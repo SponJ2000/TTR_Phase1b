@@ -1,18 +1,23 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,12 +31,24 @@ public class GameListFragment extends Fragment {
 
     private static final String TAG = "GameListFrag";
 
+    List<String> mFakeGameIDs;
+    int mSelectedGame;
+
     private Button mJoin;
     private Button mCreate;
+    private RecyclerView mGameRecycler;
+
+    private GameAdapter mGameAdapter;
 
     private OnGameSelectListener mListener;
 
     public GameListFragment() {
+        mFakeGameIDs = new ArrayList<>();
+        mFakeGameIDs.add("myGame");
+        mFakeGameIDs.add("the other game");
+        mFakeGameIDs.add("ticket to lose");
+        mFakeGameIDs.add("i love pesto");
+        mSelectedGame = -1;
     }
 
     /**
@@ -78,8 +95,89 @@ public class GameListFragment extends Fragment {
             }
         });
 
+        mGameRecycler = (RecyclerView) view.findViewById(R.id.game_recycler_view);
+        mGameRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        updateUI();
+
+        mJoin.setEnabled(false);
+
         return view;
     }
+
+    private void changeAccessibility() {
+        if(mSelectedGame == -1) {
+            mJoin.setEnabled(false);
+        }else {
+            mJoin.setEnabled(true);
+        }
+    }
+
+    private void updateUI() {
+        List<String> gameIDs = mFakeGameIDs;
+        mGameAdapter = new GameAdapter(gameIDs);
+        mGameRecycler.setAdapter(mGameAdapter);
+    }
+
+
+    private class GameHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        String mGameID;
+        int mGameNumber;
+
+        private TextView mGameIDView;
+        private TextView mHostView;
+        private TextView mPlayersView;
+
+        public GameHolder(View view) {
+            super(view);
+            view.setOnClickListener(this);
+
+            mGameIDView = view.findViewById(R.id.game_id_view);
+            mHostView = view.findViewById(R.id.hostname_view);
+            mPlayersView = view.findViewById(R.id.players_view);
+        }
+
+        public void bindGame(String gameID, int gameNumber) {
+            mGameID = gameID;
+            mGameIDView.setText(gameID);
+            mHostView.setText(gameID);
+            mPlayersView.setText("1/4");
+        }
+
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(getActivity(), "Selected " + mGameID, Toast.LENGTH_SHORT).show();
+            mSelectedGame = mGameNumber;
+            changeAccessibility();
+        }
+    }
+
+    private class GameAdapter extends RecyclerView.Adapter<GameHolder> {
+
+        private List<String> mGameIDs;
+
+        public GameAdapter(List<String> gameIDs) {
+            mGameIDs = gameIDs;
+        }
+
+        public GameHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View view = inflater.inflate(R.layout.gamelist_view, parent, false);
+            return new GameHolder(view);
+        }
+
+        public void onBindViewHolder(GameHolder holder, int position) {
+            holder.bindGame(mGameIDs.get(position), position);
+        }
+
+        public int getItemCount() {
+            return mGameIDs.size();
+        }
+
+    }
+
+
 
 //  tells the model to edit the players info to add the game info and edit the game info to add the player
 //  then calls the onGameSelect asynchronously
@@ -92,7 +190,7 @@ public class GameListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Object o) {
-            Toast.makeText(getActivity(), "joined", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "joined " + mFakeGameIDs.get(mSelectedGame), Toast.LENGTH_SHORT).show();
             onGameSelect("join");
         }
     }
