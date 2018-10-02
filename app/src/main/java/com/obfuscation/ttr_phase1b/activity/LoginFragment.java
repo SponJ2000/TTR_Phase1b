@@ -36,6 +36,8 @@ public class LoginFragment extends Fragment {
     private OnLoginListener mListener;
 
     public LoginFragment() {
+        mUser = "";
+        mPass = "";
     }
 
     /**
@@ -67,6 +69,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mUser = s.toString();
+                changeAccessibility();
             }
 
             @Override
@@ -83,6 +86,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mPass = s.toString();
+                changeAccessibility();
             }
 
             @Override
@@ -120,12 +124,23 @@ public class LoginFragment extends Fragment {
             }
         });
 
-//        mLogIn.setEnabled(false);
-//        mRegister.setEnabled(false);
+        mLogIn.setEnabled(false);
+        mRegister.setEnabled(false);
 
         return view;
     }
 
+    private void changeAccessibility() {
+        if(!mUser.equals("") && !mPass.equals("")) {
+            mLogIn.setEnabled(true);
+            mRegister.setEnabled(true);
+        }else {
+            mLogIn.setEnabled(false);
+            mRegister.setEnabled(false);
+        }
+    }
+
+//  Async task to register the user, update the model, and call the onLogin function
     private class registerInServerTask extends AsyncTask<Void, Void, Object> {
 
         @Override
@@ -140,6 +155,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
+//  Async task to login the user, update the model, and call the onLogin function
     private class loginServerTask extends AsyncTask<Void, Void, Object> {
 
         @Override
@@ -154,13 +170,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
-//    private void onClickEvent() {
-//        if (mCurrentPerson != null) {
-//            Intent intent = PersonActivity.newIntent(getContext(), mCurrentPerson.getId());
-//            startActivity(intent);
-//        }
-//    }
-
+//  sets up the activity as the listener so we can tell it when to change frags
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -178,6 +188,7 @@ public class LoginFragment extends Fragment {
         mListener = null;
     }
 
+//    tells the listener (the activity) to change the fragment to the game list
     public void onLogin() {
         if (mListener != null) {
             mListener.onLogin();

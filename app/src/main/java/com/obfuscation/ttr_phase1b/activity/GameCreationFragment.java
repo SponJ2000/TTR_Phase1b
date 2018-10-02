@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
@@ -25,8 +26,12 @@ public class GameCreationFragment extends Fragment {
 
     private static final String TAG = "LobbyFrag";
 
+    private int mMaxPlayers;
+
     private Button mCancel;
     private Button mCreate;
+
+    private RadioGroup mMaxPlayersRadio;
 
     private OnGameCreationLister mListener;
 
@@ -78,10 +83,32 @@ public class GameCreationFragment extends Fragment {
             }
         });
 
+        mMaxPlayersRadio = (RadioGroup) view.findViewById(R.id.max_players);
+//        mMaxPlayersRadio.set
+        mMaxPlayersRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId) {
+                    case R.id.players_2:
+                        mMaxPlayers = 2;
+                        break;
+                    case R.id.players_3:
+                        mMaxPlayers = 3;
+                        break;
+                    case R.id.players_4:
+                        mMaxPlayers = 4;
+                        break;
+                    case R.id.players_5:
+                        mMaxPlayers = 5;
+                        break;
+                }
+            }
+        });
+
         return view;
     }
 
-
+//  tells the model to create game info and then calls the onFinish function asynchronously
     private class createGameTask extends AsyncTask<Void, Void, Object> {
 
         @Override
@@ -96,7 +123,7 @@ public class GameCreationFragment extends Fragment {
         }
     }
 
-
+//  sets up the activity as the listener so we can tell it when to change frags
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -114,6 +141,8 @@ public class GameCreationFragment extends Fragment {
         mListener = null;
     }
 
+//    tells the activity to change the frag to the lobby if selection == "create"
+//    and game list is selection == "cancel"
     public void onFinish(String selection) {
         if (mListener != null) {
             mListener.onFinishCreating(selection);

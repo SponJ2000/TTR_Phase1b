@@ -74,33 +74,15 @@ public class GameListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Now creating");
-                try {
-                    new GameListFragment.createGameTask().execute();
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(getActivity(), "Create Failed", Toast.LENGTH_SHORT).show();
-                }
+                onGameSelect("create");
             }
         });
 
         return view;
     }
 
-
-    private class createGameTask extends AsyncTask<Void, Void, Object> {
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            Toast.makeText(getActivity(), "creating", Toast.LENGTH_SHORT).show();
-            onGameSelect("create");
-        }
-    }
-
+//  tells the model to edit the players info to add the game info and edit the game info to add the player
+//  then calls the onGameSelect asynchronously
     private class joinGameTask extends AsyncTask<Void, Void, Object> {
 
         @Override
@@ -115,7 +97,7 @@ public class GameListFragment extends Fragment {
         }
     }
 
-
+//  sets up the activity as the listener so we can tell it when to change frags
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -133,6 +115,8 @@ public class GameListFragment extends Fragment {
         mListener = null;
     }
 
+//  tells the activity to change fragments to either the create game frag if selection == "create"
+//  or the lobby frag if selection == "join"
     public void onGameSelect(String gameSelection) {
         if (mListener != null) {
             mListener.onGameSelect(gameSelection);

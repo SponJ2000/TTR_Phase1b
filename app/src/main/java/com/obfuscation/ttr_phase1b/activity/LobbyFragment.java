@@ -1,6 +1,7 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -9,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
+
+import org.w3c.dom.Text;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -20,8 +24,11 @@ public class LobbyFragment extends Fragment {
 
     private static final String TAG = "LobbyFrag";
 
+    private String mLobbyOwner;
+
     private Button mLeave;
     private Button mStart;
+    private TextView mLobbyOwnerView;
 
     private OnGameLeaveListener mListener;
 
@@ -63,14 +70,19 @@ public class LobbyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now starting");
-                Toast.makeText(getActivity(), "Starting", Toast.LENGTH_SHORT).show();
+                onGameStart();
             }
         });
+
+        mLobbyOwnerView = (TextView) view.findViewById(R.id.lobby_owner);
+//      set the TextView at the top to show the username of the person who created the lobby
+        mLobbyOwnerView.setText(mLobbyOwner);
 
         return view;
     }
 
-
+//  tells the model to edit the game info to show that the user has left the game
+//  and then calls the onGameLeave function asynchronously
     private class leaveGameTask extends AsyncTask<Void, Void, Object> {
 
         @Override
@@ -81,11 +93,17 @@ public class LobbyFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             Toast.makeText(getActivity(), "leaving", Toast.LENGTH_SHORT).show();
-            onGameStart();
+            onGameLeave();
         }
     }
 
+    private void onGameStart() {
+        Toast.makeText(getActivity(), "starting game", Toast.LENGTH_SHORT).show();
+//        Intent intent = GameActivity.newIntent(getContext());
+//        startActivity(intent);
+    }
 
+//  sets up the activity as the listener so we can tell it when to change frags
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -103,7 +121,8 @@ public class LobbyFragment extends Fragment {
         mListener = null;
     }
 
-    public void onGameStart() {
+//  tells the listener (the activity) to change the fragment back to the game list
+    public void onGameLeave() {
         if (mListener != null) {
             mListener.onGameLeave();
         }
