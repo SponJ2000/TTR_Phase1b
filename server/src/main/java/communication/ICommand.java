@@ -6,5 +6,5 @@ package communication;
 
 public interface ICommand {
 
-    void Execute();
+    Result execute();
 }
