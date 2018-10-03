@@ -12,7 +12,7 @@ public class GenericCommand implements ICommand {
     String methodName;
     String[] parameterType;
     Object[] parameterValue;
-
+    String test;//TEST
     @Override
     public void Execute() {
 
