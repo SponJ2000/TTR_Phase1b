@@ -1,10 +1,11 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,8 @@ import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -24,15 +26,33 @@ public class LobbyFragment extends Fragment {
 
     private static final String TAG = "LobbyFrag";
 
-    private String mLobbyOwner;
+    private String mHostname;
+    private String mGameID;
+    private int mMaxPlayers;
+    private List<String> mFakePlayernames;
 
     private Button mLeave;
     private Button mStart;
-    private TextView mLobbyOwnerView;
+
+    private TextView mGameIDView;
+    private TextView mHostnameView;
+    private TextView mPlayerCount;
+
+    private RecyclerView mLobbyRecycler;
+
+    private LobbyAdapter mLobbyAdapter;
 
     private OnGameLeaveListener mListener;
 
     public LobbyFragment() {
+        mGameID = "new republic (the game id)";
+        mHostname = "Bob (the host)";
+        mFakePlayernames = new ArrayList<>();
+        mFakePlayernames.add(mHostname);
+        mFakePlayernames.add("player 2");
+        mFakePlayernames.add("player 3");
+        mFakePlayernames.add("player 4");
+        mMaxPlayers = 5;
     }
 
     /**
@@ -74,12 +94,77 @@ public class LobbyFragment extends Fragment {
             }
         });
 
-        mLobbyOwnerView = (TextView) view.findViewById(R.id.lobby_owner);
+
+        mGameIDView = (TextView) view.findViewById(R.id.game_id);
 //      set the TextView at the top to show the username of the person who created the lobby
-        mLobbyOwnerView.setText(mLobbyOwner);
+        mGameIDView.setText(mGameID);
+
+        mHostnameView = (TextView) view.findViewById(R.id.hostname_view);
+//      set the TextView at the top to show the username of the person who created the lobby
+        mHostnameView.setText(mHostname);
+
+        mPlayerCount = (TextView) view.findViewById(R.id.player_count);
+//      set the TextView at the top to show the username of the person who created the lobby
+        mPlayerCount.setText(mFakePlayernames.size() + "/" + mMaxPlayers);
+
+
+        mLobbyRecycler = (RecyclerView) view.findViewById(R.id.player_recycler_view);
+        mLobbyRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        updateUI();
 
         return view;
     }
+
+    private void updateUI() {
+        List<String> gameIDs = mFakePlayernames;
+        mLobbyAdapter = new LobbyAdapter(gameIDs);
+        mLobbyRecycler.setAdapter(mLobbyAdapter);
+    }
+
+
+    private class LobbyHolder extends RecyclerView.ViewHolder {
+
+        String mPlayername;
+
+        private TextView mPlayernameView;
+
+        public LobbyHolder(View view) {
+            super(view);
+
+            mPlayernameView = view.findViewById(R.id.playername_view);
+        }
+
+        public void bindGame(String playername) {
+            mPlayername = playername;
+            mPlayernameView.setText(playername);
+        }
+    }
+
+    private class LobbyAdapter extends RecyclerView.Adapter<LobbyHolder> {
+
+        private List<String> mPlayernames;
+
+        public LobbyAdapter(List<String> playerNames) {
+            mPlayernames = playerNames;
+        }
+
+        public LobbyHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View view = inflater.inflate(R.layout.playerlist_view, parent, false);
+            return new LobbyHolder(view);
+        }
+
+        public void onBindViewHolder(LobbyHolder holder, int position) {
+            holder.bindGame(mPlayernames.get(position));
+        }
+
+        public int getItemCount() {
+            return mPlayernames.size();
+        }
+
+    }
+    
 
 //  tells the model to edit the game info to show that the user has left the game
 //  and then calls the onGameLeave function asynchronously

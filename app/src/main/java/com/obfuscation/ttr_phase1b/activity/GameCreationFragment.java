@@ -4,12 +4,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
@@ -27,11 +31,14 @@ public class GameCreationFragment extends Fragment {
     private static final String TAG = "LobbyFrag";
 
     private int mMaxPlayers;
+    private String mGameId;
 
     private Button mCancel;
     private Button mCreate;
 
     private RadioGroup mMaxPlayersRadio;
+
+    private TextView mGameIdView;
 
     private OnGameCreationLister mListener;
 
@@ -84,7 +91,7 @@ public class GameCreationFragment extends Fragment {
         });
 
         mMaxPlayersRadio = (RadioGroup) view.findViewById(R.id.max_players);
-//        mMaxPlayersRadio.set
+        mMaxPlayersRadio.check(R.id.players_2);
         mMaxPlayersRadio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -105,7 +112,34 @@ public class GameCreationFragment extends Fragment {
             }
         });
 
+        mGameIdView = (EditText) view.findViewById(R.id.game_id_edit);
+        mGameIdView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mGameId = s.toString();
+                changeAccessibility();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mCreate.setEnabled(false);
+
         return view;
+    }
+
+    private void changeAccessibility() {
+        if(mGameId.equals("")) {
+            mCreate.setEnabled(false);
+        }else {
+            mCreate.setEnabled(true);
+        }
     }
 
 //  tells the model to create game info and then calls the onFinish function asynchronously

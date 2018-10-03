@@ -140,6 +140,7 @@ public class GameListFragment extends Fragment {
 
         public void bindGame(String gameID, int gameNumber) {
             mGameID = gameID;
+            mGameNumber = gameNumber;
             mGameIDView.setText(gameID);
             mHostView.setText(gameID);
             mPlayersView.setText("1/4");
