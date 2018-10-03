@@ -20,7 +20,7 @@ import com.obfuscation.ttr_phase1b.R;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "LoginFrag";
 
@@ -140,7 +140,12 @@ public class LoginFragment extends Fragment {
         }
     }
 
-//  Async task to register the user, update the model, and call the onLogin function
+    @Override
+    public void onComplete(Result result) {
+        
+    }
+
+    //  Async task to register the user, update the model, and call the onLogin function
     private class registerInServerTask extends AsyncTask<Void, Void, Object> {
 
         @Override
