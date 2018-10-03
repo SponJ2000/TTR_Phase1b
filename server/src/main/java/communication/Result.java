@@ -9,5 +9,9 @@ public class Result {
     Object data;
     String errorInfo;
 
-
+    public Result(boolean success, Object data, String errorInfo) {
+        this.success = success;
+        this.data = data;
+        this.errorInfo = errorInfo;
+    }
 }
