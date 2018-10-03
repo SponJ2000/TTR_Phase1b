@@ -7,6 +7,8 @@ package server;
 public class ServerProxy implements IServer{
 
     public Result Login(String id, String password) {
+
+
         return null;
     }
     public Result Register(String id, String password) {
