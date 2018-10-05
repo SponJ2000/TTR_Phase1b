@@ -2,6 +2,7 @@ package com.obfuscation.server;
 
 import communication.Game;
 import communication.IServer;
+import communication.Player;
 import communication.Result;
 
 /**
@@ -9,6 +10,7 @@ import communication.Result;
  */
 
 public class ServerFacade implements IServer {
+    private Database db = Database.getInstance();
 
     private static ServerFacade instance = new ServerFacade();
 
@@ -22,36 +24,37 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result Login(String id, String password) {
-        return null;
+        return db.login(id, password);
     }
 
     @Override
     public Result Register(String id, String password) {
-        return null;
+        return db.register(id, password);
     }
 
     @Override
     public Result JoinGame(String id, String gameID, String authToken) {
-        return null;
+        //TODO : authToken?
+        return db.joinGame(id, gameID);
     }
 
     @Override
     public Result CreateGame(Game game, String authToken) {
-        return null;
+        return db.newGame(game, authToken);
     }
 
     @Override
-    public Result StartGame(Game game, String authToken) {
-        return null;
+    public Result StartGame(String gameID, String authToken) {
+        return db.startGame(gameID, authToken);
     }
 
     @Override
     public Result GetGameList(String authToken) {
-        return null;
+        return new Result(true, db.getGameList(), null);
     }
 
     @Override
     public Result GetPlayerList(String gameID, String authToken) {
-        return null;
+        return new Result(true, db.getActiveUsers(), null);
     }
 }
