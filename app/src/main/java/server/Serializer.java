@@ -1,6 +1,5 @@
 package server;
 
-import com.google.gson.Gson;
 import com.obfuscation.server.GenericCommand;
 import communication.*;
 

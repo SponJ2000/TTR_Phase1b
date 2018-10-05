@@ -32,14 +32,14 @@ public class ExecCommandHandler implements HttpHandler {
             InputStream reqBody = httpExchange.getRequestBody();
             String requestString = readString(reqBody);
 
-            ICommand commandData = new Serializer().deserialize(requestString);
+            ICommand commandData = new Serializer().deserializeCommand(requestString);
 
             //execute the command
             Result result = commandData.execute();
 
             httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
             OutputStream respBody = httpExchange.getResponseBody();
-            writeString(new Serializer().serialize(result), respBody);
+            writeString(new Serializer().serializeResult(result), respBody);
             respBody.close();
         }
         catch (Exception e) {
