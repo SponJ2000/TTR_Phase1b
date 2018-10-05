@@ -32,4 +32,10 @@ public class Result {
     public void setErrorInfo(String errorInfo) {
         this.errorInfo = errorInfo;
     }
+
+    public Result(boolean success, String errorInfo, Object data) {
+        this.success = success;
+        this.data = data;
+        this.errorInfo = errorInfo;
+    }
 }

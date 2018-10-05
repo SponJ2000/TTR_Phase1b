@@ -19,38 +19,36 @@ public class ModelFacade {
         return modelFacade;
     }
 
-    public Result Login(String id, String password){
+    public void Login(String id, String password){
         ServerProxy serverProxy = new ServerProxy();
         serverProxy.Login(id,password);
-        return null;
+
     }
 
-    public Result Register(String id, String password) {
+    public void Register(String id, String password) {
         ServerProxy serverProxy = new ServerProxy();
         serverProxy.Register(id,password);
-        return null;
+
     }
 
-    public Result JoinGame(String id, Game game) {
+    public void JoinGame(String id, Game game) {
         ServerProxy serverProxy = new ServerProxy();
         serverProxy.JoinGame(id,game);
-        return null;
     }
 
-    public Result CreateGame(Game game) {
+    public void CreateGame(Game game) {
         ServerProxy serverProxy = new ServerProxy();
         serverProxy.CreateGame(game);
-        return null;
+
     }
-    public Result StartGame(Game game) {
+    public void StartGame(Game game) {
         ServerProxy serverProxy = new ServerProxy();
         serverProxy.StartGame(game);
-        return null;
+
     }
 
-    public Result GetGameList() {
+    public void GetGameList() {
         ServerProxy serverProxy = new ServerProxy();
         serverProxy.GetGameList();
-        return null;
     }
 }
