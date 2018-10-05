@@ -41,14 +41,14 @@ public class GenericCommand implements ICommand {
 
             Method method = retClass.getMethod(methodName, paramTypeClass);
             Object results = method.invoke(serverFacadeInstance, parameterValue);
-            return new Result(); //FIXME**
+            return (Result)results;
         }
         catch (InvocationTargetException e) {
-            return new Result();//FIXME*
+            return new Result(false, null, e.getCause().getMessage());
         }
         catch (Exception e) {
             e.printStackTrace();
-            return new Result(); //FIXME**
+            return new Result(false, null, e.getMessage());
         }
     }
 }

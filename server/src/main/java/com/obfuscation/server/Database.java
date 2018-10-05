@@ -34,7 +34,13 @@ public class Database {
     List<Game> gameList;
     List<ActiveUser> activeUsers;
 
-    public Database() {
+    private static Database db = new Database();
+
+    public static Database getInstance() {
+        return db;
+    }
+
+    private Database() {
         loginInfo = new HashMap<>();
         gameList = new ArrayList<>();
         activeUsers = new ArrayList<>();
@@ -45,7 +51,7 @@ public class Database {
             //Add user and password
             loginInfo.put(id, password);
 
-            //create authToken
+            //create authToken, use UUID.randomUUID().toString()
             String authToken = "1234";
 
             //return result

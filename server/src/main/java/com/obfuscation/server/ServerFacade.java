@@ -41,7 +41,7 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result StartGame(Game game, String authToken) {
+    public Result StartGame(String gameID, String authToken) {
         return null;
     }
 
