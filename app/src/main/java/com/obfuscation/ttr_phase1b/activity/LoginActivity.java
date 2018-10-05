@@ -25,9 +25,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
 
         if (fragment == null) {
             fragment = LoginFragment.newInstance();
+            PresenterFacade.getInstance().setCurrentFragment((LoginFragment) fragment);
             fm.beginTransaction().add(R.id.container, fragment).commit();
             Log.d(TAG, "Loaded the login fragment");
-            PresenterFacade.getInstance().setCurrentFragment((LoginFragment) fragment);
         }
     }
 
@@ -35,9 +35,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
     public void onLogin() {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = GameListFragment.newInstance();
+        PresenterFacade.getInstance().setCurrentFragment((GameListFragment) fragment);
         fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game list fragment");
-        PresenterFacade.getInstance().setCurrentFragment((GameListFragment) fragment);
     }
 
     @Override
@@ -76,9 +76,9 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
     public void onGameLeave() {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = GameListFragment.newInstance();
+        PresenterFacade.getInstance().setCurrentFragment((GameListFragment) fragment);
         fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game list fragment");
-        PresenterFacade.getInstance().setCurrentFragment((GameListFragment) fragment);
     }
 
 }

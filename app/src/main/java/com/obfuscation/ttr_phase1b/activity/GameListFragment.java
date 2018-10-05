@@ -18,10 +18,9 @@ import com.obfuscation.ttr_phase1b.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.ModelFacade;
 import model.TempModelFacade;
-import server.Game;
-import server.Player;
+import model.Game;
+import model.Player;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +34,6 @@ public class GameListFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "GameListFrag";
 
-    private List<Game> mFakeGames;
     private int mSelectedGame;
     private List<Game> mGameList;
     private boolean ismGetingGameList;
@@ -50,15 +48,6 @@ public class GameListFragment extends Fragment implements IPresenter {
     private OnGameSelectListener mListener;
 
     public GameListFragment() {
-        ismGetingGameList = false;
-        ismJoingGame = false;
-        mFakeGames = new ArrayList<>();
-        mFakeGames.add( new Game("myGame", "bob", new ArrayList<Player>(1), 2) );
-        mFakeGames.add( new Game("the other game", "johnny", new ArrayList<Player>(3), 4) );
-        mFakeGames.add( new Game("ticket to lose", "lil' jimmy", new ArrayList<Player>(4), 5) );
-        mFakeGames.add( new Game("i love pesto", "helo bots!", new ArrayList<Player>(2), 3) );
-        mSelectedGame = -1;
-        mGameList = mFakeGames;
     }
 
     /**
@@ -74,9 +63,6 @@ public class GameListFragment extends Fragment implements IPresenter {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ismGetingGameList = true;
-        ismJoingGame = false;
-        TempModelFacade.getInstance().GetGameList();
     }
 
     @Override
@@ -107,6 +93,15 @@ public class GameListFragment extends Fragment implements IPresenter {
         mGameRecycler = (RecyclerView) view.findViewById(R.id.game_recycler_view);
         mGameRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        ismGetingGameList = false;
+        ismJoingGame = false;
+        mSelectedGame = -1;
+        mGameList = TempModelFacade.getInstance().GetGameList();
+        Log.d(TAG+"_constr", "gamelist: " + mGameList);
+        if(mGameList == null) {
+            mGameList = new ArrayList<>();
+        }
+//        TempModelFacade.getInstance().UpdateGameList();
         updateUI();
 
         mJoin.setEnabled(false);
@@ -123,25 +118,34 @@ public class GameListFragment extends Fragment implements IPresenter {
     }
 
     private void updateUI() {
-        mGameAdapter = new GameAdapter(mGameList);
-        mGameRecycler.setAdapter(mGameAdapter);
+        if(mGameRecycler != null) {
+            Log.d(TAG+"_updateUI", "gamelist: " + mGameList);
+            List<Game> temp = mGameList;
+            mGameAdapter = new GameAdapter(temp);
+            mGameRecycler.setAdapter(mGameAdapter);
+        }
     }
 
     @Override
     public void onComplete(Object result) {
 //      if join game worked right, go to game lobby
         if(ismJoingGame) {
-            Log.d(TAG, "Now joining");
+            Log.d(TAG+"_onComplete", "Now joining");
             onGameSelect("join");
-        }else if(ismGetingGameList && result != null) {
-            Log.d(TAG, "Got game list");
-            mGameList = (List<Game>) result;
         }
+//        else if(ismGetingGameList && result != null) {
+//            Log.d(TAG, "Got game list");
+//            mGameList = TempModelFacade.getInstance().GetGameList();
+//        }
     }
 
     @Override
     public void updateInfo(Object result) {
-        mGameList = (List<Game>) result;
+        List<Game> temp = TempModelFacade.getInstance().GetGameList();
+        if(temp != null) {
+            mGameList = temp;
+        }
+        Log.d(TAG+"_updateInfo", "gamelist: " + mGameList);
         updateUI();
     }
 
@@ -174,11 +178,12 @@ public class GameListFragment extends Fragment implements IPresenter {
         }
 
         public void bindGame(Game game, int gameNumber) {
+//            Log.d(TAG+"_holder", "game: " + game.toString());
             mGame = game;
             mGameNumber = gameNumber;
             mGameIDView.setText(game.getGameID());
             mHostView.setText(game.getUsername());
-            mPlayersView.setText(game.getPlayers()+"/"+game.getMaxPlayers());
+            mPlayersView.setText(game.getPlayerCount()+"/"+game.getMaxPlayers());
         }
 
         @Override
@@ -204,6 +209,7 @@ public class GameListFragment extends Fragment implements IPresenter {
         }
 
         public void onBindViewHolder(GameHolder holder, int position) {
+//            Log.d(TAG+"_adapter", "game[" + position + "]: " + mGames.get(position));
             holder.bindGame(mGames.get(position), position);
         }
 

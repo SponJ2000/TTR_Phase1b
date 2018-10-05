@@ -29,7 +29,7 @@ public class ModelFacade {
 
     public static ModelFacade getInstance() {
         if (modelFacade == null) {
-            return new ModelFacade();
+            modelFacade = new ModelFacade();
         }
         return modelFacade;
     }
@@ -54,16 +54,14 @@ public class ModelFacade {
 //        serverProxy.CreateGame(game);
     }
 
-    public Result LeaveGame(Game game) {
+    public void LeaveGame(Game game) {
         ServerProxy serverProxy = new ServerProxy();
 //        serverProxy.StartGame(game);
-        return null;
     }
 
-    public Result StartGame(Game game) {
+    public void StartGame(Game game) {
         ServerProxy serverProxy = new ServerProxy();
 //        serverProxy.CreateGame(game);
-        return null;
     }
 
     public void GetGameList() {

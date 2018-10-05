@@ -101,8 +101,8 @@ public class LoginFragment extends Fragment implements IPresenter {
         mLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Now loging in");
-                Toast.makeText(getActivity(), "Attempting to log in", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Now logging in");
+//                Toast.makeText(getActivity(), "Attempting to log in", Toast.LENGTH_SHORT).show();
                 TempModelFacade.getInstance().Login(mUser, mPass);
             }
         });

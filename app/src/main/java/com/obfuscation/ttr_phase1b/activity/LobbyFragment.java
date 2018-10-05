@@ -15,13 +15,11 @@ import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import model.ModelFacade;
 import model.TempModelFacade;
-import server.Game;
-import server.Player;
+import model.Game;
+import model.Player;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -65,17 +63,18 @@ public class LobbyFragment extends Fragment implements IPresenter {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ismLeaving = false;
-        ismStarting = false;
-        ismGettingGame = false;
-        mHost = TempModelFacade.getInstance().GetUser();
-        mGame = TempModelFacade.getInstance().GetCurrentGame();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lobby_fragment, container, false);
+
+        ismLeaving = false;
+        ismStarting = false;
+        ismGettingGame = false;
+        mHost = TempModelFacade.getInstance().GetUser();
+        mGame = TempModelFacade.getInstance().GetCurrentGame();
 
         mLeaveButton = (Button) view.findViewById(R.id.leave_button);
         mLeaveButton.setOnClickListener(new View.OnClickListener() {
@@ -124,8 +123,10 @@ public class LobbyFragment extends Fragment implements IPresenter {
     }
 
     private void updateUI() {
-        mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
-        mLobbyRecycler.setAdapter(mLobbyAdapter);
+        if(mLobbyRecycler != null) {
+            mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
+            mLobbyRecycler.setAdapter(mLobbyAdapter);
+        }
     }
 
     @Override
@@ -136,15 +137,17 @@ public class LobbyFragment extends Fragment implements IPresenter {
         }else if(ismStarting) {
             ismStarting = false;
             onGameStart();
-        }else if(ismGettingGame && result != null) {
-            ismGettingGame = false;
-            mGame = (Game) result;
-            updateUI();
         }
+//        else if(ismGettingGame && result != null) {
+//            ismGettingGame = false;
+//            mGame = (Game) result;
+//            updateUI();
+//        }
     }
 
     @Override
     public void updateInfo(Object result) {
+        mHost = TempModelFacade.getInstance().GetUser();
         mGame = TempModelFacade.getInstance().GetCurrentGame();
         updateUI();
     }
