@@ -22,6 +22,7 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result Login(String id, String password) {
+        Database.getInstance();
         return null;
     }
 
