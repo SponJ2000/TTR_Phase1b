@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 
 import com.obfuscation.ttr_phase1b.activity.GUIFacade;
 
-import model.Game;
-import server.Result;
+import communication.Game;
+import communication.Result;
 import server.ServerProxy;
 
 /**

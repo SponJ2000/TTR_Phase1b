@@ -4,7 +4,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-import server.Result;
+import communication.*;
 import server.ServerProxy;
 
 /**
@@ -54,16 +54,14 @@ public class ModelFacade {
 //        serverProxy.CreateGame(game);
     }
 
-    public Result LeaveGame(Game game) {
+    public void LeaveGame(Game game) {
         ServerProxy serverProxy = new ServerProxy();
 //        serverProxy.StartGame(game);
-        return null;
     }
 
-    public Result StartGame(Game game) {
+    public void StartGame(Game game) {
         ServerProxy serverProxy = new ServerProxy();
 //        serverProxy.CreateGame(game);
-        return null;
     }
 
     public void GetGameList() {

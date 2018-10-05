@@ -1,5 +1,7 @@
 package server;
 
+import communication.Result;
+
 /**
  * Created by hao on 10/5/18.
  */

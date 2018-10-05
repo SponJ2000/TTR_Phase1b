@@ -1,16 +1,18 @@
 package server;
 
 
-import model.Game;
+import communication.*;
 
 /**
  * Created by hao on 10/5/18.
  */
 
-public class ServerProxy implements IServer {
+
+public class ServerProxy implements communication.IServer {
+
+
     @Override
     public Result Login(String id, String password) {
-//        GenericCommand genericCommand = new GenericCommand("ServerProxy","Login", new String[] {"String","String"},[id,password]);
         return null;
     }
 
@@ -25,7 +27,7 @@ public class ServerProxy implements IServer {
     }
 
     @Override
-    public Result CreateGame(Game game, String authToken) {
+    public Result CreateGame(communication.Game game, String authToken) {
         return null;
     }
 

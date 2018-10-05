@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import server.Result;
+import communication.*;
 
 public class TempModelFacade {
 
@@ -103,10 +103,10 @@ public class TempModelFacade {
         return mUser;
     }
 
-    private class serverTask extends AsyncTask<Void, Void, Result> {
+    private class serverTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Result doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
 //          check the server then return the server result
             try {
                 TimeUnit.SECONDS.sleep(1);
@@ -117,7 +117,7 @@ public class TempModelFacade {
         }
 
         @Override
-        protected void onPostExecute(Result result) {
+        protected void onPostExecute(Void result) {
             Log.d(TAG+"_task", "telling presenter to update self");
             PresenterFacade.getInstance().onComplete(result);
             PresenterFacade.getInstance().updateFragment(result);
