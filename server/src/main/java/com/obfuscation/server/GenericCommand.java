@@ -17,6 +17,13 @@ public class GenericCommand implements ICommand {
     private String[] parameterType;
     private Object[] parameterValue;
 
+    public GenericCommand(String className, String methodName, String[] parameterType, Object[] parameterValue) {
+        this.className = className;
+        this.methodName = methodName;
+        this.parameterType = parameterType;
+        this.parameterValue = parameterValue;
+    }
+
     @Override
     public Result execute() {
         try {
