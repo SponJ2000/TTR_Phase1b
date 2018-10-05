@@ -2,17 +2,14 @@ package model;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import server.Game;
-import server.Player;
 import server.Result;
-import server.ServerProxy;
 
 public class TempModelFacade {
 
@@ -22,6 +19,7 @@ public class TempModelFacade {
 
     private Game mCurrentGame;
     private Player mUser;
+    private List<Game> mGameList;
 
     private TempModelFacade() {
         mUser = new Player("Bob (the host)");
@@ -29,78 +27,100 @@ public class TempModelFacade {
         fakePlayers.add(mUser);
         fakePlayers.add( new Player("player 2") );
         fakePlayers.add( new Player("player 3") );
-        fakePlayers.add( new Player("player 4") );
         mCurrentGame = new Game("new republic (the game id)", mUser.getmUsername(), fakePlayers, 5);
+        fakePlayers = new ArrayList<>();
+        fakePlayers.add( new Player("other 1") );
+        fakePlayers.add( new Player("other 2") );
+        fakePlayers.add( new Player("other 3") );
+        mGameList = new ArrayList<>();
+        mGameList.add(mCurrentGame);
+        mGameList.add( new Game("myGame", "bob", fakePlayers, 5) );
+        mGameList.add( new Game("the other game", "johnny", fakePlayers, 4) );
+        mGameList.add( new Game("ticket to lose", "lil' jimmy", fakePlayers, 5) );
+        mGameList.add( new Game("i love pesto", "helo bots!", fakePlayers, 4) );
     }
 
     public static TempModelFacade getInstance() {
         if (modelFacade == null) {
-            return new TempModelFacade();
+            modelFacade = new TempModelFacade();
         }
         return modelFacade;
     }
 
-    public Result Login(String id, String password){
+    public void Login(String id, String password){
         mUser = new Player(id);
-        PresenterFacade.getInstance().onComplete(null);
-        return null;
+        Log.d(TAG, "Current user: " + mUser.toString());
+        new serverTask().execute();
+        Log.d(TAG+"_join", "end");
     }
 
-    public Result Register(String id, String password) {
+    public void Register(String id, String password) {
         mUser = new Player(id);
-        PresenterFacade.getInstance().onComplete(null);
-        return null;
+        Log.d(TAG, "Current user: " + mUser.toString());
+        new serverTask().execute();
+        Log.d(TAG+"_join", "end");
     }
 
-    public Result JoinGame(String id, Game game) {
+    public void JoinGame(String id, Game game) {
         mCurrentGame = game;
-        PresenterFacade.getInstance().onComplete(null);
-        return null;
+        Log.d(TAG+"_join", "Current game: " + mCurrentGame.toString());
+        new serverTask().execute();
+        Log.d(TAG+"_join", "end");
     }
 
-    public Result CreateGame(Game game) {
+    public void CreateGame(Game game) {
         mCurrentGame = game;
-        Log.d(TAG, "Current game: " + mCurrentGame.toString());
-        PresenterFacade.getInstance().onComplete(null);
-        PresenterFacade.getInstance().updateFragment(null);
-        return null;
+        Log.d(TAG+"_create", "Current game: " + mCurrentGame.toString());
+        new serverTask().execute();
+        Log.d(TAG+"_join", "end");
     }
 
-    public Result LeaveGame(Game game) {
-        PresenterFacade.getInstance().onComplete(null);
-        return null;
+    public void LeaveGame(Game game) {
+        new serverTask().execute();
     }
 
-    public Result StartGame(Game game) {
-        PresenterFacade.getInstance().onComplete(null);
-        return null;
+    public void StartGame(Game game) {
+        new serverTask().execute();
     }
 
-    public Result GetGameList() {
-        PresenterFacade.getInstance().onComplete(null);
-        return null;
+    public void UpdateGameList() {
+//      go grab the updated GameList from the server
+        new serverTask().execute();
+    }
+
+    public List<Game> GetGameList() {
+        Log.d(TAG+"_get", "getting gamelist: " + mGameList);
+        return mGameList;
     }
 
     public Game GetCurrentGame() {
-        Log.d(TAG, "Current game: " + mCurrentGame.toString());
+        Log.d(TAG+"_get", "Current game: " + mCurrentGame.toString());
         return mCurrentGame;
     }
 
     public Player GetUser() {
+        Log.d(TAG+"_get", "Current user: " + mUser.toString());
         return mUser;
     }
 
-    private class createGameTask extends AsyncTask<Void, Void, Result> {
+    private class serverTask extends AsyncTask<Void, Void, Result> {
 
         @Override
         protected Result doInBackground(Void... params) {
 //          check the server then return the server result
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (Exception e) {
+                Log.d(TAG, "timer exception");
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(Result result) {
-            return;
+            Log.d(TAG+"_task", "telling presenter to update self");
+            PresenterFacade.getInstance().onComplete(result);
+            PresenterFacade.getInstance().updateFragment(result);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -14,17 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import model.ModelFacade;
 import model.TempModelFacade;
-import server.Game;
-import server.Player;
+import model.Game;
+import model.Player;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +49,9 @@ public class GameCreationFragment extends Fragment implements IPresenter {
 
     public GameCreationFragment() {
         mUser = TempModelFacade.getInstance().GetUser();
+        List<Player> l = new ArrayList<>();
+        l.add(mUser);
+        mGame = new Game("", mUser.getmUsername(), l, 2);
     }
 
     /**
@@ -67,9 +67,6 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        List<Player> l = new ArrayList<>();
-        l.add(mUser);
-        mGame = new Game("", mUser.getmUsername(), l, 2);
     }
 
     @Override
@@ -158,6 +155,8 @@ public class GameCreationFragment extends Fragment implements IPresenter {
 
     @Override
     public void updateInfo(Object result) {
+        mUser = TempModelFacade.getInstance().GetUser();
+        mGame.setUsername(mUser.getmUsername());
     }
 
 

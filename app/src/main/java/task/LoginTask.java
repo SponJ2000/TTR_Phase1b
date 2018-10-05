@@ -1,15 +1,11 @@
 package task;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.activity.GUIFacade;
 
 import model.Game;
-import server.ClientCommunicator;
-import server.GenericCommand;
 import server.Result;
-import server.Serializer;
 import server.ServerProxy;
 
 /**
