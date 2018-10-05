@@ -55,6 +55,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
     public void onFinishCreating(String selection) {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = null;
+        //TODO : .equals
         if(selection == "create") {
             fragment = LobbyFragment.newInstance();
             Log.d(TAG, "Loaded the lobby fragment");
