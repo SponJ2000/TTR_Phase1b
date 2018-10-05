@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 
 import communication.ICommand;
 import communication.Result;
+import communication.Serializer;
 
 /**
  * Created by jalton on 10/1/18.
@@ -31,8 +32,6 @@ public class ExecCommandHandler implements HttpHandler {
             InputStream reqBody = httpExchange.getRequestBody();
             String requestString = readString(reqBody);
 
-            //FIXME** what does processString and getCommand do?
-            requestString = processString(requestString);
             ICommand commandData = new Serializer().deserialize(requestString);
 
             //execute the command

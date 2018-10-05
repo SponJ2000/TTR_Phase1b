@@ -1,6 +1,8 @@
 package server;
 
-import communication.Result;
+import com.google.gson.Gson;
+import com.obfuscation.server.GenericCommand;
+import communication.*;
 
 /**
  * Created by hao on 10/5/18.
@@ -8,6 +10,7 @@ import communication.Result;
 
 public class Serializer {
     public String serialize(GenericCommand genericCommand){
+
         return null;
     }
     public Result deserialize(String s) {return null;}
