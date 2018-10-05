@@ -1,6 +1,7 @@
 package model;
 
 
+import server.Game;
 import server.Result;
 
 /**

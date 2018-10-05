@@ -1,7 +1,6 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,20 +18,24 @@ import com.obfuscation.ttr_phase1b.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.ModelFacade;
+import server.Game;
+import server.Player;
+
 /**
  * A placeholder fragment containing a simple view.
  */
-public class LobbyFragment extends Fragment {
+public class LobbyFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "LobbyFrag";
 
-    private String mHostname;
-    private String mGameID;
-    private int mMaxPlayers;
-    private List<String> mFakePlayernames;
+    private Player mHost;
+    private Game mGame;
+    private boolean mLeave;
+    private boolean mStart;
 
-    private Button mLeave;
-    private Button mStart;
+    private Button mLeaveButton;
+    private Button mStartButton;
 
     private TextView mGameIDView;
     private TextView mHostnameView;
@@ -45,14 +48,15 @@ public class LobbyFragment extends Fragment {
     private OnGameLeaveListener mListener;
 
     public LobbyFragment() {
-        mGameID = "new republic (the game id)";
-        mHostname = "Bob (the host)";
-        mFakePlayernames = new ArrayList<>();
-        mFakePlayernames.add(mHostname);
-        mFakePlayernames.add("player 2");
-        mFakePlayernames.add("player 3");
-        mFakePlayernames.add("player 4");
-        mMaxPlayers = 5;
+        mLeave = false;
+        mStart = false;
+        mHost = new Player("Bob (the host)");
+        List<Player> fakePlayers = new ArrayList<>();
+        fakePlayers.add(mHost);
+        fakePlayers.add( new Player("player 2") );
+        fakePlayers.add( new Player("player 3") );
+        fakePlayers.add( new Player("player 4") );
+        mGame = new Game("new republic (the game id)", mHost.getmUsername(), fakePlayers, 5);
     }
 
     /**
@@ -66,46 +70,51 @@ public class LobbyFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        ModelFacade.getInstance().GetCurrentGame();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lobby_fragment, container, false);
 
-        mLeave = (Button) view.findViewById(R.id.leave_button);
-        mLeave.setOnClickListener(new View.OnClickListener() {
+        mLeaveButton = (Button) view.findViewById(R.id.leave_button);
+        mLeaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now leaving");
-                try {
-                    new leaveGameTask().execute();
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(getActivity(), "Leave Failed", Toast.LENGTH_SHORT).show();
-                }
-
+                mLeave = true;
+                mStart = false;
+//                ModelFacade.getInstance().LeaveGame(mGame);
+                onGameLeave();
             }
         });
 
-        mStart = (Button) view.findViewById(R.id.start_button);
-        mStart.setOnClickListener(new View.OnClickListener() {
+        mStartButton = (Button) view.findViewById(R.id.start_button);
+        mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now starting");
-                onGameStart();
+                mLeave = false;
+                mStart = true;
+                ModelFacade.getInstance().StartGame(mGame);
             }
         });
 
 
         mGameIDView = (TextView) view.findViewById(R.id.game_id);
 //      set the TextView at the top to show the username of the person who created the lobby
-        mGameIDView.setText(mGameID);
+        mGameIDView.setText(mGame.getGameID());
 
         mHostnameView = (TextView) view.findViewById(R.id.hostname_view);
 //      set the TextView at the top to show the username of the person who created the lobby
-        mHostnameView.setText(mHostname);
+        mHostnameView.setText(mHost.getmUsername());
 
         mPlayerCount = (TextView) view.findViewById(R.id.player_count);
 //      set the TextView at the top to show the username of the person who created the lobby
-        mPlayerCount.setText(mFakePlayernames.size() + "/" + mMaxPlayers);
+        mPlayerCount.setText(mGame.getPlayerCount() + "/" + mGame.getMaxPlayers());
 
 
         mLobbyRecycler = (RecyclerView) view.findViewById(R.id.player_recycler_view);
@@ -117,9 +126,38 @@ public class LobbyFragment extends Fragment {
     }
 
     private void updateUI() {
-        List<String> gameIDs = mFakePlayernames;
-        mLobbyAdapter = new LobbyAdapter(gameIDs);
+        mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
         mLobbyRecycler.setAdapter(mLobbyAdapter);
+    }
+
+    @Override
+    public void onComplete(Object result) {
+        if(mLeave) {
+            onGameLeave();
+            return;
+        }else if(mStart) {
+            onGameStart();
+            return;
+        }
+    }
+
+    @Override
+    public void updateInfo(Object result) {
+        mGame = (Game) result;
+        updateUI();
+    }
+
+//  tells the listener (the activity) to change the fragment back to the game list
+    public void onGameLeave() {
+        if (mListener != null) {
+            mListener.onGameLeave();
+        }
+    }
+
+    private void onGameStart() {
+        Toast.makeText(getActivity(), "starting game", Toast.LENGTH_SHORT).show();
+//        Intent intent = GameActivity.newIntent(getContext());
+//        startActivity(intent);
     }
 
 
@@ -143,9 +181,9 @@ public class LobbyFragment extends Fragment {
 
     private class LobbyAdapter extends RecyclerView.Adapter<LobbyHolder> {
 
-        private List<String> mPlayernames;
+        private List<Player> mPlayernames;
 
-        public LobbyAdapter(List<String> playerNames) {
+        public LobbyAdapter(List<Player> playerNames) {
             mPlayernames = playerNames;
         }
 
@@ -156,7 +194,7 @@ public class LobbyFragment extends Fragment {
         }
 
         public void onBindViewHolder(LobbyHolder holder, int position) {
-            holder.bindGame(mPlayernames.get(position));
+            holder.bindGame(mPlayernames.get(position).getmUsername());
         }
 
         public int getItemCount() {
@@ -164,29 +202,7 @@ public class LobbyFragment extends Fragment {
         }
 
     }
-    
 
-//  tells the model to edit the game info to show that the user has left the game
-//  and then calls the onGameLeave function asynchronously
-    private class leaveGameTask extends AsyncTask<Void, Void, Object> {
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            Toast.makeText(getActivity(), "leaving", Toast.LENGTH_SHORT).show();
-            onGameLeave();
-        }
-    }
-
-    private void onGameStart() {
-        Toast.makeText(getActivity(), "starting game", Toast.LENGTH_SHORT).show();
-//        Intent intent = GameActivity.newIntent(getContext());
-//        startActivity(intent);
-    }
 
 //  sets up the activity as the listener so we can tell it when to change frags
     @Override
@@ -204,13 +220,6 @@ public class LobbyFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-//  tells the listener (the activity) to change the fragment back to the game list
-    public void onGameLeave() {
-        if (mListener != null) {
-            mListener.onGameLeave();
-        }
     }
 
     /**

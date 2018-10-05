@@ -18,6 +18,13 @@ import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import model.ModelFacade;
+import server.Game;
+import server.Player;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -26,12 +33,11 @@ import com.obfuscation.ttr_phase1b.R;
  * Use the {@link GameCreationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GameCreationFragment extends Fragment {
+public class GameCreationFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "LobbyFrag";
 
-    private int mMaxPlayers;
-    private String mGameId;
+    private Game mGame;
 
     private Button mCancel;
     private Button mCreate;
@@ -58,6 +64,7 @@ public class GameCreationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mGame = new Game("", "", new ArrayList<Player>(), 2);
     }
 
     @Override
@@ -80,12 +87,7 @@ public class GameCreationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now creating");
-                try {
-                    new createGameTask().execute();
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(getActivity(), "Start Failed", Toast.LENGTH_SHORT).show();
-                }
+                ModelFacade.getInstance().CreateGame(mGame);
 
             }
         });
@@ -97,16 +99,16 @@ public class GameCreationFragment extends Fragment {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch(checkedId) {
                     case R.id.players_2:
-                        mMaxPlayers = 2;
+                        mGame.setMaxPlayers(2);
                         break;
                     case R.id.players_3:
-                        mMaxPlayers = 3;
+                        mGame.setMaxPlayers(3);
                         break;
                     case R.id.players_4:
-                        mMaxPlayers = 4;
+                        mGame.setMaxPlayers(4);
                         break;
                     case R.id.players_5:
-                        mMaxPlayers = 5;
+                        mGame.setMaxPlayers(5);
                         break;
                 }
             }
@@ -120,7 +122,7 @@ public class GameCreationFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mGameId = s.toString();
+                mGame.setGameID(s.toString());
                 changeAccessibility();
             }
 
@@ -135,25 +137,31 @@ public class GameCreationFragment extends Fragment {
     }
 
     private void changeAccessibility() {
-        if(mGameId.equals("")) {
+        if(mGame.getGameID().equals("")) {
             mCreate.setEnabled(false);
         }else {
             mCreate.setEnabled(true);
         }
     }
 
-//  tells the model to create game info and then calls the onFinish function asynchronously
-    private class createGameTask extends AsyncTask<Void, Void, Object> {
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            Toast.makeText(getActivity(), "creating", Toast.LENGTH_SHORT).show();
+    @Override
+    public void onComplete(Object result) {
+//      if create game worked, go to the new game lobby
+        if(true) {
             onFinish("create");
+        }
+    }
+
+    @Override
+    public void updateInfo(Object result) {
+    }
+
+
+//    tells the activity to change the frag to the lobby if selection == "create"
+//    and game list is selection == "cancel"
+    public void onFinish(String selection) {
+        if (mListener != null) {
+            mListener.onFinishCreating(selection);
         }
     }
 
@@ -173,14 +181,6 @@ public class GameCreationFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-//    tells the activity to change the frag to the lobby if selection == "create"
-//    and game list is selection == "cancel"
-    public void onFinish(String selection) {
-        if (mListener != null) {
-            mListener.onFinishCreating(selection);
-        }
     }
 
     /**

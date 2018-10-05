@@ -19,6 +19,9 @@ import com.obfuscation.ttr_phase1b.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.ModelFacade;
+import server.Game;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -27,12 +30,13 @@ import java.util.List;
  * Use the {@link GameListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GameListFragment extends Fragment {
+public class GameListFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "GameListFrag";
 
     List<String> mFakeGameIDs;
     int mSelectedGame;
+    List<Game> mGameList;
 
     private Button mJoin;
     private Button mCreate;
@@ -49,6 +53,7 @@ public class GameListFragment extends Fragment {
         mFakeGameIDs.add("ticket to lose");
         mFakeGameIDs.add("i love pesto");
         mSelectedGame = -1;
+        mGameList = new ArrayList<>();
     }
 
     /**
@@ -64,6 +69,7 @@ public class GameListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ModelFacade.getInstance().GetGameList();
     }
 
     @Override
@@ -76,12 +82,7 @@ public class GameListFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now joining");
-                try {
-                    new GameListFragment.joinGameTask().execute();
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(getActivity(), "Join Failed", Toast.LENGTH_SHORT).show();
-                }
+                ModelFacade.getInstance().JoinGame("", mGameList.get(mSelectedGame));
 
             }
         });
@@ -114,15 +115,37 @@ public class GameListFragment extends Fragment {
     }
 
     private void updateUI() {
-        List<String> gameIDs = mFakeGameIDs;
-        mGameAdapter = new GameAdapter(gameIDs);
+        mGameAdapter = new GameAdapter(mGameList);
         mGameRecycler.setAdapter(mGameAdapter);
+    }
+
+    @Override
+    public void onComplete(Object result) {
+//      if join game worked right, go to game lobby
+        if(true) {
+            onGameSelect("join");
+        }
+    }
+
+    @Override
+    public void updateInfo(Object result) {
+        mGameList = (List<Game>) result;
+        updateUI();
+    }
+
+
+//  tells the activity to change fragments to either the create game frag if selection == "create"
+//  or the lobby frag if selection == "join"
+    public void onGameSelect(String gameSelection) {
+        if (mListener != null) {
+            mListener.onGameSelect(gameSelection);
+        }
     }
 
 
     private class GameHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        String mGameID;
+        Game mGame;
         int mGameNumber;
 
         private TextView mGameIDView;
@@ -138,17 +161,17 @@ public class GameListFragment extends Fragment {
             mPlayersView = view.findViewById(R.id.players_view);
         }
 
-        public void bindGame(String gameID, int gameNumber) {
-            mGameID = gameID;
+        public void bindGame(Game game, int gameNumber) {
+            mGame = game;
             mGameNumber = gameNumber;
-            mGameIDView.setText(gameID);
-            mHostView.setText(gameID);
-            mPlayersView.setText("1/4");
+            mGameIDView.setText(game.getGameID());
+            mHostView.setText(game.getUsername());
+            mPlayersView.setText(game.getPlayers()+"/"+game.getMaxPlayers());
         }
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), "Selected " + mGameID, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Selected " + mGame.getGameID(), Toast.LENGTH_SHORT).show();
             mSelectedGame = mGameNumber;
             changeAccessibility();
         }
@@ -156,10 +179,10 @@ public class GameListFragment extends Fragment {
 
     private class GameAdapter extends RecyclerView.Adapter<GameHolder> {
 
-        private List<String> mGameIDs;
+        private List<Game> mGames;
 
-        public GameAdapter(List<String> gameIDs) {
-            mGameIDs = gameIDs;
+        public GameAdapter(List<Game> games) {
+            mGames = games;
         }
 
         public GameHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -169,32 +192,15 @@ public class GameListFragment extends Fragment {
         }
 
         public void onBindViewHolder(GameHolder holder, int position) {
-            holder.bindGame(mGameIDs.get(position), position);
+            holder.bindGame(mGames.get(position), position);
         }
 
         public int getItemCount() {
-            return mGameIDs.size();
+            return mGames.size();
         }
 
     }
 
-
-
-//  tells the model to edit the players info to add the game info and edit the game info to add the player
-//  then calls the onGameSelect asynchronously
-    private class joinGameTask extends AsyncTask<Void, Void, Object> {
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            Toast.makeText(getActivity(), "joined " + mFakeGameIDs.get(mSelectedGame), Toast.LENGTH_SHORT).show();
-            onGameSelect("join");
-        }
-    }
 
 //  sets up the activity as the listener so we can tell it when to change frags
     @Override
@@ -214,13 +220,6 @@ public class GameListFragment extends Fragment {
         mListener = null;
     }
 
-//  tells the activity to change fragments to either the create game frag if selection == "create"
-//  or the lobby frag if selection == "join"
-    public void onGameSelect(String gameSelection) {
-        if (mListener != null) {
-            mListener.onGameSelect(gameSelection);
-        }
-    }
 
     /**
      * This interface must be implemented by activities that contain this

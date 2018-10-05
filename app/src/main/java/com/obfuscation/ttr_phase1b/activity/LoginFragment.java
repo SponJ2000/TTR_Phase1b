@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
+import model.ModelFacade;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -100,13 +102,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             public void onClick(View view) {
                 Log.d(TAG, "Now loging in");
                 Toast.makeText(getActivity(), "Attempting to log in", Toast.LENGTH_SHORT).show();
-                try {
-                    new loginServerTask().execute();
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(getActivity(), "Login Failed", Toast.LENGTH_SHORT).show();
-                }
-
+                ModelFacade.getInstance().Login(mUser, mPass);
             }
         });
 
@@ -115,12 +111,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Now registering");
-                try {
-                    new registerInServerTask().execute();
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    Toast.makeText(getActivity(), "Register Failed", Toast.LENGTH_SHORT).show();
-                }
+                ModelFacade.getInstance().Register(mUser, mPass);
             }
         });
 
@@ -141,41 +132,18 @@ public class LoginFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Result result) {
-        
-    }
-
-    //  Async task to register the user, update the model, and call the onLogin function
-    private class registerInServerTask extends AsyncTask<Void, Void, Object> {
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            Toast.makeText(getActivity(), "Registered", Toast.LENGTH_SHORT).show();
+    public void onComplete(Object result) {
+//      if login succeeded, login
+        if(true) {
             onLogin();
         }
     }
 
-//  Async task to login the user, update the model, and call the onLogin function
-    private class loginServerTask extends AsyncTask<Void, Void, Object> {
-
-        @Override
-        protected Object doInBackground(Void... params) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-			Toast.makeText(getActivity(), "Logged In", Toast.LENGTH_SHORT).show();
-            onLogin();
-        }
+    @Override
+    public void updateInfo(Object result) {
     }
 
-//  sets up the activity as the listener so we can tell it when to change frags
+    //  sets up the activity as the listener so we can tell it when to change frags
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
