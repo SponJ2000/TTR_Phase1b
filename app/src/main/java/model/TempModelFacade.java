@@ -108,11 +108,11 @@ public class TempModelFacade {
         @Override
         protected Void doInBackground(Void... params) {
 //          check the server then return the server result
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (Exception e) {
-                Log.d(TAG, "timer exception");
-            }
+//            try {
+//                TimeUnit.SECONDS.sleep(1);
+//            } catch (Exception e) {
+//                Log.d(TAG, "timer exception");
+//            }
             return null;
         }
 
