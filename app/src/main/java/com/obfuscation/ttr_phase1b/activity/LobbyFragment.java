@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.ModelFacade;
+import model.TempModelFacade;
 import server.Game;
 import server.Player;
 
@@ -31,8 +32,9 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
     private Player mHost;
     private Game mGame;
-    private boolean mLeave;
-    private boolean mStart;
+    private boolean ismLeaving;
+    private boolean ismStarting;
+    private boolean ismGettingGame;
 
     private Button mLeaveButton;
     private Button mStartButton;
@@ -48,15 +50,6 @@ public class LobbyFragment extends Fragment implements IPresenter {
     private OnGameLeaveListener mListener;
 
     public LobbyFragment() {
-        mLeave = false;
-        mStart = false;
-        mHost = new Player("Bob (the host)");
-        List<Player> fakePlayers = new ArrayList<>();
-        fakePlayers.add(mHost);
-        fakePlayers.add( new Player("player 2") );
-        fakePlayers.add( new Player("player 3") );
-        fakePlayers.add( new Player("player 4") );
-        mGame = new Game("new republic (the game id)", mHost.getmUsername(), fakePlayers, 5);
     }
 
     /**
@@ -72,7 +65,11 @@ public class LobbyFragment extends Fragment implements IPresenter {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ModelFacade.getInstance().GetCurrentGame();
+        ismLeaving = false;
+        ismStarting = false;
+        ismGettingGame = false;
+        mHost = TempModelFacade.getInstance().GetUser();
+        mGame = TempModelFacade.getInstance().GetCurrentGame();
     }
 
     @Override
@@ -85,10 +82,10 @@ public class LobbyFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now leaving");
-                mLeave = true;
-                mStart = false;
-//                ModelFacade.getInstance().LeaveGame(mGame);
-                onGameLeave();
+                ismLeaving = true;
+                ismStarting = false;
+                ismGettingGame = false;
+                TempModelFacade.getInstance().LeaveGame(mGame);
             }
         });
 
@@ -97,9 +94,10 @@ public class LobbyFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now starting");
-                mLeave = false;
-                mStart = true;
-                ModelFacade.getInstance().StartGame(mGame);
+                ismLeaving = false;
+                ismStarting = true;
+                ismGettingGame = false;
+                TempModelFacade.getInstance().StartGame(mGame);
             }
         });
 
@@ -132,18 +130,22 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
     @Override
     public void onComplete(Object result) {
-        if(mLeave) {
+        if(ismLeaving) {
+            ismLeaving = false;
             onGameLeave();
-            return;
-        }else if(mStart) {
+        }else if(ismStarting) {
+            ismStarting = false;
             onGameStart();
-            return;
+        }else if(ismGettingGame && result != null) {
+            ismGettingGame = false;
+            mGame = (Game) result;
+            updateUI();
         }
     }
 
     @Override
     public void updateInfo(Object result) {
-        mGame = (Game) result;
+        mGame = TempModelFacade.getInstance().GetCurrentGame();
         updateUI();
     }
 

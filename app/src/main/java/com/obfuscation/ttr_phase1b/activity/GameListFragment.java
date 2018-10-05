@@ -1,7 +1,6 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.ModelFacade;
+import model.TempModelFacade;
 import server.Game;
+import server.Player;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,9 +35,11 @@ public class GameListFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "GameListFrag";
 
-    List<String> mFakeGameIDs;
-    int mSelectedGame;
-    List<Game> mGameList;
+    private List<Game> mFakeGames;
+    private int mSelectedGame;
+    private List<Game> mGameList;
+    private boolean ismGetingGameList;
+    private boolean ismJoingGame;
 
     private Button mJoin;
     private Button mCreate;
@@ -47,13 +50,15 @@ public class GameListFragment extends Fragment implements IPresenter {
     private OnGameSelectListener mListener;
 
     public GameListFragment() {
-        mFakeGameIDs = new ArrayList<>();
-        mFakeGameIDs.add("myGame");
-        mFakeGameIDs.add("the other game");
-        mFakeGameIDs.add("ticket to lose");
-        mFakeGameIDs.add("i love pesto");
+        ismGetingGameList = false;
+        ismJoingGame = false;
+        mFakeGames = new ArrayList<>();
+        mFakeGames.add( new Game("myGame", "bob", new ArrayList<Player>(1), 2) );
+        mFakeGames.add( new Game("the other game", "johnny", new ArrayList<Player>(3), 4) );
+        mFakeGames.add( new Game("ticket to lose", "lil' jimmy", new ArrayList<Player>(4), 5) );
+        mFakeGames.add( new Game("i love pesto", "helo bots!", new ArrayList<Player>(2), 3) );
         mSelectedGame = -1;
-        mGameList = new ArrayList<>();
+        mGameList = mFakeGames;
     }
 
     /**
@@ -69,7 +74,9 @@ public class GameListFragment extends Fragment implements IPresenter {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ModelFacade.getInstance().GetGameList();
+        ismGetingGameList = true;
+        ismJoingGame = false;
+        TempModelFacade.getInstance().GetGameList();
     }
 
     @Override
@@ -81,9 +88,10 @@ public class GameListFragment extends Fragment implements IPresenter {
         mJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Now joining");
-                ModelFacade.getInstance().JoinGame("", mGameList.get(mSelectedGame));
-
+                Log.d(TAG, "Sending join command");
+                ismGetingGameList = false;
+                ismJoingGame = true;
+                TempModelFacade.getInstance().JoinGame("", mGameList.get(mSelectedGame));
             }
         });
 
@@ -122,8 +130,12 @@ public class GameListFragment extends Fragment implements IPresenter {
     @Override
     public void onComplete(Object result) {
 //      if join game worked right, go to game lobby
-        if(true) {
+        if(ismJoingGame) {
+            Log.d(TAG, "Now joining");
             onGameSelect("join");
+        }else if(ismGetingGameList && result != null) {
+            Log.d(TAG, "Got game list");
+            mGameList = (List<Game>) result;
         }
     }
 

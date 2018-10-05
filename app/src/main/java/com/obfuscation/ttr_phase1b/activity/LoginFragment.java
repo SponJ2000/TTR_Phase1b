@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.obfuscation.ttr_phase1b.R;
 
 import model.ModelFacade;
+import model.TempModelFacade;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -102,7 +103,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             public void onClick(View view) {
                 Log.d(TAG, "Now loging in");
                 Toast.makeText(getActivity(), "Attempting to log in", Toast.LENGTH_SHORT).show();
-                ModelFacade.getInstance().Login(mUser, mPass);
+                TempModelFacade.getInstance().Login(mUser, mPass);
             }
         });
 
@@ -111,7 +112,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Now registering");
-                ModelFacade.getInstance().Register(mUser, mPass);
+                TempModelFacade.getInstance().Register(mUser, mPass);
             }
         });
 

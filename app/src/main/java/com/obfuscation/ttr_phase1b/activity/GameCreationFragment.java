@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.ModelFacade;
+import model.TempModelFacade;
 import server.Game;
 import server.Player;
 
@@ -35,8 +36,9 @@ import server.Player;
  */
 public class GameCreationFragment extends Fragment implements IPresenter {
 
-    private static final String TAG = "LobbyFrag";
+    private static final String TAG = "GameCreationFrag";
 
+    private Player mUser;
     private Game mGame;
 
     private Button mCancel;
@@ -49,6 +51,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     private OnGameCreationLister mListener;
 
     public GameCreationFragment() {
+        mUser = TempModelFacade.getInstance().GetUser();
     }
 
     /**
@@ -64,7 +67,9 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGame = new Game("", "", new ArrayList<Player>(), 2);
+        List<Player> l = new ArrayList<>();
+        l.add(mUser);
+        mGame = new Game("", mUser.getmUsername(), l, 2);
     }
 
     @Override
@@ -87,8 +92,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now creating");
-                ModelFacade.getInstance().CreateGame(mGame);
-
+                TempModelFacade.getInstance().CreateGame(mGame);
             }
         });
 

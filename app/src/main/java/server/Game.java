@@ -52,4 +52,8 @@ public class Game {
         this.mMaxPlayers = mMaxPlayers;
     }
 
+    public String toString() {
+        return "{ " + mGameID + ", " + mUsername + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
+    }
+
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FrameMetricsAggregator;
 import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.R;
@@ -26,6 +27,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
             fragment = LoginFragment.newInstance();
             fm.beginTransaction().add(R.id.container, fragment).commit();
             Log.d(TAG, "Loaded the login fragment");
+            PresenterFacade.getInstance().setCurrentFragment((LoginFragment) fragment);
         }
     }
 
@@ -35,6 +37,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
         Fragment fragment = GameListFragment.newInstance();
         fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game list fragment");
+        PresenterFacade.getInstance().setCurrentFragment((GameListFragment) fragment);
     }
 
     @Override
@@ -44,9 +47,11 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
         if(selection == "join") {
             fragment = LobbyFragment.newInstance();
             Log.d(TAG, "Loaded the lobby fragment");
+            PresenterFacade.getInstance().setCurrentFragment((LobbyFragment) fragment);
         }else if(selection == "create") {
             fragment = GameCreationFragment.newInstance();
             Log.d(TAG, "Loaded the create game fragment");
+            PresenterFacade.getInstance().setCurrentFragment((GameCreationFragment) fragment);
         }
         fm.beginTransaction().replace(R.id.container, fragment).commit();
     }
@@ -55,13 +60,14 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
     public void onFinishCreating(String selection) {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = null;
-        //TODO : .equals
-        if(selection == "create") {
+        if(selection.equals("create")) {
             fragment = LobbyFragment.newInstance();
             Log.d(TAG, "Loaded the lobby fragment");
-        }else if(selection == "cancel") {
+            PresenterFacade.getInstance().setCurrentFragment((LobbyFragment) fragment);
+        }else if(selection.equals("cancel")) {
             fragment = GameListFragment.newInstance();
             Log.d(TAG, "Loaded the game list fragment");
+            PresenterFacade.getInstance().setCurrentFragment((GameListFragment) fragment);
         }
         fm.beginTransaction().replace(R.id.container, fragment).commit();
     }
@@ -72,6 +78,7 @@ public class LoginActivity extends FragmentActivity implements LoginFragment.OnL
         Fragment fragment = GameListFragment.newInstance();
         fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game list fragment");
+        PresenterFacade.getInstance().setCurrentFragment((GameListFragment) fragment);
     }
 
 }
