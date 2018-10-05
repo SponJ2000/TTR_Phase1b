@@ -2,17 +2,13 @@ package model;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import server.Game;
-import server.Player;
-import server.Result;
-import server.ServerProxy;
+import communication.*;
 
 public class TempModelFacade {
 

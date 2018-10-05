@@ -1,14 +1,10 @@
 package model;
 
 
-import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import server.Game;
-import server.Player;
-import server.Result;
+import communication.*;
 import server.ServerProxy;
 
 /**

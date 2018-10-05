@@ -13,6 +13,11 @@ public class Player {
         this.playerName = playerName;
     }
 
+    public Player(String playerName) {
+        this.id = null;
+        this.playerName = playerName;
+    }
+
     public String getId() {
         return id;
     }

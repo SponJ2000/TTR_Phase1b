@@ -1,6 +1,6 @@
 package com.obfuscation.ttr_phase1b.activity;
 
-import server.Result;
+import communication.*;
 
 /**
  * Created by hao on 10/5/18.
