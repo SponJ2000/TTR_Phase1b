@@ -36,6 +36,14 @@ public class Database {
     List<ActiveUser> activeUsers;
     List<String> authTokens;
 
+    public List<Game> getGameList() {
+        return gameList;
+    }
+
+    public List<ActiveUser> getActiveUsers() {
+        return activeUsers;
+    }
+
     private static Database db = new Database();
 
     public static Database getInstance() {
