@@ -55,13 +55,6 @@ public class ExecCommandHandler implements HttpHandler {
         return null;
     }
 
-    private String processString(String requestString) {
-        //TODO : process string here
-
-
-        return requestString;
-    }
-
     /**
      * A function that writes to the output stream.
      * @param str serialized result object

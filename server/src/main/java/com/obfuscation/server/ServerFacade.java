@@ -11,6 +11,7 @@ import communication.Result;
 
 public class ServerFacade implements IServer {
     private Database db = Database.getInstance();
+    private ClientProxy clientProxy = ClientProxy.getInstance();
 
     private static ServerFacade instance = new ServerFacade();
 
@@ -35,16 +36,19 @@ public class ServerFacade implements IServer {
     @Override
     public Result JoinGame(String id, String gameID, String authToken) {
         //TODO : authToken?
+        clientProxy.updatePlayerList(gameID);
         return db.joinGame(id, gameID);
     }
 
     @Override
     public Result CreateGame(Game game, String authToken) {
+        clientProxy.updateGameList();
         return db.newGame(game, authToken);
     }
 
     @Override
     public Result StartGame(String gameID, String authToken) {
+        clientProxy.updateGameList();
         return db.startGame(gameID, authToken);
     }
 
@@ -56,5 +60,10 @@ public class ServerFacade implements IServer {
     @Override
     public Result GetPlayerList(String gameID, String authToken) {
         return new Result(true, db.getActiveUsers(), null);
+    }
+
+    @Override
+    public Result CheckUpdates(){
+        return clientProxy.checkUpdates();
     }
 }

@@ -13,13 +13,25 @@ import java.net.InetSocketAddress;
 
 
 public class Server {
+    //port number. Change it if you want
+    private static final int portNumber = 8080;
+
     /**
      * the main function that runs the server
      * @param args
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        //run the server
-        new ServerCommunicator().run();
+
+        //for testing
+        System.out.println("server running at port : " + portNumber);
+
+        HttpServer server = HttpServer.create(new InetSocketAddress(portNumber), 0);
+        server.setExecutor(null);
+
+        //the server context is exec
+        server.createContext("/exec", new ExecCommandHandler());
+
+        server.start();
     }
 }

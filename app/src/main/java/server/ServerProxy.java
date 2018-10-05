@@ -45,4 +45,9 @@ public class ServerProxy implements communication.IServer {
     public Result GetPlayerList(String gameID, String authToken) {
         return null;
     }
+
+    @Override
+    public Result CheckUpdates() {
+        return null;
+    }
 }

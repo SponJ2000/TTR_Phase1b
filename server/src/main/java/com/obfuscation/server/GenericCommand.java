@@ -36,7 +36,13 @@ public class GenericCommand implements ICommand {
             Class<?>[] paramTypeClass = new Class<?>[parameterType.length];
 
             for (int i = 0; i < parameterType.length; i++) {
-                paramTypeClass[i] = Class.forName(parameterType[i]);
+                try {
+                    paramTypeClass[i] = Class.forName(parameterType[i]);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    return new Result(false, null, "Error: "+e.getMessage());
+                }
+
             }
 
             Method method = retClass.getMethod(methodName, paramTypeClass);

@@ -61,4 +61,10 @@ public interface IServer {
      * @return          a Result object containing the player list
      */
     Result GetPlayerList(String gameID, String authToken);
+
+    /**
+     * Used by the Poller to check for updates to the game and player lists
+     * @return  a Result object containing a list of gameIDs to update
+     */
+    Result CheckUpdates();
 }
