@@ -24,7 +24,7 @@ public class ModelFacade {
         fakePlayers.add( new Player("player 2") );
         fakePlayers.add( new Player("player 3") );
         fakePlayers.add( new Player("player 4") );
-        mCurrentGame = new Game("new republic (the game id)", mHost.getmUsername(), fakePlayers, 5);
+        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
     }
 
     public static ModelFacade getInstance() {

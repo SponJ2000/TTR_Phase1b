@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.TempModelFacade;
-import model.Game;
-import model.Player;
+import communication.Game;
+import communication.Player;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +51,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
         mUser = TempModelFacade.getInstance().GetUser();
         List<Player> l = new ArrayList<>();
         l.add(mUser);
-        mGame = new Game("", mUser.getmUsername(), l, 2);
+        mGame = new Game("", mUser.getPlayerName(), l, 2);
     }
 
     /**
@@ -156,7 +156,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     @Override
     public void updateInfo(Object result) {
         mUser = TempModelFacade.getInstance().GetUser();
-        mGame.setUsername(mUser.getmUsername());
+        mGame.setUsername(mUser.getPlayerName());
     }
 
 

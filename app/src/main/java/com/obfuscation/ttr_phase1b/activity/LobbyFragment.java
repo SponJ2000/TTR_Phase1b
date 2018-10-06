@@ -18,8 +18,8 @@ import com.obfuscation.ttr_phase1b.R;
 import java.util.List;
 
 import model.TempModelFacade;
-import model.Game;
-import model.Player;
+import communication.Game;
+import communication.Player;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -107,7 +107,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
         mHostnameView = (TextView) view.findViewById(R.id.hostname_view);
 //      set the TextView at the top to show the username of the person who created the lobby
-        mHostnameView.setText(mHost.getmUsername());
+        mHostnameView.setText(mHost.getPlayerName());
 
         mPlayerCount = (TextView) view.findViewById(R.id.player_count);
 //      set the TextView at the top to show the username of the person who created the lobby
@@ -199,7 +199,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
         }
 
         public void onBindViewHolder(LobbyHolder holder, int position) {
-            holder.bindGame(mPlayernames.get(position).getmUsername());
+            holder.bindGame(mPlayernames.get(position).getPlayerName());
         }
 
         public int getItemCount() {
