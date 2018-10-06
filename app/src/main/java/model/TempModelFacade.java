@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import communication.*;
+import communication.Player;
+import communication.Game;
 
 public class TempModelFacade {
 
@@ -27,7 +28,7 @@ public class TempModelFacade {
         fakePlayers.add(mUser);
         fakePlayers.add( new Player("player 2") );
         fakePlayers.add( new Player("player 3") );
-        mCurrentGame = new Game("new republic (the game id)", mUser.getmUsername(), fakePlayers, 5);
+        mCurrentGame = new Game("new republic (the game id)", mUser.getPlayerName(), fakePlayers, 5);
         fakePlayers = new ArrayList<>();
         fakePlayers.add( new Player("other 1") );
         fakePlayers.add( new Player("other 2") );

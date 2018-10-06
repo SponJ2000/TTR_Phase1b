@@ -4,7 +4,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-import communication.*;
+import communication.Player;
 import server.ServerProxy;
 
 /**
