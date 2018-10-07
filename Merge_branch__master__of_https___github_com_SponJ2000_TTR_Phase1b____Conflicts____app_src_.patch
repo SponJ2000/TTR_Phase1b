@@ -1,0 +1,422 @@
+Index: app/src/main/java/com/obfuscation/ttr_phase1b/activity/LobbyFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/obfuscation/ttr_phase1b/activity/LobbyFragment.java	(date 1538898126000)
++++ app/src/main/java/com/obfuscation/ttr_phase1b/activity/LobbyFragment.java	(revision )
+@@ -18,8 +18,8 @@
+ import java.util.List;
+ 
+ import model.TempModelFacade;
+-import model.Game;
+-import model.Player;
++import communication.Game;
++import communication.Player;
+ 
+ /**
+  * A placeholder fragment containing a simple view.
+@@ -107,7 +107,7 @@
+ 
+         mHostnameView = (TextView) view.findViewById(R.id.hostname_view);
+ //      set the TextView at the top to show the username of the person who created the lobby
+-        mHostnameView.setText(mHost.getmUsername());
++        mHostnameView.setText(mHost.getPlayerName());
+ 
+         mPlayerCount = (TextView) view.findViewById(R.id.player_count);
+ //      set the TextView at the top to show the username of the person who created the lobby
+@@ -199,7 +199,7 @@
+         }
+ 
+         public void onBindViewHolder(LobbyHolder holder, int position) {
+-            holder.bindGame(mPlayernames.get(position).getmUsername());
++            holder.bindGame(mPlayernames.get(position).getPlayerName());
+         }
+ 
+         public int getItemCount() {
+Index: server/src/main/java/communication/Game.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- server/src/main/java/communication/Game.java	(date 1538898126000)
++++ server/src/main/java/communication/Game.java	(revision )
+@@ -8,30 +8,63 @@
+  */
+ 
+ public class Game {
+-    String name;
+-    String gameID;
+-    List<Player> players;
+-    List<Player> absentPlayers;
+-    int maxPlayers;
+-    boolean isStarted;
++    private String mGameID;
++    private String mUsername;
++    private int mMaxPlayers;
++    private List<Player> mPlayers;
++    private List<Player> mAbsentPlayers;
+ 
+-    public Game(String name, int maxPlayers) {
+-        this.name = name;
+-        this.maxPlayers = maxPlayers;
++    private boolean misStarted;
+ 
+-        players = new ArrayList<>();
+-        absentPlayers = new ArrayList<>();
+-        isStarted = false;
++    public Game(String mGameID, String mUsername, List<Player> mPlayers, int mMaxPlayers) {
++        this.mGameID = mGameID;
++        this.mUsername = mUsername;
++        this.mPlayers = mPlayers;
++        this.mMaxPlayers = mMaxPlayers;
++        this.mAbsentPlayers = new ArrayList<>();
++        this.misStarted = false;
+     }
+ 
+-    public void setGameID(String gameID) {
+-        this.gameID = gameID;
++    public String getGameID() {
++        return mGameID;
+     }
+ 
+-    public Result addPlayer(Player player){
+-        if (players.size() < maxPlayers) {
+-            if (!players.contains(player)) {
+-                players.add(player);
++    public void setGameID(String mGameID) {
++        this.mGameID = mGameID;
++    }
++
++    public String getUsername() {
++        return mUsername;
++    }
++
++    public void setUsername(String username) {
++        this.mUsername = username;
++    }
++
++    public List<Player> getPlayers() {
++        return mPlayers;
++    }
++
++    public void setPlayers(List<Player> mPlayers) {
++        this.mPlayers = mPlayers;
++    }
++
++    public int getPlayerCount() {
++        return this.mPlayers.size();
++    }
++
++    public int getMaxPlayers() {
++        return mMaxPlayers;
++    }
++
++    public void setMaxPlayers(int mMaxPlayers) {
++        this.mMaxPlayers = mMaxPlayers;
++    }
++
++    public Result addPlayer(communication.Player player){
++        if (mPlayers.size() < mMaxPlayers) {
++            if (!mPlayers.contains(player)) {
++                mPlayers.add(player);
+                 return new Result(true, true, null);
+             }
+             else return new Result(false, null, "Error: player already in game");
+@@ -39,46 +72,35 @@
+         else return new Result(false, null, "Error: game is full");
+     }
+ 
+-    public Result removePlayer(Player player){
+-        if (!players.contains(player)) return new Result(false, false, "Error: Player not in game");
++    public Result removePlayer(communication.Player player){
++        if (!mPlayers.contains(player)) return new Result(false, false, "Error: Player not in game");
+ 
+-        if (isStarted){
+-            absentPlayers.add(player);
++        if (misStarted){
++            mAbsentPlayers.add(player);
+         }
+-        else players.remove(player);
++        else mPlayers.remove(player);
+         return new Result(true, true, null);
+     }
+ 
+-    public Result rejoinGame(Player player) {
+-        if(!players.contains(player)) return new Result(false, null, "Error: Player not found");
+-        else if (absentPlayers.contains(player)) {
+-            absentPlayers.remove(player);
++    public Result rejoinGame(communication.Player player) {
++        if(!mPlayers.contains(player)) return new Result(false, null, "Error: Player not found");
++        else if (mAbsentPlayers.contains(player)) {
++            mAbsentPlayers.remove(player);
+         }
+ 
+         return new Result(true, true, null);
+     }
+ 
++
+     public void startGame(){
+-        isStarted = true;
+-    }
+-
+-    public String getName() {
+-        return name;
+-    }
+-
+-    public String getGameID() {
+-        return gameID;
+-    }
+-
+-    public List<Player> getPlayers() {
+-        return players;
+-    }
+-
+-    public int getMaxPlayers() {
+-        return maxPlayers;
++        misStarted = true;
+     }
+ 
+     public boolean isStarted() {
+-        return isStarted;
++        return misStarted;
++    }
++
++    public String toString() {
++        return "{ " + mGameID + ", " + mUsername + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
+     }
+ }
+Index: app/src/main/java/model/Game.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/model/Game.java	(date 1538898126000)
++++ app/src/main/java/model/Game.java	(revision )
+@@ -1,28 +1,28 @@
+ package model;
+ 
++import java.util.ArrayList;
+ import java.util.List;
+-import java.util.Observable;
+-import java.util.Observer;
+ 
+-public class Game extends Observable {
++import communication.Result;
++import communication.Player;
++
++public class Game {
+ 
+     private String mGameID;
+     private String mUsername;
+     private int mMaxPlayers;
+     private List<Player> mPlayers;
++    private List<Player> mAbsentPlayers;
+ 
+-    public Game() {
+-        this.mGameID = null;
+-        this.mUsername = null;
+-        this.mPlayers = null;
+-        this.mMaxPlayers = 0;
+-    }
++    private boolean misStarted;
+ 
+     public Game(String mGameID, String mUsername, List<Player> mPlayers, int mMaxPlayers) {
+         this.mGameID = mGameID;
+         this.mUsername = mUsername;
+         this.mPlayers = mPlayers;
+         this.mMaxPlayers = mMaxPlayers;
++        this.mAbsentPlayers = new ArrayList<>();
++        this.misStarted = false;
+     }
+ 
+     public String getGameID() {
+@@ -31,9 +31,6 @@
+ 
+     public void setGameID(String mGameID) {
+         this.mGameID = mGameID;
+-
+-        setChanged();
+-        notifyObservers();
+     }
+ 
+     public String getUsername() {
+@@ -42,8 +39,6 @@
+ 
+     public void setUsername(String username) {
+         this.mUsername = username;
+-        setChanged();
+-        notifyObservers();
+     }
+ 
+     public List<Player> getPlayers() {
+@@ -52,8 +47,6 @@
+ 
+     public void setPlayers(List<Player> mPlayers) {
+         this.mPlayers = mPlayers;
+-        setChanged();
+-        notifyObservers();
+     }
+ 
+     public int getPlayerCount() {
+@@ -66,14 +59,49 @@
+ 
+     public void setMaxPlayers(int mMaxPlayers) {
+         this.mMaxPlayers = mMaxPlayers;
+-        setChanged();
+-        notifyObservers();
++    }
++
++    public Result addPlayer(communication.Player player){
++        if (mPlayers.size() < mMaxPlayers) {
++            if (!mPlayers.contains(player)) {
++                mPlayers.add(player);
++                return new Result(true, true, null);
++            }
++            else return new Result(false, null, "Error: player already in game");
++        }
++        else return new Result(false, null, "Error: game is full");
++    }
++
++    public Result removePlayer(communication.Player player){
++        if (!mPlayers.contains(player)) return new Result(false, false, "Error: Player not in game");
++
++        if (misStarted){
++            mAbsentPlayers.add(player);
++        }
++        else mPlayers.remove(player);
++        return new Result(true, true, null);
++    }
++
++    public Result rejoinGame(communication.Player player) {
++        if(!mPlayers.contains(player)) return new Result(false, null, "Error: Player not found");
++        else if (mAbsentPlayers.contains(player)) {
++            mAbsentPlayers.remove(player);
++        }
++
++        return new Result(true, true, null);
++    }
++
++
++    public void startGame(){
++        misStarted = true;
++    }
++
++    public boolean isStarted() {
++        return misStarted;
+     }
+ 
+     public String toString() {
+         return "{ " + mGameID + ", " + mUsername + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
+     }
+ 
+-
+-
+-}
++}
+\ No newline at end of file
+Index: app/src/main/java/com/obfuscation/ttr_phase1b/activity/GameListFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/obfuscation/ttr_phase1b/activity/GameListFragment.java	(date 1538898126000)
++++ app/src/main/java/com/obfuscation/ttr_phase1b/activity/GameListFragment.java	(revision )
+@@ -19,8 +19,8 @@
+ import java.util.List;
+ 
+ import model.TempModelFacade;
+-import model.Game;
+-import model.Player;
++import communication.Game;
++import communication.Player;
+ 
+ /**
+  * A simple {@link Fragment} subclass.
+Index: app/src/main/java/model/ModelFacade.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/model/ModelFacade.java	(date 1538898126000)
++++ app/src/main/java/model/ModelFacade.java	(revision )
+@@ -4,7 +4,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+-import communication.*;
++import communication.Player;
+ import server.ServerProxy;
+ import task.GenericTask;
+ 
+@@ -25,7 +25,7 @@
+         fakePlayers.add( new Player("player 2") );
+         fakePlayers.add( new Player("player 3") );
+         fakePlayers.add( new Player("player 4") );
+-        mCurrentGame = new Game("new republic (the game id)", mHost.getmUsername(), fakePlayers, 5);
++        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
+     }
+ 
+     public static ModelFacade getInstance() {
+Index: app/src/main/java/com/obfuscation/ttr_phase1b/activity/GameCreationFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/obfuscation/ttr_phase1b/activity/GameCreationFragment.java	(date 1538898126000)
++++ app/src/main/java/com/obfuscation/ttr_phase1b/activity/GameCreationFragment.java	(revision )
+@@ -20,8 +20,8 @@
+ import java.util.List;
+ 
+ import model.TempModelFacade;
+-import model.Game;
+-import model.Player;
++import communication.Game;
++import communication.Player;
+ 
+ /**
+  * A simple {@link Fragment} subclass.
+@@ -51,7 +51,7 @@
+         mUser = TempModelFacade.getInstance().GetUser();
+         List<Player> l = new ArrayList<>();
+         l.add(mUser);
+-        mGame = new Game("", mUser.getmUsername(), l, 2);
++        mGame = new Game("", mUser.getPlayerName(), l, 2);
+     }
+ 
+     /**
+@@ -156,7 +156,7 @@
+     @Override
+     public void updateInfo(Object result) {
+         mUser = TempModelFacade.getInstance().GetUser();
+-        mGame.setUsername(mUser.getmUsername());
++        mGame.setUsername(mUser.getPlayerName());
+     }
+ 
+ 
+Index: app/src/main/java/model/TempModelFacade.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/model/TempModelFacade.java	(date 1538898126000)
++++ app/src/main/java/model/TempModelFacade.java	(revision )
+@@ -9,7 +9,8 @@
+ import java.util.List;
+ import java.util.concurrent.TimeUnit;
+ 
+-import communication.*;
++import communication.Player;
++import communication.Game;
+ 
+ public class TempModelFacade {
+ 
+@@ -27,7 +28,7 @@
+         fakePlayers.add(mUser);
+         fakePlayers.add( new Player("player 2") );
+         fakePlayers.add( new Player("player 3") );
+-        mCurrentGame = new Game("new republic (the game id)", mUser.getmUsername(), fakePlayers, 5);
++        mCurrentGame = new Game("new republic (the game id)", mUser.getPlayerName(), fakePlayers, 5);
+         fakePlayers = new ArrayList<>();
+         fakePlayers.add( new Player("other 1") );
+         fakePlayers.add( new Player("other 2") );

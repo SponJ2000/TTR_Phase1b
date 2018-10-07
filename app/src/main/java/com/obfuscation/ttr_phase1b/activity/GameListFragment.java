@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.TempModelFacade;
-import model.Game;
-import model.Player;
+import communication.Game;
+import communication.Player;
 
 /**
  * A simple {@link Fragment} subclass.
