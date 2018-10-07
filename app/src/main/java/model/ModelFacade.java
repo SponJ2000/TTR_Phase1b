@@ -6,6 +6,7 @@ import java.util.List;
 
 import communication.*;
 import server.ServerProxy;
+import task.GenericTask;
 
 /**
  * Created by hao on 10/3/18.
@@ -35,38 +36,38 @@ public class ModelFacade {
     }
 
     public void Login(String id, String password){
-        ServerProxy serverProxy = new ServerProxy();
-        serverProxy.Login(id,password);
+        GenericTask genericTask = new GenericTask("Login");
+        genericTask.execute(id,password);
     }
 
     public void Register(String id, String password) {
-        ServerProxy serverProxy = new ServerProxy();
-        serverProxy.Register(id,password);
+        GenericTask genericTask = new GenericTask("Register");
+        genericTask.execute(id,password);
     }
 
     public void JoinGame(String id, Game game) {
-        ServerProxy serverProxy = new ServerProxy();
-//        serverProxy.JoinGame(id,game);
+        GenericTask genericTask = new GenericTask("JoinGame");
+        genericTask.execute(id, game, ModelRoot.getInstance().getAuthToken());
     }
 
     public void CreateGame(Game game) {
-        ServerProxy serverProxy = new ServerProxy();
-//        serverProxy.CreateGame(game);
+        GenericTask genericTask = new GenericTask("CreateGame");
+        genericTask.execute(game, ModelRoot.getInstance().getAuthToken());
     }
 
     public void LeaveGame(Game game) {
-        ServerProxy serverProxy = new ServerProxy();
-//        serverProxy.StartGame(game);
+        GenericTask genericTask = new GenericTask("LeaveGame");
+        genericTask.execute(game);
     }
 
     public void StartGame(Game game) {
-        ServerProxy serverProxy = new ServerProxy();
-//        serverProxy.CreateGame(game);
+        GenericTask genericTask = new GenericTask("StartGame");
+        genericTask.execute(game, ModelRoot.getInstance().getAuthToken());
     }
 
     public void GetGameList() {
-        ServerProxy serverProxy = new ServerProxy();
-//        serverProxy.GetGameList();
+        GenericTask genericTask = new GenericTask("GetGameList");
+        genericTask.execute();
     }
 
     public Game GetCurrentGame() {

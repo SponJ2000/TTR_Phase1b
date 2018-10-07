@@ -16,11 +16,11 @@ import server.ServerProxy;
  * Created by hao on 10/3/18.
  */
 
-public class LoginTask extends AsyncTask<Object, Void, Result> {
+public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     String action;
 
-    public LoginTask (String action) {
+    public GenericTask (String action) {
         this.action = action;
     }
 
@@ -30,24 +30,24 @@ public class LoginTask extends AsyncTask<Object, Void, Result> {
         ServerProxy serverProxy = new ServerProxy();
 
 
-            switch (action) {
-                case "Login":
-                    return serverProxy.Login((String) params[0], (String) params[1]);
-                case "Register":
-                    return serverProxy.Register((String) params[0], (String) params[1]);
-                case "JoinGame":
-                    return serverProxy.JoinGame((String) params[0], (String) params[1], (String) params[2]);
-                case "CreateGame":
-                    return serverProxy.CreateGame((Game) params[0], (String) params[1]);
-                case "StartGame":
-                    return serverProxy.StartGame((String) params[0], (String) params[1]);
-                case "GetGameList":
-                    return serverProxy.GetGameList((String) params[0]);
-                case "GetPlayerList":
-                    return serverProxy.GetPlayerList((String) params[0], (String) params[1]);
-                default:
-                    return new Result(false,null, "Invalid Request");
-            }
+        switch (action) {
+            case "Login":
+                return serverProxy.Login((String) params[0], (String) params[1]);
+            case "Register":
+                return serverProxy.Register((String) params[0], (String) params[1]);
+            case "JoinGame":
+                return serverProxy.JoinGame((String) params[0], (String) params[1], (String) params[2]);
+            case "CreateGame":
+                return serverProxy.CreateGame((Game) params[0], (String) params[1]);
+            case "StartGame":
+                return serverProxy.StartGame((String) params[0], (String) params[1]);
+            case "GetGameList":
+                return serverProxy.GetGameList((String) params[0]);
+            case "GetPlayerList":
+                return serverProxy.GetPlayerList((String) params[0], (String) params[1]);
+            default:
+                return new Result(false,null, "Invalid Request");
+        }
 
 
     }
@@ -64,11 +64,14 @@ public class LoginTask extends AsyncTask<Object, Void, Result> {
                 guiFacade.onLogin(result);
                 break;
             case "Register":
+                //need to update the authkey
                 FetchAuthTokenFrom(result);
                 guiFacade.onRegister(result);
             case "JoinGame":
+                //no need to update the model
                 guiFacade.onJoinGame(result);
             case "CreateGame":
+                //no need to update the model
                 guiFacade.onCreateGame(result);
                 break;
             case "StartGame":
@@ -100,6 +103,6 @@ public class LoginTask extends AsyncTask<Object, Void, Result> {
         }
     }
 
-    private void FetchPlayer
+
 
 }
