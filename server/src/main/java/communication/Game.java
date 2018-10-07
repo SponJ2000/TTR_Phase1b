@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Game {
     private String mGameID;
-    private String mUsername;
+    private String mHost;
     private int mMaxPlayers;
     private List<Player> mPlayers;
     private List<Player> mAbsentPlayers;
@@ -18,7 +18,7 @@ public class Game {
 
     public Game(String mGameID, String mUsername, List<Player> mPlayers, int mMaxPlayers) {
         this.mGameID = mGameID;
-        this.mUsername = mUsername;
+        this.mHost = mUsername;
         this.mPlayers = mPlayers;
         this.mMaxPlayers = mMaxPlayers;
         this.mAbsentPlayers = new ArrayList<>();
@@ -33,12 +33,12 @@ public class Game {
         this.mGameID = mGameID;
     }
 
-    public String getUsername() {
-        return mUsername;
+    public String getHost() {
+        return mHost;
     }
 
-    public void setUsername(String username) {
-        this.mUsername = username;
+    public void setHost(String host) {
+        this.mHost = host;
     }
 
     public List<Player> getPlayers() {
@@ -101,6 +101,6 @@ public class Game {
     }
 
     public String toString() {
-        return "{ " + mGameID + ", " + mUsername + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
+        return "{ " + mGameID + ", " + mHost + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
     }
 }

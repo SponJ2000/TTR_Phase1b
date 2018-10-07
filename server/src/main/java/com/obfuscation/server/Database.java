@@ -13,6 +13,7 @@ import communication.Result;
 
 /**
  * Created by jalton on 10/3/18.
+ * Database class that stores information such as gameList
  */
 
 public class Database {
@@ -31,10 +32,11 @@ public class Database {
     rejoin
      */
 
-    Map<String, String> loginInfo;
-    List<Game> gameList;
-    List<ActiveUser> activeUsers;
-    List<String> authTokens;
+    private Map<String, String> loginInfo;
+    private List<Game> gameList;
+    private List<ActiveUser> activeUsers;
+    private List<String> authTokens;
+    private HashMap<String, String> authTokenMap;
 
     public List<Game> getGameList() {
         return gameList;
@@ -54,13 +56,15 @@ public class Database {
         loginInfo = new HashMap<>();
         gameList = new ArrayList<>();
         activeUsers = new ArrayList<>();
+        authTokenMap = new HashMap<>();
     }
 
     Result register(String id, String password){
         if(!loginInfo.containsKey(id)){
             //Add user and password
             loginInfo.put(id, password);
-
+            String authToken = generateAuthToken();
+            authTokenMap.put(id, authToken);
             return login(id, password);
         }
         else{
@@ -72,7 +76,8 @@ public class Database {
         if(loginInfo.containsKey(id)){
             if(loginInfo.get(id).equals(password)){
                 //Generate authToken
-                String authToken = "1234";
+                String authToken = generateAuthToken();
+                authTokenMap.put(id, authToken);
 
                 //Add Player to Active Users
                 Player player = new Player(generateID(true), id);
@@ -92,9 +97,10 @@ public class Database {
     }
 
     Result newGame(Game game, String authToken){
+        String userID = game.getHost();
+        if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
 
-        if(!chechAuthToken(authToken)) return new Result(false, null, "Error: Invalid Token");
-
+        //check if the number of players are right
         if(game.getMaxPlayers() < 2 || game.getMaxPlayers() > 5){
             return new Result(false, null, "Error: Invalid max players");
         }
@@ -122,13 +128,12 @@ public class Database {
     }
 
     Result startGame(String gameID, String authToken) {
-
-        if(!chechAuthToken(authToken)){
-            return new Result(false, null, "Error: Invalid token");
-        }
-
         Game game = findGameByID(gameID);
         if (game == null) return new Result(false, null, "Error: game not found");
+
+        if(!checkAuthToken(authToken, game.getHost())) {
+            return new Result(false, null, "Error: Invalid token");
+        }
 
         game.startGame();
         List<Player> players = game.getPlayers();
@@ -142,6 +147,7 @@ public class Database {
         return new Result(true, true, null);
     }
 
+    //TODO : do we need authtoken?
     Result leaveGame(String gameID, String playerID) {
         Player player = findPlayerByID(playerID);
         Game game = findGameByID(gameID);
@@ -154,6 +160,7 @@ public class Database {
 
     }
 
+    //TODO : do we need authtoken?
     Result rejoinGame(String gameID, String playerID) {
         Player player = findPlayerByID(playerID);
         Game game = findGameByID(gameID);
@@ -165,19 +172,25 @@ public class Database {
         return game.rejoinGame(player);
     }
 
-
-
+    /**
+     * Helper function to find the player by its id
+     * @param id
+     * @return
+     */
     Player findPlayerByID(String id){
         for (ActiveUser user : activeUsers) {
             if (user.getPlayer().getPlayerName().equals(id))
                     return user.getPlayer();
         }
-
         return null;
     }
 
+    /**
+     * Helper function to find the game by its id
+     * @param gameID
+     * @return
+     */
     Game findGameByID(String gameID){
-
         for (Game game: gameList) {
             if (game.getGameID().equals(gameID)){
                 return game;
@@ -186,6 +199,11 @@ public class Database {
         return null;
     }
 
+    /**
+     * Helper function to find the active user by the player object
+     * @param player
+     * @return
+     */
     ActiveUser findUserByPlayer(Player player) {
         for (ActiveUser user: activeUsers) {
             if (user.getPlayer().equals(player)) {
@@ -195,10 +213,14 @@ public class Database {
         return null;
     }
 
-    boolean chechAuthToken(String authToken) {
-        if (authTokens.contains(authToken)){
-            return true;
-        }
+    /**
+     * Checking if the authToken belongs to the specified user. If not return false
+     * @param authToken
+     * @param userID
+     * @return
+     */
+    boolean checkAuthToken(String authToken, String userID) {
+        if (authTokenMap.containsKey(userID) && authTokenMap.get(userID).equals(authToken)) return true;
         return false;
     }
 
@@ -214,8 +236,11 @@ public class Database {
         else return "G" + UUID.randomUUID().toString();
     }
 
+    /**
+     * Generates authToken for users. There are stores in a map where keys are the username and values are authToken Strings
+     * @return
+     */
     String generateAuthToken(){
-
         String authToken = UUID.randomUUID().toString();
         while (authTokens.contains(authToken)){
             authToken = UUID.randomUUID().toString();
