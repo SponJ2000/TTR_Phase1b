@@ -2,11 +2,12 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import communication.Result;
 import communication.Player;
 
-public class Game {
+public class Game extends Observable{
 
     private String mGameID;
     private String mUsername;
@@ -47,6 +48,8 @@ public class Game {
 
     public void setPlayers(List<Player> mPlayers) {
         this.mPlayers = mPlayers;
+        setChanged();
+        notifyObservers();
     }
 
     public int getPlayerCount() {
@@ -103,5 +106,7 @@ public class Game {
     public String toString() {
         return "{ " + mGameID + ", " + mUsername + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
     }
+
+
 
 }

@@ -10,6 +10,7 @@ import communication.Game;
 import communication.Result;
 import model.ModelFacade;
 import model.ModelRoot;
+import model.Player;
 import server.ServerProxy;
 
 /**
@@ -100,6 +101,12 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     private void FetchGameListFrom(Result result) {
         if (result.isSuccess()) {
             ModelRoot.getInstance().getGameListModel().setGames((ArrayList<model.Game>) result.getData());
+        }
+    }
+
+    private void FetchPlayerListFrom(Result result) {
+        if (result.isSuccess()) {
+            ModelRoot.getInstance().getGame().setPlayers((ArrayList<communication.Player>) result.getData());
         }
     }
 

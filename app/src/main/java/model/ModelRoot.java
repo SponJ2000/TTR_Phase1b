@@ -46,9 +46,6 @@ public class ModelRoot {
     }
 
     public Game getGame(){
-        if (game == null) {
-            game = new Game();
-        }
         return game;
     }
 
