@@ -20,7 +20,6 @@ import java.util.List;
 
 import model.TempModelFacade;
 import communication.Game;
-import communication.Player;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -182,7 +181,7 @@ public class GameListFragment extends Fragment implements IPresenter {
             mGame = game;
             mGameNumber = gameNumber;
             mGameIDView.setText(game.getGameID());
-            mHostView.setText(game.getUsername());
+            mHostView.setText(game.getHost());
             mPlayersView.setText(game.getPlayerCount()+"/"+game.getMaxPlayers());
         }
 

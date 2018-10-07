@@ -156,7 +156,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     @Override
     public void updateInfo(Object result) {
         mUser = TempModelFacade.getInstance().GetUser();
-        mGame.setUsername(mUser.getPlayerName());
+        mGame.setHost(mUser.getPlayerName());
     }
 
 
