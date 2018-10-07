@@ -43,16 +43,13 @@ public class ExecCommandHandler implements HttpHandler {
             respBody.close();
         }
         catch (Exception e) {
-            //TODO: handle exception
-
+            Result result = new Result(false, null, e.getMessage());
+            httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+            OutputStream respBody = httpExchange.getResponseBody();
+            writeString(new Serializer().serializeResult(result), respBody);
+            respBody.close();
             e.printStackTrace();
         }
-    }
-
-    private ICommand getCommand(ICommand commandData) {
-        //TODO : commandData
-
-        return null;
     }
 
     /**
