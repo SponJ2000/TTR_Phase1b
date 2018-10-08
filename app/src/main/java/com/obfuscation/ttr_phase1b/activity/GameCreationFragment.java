@@ -13,13 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import model.TempModelFacade;
+import communication.Result;
+import model.ModelFacade;
 import communication.Game;
 import communication.Player;
 
@@ -35,7 +37,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "GameCreationFrag";
 
-    private Player mUser;
+    private String mUser;
     private Game mGame;
 
     private Button mCancel;
@@ -48,10 +50,10 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     private OnGameCreationLister mListener;
 
     public GameCreationFragment() {
-        mUser = TempModelFacade.getInstance().GetUser();
+        mUser = ModelFacade.getInstance().GetUserName();
         List<Player> l = new ArrayList<>();
-        l.add(mUser);
-        mGame = new Game("", mUser.getPlayerName(), l, 2);
+        l.add(new Player(mUser));
+        mGame = new Game("", mUser, l, 2);
     }
 
     /**
@@ -89,7 +91,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now creating");
-                TempModelFacade.getInstance().CreateGame(mGame);
+                ModelFacade.getInstance().CreateGame(mGame);
             }
         });
 
@@ -146,17 +148,17 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Object result) {
-//      if create game worked, go to the new game lobby
-        if(true) {
-            onFinish("create");
-        }
-    }
-
-    @Override
     public void updateInfo(Object result) {
-        mUser = TempModelFacade.getInstance().GetUser();
-        mGame.setHost(mUser.getPlayerName());
+        if(result == null) {
+            Toast.makeText(getActivity(), "create failed: null result", Toast.LENGTH_LONG).show();
+        }
+        Result data = (Result) result;
+//      if create game worked, go to the new game lobby
+        if(data.isSuccess()) {
+            onFinish("create");
+        }else {
+            Toast.makeText(getActivity(), "create failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+        }
     }
 
 

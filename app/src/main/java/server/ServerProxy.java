@@ -55,14 +55,26 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result GetPlayerList(String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "GetPlayerList", new String[]{"String", "String"}, new Object[]{gameID, authToken});
+    public Result GetGame(String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "GetGame", new String[]{"String", "String"}, new Object[]{gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
-    public Result CheckUpdates() {
-        GenericCommand genericCommand = new GenericCommand("IServer", "CheckUpdates", new String[]{}, new Object[]{});
+    public Result CheckGameList(String authToken) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "CheckGameList", new String[]{"String"}, new Object[]{authToken});
+        return RunCommand(genericCommand);
+    }
+
+    @Override
+    public Result LeaveGame(String id, String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "LeaveGame", new String[]{"String", "String", "String"}, new Object[]{id, gameID, authToken});
+        return RunCommand(genericCommand);
+    }
+
+    @Override
+    public Result CheckGame(String authToken, String gameID) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "CheckGame", new String[]{"String", "String"}, new Object[]{authToken, gameID});
         return RunCommand(genericCommand);
     }
 
@@ -70,7 +82,7 @@ public class ServerProxy implements communication.IServer {
         try {
             String resultJson = clientCommunicator.post(genericCommand);
             Serializer serializer = new Serializer();
-            return serializer.deserialize(resultJson);
+            return serializer.deserializeResult(resultJson);
         }
         catch (Exception e) {
             return new Result(false, null, "EXCEPTION: " + e.getMessage());

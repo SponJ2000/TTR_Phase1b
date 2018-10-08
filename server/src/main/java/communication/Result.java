@@ -38,4 +38,8 @@ public class Result {
     public void setErrorInfo(String errorInfo) {
         this.errorInfo = errorInfo;
     }
+
+    public String toString() {
+        return "{ " + success + ", " + data + ", " + errorInfo + "}";
+    }
 }

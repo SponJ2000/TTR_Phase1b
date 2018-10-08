@@ -17,7 +17,7 @@ import com.obfuscation.ttr_phase1b.R;
 
 import java.util.List;
 
-import model.TempModelFacade;
+import model.ModelFacade;
 import communication.Game;
 import communication.Player;
 
@@ -28,11 +28,10 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
     private static final String TAG = "LobbyFrag";
 
-    private Player mHost;
+    private String mHost;
     private Game mGame;
     private boolean ismLeaving;
     private boolean ismStarting;
-    private boolean ismGettingGame;
 
     private Button mLeaveButton;
     private Button mStartButton;
@@ -72,9 +71,8 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
         ismLeaving = false;
         ismStarting = false;
-        ismGettingGame = false;
-        mHost = TempModelFacade.getInstance().GetUser();
-        mGame = TempModelFacade.getInstance().GetCurrentGame();
+        mGame = ModelFacade.getInstance().GetCurrentGame();
+        mHost = mGame.getHost();
 
         mLeaveButton = (Button) view.findViewById(R.id.leave_button);
         mLeaveButton.setOnClickListener(new View.OnClickListener() {
@@ -83,8 +81,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
                 Log.d(TAG, "Now leaving");
                 ismLeaving = true;
                 ismStarting = false;
-                ismGettingGame = false;
-                TempModelFacade.getInstance().LeaveGame(mGame);
+                ModelFacade.getInstance().LeaveGame(mGame);
             }
         });
 
@@ -95,8 +92,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
                 Log.d(TAG, "Now starting");
                 ismLeaving = false;
                 ismStarting = true;
-                ismGettingGame = false;
-                TempModelFacade.getInstance().StartGame(mGame);
+                ModelFacade.getInstance().StartGame(mGame);
             }
         });
 
@@ -107,7 +103,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
         mHostnameView = (TextView) view.findViewById(R.id.hostname_view);
 //      set the TextView at the top to show the username of the person who created the lobby
-        mHostnameView.setText(mHost.getPlayerName());
+        mHostnameView.setText(mHost);
 
         mPlayerCount = (TextView) view.findViewById(R.id.player_count);
 //      set the TextView at the top to show the username of the person who created the lobby
@@ -130,7 +126,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Object result) {
+    public void updateInfo(Object result) {
         if(ismLeaving) {
             ismLeaving = false;
             onGameLeave();
@@ -138,17 +134,8 @@ public class LobbyFragment extends Fragment implements IPresenter {
             ismStarting = false;
             onGameStart();
         }
-//        else if(ismGettingGame && result != null) {
-//            ismGettingGame = false;
-//            mGame = (Game) result;
-//            updateUI();
-//        }
-    }
-
-    @Override
-    public void updateInfo(Object result) {
-        mHost = TempModelFacade.getInstance().GetUser();
-        mGame = TempModelFacade.getInstance().GetCurrentGame();
+        mGame = ModelFacade.getInstance().GetCurrentGame();
+        mHost = mGame.getHost();
         updateUI();
     }
 

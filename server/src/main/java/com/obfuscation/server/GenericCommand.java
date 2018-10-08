@@ -47,6 +47,7 @@ public class GenericCommand implements ICommand {
 
             Method method = retClass.getMethod(methodName, paramTypeClass);
             Object results = method.invoke(serverFacadeInstance, parameterValue);
+
             return (Result)results;
         }
         catch (InvocationTargetException e) {

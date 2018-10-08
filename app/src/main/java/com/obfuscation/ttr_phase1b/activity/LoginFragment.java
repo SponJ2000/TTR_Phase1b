@@ -17,8 +17,8 @@ import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
+import communication.Result;
 import model.ModelFacade;
-import model.TempModelFacade;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment implements IPresenter {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-        mUsername = (EditText) view.findViewById(R.id.username);
+        mUsername = (EditText) view.findViewById(R.id.username_input);
         mUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -80,7 +80,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             }
         });
 
-        mPassword = (EditText) view.findViewById(R.id.password);
+        mPassword = (EditText) view.findViewById(R.id.password_input);
         mPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -103,7 +103,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             public void onClick(View view) {
                 Log.d(TAG, "Now logging in");
 //                Toast.makeText(getActivity(), "Attempting to log in", Toast.LENGTH_SHORT).show();
-                TempModelFacade.getInstance().Login(mUser, mPass);
+                ModelFacade.getInstance().Login(mUser, mPass);
             }
         });
 
@@ -112,7 +112,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Now registering");
-                TempModelFacade.getInstance().Register(mUser, mPass);
+                ModelFacade.getInstance().Register(mUser, mPass);
             }
         });
 
@@ -133,15 +133,25 @@ public class LoginFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Object result) {
-//      if login succeeded, login
-        if(true) {
-            onLogin();
-        }
-    }
-
-    @Override
     public void updateInfo(Object result) {
+        if(result == null) {
+            Log.d(TAG, "null result: " + result);
+            Toast.makeText(getActivity(), "Login failed: null result", Toast.LENGTH_LONG).show();
+        }else {
+            Result data = (Result) result;
+            if(data.isSuccess()) {
+                onLogin();
+            }else {
+                if(data.getErrorInfo() == null) {
+                    Log.d(TAG, "null error msg: " + data);
+                    Toast.makeText(getActivity(), "Login failed: null result", Toast.LENGTH_LONG).show();
+                }else {
+                    Log.d(TAG, "login fail: " + data);
+//                    Log.d(TAG, "Now logging in: " + data.getErrorInfo());
+//                    Toast.makeText(getActivity(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 
     //  sets up the activity as the listener so we can tell it when to change frags

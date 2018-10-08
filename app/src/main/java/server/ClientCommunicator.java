@@ -7,6 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import communication.Serializer;
+
 import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
@@ -18,7 +20,9 @@ public class ClientCommunicator {
     String url;
 
     ClientCommunicator() {
-        url = "http://localhost:8080/";
+        url = "http://localhost/127.0.0.1:8080/";
+//        url = "http://127.0.0.1:8080/";
+//        url = "http://localhost:8080/";
     }
 
 
@@ -28,7 +32,7 @@ public class ClientCommunicator {
         System.out.println();
 
         Serializer serializer = new Serializer();
-        String request = serializer.serialize(genericCommand);
+        String request = serializer.serializeCommand(genericCommand);
 
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 

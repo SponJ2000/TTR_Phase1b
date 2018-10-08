@@ -6,6 +6,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import communication.Result;
+import model.ModelFacade;
+import model.ModelRoot;
+import model.State;
 
 /**
  * Created by hao on 10/5/18.
@@ -13,6 +16,8 @@ import communication.Result;
 
 public class Poller {
 
+    private static Integer gameListVersion = 0;
+    private static Integer gameVersion = 0;
     private static boolean running = false;
     private static ScheduledExecutorService scheduledExecutorService;
     private static ScheduledFuture scheduledFuture;
@@ -21,14 +26,19 @@ public class Poller {
         @Override
         public void run() {
             if (running) {
-                ServerProxy serverProxy = new ServerProxy();
-                Result result = serverProxy.CheckUpdates();
-
-                if (result.isSuccess()) {
-                    //do something in the success
-
-                } else {
-                    //report an error
+                switch (ModelRoot.getInstance().getState()) {
+                    case GAMELIST:
+                        CheckandUpdateGameList();
+                        break;
+                    case LOBBY:
+                        CheckandUpdateGame();
+                        break;
+//                          case GAME:
+//                        TODO: messed up with lobby case, fix later
+//                            UpdateGame(versionNum);
+//                            break;
+                    default:
+                        break;
                 }
             }
             else {
@@ -47,4 +57,37 @@ public class Poller {
         running = false;
     }
 
+    private static void CheckandUpdateGameList(Integer versionNum) {
+        ServerProxy serverProxy = new ServerProxy();
+
+
+        if (!versionNum.equals(gameListVersion)) {
+            ModelFacade.getInstance().UpdateGameList();
+        }
+    }
+
+    private static void CheckandUpdateGame() {
+        ServerProxy serverProxy = new ServerProxy();
+        Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID());
+        if (result.isSuccess()) {
+            Integer versionNum = (Integer) result.getData();
+            if (!versionNum.equals(gameVersion)) {
+                ModelFacade.getInstance().UpdateGame();
+                gameVersion = versionNum;
+                //what to do after game is updated
+            }
+        }
+    }
+
+    private static void CheckandUpdateGameList() {
+        ServerProxy serverProxy = new ServerProxy();
+        Result result = serverProxy.CheckGameList(ModelRoot.getInstance().getAuthToken());
+        if (result.isSuccess()) {
+            Integer versionNum = (Integer) result.getData();
+            if (!versionNum.equals(gameListVersion)) {
+                ModelFacade.getInstance().UpdateGame();
+                gameListVersion = versionNum;
+            }
+        }
+    }
 }

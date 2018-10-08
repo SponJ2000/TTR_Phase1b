@@ -18,7 +18,8 @@ import com.obfuscation.ttr_phase1b.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.TempModelFacade;
+import communication.Result;
+import model.ModelFacade;
 import communication.Game;
 
 /**
@@ -35,7 +36,6 @@ public class GameListFragment extends Fragment implements IPresenter {
 
     private int mSelectedGame;
     private List<Game> mGameList;
-    private boolean ismGetingGameList;
     private boolean ismJoingGame;
 
     private Button mJoin;
@@ -74,9 +74,8 @@ public class GameListFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Sending join command");
-                ismGetingGameList = false;
                 ismJoingGame = true;
-                TempModelFacade.getInstance().JoinGame("", mGameList.get(mSelectedGame));
+                ModelFacade.getInstance().JoinGame(mGameList.get(mSelectedGame));
             }
         });
 
@@ -92,15 +91,14 @@ public class GameListFragment extends Fragment implements IPresenter {
         mGameRecycler = (RecyclerView) view.findViewById(R.id.game_recycler_view);
         mGameRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        ismGetingGameList = false;
         ismJoingGame = false;
         mSelectedGame = -1;
-        mGameList = TempModelFacade.getInstance().GetGameList();
+        mGameList = ModelFacade.getInstance().GetGameList();
         Log.d(TAG+"_constr", "gamelist: " + mGameList);
         if(mGameList == null) {
             mGameList = new ArrayList<>();
         }
-//        TempModelFacade.getInstance().UpdateGameList();
+        ModelFacade.getInstance().UpdateGameList();
         updateUI();
 
         mJoin.setEnabled(false);
@@ -126,21 +124,18 @@ public class GameListFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Object result) {
-//      if join game worked right, go to game lobby
-        if(ismJoingGame) {
-            Log.d(TAG+"_onComplete", "Now joining");
-            onGameSelect("join");
-        }
-//        else if(ismGetingGameList && result != null) {
-//            Log.d(TAG, "Got game list");
-//            mGameList = TempModelFacade.getInstance().GetGameList();
-//        }
-    }
-
-    @Override
     public void updateInfo(Object result) {
-        List<Game> temp = TempModelFacade.getInstance().GetGameList();
+        if(ismJoingGame) {
+    //      if join game worked right, go to game lobby
+            Result data = (Result) result;
+            if(data.isSuccess()) {
+                Log.d(TAG+"_onComplete", "Now joining");
+                onGameSelect("join");
+            }else {
+                Toast.makeText(getActivity(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+            }
+        }
+        List<Game> temp = ModelFacade.getInstance().GetGameList();
         if(temp != null) {
             mGameList = temp;
         }

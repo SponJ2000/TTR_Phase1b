@@ -1,5 +1,8 @@
 package com.obfuscation.ttr_phase1b.activity;
 
+import model.ModelFacade;
+import model.State;
+
 public class PresenterFacade {
 
     private static final String TAG = "PresenterFacade";
@@ -21,14 +24,15 @@ public class PresenterFacade {
 
     public void setCurrentFragment(IPresenter mCurrentFragment) {
         this.mCurrentFragment = mCurrentFragment;
+        if(mCurrentFragment.getClass() == GameListFragment.class) {
+            ModelFacade.getInstance().UpdateState(State.GAMELIST);
+        }else if(mCurrentFragment.getClass() == LobbyFragment.class) {
+            ModelFacade.getInstance().UpdateState(State.LOBBY);
+        }
     }
 
     public void updateFragment(Object data) {
         this.mCurrentFragment.updateInfo(data);
-    }
-
-    public void onComplete(Object data) {
-        this.mCurrentFragment.onComplete(data);
     }
 
 }
