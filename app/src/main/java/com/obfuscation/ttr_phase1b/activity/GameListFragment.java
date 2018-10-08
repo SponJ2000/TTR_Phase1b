@@ -126,20 +126,25 @@ public class GameListFragment extends Fragment implements IPresenter {
     @Override
     public void updateInfo(Object result) {
         if(ismJoingGame) {
-    //      if join game worked right, go to game lobby
-            Result data = (Result) result;
-            if(data.isSuccess()) {
-                Log.d(TAG+"_onComplete", "Now joining");
-                onGameSelect("join");
+            if(result != null && result.getClass() == Result.class) {
+//              if join game worked right, go to game lobby
+                Result data = (Result) result;
+                if(data.isSuccess()) {
+                    Log.d(TAG+"_update", "Now joining");
+                    onGameSelect("join");
+                }else {
+                    Log.d(TAG+"_update", "Join failed: " + data.getErrorInfo());
+                    Toast.makeText(getActivity(), "Join failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+                }
             }else {
-                Toast.makeText(getActivity(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+                Log.d(TAG+"_update", "Join failed: null result");
+                Toast.makeText(getActivity(), "Join failed: null result", Toast.LENGTH_LONG).show();
             }
         }
         List<Game> temp = ModelFacade.getInstance().GetGameList();
         if(temp != null) {
             mGameList = temp;
         }
-        Log.d(TAG+"_updateInfo", "gamelist: " + mGameList);
         updateUI();
     }
 
