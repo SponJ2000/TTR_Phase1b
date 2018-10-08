@@ -12,8 +12,8 @@ import communication.Result;
 
 public class ClientProxy implements IClient {
 
-    int version;
-    Map<String, Integer> gameVersion;
+    private int version;
+    private Map<String, Integer> gameVersion;
 
     private static ClientProxy instance = null;
 

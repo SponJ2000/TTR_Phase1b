@@ -5,8 +5,8 @@ package communication;
  */
 
 public class Player {
-    String id;
-    String playerName;
+    private String id;
+    private String playerName;
 
     public Player(String id, String playerName) {
         this.id = id;

@@ -5,9 +5,9 @@ package communication;
  */
 
 public class Result {
-    boolean success;
-    Object data;
-    String errorInfo;
+    private boolean success;
+    private Object data;
+    private String errorInfo;
 
     public Result(boolean success, Object data, String errorInfo) {
         this.success = success;
