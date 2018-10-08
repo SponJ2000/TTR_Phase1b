@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
+import communication.Result;
 import model.ModelFacade;
 import model.TempModelFacade;
 
@@ -103,7 +104,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             public void onClick(View view) {
                 Log.d(TAG, "Now logging in");
 //                Toast.makeText(getActivity(), "Attempting to log in", Toast.LENGTH_SHORT).show();
-                TempModelFacade.getInstance().Login(mUser, mPass);
+                ModelFacade.getInstance().Login(mUser, mPass);
             }
         });
 
@@ -112,7 +113,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Now registering");
-                TempModelFacade.getInstance().Register(mUser, mPass);
+                ModelFacade.getInstance().Register(mUser, mPass);
             }
         });
 
@@ -134,14 +135,17 @@ public class LoginFragment extends Fragment implements IPresenter {
 
     @Override
     public void onComplete(Object result) {
-//      if login succeeded, login
-        if(true) {
-            onLogin();
-        }
     }
 
     @Override
     public void updateInfo(Object result) {
+        Result data = (Result) result;
+        if(data.isSuccess()) {
+            onLogin();
+        }else {
+            Toast.makeText(getActivity(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+        }
+
     }
 
     //  sets up the activity as the listener so we can tell it when to change frags

@@ -18,7 +18,7 @@ import com.obfuscation.ttr_phase1b.R;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.TempModelFacade;
+import model.ModelFacade;
 import communication.Game;
 
 /**
@@ -76,7 +76,7 @@ public class GameListFragment extends Fragment implements IPresenter {
                 Log.d(TAG, "Sending join command");
                 ismGetingGameList = false;
                 ismJoingGame = true;
-                TempModelFacade.getInstance().JoinGame("", mGameList.get(mSelectedGame));
+                ModelFacade.getInstance().JoinGame(mGameList.get(mSelectedGame));
             }
         });
 
@@ -95,12 +95,12 @@ public class GameListFragment extends Fragment implements IPresenter {
         ismGetingGameList = false;
         ismJoingGame = false;
         mSelectedGame = -1;
-        mGameList = TempModelFacade.getInstance().GetGameList();
+        mGameList = ModelFacade.getInstance().GetGameList();
         Log.d(TAG+"_constr", "gamelist: " + mGameList);
         if(mGameList == null) {
             mGameList = new ArrayList<>();
         }
-//        TempModelFacade.getInstance().UpdateGameList();
+//        ModelFacade.getInstance().UpdateGameList();
         updateUI();
 
         mJoin.setEnabled(false);
@@ -134,13 +134,13 @@ public class GameListFragment extends Fragment implements IPresenter {
         }
 //        else if(ismGetingGameList && result != null) {
 //            Log.d(TAG, "Got game list");
-//            mGameList = TempModelFacade.getInstance().GetGameList();
+//            mGameList = ModelFacade.getInstance().GetGameList();
 //        }
     }
 
     @Override
     public void updateInfo(Object result) {
-        List<Game> temp = TempModelFacade.getInstance().GetGameList();
+        List<Game> temp = ModelFacade.getInstance().GetGameList();
         if(temp != null) {
             mGameList = temp;
         }
