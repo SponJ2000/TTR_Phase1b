@@ -73,7 +73,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "GetGameList":
                 FetchGameListFrom(result);
                 break;
-            case "GetGame": //TODO: change into getGame
+            case "GetGame":
                 FetchGameFrom(result);
                 break;
             default:

@@ -149,6 +149,9 @@ public class GameCreationFragment extends Fragment implements IPresenter {
 
     @Override
     public void updateInfo(Object result) {
+        if(result == null) {
+            Toast.makeText(getActivity(), "create failed: null result", Toast.LENGTH_LONG).show();
+        }
         Result data = (Result) result;
 //      if create game worked, go to the new game lobby
         if(data.isSuccess()) {
