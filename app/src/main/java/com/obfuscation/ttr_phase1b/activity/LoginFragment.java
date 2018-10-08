@@ -138,9 +138,6 @@ public class LoginFragment extends Fragment implements IPresenter {
             Log.d(TAG, "result is wrong type: " + result);
             Toast.makeText(getActivity(), "Login failed: null result", Toast.LENGTH_LONG).show();
         }else {
-<<<<<<< HEAD
-            Toast.makeText(this.getContext(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
-=======
             Result data = (Result) result;
             if(data.isSuccess()) {
                 onLogin();
@@ -154,7 +151,6 @@ public class LoginFragment extends Fragment implements IPresenter {
                     Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
                 }
             }
->>>>>>> 8cce36cfe7582e1b53a6740995c6caeb74c22d8f
         }
     }
 
