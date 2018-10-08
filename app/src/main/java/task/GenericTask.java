@@ -3,6 +3,7 @@ package task;
 import android.os.AsyncTask;
 
 import com.obfuscation.ttr_phase1b.activity.GUIFacade;
+import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
 
@@ -56,39 +57,24 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     @Override
     public void onPostExecute(Result result) {
 
-        // TODO: call onLogin() through layerFacade
-
-        GUIFacade guiFacade = GUIFacade.getInstance();
         switch (action) {
             case "Login":
                 FetchAuthTokenFrom(result);
-                guiFacade.onLogin(result);
                 break;
             case "Register":
                 //need to update the authkey
                 FetchAuthTokenFrom(result);
-                guiFacade.onRegister(result);
-            case "JoinGame":
-                //no need to update the model
-                guiFacade.onJoinGame(result);
-            case "CreateGame":
-                //no need to update the model
-                guiFacade.onCreateGame(result);
-                break;
-            case "StartGame":
-                guiFacade.onStartGame(result);
                 break;
             case "GetGameList":
                 FetchGameListFrom(result);
-                guiFacade.onGetGameList(result);
                 break;
             case "GetPlayerList":
-                // it might just update things in model
-                guiFacade.onGetPlayerList(result);
+                FetchPlayerListFrom(result);
+                break;
             default:
                 break;
         }
-
+        PresenterFacade.getInstance().updateFragment(result);
 
     }
 
