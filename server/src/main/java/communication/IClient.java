@@ -6,6 +6,6 @@ package communication;
 
 public interface IClient {
 
-    void updateGameList();
-    void updatePlayerList(String gameID);
+    void updateGameList(String gameID);
+    void updateGame(String gameID);
 }

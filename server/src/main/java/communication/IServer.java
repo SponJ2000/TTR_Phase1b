@@ -1,5 +1,7 @@
 package communication;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 /**
  * Created by jalton on 10/1/18.
  */
@@ -33,6 +35,15 @@ public interface IServer {
 
     /**
      *
+     * @param id
+     * @param gameID
+     * @param authToken
+     * @return
+     */
+    Result LeaveGame(String id, String gameID, String authToken);
+
+    /**
+     *
      * @param game      the game object, containing the game name and max player count
      * @param authToken a String object containing the users authToken
      * @return          a Result object containing a boolean indication success
@@ -63,8 +74,17 @@ public interface IServer {
     Result GetPlayerList(String gameID, String authToken);
 
     /**
-     * Used by the Poller to check for updates to the game and player lists
-     * @return  a Result object containing a list of gameIDs to update
+     *
+     * @param authToken
+     * @return          a Result object containing the gameList version number
      */
-    Result CheckUpdates();
+    Result CheckUpdates(String authToken);
+
+    /**
+     *
+     * @param authToken
+     * @param gameID
+     * @return          a Result object containing the game version number
+     */
+    Result CheckGame(String authToken, String gameID);
 }

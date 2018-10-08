@@ -13,14 +13,17 @@ public class ServerFacade implements IServer {
     private Database db = Database.getInstance();
     private ClientProxy clientProxy = ClientProxy.getInstance();
 
+    Database database;
+
     private static ServerFacade instance = new ServerFacade();
 
     public static ServerFacade getInstance(){
+
         return instance;
     }
 
     private ServerFacade() {
-
+        database = Database.getInstance();
     }
 
     @Override
@@ -36,19 +39,27 @@ public class ServerFacade implements IServer {
     @Override
     public Result JoinGame(String id, String gameID, String authToken) {
         //TODO : authToken?
-        clientProxy.updatePlayerList(gameID);
+        clientProxy.updateGameList(null);
+        clientProxy.updateGame(gameID);
         return db.joinGame(id, gameID);
     }
 
     @Override
+    public Result LeaveGame(String id, String gameID, String authToken) {
+        clientProxy.updateGameList(null);
+        clientProxy.updateGame(gameID);
+        return db.leaveGame(id, gameID);
+    }
+
+    @Override
     public Result CreateGame(Game game, String authToken) {
-        clientProxy.updateGameList();
+        clientProxy.updateGameList(game.getGameID());
         return db.newGame(game, authToken);
     }
 
     @Override
     public Result StartGame(String gameID, String authToken) {
-        clientProxy.updateGameList();
+        clientProxy.updateGame(gameID);
         return db.startGame(gameID, authToken);
     }
 
@@ -63,7 +74,12 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result CheckUpdates(){
-        return clientProxy.checkUpdates();
+    public Result CheckUpdates(String authToken){
+        return clientProxy.checkUpdates(null);
+    }
+
+    @Override
+    public Result CheckGame(String authToken, String gameID){
+        return clientProxy.checkUpdates(gameID);
     }
 }
