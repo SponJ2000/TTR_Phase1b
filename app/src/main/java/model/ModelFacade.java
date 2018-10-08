@@ -74,4 +74,8 @@ public class ModelFacade {
         return mCurrentGame;
     }
 
+
+    public boolean UpdateState(State state) {
+        return true;
+    }
 }

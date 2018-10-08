@@ -47,6 +47,4 @@ public class Poller {
         running = false;
     }
 
-    public Poller() {
-    }
 }
