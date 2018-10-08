@@ -87,4 +87,6 @@ public class ServerFacade implements IServer {
     public Result CheckGame(String authToken, String gameID){
         return clientProxy.checkUpdates(gameID);
     }
+
+
 }
