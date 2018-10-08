@@ -154,7 +154,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
         if(data.isSuccess()) {
             onFinish("create");
         }else {
-            Toast.makeText(getActivity(), "create failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getActivity(), "create failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
         }
     }
 

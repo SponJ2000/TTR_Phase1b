@@ -138,7 +138,7 @@ public class LoginFragment extends Fragment implements IPresenter {
         if(data.isSuccess()) {
             onLogin();
         }else {
-            Toast.makeText(getActivity(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getContext(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
         }
     }
 

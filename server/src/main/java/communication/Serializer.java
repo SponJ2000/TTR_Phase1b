@@ -2,6 +2,7 @@ package communication;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.obfuscation.server.GenericCommand;
 
 import communication.ICommand;
 import communication.Result;
@@ -38,7 +39,7 @@ public class Serializer {
     }
 
     public ICommand deserializeCommand(String json){
-        ICommand command = gson.fromJson(json, ICommand.class);
+        GenericCommand command = gson.fromJson(json, GenericCommand.class);
         return command;
     }
 }

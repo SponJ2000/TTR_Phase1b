@@ -3,6 +3,7 @@ package server;
 
 import com.obfuscation.server.GenericCommand;
 
+
 import communication.*;
 
 /**
@@ -20,71 +21,73 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result Login(String id, String password) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "Login", new String[]{"String","String"}, new Object[]{id,password});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "Login", new String[]{"java.lang.String","java.lang.String"}, new Object[]{id,password});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result Register(String id, String password) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "Register", new String[]{"String","String"}, new Object[]{id,password});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "Register", new String[]{"java.lang.String","java.lang.String"}, new Object[]{id,password});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result JoinGame(String id, String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "JoinGame", new String[]{"String","String","String"}, new Object[]{id, gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "JoinGame", new String[]{"java.lang.String","java.lang.String","java.lang.String"}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result CreateGame(communication.Game game, String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "CreateGame", new String[]{"communication.Game","String"}, new Object[]{game, authToken});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "CreateGame", new String[]{"communication.Game","java.lang.String"}, new Object[]{game, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result StartGame(String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "StartGame", new String[]{"String","String"}, new Object[]{gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "StartGame", new String[]{"java.lang.String","java.lang.String"}, new Object[]{gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result GetGameList(String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "GetGameList", new String[]{"String"}, new Object[]{authToken});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "GetGameList", new String[]{"java.lang.String"}, new Object[]{authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result GetGame(String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "GetGame", new String[]{"String", "String"}, new Object[]{gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "GetGame", new String[]{"java.lang.String", "java.lang.String"}, new Object[]{gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result CheckGameList(String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "CheckGameList", new String[]{"String"}, new Object[]{authToken});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "CheckGameList", new String[]{"java.lang.String"}, new Object[]{authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "LeaveGame", new String[]{"String", "String", "String"}, new Object[]{id, gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "LeaveGame", new String[]{"java.lang.String", "java.lang.String", "java.lang.String"}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result CheckGame(String authToken, String gameID) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "CheckGame", new String[]{"String", "String"}, new Object[]{authToken, gameID});
+        GenericCommand genericCommand = new GenericCommand("com.obfuscation.server.ServerFacade", "CheckGame", new String[]{"java.lang.String", "java.lang.String"}, new Object[]{authToken, gameID});
         return RunCommand(genericCommand);
     }
 
     private Result RunCommand(GenericCommand genericCommand){
         try {
             String resultJson = clientCommunicator.post(genericCommand);
+            System.out.println(resultJson);
             Serializer serializer = new Serializer();
             return serializer.deserializeResult(resultJson);
         }
         catch (Exception e) {
+            e.printStackTrace();
             return new Result(false, null, "EXCEPTION: " + e.getMessage());
         }
     }

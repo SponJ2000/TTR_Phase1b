@@ -28,6 +28,7 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result Login(String id, String password) {
+        System.out.println("On login");
         return db.login(id, password);
     }
 

@@ -26,7 +26,7 @@ public class Server {
         //for testing
         System.out.println("server running at port : " + portNumber);
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(portNumber), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(portNumber), 12);
         server.setExecutor(null);
 
         //the server context is exec

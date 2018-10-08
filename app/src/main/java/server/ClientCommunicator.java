@@ -20,7 +20,7 @@ public class ClientCommunicator {
     String url;
 
     ClientCommunicator() {
-        url = "http://localhost:8080/";
+        url = "http://10.0.2.2:8080/exec";
     }
 
 
@@ -33,7 +33,9 @@ public class ClientCommunicator {
         String request = serializer.serializeCommand(genericCommand);
 
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        URL mUrl = new URL(url);
 
+        System.out.println(mUrl.toString());
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         connection.connect();

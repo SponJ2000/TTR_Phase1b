@@ -29,6 +29,8 @@ public class ExecCommandHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
+
+            System.out.println("command come in");
             InputStream reqBody = httpExchange.getRequestBody();
             String requestString = readString(reqBody);
 

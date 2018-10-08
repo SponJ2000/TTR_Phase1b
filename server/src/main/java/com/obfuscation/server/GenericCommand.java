@@ -38,7 +38,7 @@ public class GenericCommand implements ICommand {
             for (int i = 0; i < parameterType.length; i++) {
                 try {
                     paramTypeClass[i] = Class.forName(parameterType[i]);
-                } catch (ClassNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     return new Result(false, null, "Error: "+e.getMessage());
                 }
@@ -46,6 +46,8 @@ public class GenericCommand implements ICommand {
             }
 
             Method method = retClass.getMethod(methodName, paramTypeClass);
+            System.out.println(parameterType);
+            System.out.println(method.getGenericParameterTypes().getClass().toString());
             Object results = method.invoke(serverFacadeInstance, parameterValue);
             return (Result)results;
         }
