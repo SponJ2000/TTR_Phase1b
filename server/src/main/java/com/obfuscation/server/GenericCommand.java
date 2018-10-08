@@ -1,5 +1,7 @@
 package com.obfuscation.server;
 
+import com.google.gson.Gson;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -12,16 +14,17 @@ import communication.Result;
 
 public class GenericCommand implements ICommand {
 
-    private String className;
-    private String methodName;
-    private String[] parameterType;
-    private Object[] parameterValue;
+    public String className;
+    public String methodName;
+    public String[] parameterType;
+    public Object[] parameterValue;
 
     public GenericCommand(String className, String methodName, String[] parameterType, Object[] parameterValue) {
         this.className = className;
         this.methodName = methodName;
         this.parameterType = parameterType;
         this.parameterValue = parameterValue;
+
     }
 
     @Override
@@ -38,6 +41,8 @@ public class GenericCommand implements ICommand {
             for (int i = 0; i < parameterType.length; i++) {
                 try {
                     paramTypeClass[i] = Class.forName(parameterType[i]);
+                    System.out.println(parameterValue[i].toString());
+                    parameterValue[i] = new Gson().fromJson(parameterValue[i].toString(), paramTypeClass[i]);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return new Result(false, null, "Error: "+e.getMessage());
@@ -48,6 +53,14 @@ public class GenericCommand implements ICommand {
             Method method = retClass.getMethod(methodName, paramTypeClass);
             System.out.println(parameterType);
             System.out.println(method.getGenericParameterTypes().getClass().toString());
+
+            for (String s : parameterType) {
+                System.out.println("D : " + s);
+            }
+            for (Object o : parameterValue) {
+                System.out.println("D : " + o.getClass());
+            }
+
             Object results = method.invoke(serverFacadeInstance, parameterValue);
 
             return (Result)results;
