@@ -78,7 +78,7 @@ public interface IServer {
      * @param authToken
      * @return          a Result object containing the gameList version number
      */
-    Result CheckUpdates(String authToken);
+    Result CheckGameList(String authToken);
 
     /**
      *

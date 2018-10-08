@@ -51,17 +51,17 @@ public class IResultAdapter implements JsonSerializer<Result>, JsonDeserializer<
 
         JsonObject jsonResult = new JsonObject();
 
-        jsonResult.addProperty(SUCCESS, result.success);
+        jsonResult.addProperty(SUCCESS, result.isSuccess());
 
-        if(!result.success) {
+        if(!result.isSuccess()) {
             jsonResult.addProperty(DATACLASS, "null");
             jsonResult.addProperty(DATA, "null");
-            jsonResult.addProperty(ERRORINFO, result.errorInfo);
+            jsonResult.addProperty(ERRORINFO, result.getErrorInfo());
         }
         else{
-            String dataName = result.data.getClass().getName();
+            String dataName = result.getData().getClass().getName();
             jsonResult.addProperty(DATACLASS, dataName);
-            JsonElement data = context.serialize(result.data);
+            JsonElement data = context.serialize(result.getData());
             jsonResult.add(DATA, data);
             jsonResult.addProperty(ERRORINFO, "null");
         }

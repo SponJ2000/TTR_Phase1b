@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Game {
     private String mGameID;
+    private String mGameName;
     private String mHost;
     private int mMaxPlayers;
     private List<Player> mPlayers;
@@ -16,8 +17,8 @@ public class Game {
 
     private boolean misStarted;
 
-    public Game(String mGameID, String mUsername, List<Player> mPlayers, int mMaxPlayers) {
-        this.mGameID = mGameID;
+    public Game(String mGameName, String mUsername, List<Player> mPlayers, int mMaxPlayers) {
+        this.mGameName = mGameName;
         this.mHost = mUsername;
         this.mPlayers = mPlayers;
         this.mMaxPlayers = mMaxPlayers;
@@ -31,6 +32,14 @@ public class Game {
 
     public void setGameID(String mGameID) {
         this.mGameID = mGameID;
+    }
+
+    public String getGameName() {
+        return mGameName;
+    }
+
+    public void setGameName(String mGameName) {
+        this.mGameName = mGameName;
     }
 
     public String getHost() {

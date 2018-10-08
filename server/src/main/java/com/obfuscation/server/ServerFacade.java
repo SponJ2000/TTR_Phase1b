@@ -51,21 +51,31 @@ public class ServerFacade implements IServer {
         if(!db.checkAuthToken(id, authToken)) {
             return new Result(false, null, "Error: Invalid authorization");
         }
-        clientProxy.updateGameList(null);
-        clientProxy.updateGame(gameID);
-        return db.leaveGame(id, gameID);
+
+        Result result = db.leaveGame(id, gameID);
+        if(result.isSuccess()) {
+            clientProxy.updateGameList(null);
+            clientProxy.updateGame(gameID);
+        }
+        return result;
     }
 
     @Override
     public Result CreateGame(Game game, String authToken) {
-        clientProxy.updateGameList(game.getGameID());
-        return db.newGame(game, authToken);
+        Result result = db.newGame(game, authToken);
+        if(result.isSuccess()) {
+            clientProxy.updateGameList(game.getGameID());
+        }
+        return result;
     }
 
     @Override
     public Result StartGame(String gameID, String authToken) {
-        clientProxy.updateGame(gameID);
-        return db.startGame(gameID, authToken);
+        Result result = db.startGame(gameID, authToken);
+        if(result.isSuccess()) {
+            clientProxy.updateGameList(gameID);
+        }
+        return result;
     }
 
     @Override
@@ -79,7 +89,7 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result CheckUpdates(String authToken){
+    public Result CheckGameList(String authToken){
         return clientProxy.checkUpdates(null);
     }
 
