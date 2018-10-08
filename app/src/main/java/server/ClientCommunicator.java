@@ -20,15 +20,8 @@ public class ClientCommunicator {
     String url;
 
     ClientCommunicator() {
-<<<<<<< HEAD
         url = "http://10.0.2.2:8080/exec";
-=======
-        url = "http://localhost/127.0.0.1:8080/";
-//        url = "http://127.0.0.1:8080/";
-//        url = "http://localhost:8080/";
->>>>>>> 8cce36cfe7582e1b53a6740995c6caeb74c22d8f
     }
-
 
     public String post(GenericCommand genericCommand) throws Exception{
 
