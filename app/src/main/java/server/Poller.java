@@ -1,5 +1,10 @@
 package server;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import communication.Result;
 
 /**
@@ -8,19 +13,40 @@ import communication.Result;
 
 public class Poller {
 
-    final Runnable runnable = new Runnable() {
+    private static boolean running = false;
+    private static ScheduledExecutorService scheduledExecutorService;
+    private static ScheduledFuture scheduledFuture;
+
+    private static final Runnable CheckUpdates = new Runnable() {
         @Override
         public void run() {
-            ServerProxy serverProxy = new ServerProxy();
-            Result result = serverProxy.CheckUpdates();
+            if (running) {
+                ServerProxy serverProxy = new ServerProxy();
+                Result result = serverProxy.CheckUpdates();
 
-            if (result.isSuccess()) {
-                //do something in the success
+                if (result.isSuccess()) {
+                    //do something in the success
 
+                } else {
+                    //report an error
+                }
             }
             else {
-                //report an error
+                scheduledExecutorService.shutdown();
             }
         }
+    };
+
+    public static void StartPoller () {
+        running = true;
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
+        ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,2,5, TimeUnit.SECONDS);
+    }
+
+    public static void EndPoller () {
+        running = false;
+    }
+
+    public Poller() {
     }
 }
