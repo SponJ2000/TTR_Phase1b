@@ -38,7 +38,9 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result JoinGame(String id, String gameID, String authToken) {
-        //TODO : authToken?
+        if(!db.checkAuthToken(id, authToken)) {
+            return new Result(false, null, "Error: Invalid authorization");
+        }
         clientProxy.updateGameList(null);
         clientProxy.updateGame(gameID);
         return db.joinGame(id, gameID);
@@ -46,6 +48,9 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
+        if(!db.checkAuthToken(id, authToken)) {
+            return new Result(false, null, "Error: Invalid authorization");
+        }
         clientProxy.updateGameList(null);
         clientProxy.updateGame(gameID);
         return db.leaveGame(id, gameID);
@@ -69,8 +74,8 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result GetPlayerList(String gameID, String authToken) {
-        return new Result(true, db.getActiveUsers(), null);
+    public Result GetGame(String gameID, String authToken) {
+        return new Result(true, db.getGame(gameID), null);
     }
 
     @Override

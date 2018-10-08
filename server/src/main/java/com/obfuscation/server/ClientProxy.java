@@ -1,14 +1,10 @@
 package com.obfuscation.server;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import communication.Game;
 import communication.IClient;
 import communication.Result;
-import communication.Update;
 
 /**
  * Created by jalton on 10/1/18.
@@ -17,7 +13,7 @@ import communication.Update;
 public class ClientProxy implements IClient {
 
     int version;
-    Map<String, Integer> gameList;
+    Map<String, Integer> gameVersion;
 
     private static ClientProxy instance = null;
 
@@ -31,20 +27,20 @@ public class ClientProxy implements IClient {
 
     private ClientProxy() {
         version = 0;
-        gameList = new HashMap<>();
+        gameVersion = new HashMap<>();
     }
 
     @Override
     public void updateGameList(String gameID) {
         version++;
-        if (gameID != null) gameList.put(gameID, 0);
+        if (gameID != null) gameVersion.put(gameID, 0);
     }
 
     @Override
     public void updateGame(String gameID) {
-        int v = gameList.get(gameID);
+        int v = gameVersion.get(gameID);
         v += 1;
-        gameList.put(gameID, v);
+        gameVersion.put(gameID, v);
     }
 
     public Result checkUpdates(String gameID){
@@ -52,10 +48,10 @@ public class ClientProxy implements IClient {
             return new Result(true, version, null);
         }
         else {
-            if (gameList.get(gameID) == null) {
+            if (gameVersion.get(gameID) == null) {
                 return new Result(false, null, "Error: Game not found");
             }
-            else return new Result(true, gameList.get(gameID), null);
+            else return new Result(true, gameVersion.get(gameID), null);
         }
     }
 }

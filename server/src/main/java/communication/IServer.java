@@ -69,9 +69,9 @@ public interface IServer {
      *
      * @param gameID    a String object containing the game ID
      * @param authToken a String object containing the user's authToken
-     * @return          a Result object containing the player list
+     * @return          a Result object containing the Game object
      */
-    Result GetPlayerList(String gameID, String authToken);
+    Result GetGame(String gameID, String authToken);
 
     /**
      *

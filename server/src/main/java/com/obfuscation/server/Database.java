@@ -13,7 +13,7 @@ import communication.Result;
 
 /**
  * Created by jalton on 10/3/18.
- * Database class that stores information such as gameList
+ * Database class that stores information such as gameVersion
  */
 
 public class Database {
@@ -172,6 +172,10 @@ public class Database {
         return game.rejoinGame(player);
     }
 
+    public Game getGame(String gameID) {
+        return findGameByID(gameID);
+    }
+
     /**
      * Helper function to find the player by its id
      * @param id
@@ -219,7 +223,7 @@ public class Database {
      * @param userID
      * @return
      */
-    boolean checkAuthToken(String authToken, String userID) {
+    public boolean checkAuthToken(String authToken, String userID) {
         if (authTokenMap.containsKey(userID) && authTokenMap.get(userID).equals(authToken)) return true;
         return false;
     }
