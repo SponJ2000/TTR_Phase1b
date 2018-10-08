@@ -10,6 +10,7 @@ import java.util.List;
 import communication.Game;
 import communication.Result;
 import model.ModelRoot;
+import server.Poller;
 import server.ServerProxy;
 
 /**
@@ -37,6 +38,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.Register((String) params[0], (String) params[1]);
             case "JoinGame":
                 return serverProxy.JoinGame((String) params[0], (String) params[1], (String) params[2]);
+            case "LeaveGame":
+                return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
             case "CreateGame":
                 return serverProxy.CreateGame((Game) params[0], (String) params[1]);
             case "StartGame":
@@ -45,6 +48,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.GetGameList((String) params[0]);
             case "GetGame":
                 return serverProxy.GetGame((String) params[0], (String) params[1]);
+            case "CheckGameList":
+                return serverProxy.CheckGameList((String) params[0]);
+            case "CheckGame":
+                return serverProxy.CheckGame((String) params[0], (String) params[1]);
             default:
                 return new Result(false,null, "Invalid Request");
         }
@@ -57,17 +64,17 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
         switch (action) {
             case "Login":
-                FetchAuthTokenFrom(result);
+                OnSignIn(result);
                 break;
             case "Register":
                 //need to update the authkey
-                FetchAuthTokenFrom(result);
+                OnSignIn(result);
                 break;
             case "GetGameList":
                 FetchGameListFrom(result);
                 break;
-            case "GetPlayerList": //TODO: change into getGame
-                FetchPlayerListFrom(result);
+            case "GetGame": //TODO: change into getGame
+                FetchGameFrom(result);
                 break;
             default:
                 break;
@@ -76,9 +83,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     }
 
-    private void FetchAuthTokenFrom(Result result) {
+    private void OnSignIn(Result result) {
         if (result.isSuccess()) {
             ModelRoot.getInstance().setAuthToken((String) result.getData());
+            Poller.StartPoller();
         }
     }
 
@@ -88,9 +96,9 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         }
     }
 
-    private void FetchPlayerListFrom(Result result) {
+    private void FetchGameFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().getGame().setPlayers((ArrayList<communication.Player>) result.getData());
+            ModelRoot.getInstance().setGame((Game) result.getData());
         }
     }
 

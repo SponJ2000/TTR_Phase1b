@@ -62,7 +62,19 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result CheckGameList(String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "CheckUpdates", new String[]{"String"}, new Object[]{authToken});
+        GenericCommand genericCommand = new GenericCommand("IServer", "CheckGameList", new String[]{"String"}, new Object[]{authToken});
+        return RunCommand(genericCommand);
+    }
+
+    @Override
+    public Result LeaveGame(String id, String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "LeaveGame", new String[]{"String", "String", "String"}, new Object[]{id, gameID, authToken});
+        return RunCommand(genericCommand);
+    }
+
+    @Override
+    public Result CheckGame(String authToken, String gameID) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "CheckGame", new String[]{"String", "String"}, new Object[]{authToken, gameID});
         return RunCommand(genericCommand);
     }
 

@@ -50,7 +50,7 @@ public class ModelFacade {
 
     public void JoinGame(Game game) {
         GenericTask genericTask = new GenericTask("JoinGame");
-        genericTask.execute(ModelRoot.getInstance().getUserName(), game, ModelRoot.getInstance().getAuthToken());
+        genericTask.execute(ModelRoot.getInstance().getUserName(), game.getGameID(), ModelRoot.getInstance().getAuthToken());
         ModelRoot.getInstance().setGame(game);
     }
 
@@ -62,7 +62,7 @@ public class ModelFacade {
 
     public void LeaveGame(Game game) {
         GenericTask genericTask = new GenericTask("LeaveGame");
-        genericTask.execute(game);
+        genericTask.execute(ModelRoot.getInstance().getUserName(), game.getGameID(), ModelRoot.getInstance().getAuthToken());
     }
 
     public void StartGame(Game game) {
@@ -72,12 +72,22 @@ public class ModelFacade {
 
     public void UpdateGameList() {
         GenericTask genericTask = new GenericTask("GetGameList");
-        genericTask.execute();
+        genericTask.execute(ModelRoot.getInstance().getAuthToken());
     }
 
     public void UpdateGame() {
         GenericTask genericTask = new GenericTask("GetGame");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken());
+    }
+
+    public void CheckGameList() {
+        GenericTask genericTask = new GenericTask("CheckGameList");
+        genericTask.execute(ModelRoot.getInstance().getAuthToken());
+    }
+
+    public void CheckGame() {
+        GenericTask genericTask = new GenericTask("CheckGame");
+        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID());
     }
 
     //Called by presenter
