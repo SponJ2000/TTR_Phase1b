@@ -82,7 +82,7 @@ public class ServerProxy implements communication.IServer {
         try {
             String resultJson = clientCommunicator.post(genericCommand);
             Serializer serializer = new Serializer();
-            return serializer.deserialize(resultJson);
+            return serializer.deserializeResult(resultJson);
         }
         catch (Exception e) {
             return new Result(false, null, "EXCEPTION: " + e.getMessage());

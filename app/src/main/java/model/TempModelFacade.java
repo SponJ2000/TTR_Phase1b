@@ -120,7 +120,7 @@ public class TempModelFacade {
         @Override
         protected void onPostExecute(Void result) {
             Log.d(TAG+"_task", "telling presenter to update self");
-            PresenterFacade.getInstance().onComplete(result);
+//            PresenterFacade.getInstance().onComplete(result);
             PresenterFacade.getInstance().updateFragment(result);
         }
     }
