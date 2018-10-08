@@ -19,7 +19,6 @@ import com.obfuscation.ttr_phase1b.R;
 
 import communication.Result;
 import model.ModelFacade;
-import model.TempModelFacade;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -64,7 +63,7 @@ public class LoginFragment extends Fragment implements IPresenter {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-        mUsername = (EditText) view.findViewById(R.id.username);
+        mUsername = (EditText) view.findViewById(R.id.username_input);
         mUsername.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,7 +80,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             }
         });
 
-        mPassword = (EditText) view.findViewById(R.id.password);
+        mPassword = (EditText) view.findViewById(R.id.password_input);
         mPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -134,10 +133,6 @@ public class LoginFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Object result) {
-    }
-
-    @Override
     public void updateInfo(Object result) {
         Result data = (Result) result;
         if(data.isSuccess()) {
@@ -145,7 +140,6 @@ public class LoginFragment extends Fragment implements IPresenter {
         }else {
             Toast.makeText(getActivity(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
         }
-
     }
 
     //  sets up the activity as the listener so we can tell it when to change frags

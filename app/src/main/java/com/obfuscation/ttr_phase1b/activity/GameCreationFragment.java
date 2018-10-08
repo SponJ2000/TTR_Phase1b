@@ -13,12 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.Result;
 import model.ModelFacade;
 import communication.Game;
 import communication.Player;
@@ -146,17 +148,14 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Object result) {
-//      if create game worked, go to the new game lobby
-        if(true) {
-            onFinish("create");
-        }
-    }
-
-    @Override
     public void updateInfo(Object result) {
-        mUser = ModelFacade.getInstance().GetUserName();
-        mGame.setHost(mUser);
+        Result data = (Result) result;
+//      if create game worked, go to the new game lobby
+        if(data.isSuccess()) {
+            onFinish("create");
+        }else {
+            Toast.makeText(getActivity(), "create failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+        }
     }
 
 

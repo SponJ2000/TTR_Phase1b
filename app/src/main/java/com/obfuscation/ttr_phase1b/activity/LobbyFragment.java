@@ -32,7 +32,6 @@ public class LobbyFragment extends Fragment implements IPresenter {
     private Game mGame;
     private boolean ismLeaving;
     private boolean ismStarting;
-    private boolean ismGettingGame;
 
     private Button mLeaveButton;
     private Button mStartButton;
@@ -72,7 +71,6 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
         ismLeaving = false;
         ismStarting = false;
-        ismGettingGame = false;
         mGame = ModelFacade.getInstance().GetCurrentGame();
         mHost = mGame.getHost();
 
@@ -83,7 +81,6 @@ public class LobbyFragment extends Fragment implements IPresenter {
                 Log.d(TAG, "Now leaving");
                 ismLeaving = true;
                 ismStarting = false;
-                ismGettingGame = false;
                 ModelFacade.getInstance().LeaveGame(mGame);
             }
         });
@@ -95,7 +92,6 @@ public class LobbyFragment extends Fragment implements IPresenter {
                 Log.d(TAG, "Now starting");
                 ismLeaving = false;
                 ismStarting = true;
-                ismGettingGame = false;
                 ModelFacade.getInstance().StartGame(mGame);
             }
         });
@@ -130,7 +126,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
     }
 
     @Override
-    public void onComplete(Object result) {
+    public void updateInfo(Object result) {
         if(ismLeaving) {
             ismLeaving = false;
             onGameLeave();
@@ -138,15 +134,6 @@ public class LobbyFragment extends Fragment implements IPresenter {
             ismStarting = false;
             onGameStart();
         }
-//        else if(ismGettingGame && result != null) {
-//            ismGettingGame = false;
-//            mGame = (Game) result;
-//            updateUI();
-//        }
-    }
-
-    @Override
-    public void updateInfo(Object result) {
         mGame = ModelFacade.getInstance().GetCurrentGame();
         mHost = mGame.getHost();
         updateUI();
