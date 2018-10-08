@@ -9,9 +9,9 @@ import java.util.List;
 
 public class ActiveUser {
 
-    Player player;
-    String authToken;
-    List<String> joinedGames;
+    private Player player;
+    private String authToken;
+    private List<String> joinedGames;
 
     public ActiveUser(Player player, String authToken) {
         this.player = player;
