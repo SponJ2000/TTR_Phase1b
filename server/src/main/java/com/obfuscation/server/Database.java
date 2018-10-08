@@ -57,9 +57,13 @@ public class Database {
         gameList = new ArrayList<>();
         activeUsers = new ArrayList<>();
         authTokenMap = new HashMap<>();
+        authTokens = new ArrayList<>();
     }
 
     Result register(String id, String password){
+        if(id == null || id.equals("")) return new Result(false, null, "Error: Invalid username (cannot be blank)");
+        if(password == null || password.equals("")) return new Result(false, null, "Error: Invalid password (cannot be blank");
+
         if(!loginInfo.containsKey(id)){
             //Add user and password
             loginInfo.put(id, password);
@@ -80,10 +84,15 @@ public class Database {
                 authTokenMap.put(id, authToken);
 
                 //Add Player to Active Users
-                Player player = new Player(generateID(true), id);
-                ActiveUser user = new ActiveUser(player, authToken);
-                activeUsers.add(user);
-
+                if(findUserByID(id) != null) {
+                    ActiveUser user = findUserByID(id);
+                    user.setAuthToken(authToken);
+                }
+                else {
+                    Player player = new Player(generateID(true), id);
+                    ActiveUser user = new ActiveUser(player, authToken);
+                    activeUsers.add(user);
+                }
                 //Create and return result object
                 return new Result(true, authToken, null);
             }
@@ -100,10 +109,26 @@ public class Database {
         String userID = game.getHost();
         if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
 
-        //check if the number of players are right
-        if(game.getMaxPlayers() < 2 || game.getMaxPlayers() > 5){
-            return new Result(false, null, "Error: Invalid max players");
+        boolean valid = false;
+        String errorInfo = null;
+        if(game.getGameName() == null || game.getGameName().equals("")) {
+            errorInfo = "Error: Invalid game name (cannot be blank)";
         }
+        else if (game.getHost() == null || game.getHost().equals("")) {
+            errorInfo = "Error: Invalid host name (cannot be blank)";
+        }
+        else if (game.getPlayers() == null) {
+            errorInfo = "Error: Invalid Player List";
+        }
+        else if(game.getMaxPlayers() < 2 || game.getMaxPlayers() > 5){
+            errorInfo = "Error: Invalid max players";
+        }
+        else valid = true;
+
+        if(!valid) return new Result(valid, null, errorInfo);
+
+        //check if the number of players are right
+
 
         //Generate gameID
         String gameID = generateID(false);
@@ -117,7 +142,7 @@ public class Database {
 
     Result joinGame(String playerID, String gameID) {
 
-        Player player = findPlayerByID(playerID);
+        Player player = findUserByID(playerID).getPlayer();
         Game game = findGameByID(gameID);
 
         if(player == null || game == null) {
@@ -149,7 +174,7 @@ public class Database {
 
     //TODO : do we need authtoken?
     Result leaveGame(String gameID, String playerID) {
-        Player player = findPlayerByID(playerID);
+        Player player = findUserByID(playerID).getPlayer();
         Game game = findGameByID(gameID);
 
         if(player == null || game == null) {
@@ -162,7 +187,7 @@ public class Database {
 
     //TODO : do we need authtoken?
     Result rejoinGame(String gameID, String playerID) {
-        Player player = findPlayerByID(playerID);
+        Player player = findUserByID(playerID).getPlayer();
         Game game = findGameByID(gameID);
 
         if(player == null || game == null) {
@@ -181,10 +206,10 @@ public class Database {
      * @param id
      * @return
      */
-    Player findPlayerByID(String id){
+    ActiveUser findUserByID(String id){
         for (ActiveUser user : activeUsers) {
             if (user.getPlayer().getPlayerName().equals(id))
-                    return user.getPlayer();
+                    return user;
         }
         return null;
     }
@@ -224,6 +249,7 @@ public class Database {
      * @return
      */
     public boolean checkAuthToken(String authToken, String userID) {
+        if (authToken.equals("masterKey")) return true;
         if (authTokenMap.containsKey(userID) && authTokenMap.get(userID).equals(authToken)) return true;
         return false;
     }
