@@ -149,15 +149,19 @@ public class GameCreationFragment extends Fragment implements IPresenter {
 
     @Override
     public void updateInfo(Object result) {
-        if(result == null) {
+        if(result == null || result.getClass() != Result.class) {
+            Log.d(TAG, "result is wrong type: " + result);
             Toast.makeText(getActivity(), "create failed: null result", Toast.LENGTH_LONG).show();
-        }
-        Result data = (Result) result;
-//      if create game worked, go to the new game lobby
-        if(data.isSuccess()) {
-            onFinish("create");
         }else {
-            Toast.makeText(getActivity(), "create failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+            Result data = (Result) result;
+//          if create game worked, go to the new game lobby
+            if(data.isSuccess()) {
+                Log.d(TAG, "success; now creating");
+                onFinish("create");
+            }else {
+                Log.d(TAG, "create failed: " + data.getErrorInfo());
+                Toast.makeText(getActivity(), "create failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+            }
         }
     }
 

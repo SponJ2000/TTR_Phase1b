@@ -32,7 +32,7 @@ public class Result {
     }
 
     public String getErrorInfo() {
-        return errorInfo;
+        return "" + errorInfo;
     }
 
     public void setErrorInfo(String errorInfo) {

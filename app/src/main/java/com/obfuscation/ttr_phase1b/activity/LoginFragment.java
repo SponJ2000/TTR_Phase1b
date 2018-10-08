@@ -134,8 +134,8 @@ public class LoginFragment extends Fragment implements IPresenter {
 
     @Override
     public void updateInfo(Object result) {
-        if(result == null) {
-            Log.d(TAG, "null result: " + result);
+        if(result == null || result.getClass() != Result.class) {
+            Log.d(TAG, "result is wrong type: " + result);
             Toast.makeText(getActivity(), "Login failed: null result", Toast.LENGTH_LONG).show();
         }else {
             Result data = (Result) result;
@@ -144,11 +144,11 @@ public class LoginFragment extends Fragment implements IPresenter {
             }else {
                 if(data.getErrorInfo() == null) {
                     Log.d(TAG, "null error msg: " + data);
-                    Toast.makeText(getActivity(), "Login failed: null result", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Login failed: null error", Toast.LENGTH_LONG).show();
                 }else {
-                    Log.d(TAG, "login fail: " + data);
-//                    Log.d(TAG, "Now logging in: " + data.getErrorInfo());
-//                    Toast.makeText(getActivity(), "Login failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
+                    String toastText = "Login failed: " + data.getErrorInfo();
+                    Log.d(TAG, toastText);
+                    Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
                 }
             }
         }
