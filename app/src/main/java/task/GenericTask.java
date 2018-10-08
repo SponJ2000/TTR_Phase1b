@@ -2,16 +2,14 @@ package task;
 
 import android.os.AsyncTask;
 
-import com.obfuscation.ttr_phase1b.activity.GUIFacade;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import communication.Game;
 import communication.Result;
-import model.ModelFacade;
 import model.ModelRoot;
-import model.Player;
 import server.ServerProxy;
 
 /**
@@ -45,8 +43,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
             case "GetGameList":
                 return serverProxy.GetGameList((String) params[0]);
-            case "GetPlayerList":
-                return serverProxy.GetPlayerList((String) params[0], (String) params[1]);
+            case "GetGame":
+                return serverProxy.GetGame((String) params[0], (String) params[1]);
             default:
                 return new Result(false,null, "Invalid Request");
         }
@@ -68,7 +66,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "GetGameList":
                 FetchGameListFrom(result);
                 break;
-            case "GetPlayerList":
+            case "GetPlayerList": //TODO: change into getGame
                 FetchPlayerListFrom(result);
                 break;
             default:
@@ -86,7 +84,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void FetchGameListFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().getGameListModel().setGames((ArrayList<model.Game>) result.getData());
+            ModelRoot.getInstance().setGameList((List<Game>) result.getData());
         }
     }
 

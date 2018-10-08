@@ -1,5 +1,11 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import communication.Game;
+import communication.Player;
+
 /**
  * Created by hao on 10/5/18.
  */
@@ -17,17 +23,12 @@ public class ModelRoot {
     }
 
     private String authToken;
-
-    private GameListModel gameListModel;
-
+    private List<Game> gameList;
     private Game game;
+    private State state;
+    private String userName;
 
     public ModelRoot() {
-        authToken = null;
-
-        gameListModel = new GameListModel();
-
-        game = null;
     }
 
     public void setAuthToken (String s) {
@@ -38,15 +39,38 @@ public class ModelRoot {
         return authToken;
     }
 
-    public GameListModel getGameListModel() {
-        if (gameListModel == null) {
-            gameListModel = new GameListModel();
+    public List<Game> getGameList() {
+        if (gameList == null) {
+            gameList = new ArrayList<Game>();
         }
-        return gameListModel;
+        return gameList;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public void setGameList(List<Game> games) {
+        this.gameList = games;
     }
 
     public Game getGame(){
         return game;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

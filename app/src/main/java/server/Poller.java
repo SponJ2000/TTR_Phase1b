@@ -6,6 +6,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import communication.Result;
+import model.ModelFacade;
+import model.ModelRoot;
+import model.State;
 
 /**
  * Created by hao on 10/5/18.
@@ -13,6 +16,8 @@ import communication.Result;
 
 public class Poller {
 
+    private static Integer gameListVersion = 0;
+    private static Integer gameVersion = 0;
     private static boolean running = false;
     private static ScheduledExecutorService scheduledExecutorService;
     private static ScheduledFuture scheduledFuture;
@@ -26,6 +31,22 @@ public class Poller {
 
                 if (result.isSuccess()) {
                     //do something in the success
+                    Integer versionNum = (Integer) result.getData();
+
+                    switch (ModelRoot.getInstance().getState()) {
+                        case GAMELIST:
+                            UpdateGameList(versionNum);
+                            break;
+                        case LOBBY:
+                            UpdateGame(versionNum);
+                            break;
+//                        case GAME:
+//                        TODO: messed up with lobby case, fix later
+//                            UpdateGame(versionNum);
+//                            break;
+                        default:
+                            break;
+                    }
 
                 } else {
                     //report an error
@@ -47,4 +68,15 @@ public class Poller {
         running = false;
     }
 
+    private static void UpdateGameList(Integer versionNum) {
+        if (!versionNum.equals(gameListVersion)) {
+            ModelFacade.getInstance().UpdateGameList();
+        }
+    }
+
+    private static void UpdateGame(Integer versionNum) {
+        if (!versionNum.equals(gameVersion)) {
+            ModelFacade.getInstance().UpdateGame();
+        }
+    }
 }

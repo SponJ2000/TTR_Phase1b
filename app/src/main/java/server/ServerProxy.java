@@ -55,14 +55,14 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result GetPlayerList(String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand("IServer", "GetPlayerList", new String[]{"String", "String"}, new Object[]{gameID, authToken});
+    public Result GetGame(String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "GetGame", new String[]{"String", "String"}, new Object[]{gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
-    public Result CheckUpdates() {
-        GenericCommand genericCommand = new GenericCommand("IServer", "CheckUpdates", new String[]{}, new Object[]{});
+    public Result CheckGameList(String authToken) {
+        GenericCommand genericCommand = new GenericCommand("IServer", "CheckUpdates", new String[]{"String"}, new Object[]{authToken});
         return RunCommand(genericCommand);
     }
 
