@@ -39,21 +39,24 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result JoinGame(String id, String gameID, String authToken) {
-        if(!db.checkAuthToken(id, authToken)) {
+        if(!db.checkAuthToken(authToken, id)) {
             return new Result(false, null, "Error: Invalid authorization");
         }
-        clientProxy.updateGameList(null);
-        clientProxy.updateGame(gameID);
-        return db.joinGame(id, gameID);
+        Result result = db.joinGame(id, gameID);
+        if(result.isSuccess()) {
+            clientProxy.updateGameList(null);
+            clientProxy.updateGame(gameID);
+        }
+        return result;
     }
 
     @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
-        if(!db.checkAuthToken(id, authToken)) {
+        if(!db.checkAuthToken(authToken, id)) {
             return new Result(false, null, "Error: Invalid authorization");
         }
 
-        Result result = db.leaveGame(id, gameID);
+        Result result = db.leaveGame(gameID, id);
         if(result.isSuccess()) {
             clientProxy.updateGameList(null);
             clientProxy.updateGame(gameID);

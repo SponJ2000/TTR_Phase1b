@@ -49,6 +49,7 @@ public class GenericCommand implements ICommand {
             System.out.println(parameterType);
             System.out.println(method.getGenericParameterTypes().getClass().toString());
             Object results = method.invoke(serverFacadeInstance, parameterValue);
+
             return (Result)results;
         }
         catch (InvocationTargetException e) {

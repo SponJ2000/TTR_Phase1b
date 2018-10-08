@@ -26,7 +26,7 @@ public interface IServer {
 
     /**
      *
-     * @param id        a String object containing the userID
+     * @param id        a String object containing the userName
      * @param gameID    a String object containing the gameID
      * @param authToken a String object with the username's authToken
      * @return          a Result object containing a boolean indicating success

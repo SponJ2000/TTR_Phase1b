@@ -106,13 +106,18 @@ public class Database {
     }
 
     Result newGame(Game game, String authToken){
-        String userID = game.getHost();
-        if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
+
 
         boolean valid = false;
         String errorInfo = null;
-        if(game.getGameName() == null || game.getGameName().equals("")) {
+        if(game == null) {
+            errorInfo = "Error: Game is null";
+        }
+        else if(game.getGameID() == null || game.getGameID().equals("")) {
             errorInfo = "Error: Invalid game name (cannot be blank)";
+        }
+        else if(findGameByID(game.getGameID()) != null) {
+            errorInfo = "Error: Game name must be unique";
         }
         else if (game.getHost() == null || game.getHost().equals("")) {
             errorInfo = "Error: Invalid host name (cannot be blank)";
@@ -127,13 +132,15 @@ public class Database {
 
         if(!valid) return new Result(valid, null, errorInfo);
 
-        //check if the number of players are right
+        //check the userID
+        String userID = game.getHost();
+        if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
 
-
-        //Generate gameID
-        String gameID = generateID(false);
-
-        game.setGameID(gameID);
+        ActiveUser user = findUserByID(userID);
+        if (user == null) return new Result(false, null, "Error: Invlaid user");
+        List<Player> playerList = new ArrayList<>();
+        playerList.add(user.getPlayer());
+        game.setPlayers(playerList);
 
         gameList.add(game);
 
@@ -142,14 +149,15 @@ public class Database {
 
     Result joinGame(String playerID, String gameID) {
 
-        Player player = findUserByID(playerID).getPlayer();
+
+        ActiveUser user = findUserByID(playerID);
         Game game = findGameByID(gameID);
 
-        if(player == null || game == null) {
+        if(user == null || game == null) {
             return new Result(false, null, "Error: Could not join game");
         }
 
-        return game.addPlayer(player);
+        return game.addPlayer(user.getPlayer());
     }
 
     Result startGame(String gameID, String authToken) {
@@ -159,6 +167,8 @@ public class Database {
         if(!checkAuthToken(authToken, game.getHost())) {
             return new Result(false, null, "Error: Invalid token");
         }
+
+        if(game.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
 
         game.startGame();
         List<Player> players = game.getPlayers();
@@ -174,14 +184,14 @@ public class Database {
 
     //TODO : do we need authtoken?
     Result leaveGame(String gameID, String playerID) {
-        Player player = findUserByID(playerID).getPlayer();
+        ActiveUser user = findUserByID(playerID);
         Game game = findGameByID(gameID);
 
-        if(player == null || game == null) {
+        if(user == null || game == null) {
             return new Result(false, null, "Error: Could not leave game");
         }
 
-        return game.removePlayer(player);
+        return game.removePlayer(user.getPlayer());
 
     }
 
