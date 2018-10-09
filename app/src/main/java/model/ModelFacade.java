@@ -92,6 +92,7 @@ public class ModelFacade {
 
     //Called by presenter
     public boolean UpdateState(State state) {
+        ModelRoot.getInstance().setState(state);
         return true;
     }
 

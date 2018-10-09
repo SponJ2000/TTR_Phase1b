@@ -26,7 +26,7 @@ public class Poller {
         @Override
         public void run() {
             if (running) {
-
+                System.out.println("***********************************************" + ModelRoot.getInstance().getState());
                 switch (ModelRoot.getInstance().getState()) {
                     case GAMELIST:
 
@@ -88,7 +88,7 @@ public class Poller {
         if (result.isSuccess()) {
             Integer versionNum = (Integer) result.getData();
             if (!versionNum.equals(gameListVersion)) {
-                ModelFacade.getInstance().CheckGameList();
+                ModelFacade.getInstance().UpdateGameList();
                 gameListVersion = versionNum;
             }
         }
