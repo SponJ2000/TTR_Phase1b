@@ -115,6 +115,7 @@ public class GameListFragment extends Fragment implements IPresenter {
     }
 
     private void updateUI() {
+        Log.d(TAG, "getting updated");
         if(mGameRecycler != null) {
             Log.d(TAG+"_updateUI", "gamelist: " + mGameList);
             ArrayList<Game> temp = mGameList;

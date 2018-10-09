@@ -149,6 +149,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
 
     @Override
     public void updateInfo(Object result) {
+        Log.d(TAG, "getting updated");
         if(result == null || result.getClass() != Result.class) {
             Log.d(TAG, "result is wrong type: " + result);
             Toast.makeText(getActivity(), "create failed: null result", Toast.LENGTH_LONG).show();

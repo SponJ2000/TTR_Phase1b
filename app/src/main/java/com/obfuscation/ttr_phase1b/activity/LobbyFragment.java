@@ -128,10 +128,12 @@ public class LobbyFragment extends Fragment implements IPresenter {
         if(mGame.getPlayerCount() > 1) {
             mStartButton.setEnabled(true);
         }
+        mPlayerCount.setText(mGame.getPlayerCount() + "/" + mGame.getMaxPlayers());
     }
 
     @Override
     public void updateInfo(Object result) {
+        Log.d(TAG, "getting updated");
         if(ismLeaving) {
             ismLeaving = false;
             onGameLeave();
