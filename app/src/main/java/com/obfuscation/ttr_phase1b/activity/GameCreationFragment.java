@@ -51,7 +51,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
 
     public GameCreationFragment() {
         mUser = ModelFacade.getInstance().GetUserName();
-        List<Player> l = new ArrayList<>();
+        ArrayList<Player> l = new ArrayList<>();
         l.add(new Player(mUser));
         mGame = new Game("", mUser, l, 2);
     }

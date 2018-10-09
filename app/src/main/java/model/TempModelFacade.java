@@ -24,7 +24,7 @@ public class TempModelFacade {
 
     private TempModelFacade() {
         mUser = new Player("Bob (the host)");
-        List<Player> fakePlayers = new ArrayList<>();
+        ArrayList<Player> fakePlayers = new ArrayList<>();
         fakePlayers.add(mUser);
         fakePlayers.add( new Player("player 2") );
         fakePlayers.add( new Player("player 3") );

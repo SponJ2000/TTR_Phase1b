@@ -92,7 +92,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void FetchGameListFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().setGameList((List<Game>) result.getData());
+            ModelRoot.getInstance().setGameList((ArrayList<Game>) result.getData());
         }
     }
 

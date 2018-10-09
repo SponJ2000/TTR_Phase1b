@@ -35,7 +35,7 @@ public class GameListFragment extends Fragment implements IPresenter {
     private static final String TAG = "GameListFrag";
 
     private int mSelectedGame;
-    private List<Game> mGameList;
+    private ArrayList<Game> mGameList;
     private boolean ismJoingGame;
 
     private Button mJoin;
@@ -117,7 +117,7 @@ public class GameListFragment extends Fragment implements IPresenter {
     private void updateUI() {
         if(mGameRecycler != null) {
             Log.d(TAG+"_updateUI", "gamelist: " + mGameList);
-            List<Game> temp = mGameList;
+            ArrayList<Game> temp = mGameList;
             mGameAdapter = new GameAdapter(temp);
             mGameRecycler.setAdapter(mGameAdapter);
         }
@@ -132,6 +132,7 @@ public class GameListFragment extends Fragment implements IPresenter {
                 if(data.isSuccess()) {
                     Log.d(TAG+"_update", "Now joining");
                     onGameSelect("join");
+                    ModelFacade.getInstance().UpdateGame();
                 }else {
                     Log.d(TAG+"_update", "Join failed: " + data.getErrorInfo());
                     Toast.makeText(getActivity(), "Join failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
@@ -141,7 +142,7 @@ public class GameListFragment extends Fragment implements IPresenter {
                 Toast.makeText(getActivity(), "Join failed: null result", Toast.LENGTH_LONG).show();
             }
         }
-        List<Game> temp = ModelFacade.getInstance().GetGameList();
+        ArrayList<Game> temp = ModelFacade.getInstance().GetGameList();
         if(temp != null) {
             mGameList = temp;
         }
@@ -179,6 +180,7 @@ public class GameListFragment extends Fragment implements IPresenter {
         public void bindGame(Game game, int gameNumber) {
 //            Log.d(TAG+"_holder", "game: " + game.toString());
             mGame = game;
+            System.out.println("wqeqweqweqw!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             mGameNumber = gameNumber;
             mGameIDView.setText(game.getGameID());
             mHostView.setText(game.getHost());
@@ -195,9 +197,9 @@ public class GameListFragment extends Fragment implements IPresenter {
 
     private class GameAdapter extends RecyclerView.Adapter<GameHolder> {
 
-        private List<Game> mGames;
+        private ArrayList<Game> mGames;
 
-        public GameAdapter(List<Game> games) {
+        public GameAdapter(ArrayList<Game> games) {
             mGames = games;
         }
 

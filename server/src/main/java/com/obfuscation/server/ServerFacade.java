@@ -94,12 +94,17 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result CheckGameList(String authToken){
+        System.out.println("User Checking gamelist");
         return clientProxy.checkUpdates(null);
     }
 
     @Override
     public Result CheckGame(String authToken, String gameID){
-        return clientProxy.checkUpdates(gameID);
+        System.out.println("User checking game");
+        Result result = clientProxy.checkUpdates(gameID);
+        System.out.println("With isSuccess" + result.isSuccess());
+        return result;
+//        return clientProxy.checkUpdates(gameID);
     }
 
 

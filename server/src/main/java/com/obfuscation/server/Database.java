@@ -138,7 +138,7 @@ public class Database {
 
         ActiveUser user = findUserByID(userID);
         if (user == null) return new Result(false, null, "Error: Invlaid user");
-        List<Player> playerList = new ArrayList<>();
+        ArrayList<Player> playerList = new ArrayList<>();
         playerList.add(user.getPlayer());
         game.setPlayers(playerList);
 

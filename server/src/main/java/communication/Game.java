@@ -11,12 +11,12 @@ public class Game {
     private String mGameID;
     private String mHost;
     private int mMaxPlayers;
-    private List<Player> mPlayers;
-    private List<Player> mAbsentPlayers;
+    private ArrayList<Player> mPlayers;
+    private ArrayList<Player> mAbsentPlayers;
 
     private boolean misStarted;
 
-    public Game(String mGameID, String mUsername, List<Player> mPlayers, int mMaxPlayers) {
+    public Game(String mGameID, String mUsername, ArrayList<Player> mPlayers, int mMaxPlayers) {
         this.mGameID = mGameID;
         this.mHost = mUsername;
         this.mPlayers = mPlayers;
@@ -45,7 +45,7 @@ public class Game {
         return mPlayers;
     }
 
-    public void setPlayers(List<Player> mPlayers) {
+    public void setPlayers(ArrayList<Player> mPlayers) {
         this.mPlayers = mPlayers;
     }
 
