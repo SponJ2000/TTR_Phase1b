@@ -125,7 +125,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
             mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
             mLobbyRecycler.setAdapter(mLobbyAdapter);
         }
-        if(mHost.equals(ModelFacade.getInstance().GetUserName())) {
+        if(mHost != null && mHost.equals(ModelFacade.getInstance().GetUserName())) {
             if(mGame.getPlayerCount() > 1) {
                 mStartButton.setEnabled(true);
             }else {
