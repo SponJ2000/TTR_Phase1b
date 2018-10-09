@@ -9,6 +9,7 @@ import java.util.List;
 
 import communication.Game;
 import communication.Result;
+import communication.Serializer;
 import model.ModelRoot;
 import server.Poller;
 import server.ServerProxy;
@@ -92,7 +93,14 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void FetchGameListFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().setGameList((ArrayList<Game>) result.getData());
+
+            ArrayList<Object> temp = (ArrayList<Object>) result.getData();
+            ArrayList<Game> games = new ArrayList<>();
+            for (int i = 0;i < temp.size(); i++) {
+                games.add(new Serializer().deserializeGame(temp.get(i).toString()));
+            }
+            ModelRoot.getInstance().setGameList(games);
+
         }
     }
 

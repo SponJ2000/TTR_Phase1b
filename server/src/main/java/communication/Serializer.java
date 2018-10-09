@@ -42,4 +42,9 @@ public class Serializer {
         GenericCommand command = gson.fromJson(json, GenericCommand.class);
         return command;
     }
+
+    public Game deserializeGame(String json) {
+        Game game = gson.fromJson(json, Game.class);
+        return game;
+    }
 }
