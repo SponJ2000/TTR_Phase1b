@@ -88,7 +88,7 @@ public class Poller {
         if (result.isSuccess()) {
             Integer versionNum = (Integer) result.getData();
             if (!versionNum.equals(gameListVersion)) {
-                ModelFacade.getInstance().UpdateGame();
+                ModelFacade.getInstance().CheckGameList();
                 gameListVersion = versionNum;
             }
         }
