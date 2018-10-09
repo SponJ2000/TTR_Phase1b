@@ -21,6 +21,7 @@ public class Poller {
     private static boolean running = false;
     private static ScheduledExecutorService scheduledExecutorService;
     private static ScheduledFuture scheduledFuture;
+    private static final int checkTime = 2;
 
     private static final Runnable CheckUpdates = new Runnable() {
         @Override
@@ -49,7 +50,7 @@ public class Poller {
         running = true;
         System.out.println("Poller Starting");
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
-        ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,2,5, TimeUnit.SECONDS);
+        ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,2,checkTime, TimeUnit.SECONDS);
 
     }
 
