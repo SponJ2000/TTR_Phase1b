@@ -115,6 +115,8 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
         updateUI();
 
+        mStartButton.setEnabled(false);
+
         return view;
     }
 
@@ -122,6 +124,9 @@ public class LobbyFragment extends Fragment implements IPresenter {
         if(mLobbyRecycler != null) {
             mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
             mLobbyRecycler.setAdapter(mLobbyAdapter);
+        }
+        if(mGame.getPlayerCount() > 1) {
+            mStartButton.setEnabled(true);
         }
     }
 

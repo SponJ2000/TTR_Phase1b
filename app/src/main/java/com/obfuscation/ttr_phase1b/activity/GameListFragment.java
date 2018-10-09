@@ -208,7 +208,7 @@ public class GameListFragment extends Fragment implements IPresenter {
         }
 
         public void onBindViewHolder(GameHolder holder, int position) {
-//            Log.d(TAG+"_adapter", "game[" + position + "]: " + mGames.get(position));
+            Log.d(TAG+"_adapter", "game[" + position + "]: " + mGames.get(position));
             holder.bindGame(mGames.get(position), position);
         }
 
