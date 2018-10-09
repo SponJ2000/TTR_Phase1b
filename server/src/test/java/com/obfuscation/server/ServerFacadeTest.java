@@ -58,7 +58,7 @@ public class ServerFacadeTest {
     @Test
     public void joinGame() throws Exception {
         //Phase 1: test invalid input
-        List<Player> players = new ArrayList<>();
+        ArrayList<Player> players = new ArrayList<>();
         facade.Register("Jill", "Jill");
         Game game = new Game("Jill's game", "Jill", players, 2);
         facade.CreateGame(game, "masterKey");
@@ -66,7 +66,7 @@ public class ServerFacadeTest {
         //Test valid join
         Result True = new Result(true, null, null);
         facade.Register("Jack", "jack");
-        assertEquals(facade.JoinGame("Jack", "Jill's game", "masterKey").getErrorInfo(), null);
+        assertEquals(facade.JoinGame("Jack", "Jill's game", "masterKey").isSuccess(), true);
 
         //Test invalid (too many players)
         facade.Register("Harold", "harold");
@@ -86,7 +86,7 @@ public class ServerFacadeTest {
     @Test
     public void leaveGame() throws Exception {
         facade.Register("Bot", "bob");
-        List<Player> list = new ArrayList<>();
+        ArrayList<Player> list = new ArrayList<>();
         Game game = new Game("Bot's game", "Bot", list, 2);
         facade.CreateGame(game, KEY);
 
@@ -94,7 +94,7 @@ public class ServerFacadeTest {
         assertEquals(facade.LeaveGame("Kyle", "Bot's game", KEY).isSuccess(), false);
 
         facade.JoinGame("Kyle", "Bot's game", KEY);
-        assertEquals(facade.LeaveGame("Kyle", "Bot's game", KEY).getErrorInfo(), null);
+        assertEquals(facade.LeaveGame("Kyle", "Bot's game", KEY).isSuccess(), true);
 
 
     }
@@ -125,7 +125,7 @@ public class ServerFacadeTest {
     @Test
     public void startGame() throws Exception {
         facade.Register("Bob", "bob");
-        List<Player> list = new ArrayList<>();
+        ArrayList<Player> list = new ArrayList<>();
         Game game = new Game("Bob's game", "Bob", list, 2);
         facade.CreateGame(game, KEY);
 
@@ -134,7 +134,7 @@ public class ServerFacadeTest {
         facade.Register("Hob", "hob");
         facade.JoinGame("Hob", "Bob's game", KEY);
 
-        assertEquals(facade.StartGame("Bob's game", KEY).getErrorInfo(), null);
+        assertEquals(facade.StartGame("Bob's game", KEY).isSuccess(), true);
 
 
     }
@@ -142,7 +142,7 @@ public class ServerFacadeTest {
     @Test
     public void getGameList() throws Exception {
         facade.Register("M", "m");
-        List<Player> players = new ArrayList<>();
+        ArrayList<Player> players = new ArrayList<>();
 
         Game game1 = new Game("1", "M", players, 2);
         Game game2 = new Game("2", "M", players, 3);
@@ -157,7 +157,7 @@ public class ServerFacadeTest {
     @Test
     public void getGame() throws Exception {
         facade.Register("M", "m");
-        List<Player> players = new ArrayList<>();
+        ArrayList<Player> players = new ArrayList<>();
         Game game1 = new Game("1", "M", players, 2);
         facade.CreateGame(game1, KEY);
 
@@ -169,7 +169,7 @@ public class ServerFacadeTest {
     @Test
     public void checkGameList() throws Exception {
         facade.Register("M", "m");
-        List<Player> players = new ArrayList<>();
+        ArrayList<Player> players = new ArrayList<>();
         int up = (Integer) facade.CheckGameList(KEY).getData();
 
         Game game3 = new Game("3", "M", players, 3);
@@ -183,7 +183,7 @@ public class ServerFacadeTest {
     @Test
     public void checkGame() throws Exception {
         facade.Register("M", "m");
-        List<Player> players = new ArrayList<>();
+        ArrayList<Player> players = new ArrayList<>();
         Game game4 = new Game("4", "M", players, 3);
         facade.CreateGame(game4, KEY);
 

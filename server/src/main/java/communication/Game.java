@@ -62,13 +62,15 @@ public class Game {
     }
 
     public Result addPlayer(communication.Player player){
-        if (mPlayers.size() < mMaxPlayers) {
+        if (misStarted) {
+            if (mPlayers.contains(player)) {
+                return rejoinGame(player);
+            } else return new Result(false, null, "Error: game has started");
+        }
+        else if (mPlayers.size() < mMaxPlayers) {
             if (!mPlayers.contains(player)) {
-                if(!misStarted) {
-                    mPlayers.add(player);
-                    return new Result(true, true, null);
-                }
-                else return new Result(false, null, "Error: game has started");
+                mPlayers.add(player);
+                return new Result(true, true, null);
             }
             else return new Result(false, null, "Error: player already in game");
         }
