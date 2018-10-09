@@ -109,6 +109,8 @@ public class GameListFragment extends Fragment implements IPresenter {
     private void changeAccessibility() {
         if(mSelectedGame == -1) {
             mJoin.setEnabled(false);
+        }else if( mGameList.get(mSelectedGame).getPlayerCount() == mGameList.get(mSelectedGame).getMaxPlayers() ) {
+            mJoin.setEnabled(false);
         }else {
             mJoin.setEnabled(true);
         }
