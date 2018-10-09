@@ -23,7 +23,6 @@ public class ClientCommunicator {
         url = "http://10.0.2.2:8080/exec";
     }
 
-
     public String post(GenericCommand genericCommand) throws Exception{
 
         System.out.println("CLIENT: POST: " + url);

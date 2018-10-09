@@ -26,17 +26,15 @@ public class Poller {
         @Override
         public void run() {
             if (running) {
+
                 switch (ModelRoot.getInstance().getState()) {
                     case GAMELIST:
+
                         CheckandUpdateGameList();
                         break;
                     case LOBBY:
                         CheckandUpdateGame();
                         break;
-//                          case GAME:
-//                        TODO: messed up with lobby case, fix later
-//                            UpdateGame(versionNum);
-//                            break;
                     default:
                         break;
                 }
@@ -49,8 +47,10 @@ public class Poller {
 
     public static void StartPoller () {
         running = true;
+        System.out.println("Poller Starting");
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
         ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,2,5, TimeUnit.SECONDS);
+
     }
 
     public static void EndPoller () {
@@ -77,6 +77,9 @@ public class Poller {
                 //what to do after game is updated
             }
         }
+        else {
+            System.out.println("poller failure");
+        }
     }
 
     private static void CheckandUpdateGameList() {
@@ -89,5 +92,6 @@ public class Poller {
                 gameListVersion = versionNum;
             }
         }
+
     }
 }

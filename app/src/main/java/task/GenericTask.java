@@ -93,12 +93,14 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void FetchGameListFrom(Result result) {
         if (result.isSuccess()) {
+
             ArrayList<Object> temp = (ArrayList<Object>) result.getData();
             ArrayList<Game> games = new ArrayList<>();
             for (int i = 0;i < temp.size(); i++) {
                 games.add(new Serializer().deserializeGame(temp.get(i).toString()));
             }
             ModelRoot.getInstance().setGameList(games);
+
         }
     }
 

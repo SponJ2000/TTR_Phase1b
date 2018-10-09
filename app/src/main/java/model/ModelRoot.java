@@ -23,12 +23,13 @@ public class ModelRoot {
     }
 
     private String authToken;
-    private List<Game> gameList;
+    private ArrayList<Game> gameList;
     private Game game;
     private State state;
     private String userName;
 
     public ModelRoot() {
+        this.state = State.GAMELIST;
     }
 
     public void setAuthToken (String s) {
@@ -39,7 +40,7 @@ public class ModelRoot {
         return authToken;
     }
 
-    public List<Game> getGameList() {
+    public ArrayList<Game> getGameList() {
         if (gameList == null) {
             gameList = new ArrayList<Game>();
         }
@@ -50,7 +51,7 @@ public class ModelRoot {
         this.game = game;
     }
 
-    public void setGameList(List<Game> games) {
+    public void setGameList(ArrayList<Game> games) {
         this.gameList = games;
     }
 

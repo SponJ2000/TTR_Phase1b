@@ -95,7 +95,7 @@ public class ModelFacade {
         return true;
     }
 
-    public List<Game> GetGameList() {
+    public ArrayList<Game> GetGameList() {
         return ModelRoot.getInstance().getGameList();
     }
 
