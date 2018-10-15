@@ -139,11 +139,11 @@ public interface IServer {
     Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken);
 
     /**
-     * user draw Train Card from the face up deck
+     * user draw Train Card from the face up deck or face down deck
      *
      * @pre     the game of this user currently belong is already started
      *          by the time it call this, it has to be the user's turn, and this function havent been called more than 2 twice in this user round
-     *          the index has to be less than the number of cards remain
+     *          the index has to be less than the number of cards remain, and between 0 and 4
      *
      * @post    the user get the card he call to draw.
      *          this card is no longer in the deck of havent-drawn-cards
@@ -152,10 +152,10 @@ public interface IServer {
      * @param authToken a String object containing the user's authToken
      * @return          a Result object contain a card.
      */
-    Result DrawFaceUpTrainCard(Integer index, String authToken);
+    Result DrawTrainCard(Integer index, String authToken);
 
     /**
-     * user draw three destination tickets blindly from the deck
+     * user recieve three destination tickets blindly from the deck to choose from
      *
      * @pre     the game this user currently belong has been started
      *          it is this player's turn, which player identified by this authToken.
@@ -167,7 +167,7 @@ public interface IServer {
      * @param authToken a String object containing the user's authToken
      * @return          a Result object contain three ticktes.
      */
-    Result DrawDestTickets(String authToken);
+    Result GetTickets(String authToken);
 
     /**
      * user put back the tickets he doesnt want to keep
@@ -187,7 +187,7 @@ public interface IServer {
      * @param authToken a String of unique authToken
      * @return          a result object containing an boolean indicate of success of this call
      */
-    Result ReturnDestTickets(List<Ticket>tickets, String authToken);
+    Result ReturnTickets(List<Ticket>tickets, String authToken);
 
     /**
      * user send a message
