@@ -1,4 +1,6 @@
 package gamePresenters;
 
-public interface IChatPresenter {
+import com.obfuscation.ttr_phase1b.activity.IPresenter;
+
+public interface IChatPresenter extends IPresenter {
 }

@@ -3,13 +3,14 @@ package gamePresenters;
 import android.support.v4.app.Fragment;
 
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
+import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 
-public class GamePresenter implements IPresenter {
+public class GamePresenter implements IGamePresenter {
 
-    private Fragment fragment;
+    private IGameView view;
 
-    public GamePresenter(Fragment fragment) {
-        this.fragment = fragment;
+    public GamePresenter(IGameView view) {
+        this.view = view;
     }
 
 

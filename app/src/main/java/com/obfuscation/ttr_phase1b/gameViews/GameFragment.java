@@ -10,7 +10,13 @@ import android.view.ViewGroup;
 
 import com.obfuscation.ttr_phase1b.R;
 
-public class GameFragment extends Fragment {
+import java.util.List;
+
+import communication.Card;
+import communication.GameMap;
+import communication.Player;
+
+public class GameFragment extends Fragment implements IGameView {
 
     public static GameFragment newInstance() {
         return new GameFragment();
@@ -28,4 +34,23 @@ public class GameFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    @Override
+    public void UpdateUI() {
+
+    }
+
+    @Override
+    public void setMap(GameMap map) {
+
+    }
+
+    @Override
+    public void setCards(List<Card> cards) {
+
+    }
+
+    @Override
+    public void setPlayer(Player player) {
+
+    }
 }
