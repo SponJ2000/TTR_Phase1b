@@ -3,6 +3,7 @@ package communication;
 import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jalton on 10/1/18.
@@ -187,7 +188,7 @@ public interface IServer {
      * @param authToken a String of unique authToken
      * @return          a result object containing an boolean indicate of success of this call
      */
-    Result ReturnTickets(List<Ticket>tickets, String authToken);
+    Result ReturnTickets(List<Ticket> tickets, String authToken);
 
     /**
      * user send a message
