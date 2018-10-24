@@ -9,4 +9,15 @@ public interface IGamePresenter extends IPresenter{
     void showTickets();
     void showChat();
     void showMap();
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     */
+    public interface OnShowListener {
+        void onShow(Shows show);
+    }
+
 }
