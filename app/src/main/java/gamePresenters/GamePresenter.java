@@ -18,4 +18,29 @@ public class GamePresenter implements IGamePresenter {
     public void updateInfo(Object result) {
 
     }
+
+    @Override
+    public void showMenu() {
+
+    }
+
+    @Override
+    public void showPlayerInfo() {
+
+    }
+
+    @Override
+    public void showTickets() {
+
+    }
+
+    @Override
+    public void showChat() {
+
+    }
+
+    @Override
+    public void showMap() {
+
+    }
 }
