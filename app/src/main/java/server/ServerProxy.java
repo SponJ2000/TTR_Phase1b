@@ -4,6 +4,9 @@ package server;
 import com.obfuscation.server.GenericCommand;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import communication.*;
 
 /**
@@ -90,5 +93,38 @@ public class ServerProxy implements communication.IServer {
             e.printStackTrace();
             return new Result(false, null, "EXCEPTION: " + e.getMessage());
         }
+    }
+
+    //Phase 2 stuff
+
+
+    @Override
+    public Result GetUpdates(String authToken, String gameID, int state) {
+        return null;
+    }
+
+    @Override
+    public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result DrawTrainCard(Integer index, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result GetTickets(String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result ReturnTickets(List<Ticket> tickets, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result SendMessage(String message, String authToken) {
+        return null;
     }
 }

@@ -1,9 +1,14 @@
 package com.obfuscation.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import communication.Card;
 import communication.Game;
 import communication.IServer;
 import communication.Player;
 import communication.Result;
+import communication.Ticket;
 
 /**
  * Created by jalton on 10/1/18.
@@ -108,4 +113,33 @@ public class ServerFacade implements IServer {
     }
 
 
+    @Override
+    public Result GetUpdates(String authToken, String gameID, int state) {
+        return null;
+    }
+
+    @Override
+    public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result DrawTrainCard(Integer index, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result GetTickets(String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result ReturnTickets(List<Ticket> tickets, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result SendMessage(String message, String authToken) {
+        return null;
+    }
 }
