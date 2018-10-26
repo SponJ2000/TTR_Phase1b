@@ -237,5 +237,13 @@ public interface IServer {
      * @param gameID
      * @return          a Result object containing the game version number
      */
-    Result CheckGame(String authToken, String gameID);
+    Result CheckGame(String authToken, String gameID, int state);
+
+    /**
+     *
+     * @param authToken
+     * @param gameID
+     * @return          a Result object containing the game version number
+     */
+    Result CheckGameLobby(String authToken, String gameID);
 }

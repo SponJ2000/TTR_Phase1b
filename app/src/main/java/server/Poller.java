@@ -1,5 +1,8 @@
 package server;
 
+import com.obfuscation.server.GenericCommand;
+
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -33,8 +36,10 @@ public class Poller {
                         CheckandUpdateGameList();
                         break;
                     case LOBBY:
-                        CheckandUpdateGame();
+                        CheckandUpdateGameLobby();
                         break;
+                    case GAME:
+                        CheckandUpdateGame();
                     default:
                         break;
                 }
@@ -66,15 +71,30 @@ public class Poller {
         }
     }
 
-    private static void CheckandUpdateGame() {
+//    Note: this is just a copy of last phase
+    private static void CheckandUpdateGameLobby() {
         ServerProxy serverProxy = new ServerProxy();
-        Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID());
+        Result result = serverProxy.CheckGameLobby(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID());
         if (result.isSuccess()) {
             Integer versionNum = (Integer) result.getData();
             if (!versionNum.equals(gameVersion)) {
                 ModelFacade.getInstance().UpdateGame();
                 gameVersion = versionNum;
                 //what to do after game is updated
+            }
+        }
+        else {
+            System.out.println("poller failure");
+        }
+    }
+
+    private static void CheckandUpdateGame() {
+        ServerProxy serverProxy = new ServerProxy();
+        Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getGame().getState());
+        if (result.isSuccess()) {
+            ArrayList<GenericCommand> commands = (ArrayList<GenericCommand>)result.getData();
+            for (GenericCommand c: commands) {
+                c.execute();
             }
         }
         else {

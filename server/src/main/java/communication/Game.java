@@ -85,6 +85,14 @@ public class Game {
         this.mMaxPlayers = mMaxPlayers;
     }
 
+    public int getState(){
+        return state;
+    }
+
+    public void setState(int nState){
+        state = nState;
+    }
+
     public Result addPlayer(communication.Player player){
         if (misStarted) {
             if (mPlayers.contains(player)) {
