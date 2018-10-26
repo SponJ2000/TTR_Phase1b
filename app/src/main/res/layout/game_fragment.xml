@@ -32,7 +32,7 @@
                 android:layout_width="32dp"
                 android:layout_height="64dp"
                 android:layout_weight="1"
-                android:src="@android:color/holo_blue_dark" />
+                android:src="@color/trainBlack" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                 android:layout_width="32dp"
                 android:layout_height="64dp"
                 android:layout_weight="1"
-                android:src="@android:color/holo_blue_dark" />
+                android:src="@color/trainBlue" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -56,7 +56,7 @@
                 android:layout_width="32dp"
                 android:layout_height="64dp"
                 android:layout_weight="1"
-                android:src="@android:color/holo_blue_dark" />
+                android:src="@color/trainGreen" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                 android:layout_width="32dp"
                 android:layout_height="64dp"
                 android:layout_weight="1"
-                android:src="@android:color/holo_blue_dark" />
+                android:src="@color/trainOrange" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -80,7 +80,7 @@
                 android:layout_width="32dp"
                 android:layout_height="64dp"
                 android:layout_weight="1"
-                android:src="@android:color/holo_blue_dark" />
+                android:src="@color/trainPurple" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -107,11 +107,11 @@
             tools:layout_editor_absoluteY="135dp">
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton3"
+                android:id="@+id/tickets_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:src="@android:drawable/stat_notify_sdcard"
+                android:src="@drawable/tickets_icon1"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="266dp" />
 
@@ -120,7 +120,7 @@
                 android:layout_height="16dp" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton2"
+                android:id="@+id/players_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -133,7 +133,7 @@
                 android:layout_height="16dp" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+                android:id="@+id/chat_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
