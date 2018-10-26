@@ -1,5 +1,7 @@
 package com.obfuscation.ttr_phase1b.gameViews;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +25,10 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener, IMenuPresenter.MenuListener {
 
     private static final String TAG = "GameActivity";
+
+    public static Intent newIntent(Context context) {
+        return new Intent(context, GameActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

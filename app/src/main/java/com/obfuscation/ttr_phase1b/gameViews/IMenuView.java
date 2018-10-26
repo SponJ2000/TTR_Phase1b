@@ -7,4 +7,5 @@ package com.obfuscation.ttr_phase1b.gameViews;
 public interface IMenuView extends IView {
 
 
+
 }

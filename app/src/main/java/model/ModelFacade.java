@@ -4,8 +4,12 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.Card;
 import communication.Game;
+import communication.GameMap;
+import communication.Message;
 import communication.Player;
+import communication.Ticket;
 import server.ServerProxy;
 import task.GenericTask;
 
@@ -13,7 +17,7 @@ import task.GenericTask;
  * Created by hao on 10/3/18.
  */
 
-public class ModelFacade {
+public class ModelFacade implements IGameModel {
 
     private static ModelFacade modelFacade;
 
@@ -106,5 +110,30 @@ public class ModelFacade {
 
     public String GetUserName() {
         return ModelRoot.getInstance().getUserName();
+    }
+
+    @Override
+    public List<Card> getCards() {
+        return null;
+    }
+
+    @Override
+    public GameMap getMap() {
+        return null;
+    }
+
+    @Override
+    public Player getPlayer() {
+        return null;
+    }
+
+    @Override
+    public List<Ticket> getTickets() {
+        return null;
+    }
+
+    @Override
+    public List<Message> getMessages() {
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
+import com.obfuscation.ttr_phase1b.gameViews.GameActivity;
 
 import java.util.List;
 
@@ -159,8 +161,8 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
     private void onGameStart() {
         Toast.makeText(getActivity(), "starting game", Toast.LENGTH_SHORT).show();
-//        Intent intent = GameActivity.newIntent(getContext());
-//        startActivity(intent);
+        Intent intent = GameActivity.newIntent(getContext());
+        startActivity(intent);
     }
 
 
