@@ -205,7 +205,7 @@ public interface IServer {
      */
     Result SendMessage(String message, String gameID , String authToken);
 
-    //TODO: functions below should be deprecated
+    //TODO: functions below should be consided deprecated
 
     /**
      *

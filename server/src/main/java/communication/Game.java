@@ -1,6 +1,9 @@
 package communication;
 
+import com.obfuscation.server.GenericCommand;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -14,6 +17,18 @@ public class Game {
     private ArrayList<Player> mPlayers;
     private ArrayList<Player> mAbsentPlayers;
     private ArrayList<Message> messages;
+
+    //Client only data member-----------------------------------------
+    private int state;
+    //----------------------------------------------------------------
+
+    //Server only data member ----------------------------------------
+    private HashMap<Integer, GenericCommand> stateCommandMap;
+
+    //----------------------------------------------------------------
+
+
+
 
     public ArrayList<Message> getMessages() {
         return messages;

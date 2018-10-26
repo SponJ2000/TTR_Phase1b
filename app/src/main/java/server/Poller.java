@@ -30,7 +30,6 @@ public class Poller {
                 System.out.println("***********************************************" + ModelRoot.getInstance().getState());
                 switch (ModelRoot.getInstance().getState()) {
                     case GAMELIST:
-
                         CheckandUpdateGameList();
                         break;
                     case LOBBY:
