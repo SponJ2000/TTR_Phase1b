@@ -252,7 +252,14 @@ public class Database {
         }
         return null;
     }
-
+    String findPlayerIDByAuthToken(String authToken) {
+        for (Map.Entry<String, String> entry : authTokenMap.entrySet()) {
+            if (authToken.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
 
     /**
@@ -267,11 +274,23 @@ public class Database {
         return false;
     }
 
+    /**
+     * updating game message list
+     * @param gameID
+     * @param message
+     * @param authToken
+     * @return
+     */
     public Result sendMessage(String gameID, String message, String authToken) {
         if (authTokenMap.containsValue(authToken) || authToken.equals("masterKey")) {
             Game game = findGameByID(gameID);
-            Message messageObject = new Message(, gameID, message);
-            game.getMessages().add(messageObject);
+            String playerID = findPlayerIDByAuthToken(authToken);
+            if (playerID != null) {
+                Message messageObject = new Message(playerID, message);
+                game.getMessages().add(messageObject);
+                //FIXME**
+                return new Result(false, messageObject, null);
+            }
         }
         return new Result(false, null, "Error : Invalid auth_token");
     }
