@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import communication.IClient;
+import communication.Message;
 import communication.Result;
 
 /**
@@ -53,5 +54,10 @@ public class ClientProxy implements IClient {
             }
             else return new Result(true, gameVersion.get(gameID), null);
         }
+    }
+
+    @Override
+    public void updateChat(Message m) {
+
     }
 }
