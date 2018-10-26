@@ -8,6 +8,8 @@ import communication.Ticket;
  * Created by jalton on 10/24/18.
  */
 
-public interface ITicketView {
+public interface ITicketView extends IView {
+
     void setTickets(List<Ticket> tickets);
+
 }

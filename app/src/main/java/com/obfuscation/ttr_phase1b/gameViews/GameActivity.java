@@ -9,18 +9,18 @@ import android.util.Log;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
+import gamePresenters.ChatPresenter;
 import gamePresenters.GamePresenter;
 import gamePresenters.IChatPresenter;
 import gamePresenters.IGamePresenter;
 import gamePresenters.IMenuPresenter;
-import gamePresenters.IScorePresenter;
 import gamePresenters.ITicketPresenter;
+import gamePresenters.MenuPresenter;
 import gamePresenters.Shows;
+import gamePresenters.TicketPresenter;
 
 public class GameActivity extends AppCompatActivity implements IGamePresenter.OnShowListener,
-        IChatPresenter.OnBackListener, IScorePresenter.OnBackListener,
-        ITicketPresenter.OnBackListener, IMenuPresenter.OnBackListener,
-        IMenuPresenter.OnGameSelectListener, IMenuPresenter.OnLogoutListener {
+        IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener, IMenuPresenter.MenuListener {
 
     private static final String TAG = "GameActivity";
 
@@ -42,7 +42,21 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
 
     @Override
     public void onShow(Shows show) {
-
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.container);
+        switch (show) {
+            case menu:
+                PresenterFacade.getInstance().setCurrentFragment( new MenuPresenter((IMenuView) fragment, this) );
+                break;
+            case chat:
+                PresenterFacade.getInstance().setCurrentFragment( new ChatPresenter((IChatView) fragment, this) );
+                break;
+            case tickets:
+                PresenterFacade.getInstance().setCurrentFragment( new TicketPresenter((ITicketView) fragment, this) );
+                break;
+        }
+        fm.beginTransaction().add(R.id.container, fragment).commit();
+        Log.d(TAG, "showing a fragment");
     }
 
     @Override

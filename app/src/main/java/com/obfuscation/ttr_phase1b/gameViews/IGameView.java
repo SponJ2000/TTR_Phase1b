@@ -10,12 +10,12 @@ import communication.Player;
  * Created by jalton on 10/24/18.
  */
 
-public interface IGameView {
-    void UpdateUI();
+public interface IGameView extends IView {
 
     void setMap(GameMap map);
 
     void setCards(List<Card> cards);
 
     void setPlayer(Player player);
+
 }

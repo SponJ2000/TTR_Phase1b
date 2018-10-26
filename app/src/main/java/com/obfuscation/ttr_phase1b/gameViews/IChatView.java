@@ -8,7 +8,8 @@ import communication.Message;
  * Created by jalton on 10/24/18.
  */
 
-public interface IChatView {
-    void updateUI();
+public interface IChatView extends IView {
+
     void setMessages(List<Message> messages);
+
 }

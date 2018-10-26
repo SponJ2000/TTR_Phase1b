@@ -15,7 +15,7 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
-
+        view.updateUI();
     }
 
     public void showMenu() {
@@ -37,4 +37,5 @@ public class GamePresenter implements IGamePresenter {
     public void showMap() {
         this.listener.onShow(Shows.map);
     }
+
 }

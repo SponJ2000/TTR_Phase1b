@@ -8,7 +8,8 @@ import communication.Player;
  * Created by jalton on 10/24/18.
  */
 
-public interface IPlayerInfoView {
-    void updateUI();
+public interface IPlayerInfoView extends IView {
+
     void setPlayers(List<Player> players);
+
 }
