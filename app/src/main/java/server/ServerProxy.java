@@ -124,7 +124,7 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result SendMessage(String message, String authToken) {
+    public Result SendMessage(String message, String gameID , String authToken) {
         return null;
     }
 }

@@ -203,9 +203,9 @@ public interface IServer {
      * @param authToken a String of unique authToken
      * @return
      */
-    Result SendMessage(String message, String authToken);
+    Result SendMessage(String message, String gameID , String authToken);
 
-    //TODO: functions below should are deprecated
+    //TODO: functions below should be deprecated
 
     /**
      *
