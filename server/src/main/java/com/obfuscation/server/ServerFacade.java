@@ -139,7 +139,11 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result SendMessage(String message, String authToken) {
-        return null;
+    public Result SendMessage(String gameID, String message, String authToken) {
+        Result result = db.startGame(gameID, authToken);
+        if(result.isSuccess()) {
+            clientProxy.updateGameList(gameID);
+        }
+        return result;
     }
 }

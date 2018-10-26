@@ -13,6 +13,15 @@ public class Game {
     private int mMaxPlayers;
     private ArrayList<Player> mPlayers;
     private ArrayList<Player> mAbsentPlayers;
+    private ArrayList<Message> messages;
+
+    public ArrayList<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
+    }
 
     private boolean misStarted;
 

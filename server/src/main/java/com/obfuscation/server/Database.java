@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import communication.ActiveUser;
 import communication.Game;
+import communication.Message;
 import communication.Player;
 import communication.Result;
 
@@ -252,6 +253,8 @@ public class Database {
         return null;
     }
 
+
+
     /**
      * Checking if the authToken belongs to the specified user. If not return false
      * @param authToken
@@ -264,6 +267,14 @@ public class Database {
         return false;
     }
 
+    public Result sendMessage(String gameID, String message, String authToken) {
+        if (authTokenMap.containsValue(authToken) || authToken.equals("masterKey")) {
+            Game game = findGameByID(gameID);
+            Message messageObject = new Message(, gameID, message);
+            game.getMessages().add(messageObject);
+        }
+        return new Result(false, null, "Error : Invalid auth_token");
+    }
     /**
      * Creates and retuns a unique, random ID
      * @param isPlayer  if true, returns player ID. If false, returns game ID

@@ -6,12 +6,10 @@ package communication;
 
 public class Message {
     private String playerID;
-    private String gameID;
     private String text;
 
-    public Message(String playerID, String gameID, String text) {
+    public Message(String playerID, String text) {
         this.playerID = playerID;
-        this.gameID = gameID;
         this.text = text;
     }
 }
