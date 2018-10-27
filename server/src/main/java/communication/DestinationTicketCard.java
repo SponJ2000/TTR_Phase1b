@@ -5,4 +5,16 @@ package communication;
  */
 
 public class DestinationTicketCard {
+
+    String startingCity;
+    String endingCity;
+    int value;
+
+    public DestinationTicketCard(String startingCity, String endingCity, int value) {
+        this.startingCity = startingCity;
+        this.endingCity = endingCity;
+        this.value = value;
+    }
 }
+
+

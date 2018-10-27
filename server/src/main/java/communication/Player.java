@@ -1,5 +1,7 @@
 package communication;
 
+import java.util.ArrayList;
+
 /**
  * Created by jalton on 10/1/18.
  */
@@ -7,7 +9,7 @@ package communication;
 public class Player {
     private String id;
     private String playerName;
-    private ArrayList<>
+    private ArrayList<DestinationTicketCard> destinationTickectCardArrayList = new ArrayList<DestinationTicketCard>();
 
     public Player(String id, String playerName) {
         this.id = id;

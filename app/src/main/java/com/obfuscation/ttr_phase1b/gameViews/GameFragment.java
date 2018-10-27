@@ -139,4 +139,4 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mMapView.onLowMemory();
     }
 }
-}
+
