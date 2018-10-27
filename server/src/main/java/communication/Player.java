@@ -7,6 +7,7 @@ package communication;
 public class Player {
     private String id;
     private String playerName;
+    private ArrayList<>
 
     public Player(String id, String playerName) {
         this.id = id;
