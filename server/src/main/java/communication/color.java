@@ -5,4 +5,6 @@ package communication;
  */
 
 public enum color {
+
+
 }
