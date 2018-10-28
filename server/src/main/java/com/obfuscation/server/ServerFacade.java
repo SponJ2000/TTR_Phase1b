@@ -83,6 +83,10 @@ public class ServerFacade implements IServer {
         Result result = db.startGame(gameID, authToken);
         if(result.isSuccess()) {
             clientProxy.updateGameList(gameID);
+            Game game = db.getGame(gameID);
+            for (Player p : game.getPlayers()) {
+                clientProxy.insertKey(gameID, p.getId());
+            }
         }
         return result;
     }

@@ -4,6 +4,10 @@ import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+
+import communication.Game;
+import communication.Player;
 
 
 /**
@@ -33,5 +37,13 @@ public class Server {
         server.createContext("/exec", new ExecCommandHandler());
 
         server.start();
+
+
+        ServerFacade facade = ServerFacade.getInstance();
+//        facade.Register("Jerry", "jerry");
+//        facade.Register("Tom", "tom");
+//        facade.CreateGame(new Game("Jerry's game", "Jerry", new ArrayList<Player>(), 5), "masterKey");
+//        facade.CreateGame(new Game("TOM", "Tom", new ArrayList<Player>(), 3), "masterKey");
+
     }
 }
