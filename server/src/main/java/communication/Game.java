@@ -25,6 +25,7 @@ public class Game {
     private GameMap mMap;
     //Client only data member-----------------------------------------
     private int state;
+    private int ticketsRemainNum;
     //----------------------------------------------------------------
 
     //Server only data member ----------------------------------------
@@ -32,6 +33,14 @@ public class Game {
 
     //----------------------------------------------------------------
 
+
+    public int getTicketsRemainNum() {
+        return ticketsRemainNum;
+    }
+
+    public void setTicketsRemainNum(int ticketsRemainNum) {
+        this.ticketsRemainNum = ticketsRemainNum;
+    }
 
     public ArrayList<Card> getFaceUpTrainCarCards() {
         return faceUpTrainCarCards;

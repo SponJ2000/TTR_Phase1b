@@ -78,6 +78,11 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
+    public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
+        return null;
+    }
+
+    @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "LeaveGame", new String[]{STRING, STRING, STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
@@ -134,7 +139,7 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result SendMessage(String message, String gameID , String authToken) {
+    public Result SendMessage(String authToken, String gameID, Message message) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "SendMessage", new String[]{STRING,STRING,STRING}, new Object[]{message, gameID, authToken});
         return RunCommand(genericCommand);
     }

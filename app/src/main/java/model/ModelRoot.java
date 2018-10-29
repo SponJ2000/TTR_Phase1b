@@ -24,7 +24,7 @@ public class ModelRoot {
 
     private String authToken;
     private ArrayList<Game> gameList;
-    private Game activeGame;
+    private Game game;
     private State state;
     private String userName;
 
@@ -48,7 +48,7 @@ public class ModelRoot {
     }
 
     public void setGame(Game game) {
-        this.activeGame = game;
+        this.game = game;
     }
 
     public void setGameList(ArrayList<Game> games) {
@@ -56,7 +56,7 @@ public class ModelRoot {
     }
 
     public Game getGame(){
-        return activeGame;
+        return game;
     }
 
     public Game getGameByGameID(String gameID) {
@@ -67,7 +67,6 @@ public class ModelRoot {
         }
         return null;
     }
-
     public State getState() {
         return state;
     }

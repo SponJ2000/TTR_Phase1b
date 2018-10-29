@@ -7,6 +7,7 @@ import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 import java.util.ArrayList;
 
 import communication.Game;
+import communication.Message;
 import communication.Result;
 import communication.Serializer;
 import model.ModelRoot;
@@ -51,7 +52,11 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "CheckGameList":
                 return serverProxy.CheckGameList((String) params[0]);
             case "CheckGame":
-                return serverProxy.CheckGame((String) params[0], (String) params[1]);
+                return serverProxy.CheckGame((String) params[0], (String) params[1], (Integer)params[2]);
+            case "SendMessage":
+                return serverProxy.SendMessage((String) params[0], (String) params[1], (Message) params[2]);
+            case "ChooseTicket":
+                return serverProxy.ChooseTicket((String) params[0], (String) params[1], (Message) params[2]);
             default:
                 return new Result(false,null, "Invalid Request");
         }
@@ -108,7 +113,5 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             ModelRoot.getInstance().setGame((Game) result.getData());
         }
     }
-
-
 
 }

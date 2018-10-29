@@ -190,20 +190,6 @@ public interface IServer {
      */
     Result ReturnTickets(List<Ticket> tickets, String authToken);
 
-    /**
-     * user send a message
-     *
-     * @pre     the message can't be empty
-     *          the user who own this authToken has to be in a game
-     *          This authToken is still valid
-     *
-     * @post    the message is added to the list of all messages in the chat.
-     *
-     * @param message   a String that contain the message user want to sent
-     * @param authToken a String of unique authToken
-     * @return
-     */
-    Result SendMessage(String message, String gameID , String authToken);
 
     //TODO: functions below should be consided deprecated
 
@@ -246,4 +232,8 @@ public interface IServer {
      * @return          a Result object containing the game version number
      */
     Result CheckGameLobby(String authToken, String gameID);
+
+    Result SendMessage(String authToken, String gameID, Message message);
+
+    Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets);
 }

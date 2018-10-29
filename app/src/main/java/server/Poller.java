@@ -20,7 +20,7 @@ import model.State;
 public class Poller {
 
     private static Integer gameListVersion = 0;
-    private static Integer gameVersion = 0;
+    public static Integer gameVersion = 0;
     private static boolean running = false;
     private static ScheduledExecutorService scheduledExecutorService;
     private static ScheduledFuture scheduledFuture;

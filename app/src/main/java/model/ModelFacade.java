@@ -1,6 +1,8 @@
 package model;
 
 
+import com.obfuscation.server.GenericCommand;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import communication.Message;
 import communication.Player;
 import communication.Ticket;
 import communication.TrainCarCard;
+import server.Poller;
 import server.ServerProxy;
 import task.GenericTask;
 
@@ -93,7 +96,24 @@ public class ModelFacade implements IGameModel {
 
     public void CheckGame() {
         GenericTask genericTask = new GenericTask("CheckGame");
-        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID());
+        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
+    }
+
+    @Override
+    public void sendMessage(Message message) {
+        GenericTask genericTask = new GenericTask("SendMessage");
+        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), message);
+    }
+
+    @Override
+    public void chooseTickets(List<Ticket> tickets) {
+        GenericTask genericTask = new GenericTask("ChooseTicket");
+        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), tickets);
+    }
+
+    @Override
+    public void chooseCard(int index) {
+
     }
 
     //Called by presenter
@@ -142,20 +162,5 @@ public class ModelFacade implements IGameModel {
     @Override
     public List<Message> getMessages() {
         return GetCurrentGame().getMessages();
-    }
-
-    @Override
-    public void sendMessage(Message message) {
-
-    }
-
-    @Override
-    public void chooseTickets(List<Ticket> tickets) {
-
-    }
-
-    @Override
-    public void chooseCard(int index) {
-
     }
 }

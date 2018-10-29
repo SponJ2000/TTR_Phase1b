@@ -55,14 +55,20 @@ public class ClientFacade implements IClient{
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setTickets((ArrayList<Ticket>) tickets);
+                p.setTickes((ArrayList<Ticket>) tickets);
             }
         }
     }
 
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
-
+        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        if (g != null) {
+            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+            if (p != null) {
+                p.setTrainCarNum(cardNum);
+            }
+        }
     }
 
     @Override
@@ -100,8 +106,7 @@ public class ClientFacade implements IClient{
     public void updateDestinationDeck(String gameID, Integer cardNum) {
         Game g = ModelRoot.getInstance().getGameByGameID(gameID);
         if (g != null) {
-//TODO: 1111111111111111111111111111111111111111
-            g.g
+            g.setTicketsRemainNum(cardNum);
         }
     }
 

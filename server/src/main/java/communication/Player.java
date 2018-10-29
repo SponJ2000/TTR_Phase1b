@@ -14,9 +14,12 @@ public class Player {
     private ArrayList<Card> cards;
     private ArrayList<String> claimedRoutesID;
 
+    private ArrayList<Ticket> ticketToChoose;
+
     private Integer ticketNum;
     private Integer trainCarNum;
     private color playerColor;
+
 
     public color getPlayerColor() {
         return playerColor;
@@ -30,6 +33,7 @@ public class Player {
         this.id = id;
         this.playerName = playerName;
         tickets = new ArrayList<Ticket>();
+        ticketToChoose = new ArrayList<Ticket>();
         cards = new ArrayList<Card>();
         claimedRoutesID = new ArrayList<String>();
     }
@@ -38,6 +42,7 @@ public class Player {
         this.id = null;
         this.playerName = playerName;
         tickets = new ArrayList<Ticket>();
+        ticketToChoose = new ArrayList<Ticket>();
         cards = new ArrayList<Card>();
         claimedRoutesID = new ArrayList<String>();
     }
