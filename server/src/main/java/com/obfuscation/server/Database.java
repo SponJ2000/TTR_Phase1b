@@ -40,12 +40,13 @@ public class Database {
     rejoin
      */
 
+
     private Map<String, String> loginInfo;
     private List<Game> gameList;
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
-    private List<color> colors = Arrays.asList(color.BLACK, color.BLUE, color.GREEN, color.RED, color.YELLOW);
+    private List<color> colors = Arrays.asList(color.BLACK, color.BLUE, color.PURPLE, color.RED, color.YELLOW);
 
     public List<Game> getGameList() {
         return gameList;
@@ -169,6 +170,47 @@ public class Database {
         return game.addPlayer(user.getPlayer());
     }
 
+    void setupGame(String gameID) {
+        Game game = getGame(gameID);
+
+        //initialize traincards
+        ArrayList<Card> trainCards = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            Card purpleCard = new Card(TrainCarCardColor.PURPLE);
+            Card blueCard = new Card(TrainCarCardColor.BLUE);
+            Card orangeCard = new Card(TrainCarCardColor.ORANGE);
+            Card whiteCard = new Card(TrainCarCardColor.WHITE);
+            Card greenCard = new Card(TrainCarCardColor.GREEN);
+            Card redCard = new Card(TrainCarCardColor.RED);
+            Card blackCard = new Card(TrainCarCardColor.BLACK);
+            Card yellowCard = new Card(TrainCarCardColor.YELLOW);
+            trainCards.add(purpleCard);
+            trainCards.add(blueCard);
+            trainCards.add(orangeCard);
+            trainCards.add(whiteCard);
+            trainCards.add(greenCard);
+            trainCards.add(redCard);
+            trainCards.add(blackCard);
+            trainCards.add(yellowCard);
+        }
+        for (int i = 0; i < 14; i++) {
+            Card LocomotiveCard = new Card(TrainCarCardColor.LOCOMOTIVE);
+        }
+        Collections.shuffle(trainCards);
+        game.setTrainCards(trainCards);
+
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        //initialize destTickets
+        for (int i = 0; i < 30; i++) {
+            //FIXME**
+            Ticket ticket = new Ticket(new City("CITY1"), new City("city2"), 100);
+            tickets.add(ticket);
+        }
+        Collections.shuffle(tickets);
+        game.setTickes(tickets);
+
+
+    }
     Result startGame(String gameID, String authToken) {
         Game game = findGameByID(gameID);
         if (game == null) return new Result(false, null, "Error: game not found");
@@ -195,44 +237,7 @@ public class Database {
             players.get(i).setPlayerColor(colors.get(i));
         }
 
-
-        //initialize traincards
-        ArrayList<Card> trainCards = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            Card purpleCard = new Card(TrainCarCardColor.PURPLE);
-            Card blueCard = new Card(TrainCarCardColor.BLUE);
-            Card orangeCard = new Card(TrainCarCardColor.ORANGE);
-            Card whiteCard = new Card(TrainCarCardColor.WHITE);
-            Card greenCard = new Card(TrainCarCardColor.GREEN);
-            Card redCard = new Card(TrainCarCardColor.RED);
-            Card blackCard = new Card(TrainCarCardColor.BLACK);
-            Card yellowCard = new Card(TrainCarCardColor.YELLOW);
-            trainCards.add(purpleCard);
-            trainCards.add(blueCard);
-            trainCards.add(orangeCard);
-            trainCards.add(whiteCard);
-            trainCards.add(greenCard);
-            trainCards.add(redCard);
-            trainCards.add(blackCard);
-            trainCards.add(yellowCard);
-        }
-        for (int i = 0; i < 14; i++) {
-            Card LocomotiveCard = new Card(TrainCarCardColor.LOCOMOTIVE);
-        }
-
-        ArrayList<Ticket> tickets = new ArrayList<>();
-        //initialize destTickets
-        for (int i = 0; i < 30; i++) {
-            //FIXME**
-            Ticket ticket = new Ticket(new City("CITY1"), new City("city2"), 100);
-            tickets.add(ticket);
-        }
-        Collections.shuffle(tickets);
-
-        //TODO : Set an order - player at index 0 starts and increments the index
-
-        //FIXME return the game object
-        return new Result(true, true, null);
+        return new Result(true, game, null);
     }
 
     //TODO : do we need authtoken?

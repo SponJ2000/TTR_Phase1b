@@ -16,6 +16,8 @@ public interface IClient {
     //TODO: this functon should be replaced with function that has specific purpose, like OpponentClaimRoute()...
     void updateGame(String gameID);
 
+    void initializeGame(Game game);
+
     void updatePlayerPoints(String gameID, String plyerID, Integer points);
 
     //TODO: what dose this suppose to do? what do we want to do this card passed in as a parameter?

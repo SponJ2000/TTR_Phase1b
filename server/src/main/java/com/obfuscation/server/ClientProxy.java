@@ -7,10 +7,13 @@ import java.util.Map;
 
 import communication.Card;
 import communication.DestinationTicketCard;
+import communication.Game;
 import communication.IClient;
 import communication.ICommand;
 import communication.Message;
+import communication.Player;
 import communication.Result;
+import communication.Ticket;
 
 /**
  * Created by jalton on 10/1/18.
@@ -26,8 +29,9 @@ public class ClientProxy implements IClient {
     private static final String STRING = "java.lang.String";
     private static final String INTEGER = Integer.TYPE.getName();
     private static final String CARD = Card.class.getName();
-    private static final String DESTCARD = DestinationTicketCard.class.getName();
+    private static final String TICKET = Ticket.class.getName();
     private static final String MESSAGE = Message.class.getName();
+    private static final String GAME = Game.class.getName();
 
     /**
      * getters and setters
@@ -52,7 +56,20 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updatePlayerPoints(String gameID, String plyerID, int points) {
+    public void initializeGame(Game game) {
+        for (Player player : game.getPlayers()) {
+            GamePlayerPair gamePlayerPair = new GamePlayerPair(game.getGameID(), player.getId());
+            ICommand command = new GenericCommand(
+                    CLIENT_FACADE
+                    , "initializeGame"
+                    , new String[]{GAME}
+                    , new Object[] {game});
+            notSeenCommands.get(gamePlayerPair).add(command);
+        }
+    }
+
+    @Override
+    public void updatePlayerPoints(String gameID, String plyerID, Integer points) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updatePlayerPoints"
@@ -80,12 +97,12 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updateTickets(String gameID, DestinationTicketCard destinationTicketCard) {
+    public void updateTickets(String gameID, List<Ticket> tickets) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTickets"
-                , new String[]{STRING, DESTCARD}
-                , new Object[] {gameID, destinationTicketCard});
+                , new String[]{STRING, TICKET}
+                , new Object[] {gameID, tickets});
         for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
             if (gamePlayerPair.getGameID().equals(gameID)) {
                 notSeenCommands.get(gamePlayerPair).add(command);
@@ -108,7 +125,7 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updateOpponentTrainCars(String gameID, String playerID, int carNum) {
+    public void updateOpponentTrainCars(String gameID, String playerID, Integer carNum) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateOpponentTrainCars"
@@ -122,7 +139,7 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updateOpponentTickets(String gameID, String playerID, int cardNum) {
+    public void updateOpponentTickets(String gameID, String playerID, Integer cardNum) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateOpponentTickets"
@@ -136,7 +153,7 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updateTrainDeck(String gameID, Card faceCards, int downCardNum) {
+    public void updateTrainDeck(String gameID, Card faceCards, Integer downCardNum) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainDeck"
@@ -150,7 +167,7 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updateDestinationDeck(String gameID, int cardNum) {
+    public void updateDestinationDeck(String gameID, Integer cardNum) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateDestinationDeck"
@@ -194,17 +211,7 @@ public class ClientProxy implements IClient {
     private int version;
     private Map<String, Integer> gameVersion;
 
-    private static ClientProxy instance = null;
-
-    public static ClientProxy getInstance(){
-        if (instance == null) {
-            instance = new ClientProxy();
-        }
-
-        return instance;
-    }
-
-    private ClientProxy() {
+    public ClientProxy() {
         version = 0;
         gameVersion = new HashMap<>();
     }

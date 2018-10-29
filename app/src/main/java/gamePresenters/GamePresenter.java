@@ -20,6 +20,9 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
+        if(model.isMyTurn()) {
+//          is my turn, so do something
+        }
         view.setCards(model.getCards());
         view.setMap(model.getMap());
         view.setPlayer(model.getPlayer());

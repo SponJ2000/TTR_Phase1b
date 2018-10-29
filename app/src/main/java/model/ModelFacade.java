@@ -140,6 +140,11 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public boolean isMyTurn() {
+        return false;
+    }
+
+    @Override
     public List<Card> getCards() {
         return getPlayer().getCards();
     }
@@ -157,6 +162,11 @@ public class ModelFacade implements IGameModel {
     @Override
     public List<Ticket> getTickets() {
         return getPlayer().getTickets();
+    }
+
+    @Override
+    public List<Ticket> getTicketsToChoose() {
+        return null;
     }
 
     @Override

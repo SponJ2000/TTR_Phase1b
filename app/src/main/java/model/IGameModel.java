@@ -3,15 +3,14 @@ package model;
 import java.util.List;
 
 import communication.Card;
-import communication.DestinationTicketCard;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
 import communication.Ticket;
-import communication.TrainCarCard;
 
 public interface IGameModel {
 
+    boolean isMyTurn();
 
     List<Card> getCards();
 
@@ -20,8 +19,9 @@ public interface IGameModel {
 //  get the current user
     Player getPlayer();
 
-
     List<Ticket> getTickets();
+
+    List<Ticket> getTicketsToChoose();
 
     List<Message> getMessages();
 

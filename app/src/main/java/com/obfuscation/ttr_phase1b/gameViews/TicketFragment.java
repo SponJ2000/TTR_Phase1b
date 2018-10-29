@@ -1,109 +1,191 @@
 package com.obfuscation.ttr_phase1b.gameViews;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.obfuscation.ttr_phase1b.R;
+import com.obfuscation.ttr_phase1b.activity.IPresenter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import communication.Message;
+import communication.Ticket;
+import gamePresenters.ITicketPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link TicketFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link TicketFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TicketFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class TicketFragment extends Fragment implements ITicketView {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private static final String TAG = "TicketFrag";
 
-    private OnFragmentInteractionListener mListener;
+    private ITicketPresenter mPresenter;
+
+    private List<Ticket> mTickets;
+    private boolean[] mChosenTickets;
+
+    private Button mDoneButton;
+    private TicketAdapter mTicketAdapter;
+    private RecyclerView mTicketRecycler;
 
     public TicketFragment() {
-        // Required empty public constructor
+        mChosenTickets = new boolean[3];
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TicketFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TicketFragment newInstance(String param1, String param2) {
+
+    public static TicketFragment newInstance() {
         TicketFragment fragment = new TicketFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ticket, container, false);
+        View view = inflater.inflate(R.layout.fragment_ticket, container, false);
+
+//      Check to see if we are at beginning of game or not;
+//      if we are, then the player needs to select 2 tickets
+        if(true) {
+            TextView tv = (TextView) view.findViewById(R.id.ticket_header);
+            tv.setText("Choose at least 2");
+        }
+
+        mDoneButton = (Button) view.findViewById(R.id.ticket_done_button);
+        mDoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Now chosing tickets");
+                onDone();
+            }
+        });
+
+        mTicketRecycler = (RecyclerView) view.findViewById(R.id.ticket_recycler_view);
+        mTicketRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        changeAccessibility();
+
+        updateUI();
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private void onDone() {
+        List<Ticket> tickets = new ArrayList<>();
+        for(int i = 0; i < mChosenTickets.length; i++) {
+            if(mChosenTickets[i]) {
+                tickets.add(mTickets.get(i));
+            }
+        }
+        mPresenter.onFinish(tickets);
+    }
+
+    private void changeAccessibility() {
+        for(int i = 0; i < mChosenTickets.length; i++) {
+            if(mChosenTickets[i]) {
+                mDoneButton.setEnabled(true);
+                return;
+            }
+        }
+        mDoneButton.setEnabled(false);
+    }
+
+    @Override
+    public void setTickets(List<Ticket> tickets) {
+        mTickets = tickets;
+    }
+
+    @Override
+    public void updateUI() {
+        Log.d(TAG, "getting updated");
+        if(mTicketRecycler != null) {
+            Log.d(TAG+"_updateUI", "ticketlist: " + mTickets);
+            mTicketAdapter = new TicketAdapter(mTickets);
+            mTicketRecycler.setAdapter(mTicketAdapter);
         }
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+    public void setPresenter(IPresenter presenter) {
+        mPresenter = (ITicketPresenter) presenter;
+    }
+
+
+    private class TicketHolder extends RecyclerView.ViewHolder {
+
+        private int mTicket;
+        private CheckBox mCheckbox;
+        private TextView mDescription;
+        private TextView mPoints;
+
+        public TicketHolder(View view) {
+            super(view);
+
+            mCheckbox = view.findViewById(R.id.ticket_checkbox);
+            mDescription = view.findViewById(R.id.ticket_description);
+            mPoints = view.findViewById(R.id.ticket_points);
         }
+
+        public void bind(Ticket ticket, int index) {
+            mTicket = index;
+            mDescription.setText(ticket.getValue());
+            mPoints.setText(ticket.getValue());
+            mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (buttonView.isChecked()) {
+                        mChosenTickets[mTicket] = true;
+                    } else {
+                        mChosenTickets[mTicket] = false;
+                    }
+                }
+
+            });
+        }
+
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    private class TicketAdapter extends RecyclerView.Adapter<TicketHolder> {
+
+        private List<Ticket> mTickets;
+
+        public TicketAdapter(List<Ticket> tickets) {
+            mTickets = tickets;
+        }
+
+        public TicketHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View view = inflater.inflate(R.layout.gamelist_view, parent, false);
+            return new TicketHolder(view);
+        }
+
+        public void onBindViewHolder(TicketHolder holder, int position) {
+            Log.d(TAG+"_adapter", "game[" + position + "]: " + mTickets.get(position));
+            holder.bind(mTickets.get(position), position);
+        }
+
+        public int getItemCount() {
+            return mTickets.size();
+        }
+
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

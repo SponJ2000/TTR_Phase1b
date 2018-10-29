@@ -2,6 +2,9 @@ package gamePresenters;
 
 import com.obfuscation.ttr_phase1b.gameViews.ITicketView;
 
+import java.util.List;
+
+import communication.Ticket;
 import model.IGameModel;
 import model.ModelFacade;
 
@@ -18,7 +21,8 @@ public class TicketPresenter implements ITicketPresenter {
     }
 
     @Override
-    public void onFinish() {
+    public void onFinish(List<Ticket> tickets) {
+        model.chooseTickets(tickets);
         listener.onBack();
     }
 
