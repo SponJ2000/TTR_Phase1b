@@ -131,11 +131,12 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public Player getPlayer() {
-        Player player = ModelRoot.getInstance().getGame().getUserPlayer();
-        if (player == null) {
-            player = new Player(ModelRoot.getInstance().getUserName());
+        Game g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+            return p;
         }
-        return player;
+        return null;
     }
 
     @Override

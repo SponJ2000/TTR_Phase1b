@@ -10,10 +10,12 @@ import java.util.UUID;
 
 import communication.ActiveUser;
 import communication.Card;
+import communication.City;
 import communication.Game;
 import communication.Message;
 import communication.Player;
 import communication.Result;
+import communication.Ticket;
 import communication.TrainCarCardColor;
 import communication.color;
 
@@ -218,7 +220,14 @@ public class Database {
             Card LocomotiveCard = new Card(TrainCarCardColor.LOCOMOTIVE);
         }
 
-
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        //initialize destTickets
+        for (int i = 0; i < 30; i++) {
+            //FIXME**
+            Ticket ticket = new Ticket(new City("CITY1"), new City("city2"), 100);
+            tickets.add(ticket);
+        }
+        Collections.shuffle(tickets);
 
         //TODO : Set an order - player at index 0 starts and increments the index
 
