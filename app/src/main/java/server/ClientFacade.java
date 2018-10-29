@@ -1,6 +1,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import communication.Card;
 import communication.DestinationTicketCard;
@@ -8,6 +9,7 @@ import communication.Game;
 import communication.IClient;
 import communication.Message;
 import communication.Player;
+import communication.Ticket;
 import model.ModelRoot;
 
 /**
@@ -42,8 +44,14 @@ public class ClientFacade implements IClient{
     }
 
     @Override
-    public void updateTickets(String gameID, DestinationTicketCard destinationTicketCard) {
-
+    public void updateTickets(String gameID, List<Ticket> tickets) {
+        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        if (g != null) {
+            Player p = g.getPlayerbyID(playerID);
+            if (p != null) {
+                p.setTrainCarNum(carNum);
+            }
+        }
     }
 
     @Override

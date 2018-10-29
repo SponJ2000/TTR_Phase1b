@@ -1,6 +1,8 @@
 package communication;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jalton on 10/1/18.
@@ -19,7 +21,7 @@ public interface IClient {
     //TODO: what dose this suppose to do? what do we want to do this card passed in as a parameter?
     void updateTrainCards(String gameID, Card trainCard);
 
-    void updateTickets(String gameID, DestinationTicketCard destinationTicketCard);
+    void updateTickets(String gameID, List<Ticket> tickets);
 
     void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum);
 
@@ -33,6 +35,5 @@ public interface IClient {
 
     void claimRoute(String gameID, String playerID, String routeID);
 
-    // todo: are you planning on just appending a message into the chat? I am doing it assuming you are append a message
     void updateChat(String gameID, Message m);
 }
