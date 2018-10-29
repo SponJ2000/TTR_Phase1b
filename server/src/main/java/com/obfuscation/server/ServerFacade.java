@@ -6,6 +6,7 @@ import java.util.List;
 import communication.Card;
 import communication.Game;
 import communication.IServer;
+import communication.Message;
 import communication.Player;
 import communication.Result;
 import communication.Ticket;
@@ -147,9 +148,10 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result SendMessage(String gameID, String message, String authToken) {
+        System.out.println("Updating the message");
         Result result = db.sendMessage(gameID, message, authToken);
         if(result.isSuccess()) {
-            clientProxy.updateGameList(gameID);
+            clientProxy.updateChat(gameID, (Message)result.getData());
         }
         return result;
     }

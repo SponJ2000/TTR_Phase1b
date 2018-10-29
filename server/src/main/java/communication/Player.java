@@ -16,7 +16,15 @@ public class Player {
 
     private Integer ticketNum;
     private Integer trainCarNum;
+    private color playerColor;
 
+    public color getPlayerColor() {
+        return playerColor;
+    }
+
+    public void setPlayerColor(color playerColor) {
+        this.playerColor = playerColor;
+    }
 
     public Player(String id, String playerName) {
         this.id = id;
