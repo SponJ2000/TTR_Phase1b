@@ -2,10 +2,12 @@ package gamePresenters;
 
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
+import communication.Message;
+
 public interface IChatPresenter extends IPresenter {
 
     void goBack();
-    void onSend();
+    void onSend(Message message);
 
     /**
      * This interface must be implemented by activities that contain this

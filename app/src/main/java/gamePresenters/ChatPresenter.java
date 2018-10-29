@@ -2,6 +2,7 @@ package gamePresenters;
 
 import com.obfuscation.ttr_phase1b.gameViews.IChatView;
 
+import communication.Message;
 import model.IGameModel;
 import model.ModelFacade;
 
@@ -13,6 +14,7 @@ public class ChatPresenter implements IChatPresenter {
 
     public ChatPresenter(IChatView view, IChatPresenter.OnBackListener listener) {
         this.view = view;
+        view.setPresenter(this);
         this.listener = listener;
         this.model = ModelFacade.getInstance();
     }
@@ -29,7 +31,7 @@ public class ChatPresenter implements IChatPresenter {
     }
 
     @Override
-    public void onSend() {
+    public void onSend(Message message) {
 
     }
 

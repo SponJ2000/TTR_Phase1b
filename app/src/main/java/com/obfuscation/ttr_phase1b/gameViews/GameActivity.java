@@ -40,7 +40,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
 
         if (fragment == null) {
             fragment = GameFragment.newInstance();
-            PresenterFacade.getInstance().setCurrentFragment(new GamePresenter((IGameView) fragment, this));
+            PresenterFacade.getInstance().setPresenter(new GamePresenter((IGameView) fragment, this));
             fm.beginTransaction().add(R.id.container, fragment).commit();
             Log.d(TAG, "Loaded the game fragment");
         }
@@ -52,13 +52,13 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         Fragment fragment = fm.findFragmentById(R.id.container);
         switch (show) {
             case menu:
-                PresenterFacade.getInstance().setCurrentFragment( new MenuPresenter((IMenuView) fragment, this) );
+                PresenterFacade.getInstance().setPresenter( new MenuPresenter((IMenuView) fragment, this) );
                 break;
             case chat:
-                PresenterFacade.getInstance().setCurrentFragment( new ChatPresenter((IChatView) fragment, this) );
+                PresenterFacade.getInstance().setPresenter( new ChatPresenter((IChatView) fragment, this) );
                 break;
             case tickets:
-                PresenterFacade.getInstance().setCurrentFragment( new TicketPresenter((ITicketView) fragment, this) );
+                PresenterFacade.getInstance().setPresenter( new TicketPresenter((ITicketView) fragment, this) );
                 break;
         }
         fm.beginTransaction().add(R.id.container, fragment).commit();
@@ -70,7 +70,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         FragmentManager fm = getSupportFragmentManager();
 
         Fragment fragment = GameFragment.newInstance();
-        PresenterFacade.getInstance().setCurrentFragment( new GamePresenter((IGameView) fragment, this) );
+        PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
         fm.beginTransaction().add(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game fragment back in");
     }

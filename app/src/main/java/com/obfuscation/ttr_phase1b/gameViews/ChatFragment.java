@@ -4,16 +4,23 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.obfuscation.ttr_phase1b.R;
+import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
 import java.util.List;
 
 import communication.Message;
+import gamePresenters.IChatPresenter;
 
 /**
  * A fragment representing a list of Items.
@@ -24,7 +31,14 @@ public class ChatFragment extends Fragment implements IChatView {
 
     private static final String TAG = "ChatFrag";
 
+    private IChatPresenter mPresenter;
+
     private List<Message> mMessages;
+
+    private Message mPlayerMessage;
+
+    private EditText mPlayerMessageText;
+    private Button mSendButton;
 
     private RecyclerView mMessageRecycler;
     private MessageAdapter mMessageAdapter;
@@ -51,12 +65,49 @@ public class ChatFragment extends Fragment implements IChatView {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
+        mPlayerMessage = new Message("");
+        mPlayerMessageText = (EditText) view.findViewById(R.id.player_message);
+        mPlayerMessageText.setText("");
+        mPlayerMessageText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mPlayerMessage.setText(s.toString());
+                changeAccessibility();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        mSendButton = (Button) view.findViewById(R.id.send_message_button);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Now sending message");
+            }
+        });
+
         mMessageRecycler = (RecyclerView) view.findViewById(R.id.game_recycler_view);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        changeAccessibility();
 
         updateUI();
 
         return view;
+    }
+
+    private void changeAccessibility() {
+        if(mPlayerMessage.getText().equals("")) {
+            mSendButton.setEnabled(false);
+        }else {
+            mSendButton.setEnabled(true);
+        }
     }
 
     @Override
@@ -74,29 +125,28 @@ public class ChatFragment extends Fragment implements IChatView {
         }
     }
 
+    @Override
+    public void setPresenter(IPresenter presenter) {
+        mPresenter = (IChatPresenter) presenter;
+    }
+
     private class MessageHolder extends RecyclerView.ViewHolder {
 
-        Message mMessage;
-
-//        private TextView mGameIDView;
-//        private TextView mHostView;
-//        private TextView mPlayersView;
+//        private Message mMessage;
+        private TextView mPlayerNameView;
+        private TextView mMessageView;
 
         public MessageHolder(View view) {
             super(view);
 
-//            mGameIDView = view.findViewById(R.id.game_id_view);
-//            mHostView = view.findViewById(R.id.hostname_view);
-//            mPlayersView = view.findViewById(R.id.players_view);
+            mPlayerNameView = view.findViewById(R.id.player_name);
+            mMessageView = view.findViewById(R.id.message);
         }
 
         public void bindGame(Message message) {
-//            Log.d(TAG+"_holder", "game: " + game.toString());
-            mMessage = message;
-//            mGameNumber = gameNumber;
-//            mGameIDView.setText(game.getGameID());
-//            mHostView.setText(game.getHost());
-//            mPlayersView.setText(game.getPlayerCount()+"/"+game.getMaxPlayers());
+//            mMessage = message;
+            mPlayerNameView.setText(message.getPlayerID());
+            mMessageView.setText(message.getText());
         }
 
     }
