@@ -25,4 +25,6 @@ public interface IGameModel {
 
     List<Message> getMessages();
 
+    void sendMessage(Message message);
+
 }

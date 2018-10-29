@@ -142,4 +142,9 @@ public class ModelFacade implements IGameModel {
     public List<Message> getMessages() {
         return GetCurrentGame().getMessages();
     }
+
+    @Override
+    public void sendMessage(Message message) {
+
+    }
 }
