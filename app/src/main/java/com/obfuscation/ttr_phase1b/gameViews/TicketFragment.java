@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.obfuscation.ttr_phase1b.R;
@@ -72,7 +73,8 @@ public class TicketFragment extends Fragment implements ITicketView {
         mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Now sending message");
+                Log.d(TAG, "Now chosing tickets");
+                onDone();
             }
         });
 
@@ -84,6 +86,16 @@ public class TicketFragment extends Fragment implements ITicketView {
         updateUI();
 
         return view;
+    }
+
+    private void onDone() {
+        List<Ticket> tickets = new ArrayList<>();
+        for(int i = 0; i < mChosenTickets.length; i++) {
+            if(mChosenTickets[i]) {
+                tickets.add(mTickets.get(i));
+            }
+        }
+        mPresenter.onFinish(tickets);
     }
 
     private void changeAccessibility() {
@@ -136,6 +148,17 @@ public class TicketFragment extends Fragment implements ITicketView {
             mTicket = index;
             mDescription.setText(ticket.getValue());
             mPoints.setText(ticket.getValue());
+            mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (buttonView.isChecked()) {
+                        mChosenTickets[mTicket] = true;
+                    } else {
+                        mChosenTickets[mTicket] = false;
+                    }
+                }
+
+            });
         }
 
     }
