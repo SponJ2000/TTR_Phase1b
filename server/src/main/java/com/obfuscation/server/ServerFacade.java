@@ -1,6 +1,7 @@
 package com.obfuscation.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import communication.Card;
@@ -17,24 +18,24 @@ import communication.Ticket;
 
 public class ServerFacade implements IServer {
     private Database db = Database.getInstance();
-    private ClientProxy clientProxy = ClientProxy.getInstance();
-
-    Database database;
-
+    private HashMap<String, ClientProxy> clientproxies;
     private static ServerFacade instance = new ServerFacade();
 
     public static ServerFacade getInstance(){
-
         return instance;
     }
 
     private ServerFacade() {
-        database = Database.getInstance();
+
     }
 
     @Override
     public Result Login(String id, String password) {
         System.out.println("On login");
+        Result result = db.login(id, password);
+        if (result.isSuccess()) {
+            clientproxies.put((String)result.getData(), new ClientProxy());
+        }
         return db.login(id, password);
     }
 
@@ -50,8 +51,7 @@ public class ServerFacade implements IServer {
         }
         Result result = db.joinGame(id, gameID);
         if(result.isSuccess()) {
-            clientProxy.updateGameList(null);
-            clientProxy.updateGame(gameID);
+            for (ClientProxy clientProxy : )
         }
         return result;
     }
@@ -88,6 +88,15 @@ public class ServerFacade implements IServer {
             for (Player p : game.getPlayers()) {
                 clientProxy.insertKey(gameID, p.getId());
             }
+            clientProxy.initializeGame(game);
+            db.setupGame(gameID);
+            clientProxy.updateDestinationDeck(gameID, game.getTickets().size());
+            for (Player player : game.getPlayers()) {
+                clientProxy.updateTickets(gameID, player.getId(), );
+            }
+            clientProxy.updateOpponentTickets();
+            clientProxy.updateTrainCards();
+            clientProxy.updateOpponentTrainCards();
         }
         return result;
     }

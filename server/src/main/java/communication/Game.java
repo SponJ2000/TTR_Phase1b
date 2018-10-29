@@ -25,6 +25,15 @@ public class Game {
     private GameMap mMap;
     //Client only data member-----------------------------------------
     private int state;
+    private int currentPlayerIndex = 0;
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
+    }
     //----------------------------------------------------------------
 
     //Server only data member ----------------------------------------
@@ -207,6 +216,11 @@ public class Game {
 
     public boolean isStarted() {
         return misStarted;
+    }
+
+    public void moveToNextTurn() {
+        currentPlayerIndex++;
+        currentPlayerIndex %= getPlayers().size();
     }
 
     @Override
