@@ -9,15 +9,15 @@ import java.util.Scanner;
  */
 
 public class DestinationTickectCardMaker {
-    public ArrayList<DestinationTicketCard> MakeCards(){
-        ArrayList<DestinationTicketCard> result = new ArrayList<DestinationTicketCard>();
+    public ArrayList<Ticket> MakeCards(){
+        ArrayList<Ticket> result = new ArrayList<Ticket>();
         try {
             Scanner sc = new Scanner(new File("DestinationTicketCard.txt"));
             while (sc.hasNextLine()) {
                 String beginningCity = sc.nextLine();
                 String endingCity = sc.nextLine();
                 int value = Integer.parseInt(sc.nextLine());
-                DestinationTicketCard d = new DestinationTicketCard(beginningCity,endingCity,value);
+                Ticket d = new Ticket(new City(beginningCity), new City(endingCity),value);
                 result.add(d);
                 sc.nextLine();
             }

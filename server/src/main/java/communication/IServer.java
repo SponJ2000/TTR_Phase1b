@@ -120,7 +120,7 @@ public interface IServer {
      * @return          a Result object containing all update commands
      */
 
-    Result GetUpdates(String authToken, String gameID, int state);
+    Result GetUpdates(String authToken, String gameID, Integer state);
 
     /**
      * User claim a route on the map with his cards
@@ -237,7 +237,7 @@ public interface IServer {
      * @param gameID
      * @return          a Result object containing the game version number
      */
-    Result CheckGame(String authToken, String gameID, int state);
+    Result CheckGame(String authToken, String gameID, Integer state);
 
     /**
      *

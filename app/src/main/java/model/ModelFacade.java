@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
+import communication.DestinationTicketCard;
 import communication.Game;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
 import communication.Ticket;
+import communication.TrainCarCard;
 import server.ServerProxy;
 import task.GenericTask;
 
@@ -113,27 +115,31 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    public List<Card> getCards() {
-        return null;
+    public GameMap getMap() {
+        return ModelRoot.getInstance().getGame().getmMap();
     }
 
     @Override
-    public GameMap getMap() {
-        return null;
+    public List<Card> getCards() {
+        return getPlayer().getCards();
     }
 
     @Override
     public Player getPlayer() {
-        return null;
+        Player player = ModelRoot.getInstance().getGame().getUserPlayer();
+        if (player == null) {
+            player = new Player(ModelRoot.getInstance().getUserName());
+        }
+        return player;
     }
 
     @Override
     public List<Ticket> getTickets() {
-        return null;
+        return getPlayer().getTickets();
     }
 
     @Override
     public List<Message> getMessages() {
-        return null;
+        return GetCurrentGame().getMessages();
     }
 }

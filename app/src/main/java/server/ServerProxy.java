@@ -19,6 +19,10 @@ public class ServerProxy implements communication.IServer {
     ClientCommunicator clientCommunicator;
     private static final String SERVER_FACADE = "com.obfuscation.server.ServerFacade";
     private static final String STRING = "java.lang.String";
+    private static final String INTEGER = "java.lang.Integer";
+//    TODO: helps to find the typeName
+    private static final String ARRAYLISTCARD = "??";
+    private static final String LISTTICKET = "??";
 
 
     public ServerProxy() {
@@ -80,8 +84,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result CheckGame(String authToken, String gameID) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGame", new String[]{STRING, STRING}, new Object[]{authToken, gameID});
+    public Result CheckGame(String authToken, String gameID, Integer state) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGame", new String[]{STRING, STRING, INTEGER}, new Object[]{authToken, gameID, state});
         return RunCommand(genericCommand);
     }
 
@@ -99,35 +103,45 @@ public class ServerProxy implements communication.IServer {
     }
 
     //Phase 2 stuff
-
-
     @Override
-    public Result GetUpdates(String authToken, String gameID, int state) {
-        return null;
+    public Result GetUpdates(String authToken, String gameID, Integer state) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetUpdates", new String[]{STRING, STRING, INTEGER}, new Object[]{authToken, gameID, state});
+        return RunCommand(genericCommand);
     }
 
     @Override
     public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, ARRAYLISTCARD, STRING}, new Object[]{routeID, cards, authToken});
+        return RunCommand(genericCommand);
     }
 
     @Override
     public Result DrawTrainCard(Integer index, String authToken) {
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "DrawTrainCard", new String[]{INTEGER, STRING}, new Object[]{index, authToken});
+        return RunCommand(genericCommand);
     }
 
     @Override
     public Result GetTickets(String authToken) {
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetTickets", new String[]{STRING}, new Object[]{authToken});
+        return RunCommand(genericCommand);
     }
 
     @Override
     public Result ReturnTickets(List<Ticket> tickets, String authToken) {
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{LISTTICKET,STRING}, new Object[]{tickets, authToken});
+        return RunCommand(genericCommand);
     }
 
     @Override
     public Result SendMessage(String message, String gameID , String authToken) {
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "SendMessage", new String[]{STRING,STRING,STRING}, new Object[]{message, gameID, authToken});
+        return RunCommand(genericCommand);
+    }
+
+    @Override
+    public Result CheckGameLobby(String authToken, String gameID) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGameLobby", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
+        return RunCommand(genericCommand);
     }
 }

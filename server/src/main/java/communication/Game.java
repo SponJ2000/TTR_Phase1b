@@ -18,6 +18,15 @@ public class Game {
     private ArrayList<Player> mAbsentPlayers;
     private ArrayList<Message> messages;
 
+    private Player userPlayer;
+
+    private ArrayList<Card> trainCards;
+
+
+    private ArrayList<TrainCarCard> trainCarCards;
+    private ArrayList<Ticket> tickets;
+    private ArrayList<Card> faceUpTrainCarCards;
+    private GameMap mMap;
     //Client only data member-----------------------------------------
     private int state;
     //----------------------------------------------------------------
@@ -28,7 +37,29 @@ public class Game {
     //----------------------------------------------------------------
 
 
+    public ArrayList<Card> getFaceUpTrainCarCards() {
+        return faceUpTrainCarCards;
+    }
 
+    public void setFaceUpTrainCarCards(ArrayList<Card> faceUpTrainCarCards) {
+        this.faceUpTrainCarCards = faceUpTrainCarCards;
+    }
+
+    public ArrayList<Card> getTrainCards() {
+        return trainCards;
+    }
+
+    public void setTrainCards(ArrayList<Card> trainCards) {
+        this.trainCards = trainCards;
+    }
+
+    public Player getUserPlayer() {
+        return userPlayer;
+    }
+
+    public void setUserPlayer(Player userPlayer) {
+        this.userPlayer = userPlayer;
+    }
 
     public ArrayList<Message> getMessages() {
         return messages;
@@ -47,6 +78,60 @@ public class Game {
         this.mMaxPlayers = mMaxPlayers;
         this.mAbsentPlayers = new ArrayList<>();
         this.misStarted = false;
+        trainCarCards = new ArrayList<TrainCarCard>();
+        tickets = new ArrayList<Ticket>();
+        mMap = new GameMap();
+        messages = new ArrayList<Message>();
+    }
+
+    public Game() {
+        mPlayers = new ArrayList<Player>();
+        mAbsentPlayers = new ArrayList<Player>();
+        messages = new ArrayList<Message>();
+
+        trainCards = new ArrayList<Card>();
+        trainCarCards = new ArrayList<TrainCarCard>();
+        tickets = new ArrayList<Ticket>();
+    }
+
+    public void insertMessage(Message m) {
+        messages.add(m);
+    }
+
+    public Player getPlayerbyID(String playerID) {
+        if (userPlayer.getId().equals(playerID)) {
+            return userPlayer;
+        }
+        for(Player p: mPlayers) {
+            if (p.getId().equals(playerID)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public GameMap getmMap() {
+        return mMap;
+    }
+
+    public void setmMap(GameMap mMap) {
+        this.mMap = mMap;
+    }
+
+    public ArrayList<TrainCarCard> getTrainCarCards() {
+        return trainCarCards;
+    }
+
+    public void setTrainCarCards(ArrayList<TrainCarCard> trainCarCards) {
+        this.trainCarCards = trainCarCards;
+    }
+
+    public ArrayList<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickes(ArrayList<Ticket> tickes) {
+        this.tickets = tickes;
     }
 
     public String getGameID() {
@@ -93,6 +178,10 @@ public class Game {
         state = nState;
     }
 
+    public void increaseGameState(){
+        state++;
+    }
+
     public Result addPlayer(communication.Player player){
         if (misStarted) {
             if (mPlayers.contains(player)) {
@@ -127,7 +216,6 @@ public class Game {
 
         return new Result(true, true, null);
     }
-
 
     public void startGame(){
         misStarted = true;

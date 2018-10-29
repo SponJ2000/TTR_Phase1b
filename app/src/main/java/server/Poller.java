@@ -81,6 +81,7 @@ public class Poller {
                 ModelFacade.getInstance().UpdateGame();
                 gameVersion = versionNum;
                 //what to do after game is updated
+                ModelRoot.getInstance().getGame().increaseGameState();
             }
         }
         else {
