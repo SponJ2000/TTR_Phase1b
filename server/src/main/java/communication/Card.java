@@ -5,9 +5,9 @@ package communication;
  */
 
 public class Card {
-    private color color;
+    private TrainCarCardColor color;
 
-    public Card(communication.color color) {
+    public Card(TrainCarCardColor color) {
         this.color = color;
     }
 }

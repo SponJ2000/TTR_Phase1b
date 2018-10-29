@@ -225,6 +225,7 @@ public class Game {
         return misStarted;
     }
 
+    @Override
     public String toString() {
         return "{ " + mGameID + ", " + mHost + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
     }
