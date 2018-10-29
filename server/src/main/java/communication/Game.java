@@ -26,6 +26,8 @@ public class Game {
     //Client only data member-----------------------------------------
     private int state;
 
+    //stop delete this data member, client need this
+    private int ticketsRemainNum;
     private int currentPlayerIndex = 0;
 
     public int getCurrentPlayerIndex() {
@@ -35,7 +37,6 @@ public class Game {
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
         this.currentPlayerIndex = currentPlayerIndex;
     }
-
     //----------------------------------------------------------------
 
     //Server only data member ----------------------------------------

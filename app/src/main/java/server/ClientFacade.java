@@ -125,4 +125,9 @@ public class ClientFacade implements IClient{
             g.insertMessage(m);
         }
     }
+
+    @Override
+    public void initializeGame(Game game) {
+        ModelRoot.getInstance().setGame(game);
+    }
 }
