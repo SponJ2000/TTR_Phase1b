@@ -14,4 +14,16 @@ public class Ticket {
         this.city2 = city2;
         this.value = value;
     }
+
+    public City getCity1() {
+        return city1;
+    }
+
+    public City getCity2() {
+        return city2;
+    }
+
+    public int getValue() {
+        return value;
+    }
 }

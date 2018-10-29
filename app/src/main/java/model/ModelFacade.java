@@ -120,22 +120,33 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public boolean isMyTurn() {
+        return false;
+    }
+
+    @Override
     public List<Card> getCards() {
         return getPlayer().getCards();
     }
 
     @Override
     public Player getPlayer() {
-        Player player = ModelRoot.getInstance().getGame().getUserPlayer();
-        if (player == null) {
-            player = new Player(ModelRoot.getInstance().getUserName());
+        Game g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+            return p;
         }
-        return player;
+        return null;
     }
 
     @Override
     public List<Ticket> getTickets() {
         return getPlayer().getTickets();
+    }
+
+    @Override
+    public List<Ticket> getTicketsToChoose() {
+        return null;
     }
 
     @Override

@@ -51,13 +51,12 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.container);
         switch (show) {
-            case menu:
-                PresenterFacade.getInstance().setPresenter( new MenuPresenter((IMenuView) fragment, this) );
-                break;
             case chat:
+                fragment = ChatFragment.newInstance();
                 PresenterFacade.getInstance().setPresenter( new ChatPresenter((IChatView) fragment, this) );
                 break;
             case tickets:
+                fragment = TicketFragment.newInstance();
                 PresenterFacade.getInstance().setPresenter( new TicketPresenter((ITicketView) fragment, this) );
                 break;
         }

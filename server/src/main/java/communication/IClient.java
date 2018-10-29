@@ -21,7 +21,7 @@ public interface IClient {
     void updatePlayerPoints(String gameID, String plyerID, Integer points);
 
     //TODO: what dose this suppose to do? what do we want to do this card passed in as a parameter?
-    void updateTrainCards(String gameID, Card trainCard);
+    void updateTrainCards(String gameID, List<Card> trainCards);
 
     void updateTickets(String gameID, List<Ticket> tickets);
 

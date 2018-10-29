@@ -18,8 +18,6 @@ public class Game {
     private ArrayList<Player> mAbsentPlayers;
     private ArrayList<Message> messages;
 
-    private Player userPlayer;
-
     private ArrayList<Card> trainCards;
     private ArrayList<Ticket> tickets;
     private ArrayList<Card> faceUpTrainCarCards;
@@ -60,12 +58,13 @@ public class Game {
         this.trainCards = trainCards;
     }
 
-    public Player getUserPlayer() {
-        return userPlayer;
-    }
-
-    public void setUserPlayer(Player userPlayer) {
-        this.userPlayer = userPlayer;
+    public Player getUserPlayer(String userName) {
+        for(Player p: mPlayers) {
+            if (p.getPlayerName().equals(userName)){
+                return p;
+            }
+        }
+        return null;
     }
 
     public ArrayList<Message> getMessages() {
@@ -104,9 +103,6 @@ public class Game {
     }
 
     public Player getPlayerbyID(String playerID) {
-        if (userPlayer.getId().equals(playerID)) {
-            return userPlayer;
-        }
         for(Player p: mPlayers) {
             if (p.getId().equals(playerID)) {
                 return p;

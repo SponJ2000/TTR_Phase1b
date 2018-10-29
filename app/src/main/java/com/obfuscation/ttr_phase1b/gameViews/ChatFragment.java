@@ -92,7 +92,7 @@ public class ChatFragment extends Fragment implements IChatView {
             }
         });
 
-        mMessageRecycler = (RecyclerView) view.findViewById(R.id.game_recycler_view);
+        mMessageRecycler = (RecyclerView) view.findViewById(R.id.chat_recycler_view);
         mMessageRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         changeAccessibility();
@@ -143,7 +143,7 @@ public class ChatFragment extends Fragment implements IChatView {
             mMessageView = view.findViewById(R.id.message);
         }
 
-        public void bindGame(Message message) {
+        public void bind(Message message) {
 //            mMessage = message;
             mPlayerNameView.setText(message.getPlayerID());
             mMessageView.setText(message.getText());
@@ -167,7 +167,7 @@ public class ChatFragment extends Fragment implements IChatView {
 
         public void onBindViewHolder(MessageHolder holder, int position) {
             Log.d(TAG+"_adapter", "game[" + position + "]: " + mMessages.get(position));
-            holder.bindGame(mMessages.get(position));
+            holder.bind(mMessages.get(position));
         }
 
         public int getItemCount() {

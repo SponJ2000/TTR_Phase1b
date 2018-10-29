@@ -39,17 +39,23 @@ public class ClientFacade implements IClient{
     }
 
     @Override
-    public void updateTrainCards(String gameID, Card trainCard) {
-
+    public void updateTrainCards(String gameID, List<Card> trainCards) {
+        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        if (g != null) {
+            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+            if (p != null) {
+                p.setCards((ArrayList<Card>) trainCards);
+            }
+        }
     }
 
     @Override
     public void updateTickets(String gameID, List<Ticket> tickets) {
         Game g = ModelRoot.getInstance().getGameByGameID(gameID);
         if (g != null) {
-            Player p = g.getPlayerbyID(playerID);
+            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setTrainCarNum(carNum);
+                p.setTickets((ArrayList<Ticket>) tickets);
             }
         }
     }
@@ -89,11 +95,13 @@ public class ClientFacade implements IClient{
         }
     }
 
+    //upate number of card in the deck
     @Override
     public void updateDestinationDeck(String gameID, Integer cardNum) {
         Game g = ModelRoot.getInstance().getGameByGameID(gameID);
         if (g != null) {
-
+//TODO: 1111111111111111111111111111111111111111
+            g.g
         }
     }
 

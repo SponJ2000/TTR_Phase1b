@@ -8,7 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.obfuscation.ttr_phase1b.R;
+import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
 import java.util.List;
 
@@ -16,15 +22,6 @@ import communication.Card;
 import communication.GameMap;
 import communication.Player;
 import gamePresenters.IGamePresenter;
-
-
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
 
 public class GameFragment extends Fragment implements IGameView, OnMapReadyCallback {
