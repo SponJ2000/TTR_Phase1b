@@ -1,16 +1,23 @@
 package com.obfuscation.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import communication.ActiveUser;
+import communication.Card;
+import communication.City;
 import communication.Game;
 import communication.Message;
 import communication.Player;
 import communication.Result;
+import communication.Ticket;
+import communication.TrainCarCardColor;
+import communication.color;
 
 /**
  * Created by jalton on 10/3/18.
@@ -38,6 +45,7 @@ public class Database {
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
+    private List<color> colors = Arrays.asList(color.BLACK, color.BLUE, color.GREEN, color.RED, color.YELLOW);
 
     public List<Game> getGameList() {
         return gameList;
@@ -172,6 +180,7 @@ public class Database {
         if(game.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
 
         game.startGame();
+
         List<Player> players = game.getPlayers();
         for (Player player : players) {
             ActiveUser user = findUserByPlayer(player);
@@ -180,6 +189,49 @@ public class Database {
             user.getJoinedGames().add(gameID);
         }
 
+        //Assign colors
+        Collections.shuffle(colors);
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).setPlayerColor(colors.get(i));
+        }
+
+
+        //initialize traincards
+        ArrayList<Card> trainCards = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            Card purpleCard = new Card(TrainCarCardColor.PURPLE);
+            Card blueCard = new Card(TrainCarCardColor.BLUE);
+            Card orangeCard = new Card(TrainCarCardColor.ORANGE);
+            Card whiteCard = new Card(TrainCarCardColor.WHITE);
+            Card greenCard = new Card(TrainCarCardColor.GREEN);
+            Card redCard = new Card(TrainCarCardColor.RED);
+            Card blackCard = new Card(TrainCarCardColor.BLACK);
+            Card yellowCard = new Card(TrainCarCardColor.YELLOW);
+            trainCards.add(purpleCard);
+            trainCards.add(blueCard);
+            trainCards.add(orangeCard);
+            trainCards.add(whiteCard);
+            trainCards.add(greenCard);
+            trainCards.add(redCard);
+            trainCards.add(blackCard);
+            trainCards.add(yellowCard);
+        }
+        for (int i = 0; i < 14; i++) {
+            Card LocomotiveCard = new Card(TrainCarCardColor.LOCOMOTIVE);
+        }
+
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        //initialize destTickets
+        for (int i = 0; i < 30; i++) {
+            //FIXME**
+            Ticket ticket = new Ticket(new City("CITY1"), new City("city2"), 100);
+            tickets.add(ticket);
+        }
+        Collections.shuffle(tickets);
+
+        //TODO : Set an order - player at index 0 starts and increments the index
+
+        //FIXME return the game object
         return new Result(true, true, null);
     }
 
@@ -288,7 +340,6 @@ public class Database {
             if (playerID != null) {
                 Message messageObject = new Message(playerID, message);
                 game.getMessages().add(messageObject);
-                //FIXME**
                 return new Result(false, messageObject, null);
             }
         }

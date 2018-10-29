@@ -19,9 +19,9 @@ public class Game {
     private ArrayList<Message> messages;
 
     private ArrayList<Card> trainCards;
-    private ArrayList<TrainCarCard> trainCarCards;
     private ArrayList<Ticket> tickets;
     private ArrayList<Card> faceUpTrainCarCards;
+
     private GameMap mMap;
     //Client only data member-----------------------------------------
     private int state;
@@ -75,7 +75,6 @@ public class Game {
         this.mMaxPlayers = mMaxPlayers;
         this.mAbsentPlayers = new ArrayList<>();
         this.misStarted = false;
-        trainCarCards = new ArrayList<TrainCarCard>();
         tickets = new ArrayList<Ticket>();
         mMap = new GameMap();
         messages = new ArrayList<Message>();
@@ -87,7 +86,6 @@ public class Game {
         messages = new ArrayList<Message>();
 
         trainCards = new ArrayList<Card>();
-        trainCarCards = new ArrayList<TrainCarCard>();
         tickets = new ArrayList<Ticket>();
     }
 
@@ -110,14 +108,6 @@ public class Game {
 
     public void setmMap(GameMap mMap) {
         this.mMap = mMap;
-    }
-
-    public ArrayList<TrainCarCard> getTrainCarCards() {
-        return trainCarCards;
-    }
-
-    public void setTrainCarCards(ArrayList<TrainCarCard> trainCarCards) {
-        this.trainCarCards = trainCarCards;
     }
 
     public ArrayList<Ticket> getTickets() {
@@ -219,6 +209,7 @@ public class Game {
         return misStarted;
     }
 
+    @Override
     public String toString() {
         return "{ " + mGameID + ", " + mHost + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
     }
