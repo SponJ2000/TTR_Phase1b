@@ -55,7 +55,7 @@ public class ClientFacade implements IClient{
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setTickes((ArrayList<Ticket>) tickets);
+                p.setTickets((ArrayList<Ticket>) tickets);
             }
         }
     }
