@@ -17,7 +17,7 @@ public interface IGameModel {
 
     GameMap getMap();
 
-    // TODO: do you mean current user? i am gonna set it up as if it is asking for current user
+//  get the current user
     Player getPlayer();
 
 
@@ -26,5 +26,9 @@ public interface IGameModel {
     List<Message> getMessages();
 
     void sendMessage(Message message);
+
+    void chooseTickets(List<Ticket> tickets);
+
+    void chooseCard(int index);
 
 }

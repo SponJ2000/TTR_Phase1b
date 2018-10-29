@@ -147,4 +147,14 @@ public class ModelFacade implements IGameModel {
     public void sendMessage(Message message) {
 
     }
+
+    @Override
+    public void chooseTickets(List<Ticket> tickets) {
+
+    }
+
+    @Override
+    public void chooseCard(int index) {
+
+    }
 }
