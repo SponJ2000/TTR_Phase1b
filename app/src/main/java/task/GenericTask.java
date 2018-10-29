@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import communication.Game;
 import communication.Result;
@@ -80,7 +79,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             default:
                 break;
         }
-        PresenterFacade.getInstance().updateFragment(result);
+        PresenterFacade.getInstance().updatePresenter(result);
 
     }
 
