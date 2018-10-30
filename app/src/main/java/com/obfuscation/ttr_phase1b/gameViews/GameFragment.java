@@ -8,11 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
+//import com.google.android.gms.maps.CameraUpdateFactory;
+//import com.google.android.gms.maps.GoogleMap;
+//import com.google.android.gms.maps.OnMapReadyCallback;
+//import com.google.android.gms.maps.model.LatLng;
+//import com.google.android.gms.maps.model.MapStyleOptions;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
@@ -24,14 +24,14 @@ import communication.Player;
 import gamePresenters.IGamePresenter;
 
 
-public class GameFragment extends Fragment implements IGameView, OnMapReadyCallback {
+public class GameFragment extends Fragment implements IGameView {
 
     public static GameFragment newInstance() {
         return new GameFragment();
     }
 
-    MapView mMapView;
-    private GoogleMap googleMap;
+//    MapView mMapView;
+//    private GoogleMap googleMap;
 
     private IGamePresenter mPresenter;
 
@@ -44,46 +44,46 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume();
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-
-                try {
-                    // Customise the styling of the base map using a JSON object defined
-                    // in a raw resource file.
-                    boolean success = googleMap.setMapStyle(
-                            MapStyleOptions.loadRawResourceStyle(
-                                    this, R.raw.map_style.json));
-
-                    if (!success) {
-                        Log.e(TAG, "Style parsing failed.");
-                    }
-                } catch (Resources.NotFoundException e) {
-                    Log.e(TAG, "Can't find style. Error: ", e);
-                }
-
-
-                // For dropping a marker at a point on the Map
-                LatLng ny = new LatLng(41, 74);
-                googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        });
+//        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+//        mMapView.onCreate(savedInstanceState);
+//
+//        mMapView.onResume();
+//
+//        try {
+//            MapsInitializer.initialize(getActivity().getApplicationContext());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        mMapView.getMapAsync(new OnMapReadyCallback() {
+//            @Override
+//            public void onMapReady(GoogleMap mMap) {
+//                googleMap = mMap;
+//
+//                try {
+//                    // Customise the styling of the base map using a JSON object defined
+//                    // in a raw resource file.
+//                    boolean success = googleMap.setMapStyle(
+//                            MapStyleOptions.loadRawResourceStyle(
+//                                    this, R.raw.map_style.json));
+//
+//                    if (!success) {
+//                        Log.e(TAG, "Style parsing failed.");
+//                    }
+//                } catch (Resources.NotFoundException e) {
+//                    Log.e(TAG, "Can't find style. Error: ", e);
+//                }
+//
+//
+//                // For dropping a marker at a point on the Map
+//                LatLng ny = new LatLng(41, 74);
+//                googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
+//
+//                // For zooming automatically to the location of the marker
+//                CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
+//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//            }
+//        });
 
         return rootView;
 
@@ -119,28 +119,28 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mPresenter = (IGamePresenter) presenter;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mMapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mMapView.onLowMemory();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        mMapView.onResume();
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        mMapView.onPause();
+//    }
+//
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        mMapView.onDestroy();
+//    }
+//
+//    @Override
+//    public void onLowMemory() {
+//        super.onLowMemory();
+//        mMapView.onLowMemory();
+//    }
 }
 

@@ -1,5 +1,7 @@
 package model;
 
+import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,6 +175,7 @@ public class FakeModel implements IGameModel {
     @Override
     public void sendMessage(Message message) {
         messages.add(message);
+        PresenterFacade.getInstance().updatePresenter(null);
     }
 
 }

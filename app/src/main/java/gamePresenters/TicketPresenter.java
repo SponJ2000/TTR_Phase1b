@@ -30,7 +30,7 @@ public class TicketPresenter implements ITicketPresenter {
 
     @Override
     public void updateInfo(Object result) {
-        view.setTickets(model.getTickets());
+        view.setTickets(model.getTicketsToChoose());
         view.updateUI();
     }
 
