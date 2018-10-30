@@ -109,11 +109,14 @@ public class ModelFacade implements IGameModel {
     public void chooseTickets(List<Ticket> tickets) {
         GenericTask genericTask = new GenericTask("ChooseTicket");
         genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), tickets);
+        ModelRoot.getInstance().setTicketsWanted((ArrayList<Ticket>) tickets);
     }
 
     @Override
     public void chooseCard(int index) {
-
+        GenericTask genericTask = new GenericTask("DrawTrainCard");
+        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
+        ModelRoot.getInstance().setWantedCardIndex(index);
     }
 
     //Called by presenter
@@ -161,12 +164,12 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Ticket> getTickets() {
-        return getPlayer().getTickets();
+        return getPlayer().getTicketToChoose();
     }
 
     @Override
     public List<Ticket> getTicketsToChoose() {
-        return null;
+        return ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
     }
 
     @Override

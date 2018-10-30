@@ -44,7 +44,7 @@ public class ClientFacade implements IClient{
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setCards((ArrayList<Card>) trainCards);
+                p.setCardToChoose((ArrayList<Card>) trainCards);
             }
         }
     }
@@ -55,7 +55,7 @@ public class ClientFacade implements IClient{
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setTickets((ArrayList<Ticket>) tickets);
+                p.setTicketToChoose((ArrayList<Ticket>) tickets);
             }
         }
     }
@@ -129,5 +129,6 @@ public class ClientFacade implements IClient{
     @Override
     public void initializeGame(Game game) {
         ModelRoot.getInstance().setGame(game);
+        Poller.gameVersion = 0;
     }
 }

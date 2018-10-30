@@ -15,6 +15,7 @@ public class Player {
     private ArrayList<String> claimedRoutesID;
 
     private ArrayList<Ticket> ticketToChoose;
+    private ArrayList<Card> cardToChoose;
 
     private Integer ticketNum;
     private Integer trainCarNum;
@@ -104,11 +105,34 @@ public class Player {
         this.tickets = tickets;
     }
 
+    public void addTickets(ArrayList<Ticket> moreTickets) {
+        this.tickets.addAll(moreTickets);
+    }
+    public ArrayList<Ticket> getTicketToChoose() {
+        return ticketToChoose;
+    }
+
+    public void setTicketToChoose(ArrayList<Ticket> ticketToChoose) {
+        this.ticketToChoose = ticketToChoose;
+    }
+
     public String getId() {
         return id;
     }
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public void addCardToOwnedFromOptions(Integer index) {
+        cards.add(cardToChoose.get(index));
+    }
+
+    public ArrayList<Card> getCardToChoose() {
+        return cardToChoose;
+    }
+
+    public void setCardToChoose(ArrayList<Card> cardToChoose) {
+        this.cardToChoose = cardToChoose;
     }
 }

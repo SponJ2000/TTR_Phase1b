@@ -5,6 +5,7 @@ import java.util.List;
 
 import communication.Game;
 import communication.Player;
+import communication.Ticket;
 
 /**
  * Created by hao on 10/5/18.
@@ -27,6 +28,9 @@ public class ModelRoot {
     private Game game;
     private State state;
     private String userName;
+
+    private ArrayList<Ticket> ticketsWanted;
+    private int wantedCardIndex;
 
     public ModelRoot() {
         this.state = State.GAMELIST;
@@ -83,4 +87,22 @@ public class ModelRoot {
         this.userName = userName;
     }
 
+    public ArrayList<Ticket> getTicketsWanted() {
+        if (ticketsWanted == null) {
+            ticketsWanted = new ArrayList<Ticket>();
+        }
+        return ticketsWanted;
+    }
+
+    public void setTicketsWanted(ArrayList<Ticket> ticketsWanted) {
+        this.ticketsWanted = ticketsWanted;
+    }
+
+    public int getWantedCardIndex() {
+        return wantedCardIndex;
+    }
+
+    public void setWantedCardIndex(int wantedCardIndex) {
+        this.wantedCardIndex = wantedCardIndex;
+    }
 }

@@ -5,11 +5,13 @@ import android.os.AsyncTask;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import communication.Game;
 import communication.Message;
 import communication.Result;
 import communication.Serializer;
+import communication.Ticket;
 import model.ModelRoot;
 import server.Poller;
 import server.ServerProxy;
@@ -56,7 +58,9 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "SendMessage":
                 return serverProxy.SendMessage((String) params[0], (String) params[1], (Message) params[2]);
             case "ChooseTicket":
-                return serverProxy.ChooseTicket((String) params[0], (String) params[1], (Message) params[2]);
+                return serverProxy.ChooseTicket((String) params[0], (String) params[1], (List<Ticket>) params[2]);
+            case "DrawTrainCard":
+                return serverProxy.DrawTrainCard((int) params[0], (String) params[1]);
             default:
                 return new Result(false,null, "Invalid Request");
         }
@@ -81,6 +85,11 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "GetGame":
                 FetchGameFrom(result);
                 break;
+            case "ChooseTicket":
+                OnTickectsChoosen(result);
+                break;
+            case "DrawTrainCard":
+                OnTrainCardDrawn(result);
             default:
                 break;
         }
@@ -111,6 +120,21 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     private void FetchGameFrom(Result result) {
         if (result.isSuccess()) {
             ModelRoot.getInstance().setGame((Game) result.getData());
+        }
+    }
+
+    private void OnTickectsChoosen(Result result) {
+        if (result.isSuccess()) {
+            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).addTickets(ModelRoot.getInstance().getTicketsWanted());
+            ModelRoot.getInstance().setTicketsWanted(new ArrayList<Ticket>());
+        }
+    }
+
+    private void OnTrainCardDrawn(Result result) {
+        if (result.isSuccess()) {
+            ModelRoot m = ModelRoot.getInstance();
+            String userName = m.getUserName();
+            m.getGame().getUserPlayer(userName).addCardToOwnedFromOptions(m.getWantedCardIndex());
         }
     }
 
