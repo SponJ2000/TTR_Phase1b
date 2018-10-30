@@ -139,9 +139,7 @@ public class Database {
             errorInfo = "Error: Invalid max players";
         }
         else valid = true;
-
         if(!valid) return new Result(valid, null, errorInfo);
-
         //check the userID
         String userID = game.getHost();
         if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
@@ -153,7 +151,7 @@ public class Database {
         game.setPlayers(playerList);
 
         gameList.add(game);
-
+        System.out.println("Get HERE");
         return new Result(true, gameList, null);
     }
 

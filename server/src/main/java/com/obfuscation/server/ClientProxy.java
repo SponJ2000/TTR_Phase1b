@@ -31,6 +31,8 @@ public class ClientProxy implements IClient {
     }
 
     public ClientProxy(String authToken) {
+        version = 0;
+        gameVersion = new HashMap<>();
         this.authToken = authToken;
     }
 
@@ -187,6 +189,7 @@ public class ClientProxy implements IClient {
     public void updateGame(String gameID) {
         int v = gameVersion.get(gameID);
         v += 1;
+        System.out.println(authToken + " " + gameID + " IIIIIIIIIIIIIIIIIIINcrease v " + v);
         gameVersion.put(gameID, v);
     }
 

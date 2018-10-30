@@ -71,56 +71,81 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result Register(String id, String password) {
-        return db.register(id, password);
+        Result result = db.register(id, password);
+        if (result.isSuccess()) {
+            clientproxies.add(new ClientProxy((String)result.getData()));
+        }
+        return result;
     }
 
     @Override
     public Result JoinGame(String id, String gameID, String authToken) {
-        if(!db.checkAuthToken(authToken, id)) {
-            return new Result(false, null, "Error: Invalid authorization");
-        }
-        Result result = db.joinGame(id, gameID);
-        if(result.isSuccess()) {
-            for (ClientProxy clientProxy : clientproxies) {
-                clientProxy.updateGame(gameID);
-                clientProxy.updateGameList(gameID);
+        try {
+            if (!db.checkAuthToken(authToken, id)) {
+                return new Result(false, null, "Error: Invalid authorization");
             }
-            gameIDclientProxyMap.get(gameID).add(getClientProxyByAuthToken(authToken));
+            Result result = db.joinGame(id, gameID);
+            if (result.isSuccess()) {
+                for (ClientProxy clientProxy : clientproxies) {
+                    clientProxy.updateGameList(null);
+                }
+                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                    clientProxy.updateGame(gameID);
+                }
+                gameIDclientProxyMap.get(gameID).add(getClientProxyByAuthToken(authToken));
+            }
+            return result;
         }
-        return result;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
-        if(!db.checkAuthToken(authToken, id)) {
-            return new Result(false, null, "Error: Invalid authorization");
-        }
-
-        Result result = db.leaveGame(gameID, id);
-        if(result.isSuccess()) {
-            for (ClientProxy clientProxy : clientproxies) {
-                clientProxy.updateGameList(gameID);
-                clientProxy.updateGame(gameID);
+        try {
+            if (!db.checkAuthToken(authToken, id)) {
+                return new Result(false, null, "Error: Invalid authorization");
             }
-            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                if (clientProxy.getAuthToken().equals(authToken)) {
-                    gameIDclientProxyMap.get(gameID).remove(clientProxy);
+
+            Result result = db.leaveGame(gameID, id);
+            if (result.isSuccess()) {
+                for (ClientProxy clientProxy : clientproxies) {
+                    clientProxy.updateGameList(null);
+                }
+                gameIDclientProxyMap.get(gameID).remove(getClientProxyByAuthToken(authToken));
+                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                    clientProxy.updateGame(gameID);
                 }
             }
+            return result;
         }
-        return result;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public Result CreateGame(Game game, String authToken) {
-        Result result = db.newGame(game, authToken);
-        if(result.isSuccess()) {
-            for (ClientProxy clientProxy : clientproxies) {
-                clientProxy.updateGameList(game.getGameID());
+        try {
+            Result result = db.newGame(game, authToken);
+            System.out.println("WHAT IS " + result.toString());
+            if (result.isSuccess()) {
+                for (ClientProxy clientProxy : clientproxies) {
+                    clientProxy.updateGameList(game.getGameID());
+                }
+                gameIDclientProxyMap.put(game.getGameID(), new ArrayList<ClientProxy>());
+                gameIDclientProxyMap.get(game.getGameID()).add(getClientProxyByAuthToken(authToken));
             }
-            gameIDclientProxyMap.put(game.getGameID(), new ArrayList<ClientProxy>());
+            System.out.println("CREATE " + result.toString());
+            return result;
         }
-        return result;
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -196,27 +221,38 @@ public class ServerFacade implements IServer {
                 result = clientProxy.checkUpdates(null);
             }
         }
+        System.out.println("EE");
+        System.out.println(result.toString());
         return result;
     }
 
     @Override
     public Result CheckGame(String authToken, String gameID, Integer state) {
-        System.out.println("User checking game");
-        Result result = null;
-        for (ClientProxy clientProxy : clientproxies) {
-            if (clientProxy.getAuthToken().equals(authToken)) {
-                result = clientProxy.checkUpdates(gameID);
-            }
-        }
-
-        System.out.println("With isSuccess" + result.isSuccess());
-
-
-        return result;
+       return null;
     }
 
     @Override
     public Result CheckGameLobby(String authToken, String gameID) {
+        try {
+            System.out.println("User checking gsame");
+            Result result = null;
+            for (ClientProxy clientProxy : clientproxies) {
+                System.out.println(clientProxy.getAuthToken());
+                System.out.println(authToken);
+                System.out.println("^^^^^^^^^");
+                if (clientProxy.getAuthToken().equals(authToken)) {
+                    result = clientProxy.checkUpdates(gameID);
+                }
+            }
+
+            System.out.println("With isSuccess" + result.isSuccess());
+
+
+            return result;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
