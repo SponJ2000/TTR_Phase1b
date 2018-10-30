@@ -206,9 +206,36 @@ public class Database {
             Ticket ticket = new Ticket(new City("CITY1"), new City("city2"), 100);
             tickets.add(ticket);
         }
+
+
         Collections.shuffle(tickets);
+
+        //set player tickets
+        for (Player player : game.getPlayers()) {
+            ArrayList<Ticket> playerTickets = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                Ticket ticket = tickets.get(0);
+                playerTickets.add(ticket);
+                tickets.remove(0);
+            }
+            player.setTickets(playerTickets);
+        }
+
+        //set the deck
         game.setTickes(tickets);
 
+        //set player train cards
+        for (Player player : game.getPlayers()) {
+            ArrayList<Card> playerTrainCards = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                Card card = trainCards.get(0);
+                playerTrainCards.add(card);
+                playerTrainCards.remove(0);
+            }
+            player.setCards(playerTrainCards);
+        }
+
+        game.setTrainCards(trainCards);
 
     }
     Result startGame(String gameID, String authToken) {
@@ -236,7 +263,6 @@ public class Database {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).setPlayerColor(colors.get(i));
         }
-
         return new Result(true, game, null);
     }
 
@@ -309,10 +335,19 @@ public class Database {
         }
         return null;
     }
-    String findPlayerIDByAuthToken(String authToken) {
+    public String findPlayerIDByAuthToken(String authToken) {
         for (Map.Entry<String, String> entry : authTokenMap.entrySet()) {
             if (authToken.equals(entry.getValue())) {
                 return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public String findAuthTokenByPlayerID(String playerID) {
+        for (Map.Entry<String, String> entry : authTokenMap.entrySet()) {
+            if (playerID.equals(entry.getKey())) {
+                return entry.getValue();
             }
         }
         return null;

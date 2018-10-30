@@ -28,6 +28,11 @@ public class ClientFacade implements IClient{
     }
 
     @Override
+    public void initializeGame(Game game) {
+
+    }
+
+    @Override
     public void updatePlayerPoints(String gameID, String plyerID, Integer points) {
         Game g = ModelRoot.getInstance().getGameByGameID(gameID);
         if (g != null) {
@@ -44,7 +49,7 @@ public class ClientFacade implements IClient{
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setCardToChoose((ArrayList<Card>) trainCards);
+                p.setCards((ArrayList<Card>) trainCards);
             }
         }
     }
@@ -55,20 +60,14 @@ public class ClientFacade implements IClient{
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setTicketToChoose((ArrayList<Ticket>) tickets);
+                p.setTickets((ArrayList<Ticket>) tickets);
             }
         }
     }
 
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
-        if (g != null) {
-            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
-            if (p != null) {
-                p.setTrainCarNum(cardNum);
-            }
-        }
+
     }
 
     @Override
@@ -106,7 +105,8 @@ public class ClientFacade implements IClient{
     public void updateDestinationDeck(String gameID, Integer cardNum) {
         Game g = ModelRoot.getInstance().getGameByGameID(gameID);
         if (g != null) {
-            g.setTicketsRemainNum(cardNum);
+//TODO: 1111111111111111111111111111111111111111
+
         }
     }
 
@@ -124,11 +124,5 @@ public class ClientFacade implements IClient{
         if (g != null) {
             g.insertMessage(m);
         }
-    }
-
-    @Override
-    public void initializeGame(Game game) {
-        ModelRoot.getInstance().setGame(game);
-        Poller.gameVersion = 0;
     }
 }

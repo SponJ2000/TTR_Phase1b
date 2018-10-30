@@ -20,11 +20,24 @@ import communication.Ticket;
  */
 
 public class ClientProxy implements IClient {
+    private String authToken;
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public ClientProxy(String authToken) {
+        this.authToken = authToken;
+    }
 
     /**
      * private member and class name strings
      */
-    private Map<GamePlayerPair, List<ICommand>> notSeenCommands = new HashMap();
+    private List<ICommand> notSeenCommands = new ArrayList<>();
     private static final String CLIENT_FACADE = "ClientFacade";
     private static final String STRING = "java.lang.String";
     private static final String INTEGER = Integer.TYPE.getName();
@@ -32,40 +45,28 @@ public class ClientProxy implements IClient {
     private static final String TICKET = Ticket.class.getName();
     private static final String MESSAGE = Message.class.getName();
     private static final String GAME = Game.class.getName();
+    private static final String LIST = List.class.getName();
 
     /**
      * getters and setters
      * @return
      */
-    public Map<GamePlayerPair, List<ICommand>> getNotSeenCommands() {
+    public List<ICommand> getNotSeenCommands() {
         return notSeenCommands;
     }
 
-    public void setNotSeenCommands(Map<GamePlayerPair, List<ICommand>> notSeenCommands) {
+    public void setNotSeenCommands(List<ICommand> notSeenCommands) {
         this.notSeenCommands = notSeenCommands;
-    }
-
-    /**
-     * make key at the start of the game
-     * @param gameID
-     * @param playerID
-     */
-    public void insertKey(String gameID, String playerID) {
-        GamePlayerPair gamePlayerPair = new GamePlayerPair(gameID, playerID);
-        notSeenCommands.put(gamePlayerPair, new ArrayList<ICommand>());
     }
 
     @Override
     public void initializeGame(Game game) {
-        for (Player player : game.getPlayers()) {
-            GamePlayerPair gamePlayerPair = new GamePlayerPair(game.getGameID(), player.getId());
-            ICommand command = new GenericCommand(
-                    CLIENT_FACADE
-                    , "initializeGame"
-                    , new String[]{GAME}
-                    , new Object[] {game});
-            notSeenCommands.get(gamePlayerPair).add(command);
-        }
+        ICommand command = new GenericCommand(
+                CLIENT_FACADE
+                , "initializeGame"
+                , new String[]{GAME}
+                , new Object[] {game});
+        notSeenCommands.add(command);
     }
 
     @Override
@@ -75,25 +76,17 @@ public class ClientProxy implements IClient {
                 , "updatePlayerPoints"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, plyerID, points});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
-    public void updateTrainCards(String gameID, Card trainCard) {
+    public void updateTrainCards(String gameID, List<Card> trainCards) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainCards"
                 , new String[]{STRING, CARD}
-                , new Object[] {gameID, trainCard});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+                , new Object[] {gameID, trainCards});
+        notSeenCommands.add(command);
     }
 
     @Override
@@ -101,27 +94,19 @@ public class ClientProxy implements IClient {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTickets"
-                , new String[]{STRING, TICKET}
+                , new String[]{STRING, LIST}
                 , new Object[] {gameID, tickets});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
-    public void updateOpponentTrainCards(String gameID, String playerID, int cardNum) {
+    public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateOpponentTrainCards"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, cardNum});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
@@ -131,11 +116,7 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTrainCars"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, carNum});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
@@ -145,25 +126,17 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTickets"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, cardNum});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
-    public void updateTrainDeck(String gameID, Card faceCards, Integer downCardNum) {
+    public void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum) {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainDeck"
                 , new String[]{STRING, CARD, INTEGER}
                 , new Object[] {gameID, faceCards, downCardNum});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
@@ -173,11 +146,7 @@ public class ClientProxy implements IClient {
                 , "updateDestinationDeck"
                 , new String[]{STRING, INTEGER}
                 , new Object[] {gameID, cardNum});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
@@ -187,11 +156,7 @@ public class ClientProxy implements IClient {
                 , "updateDestinationDeck"
                 , new String[]{STRING, STRING, STRING}
                 , new Object[] {gameID, playerID, routeID});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     @Override
@@ -201,11 +166,7 @@ public class ClientProxy implements IClient {
                 , "updateChat"
                 , new String[]{STRING, MESSAGE}
                 , new Object[] {gameID, m});
-        for (GamePlayerPair gamePlayerPair : notSeenCommands.keySet()) {
-            if (gamePlayerPair.getGameID().equals(gameID)) {
-                notSeenCommands.get(gamePlayerPair).add(command);
-            }
-        }
+        notSeenCommands.add(command);
     }
 
     private int version;
@@ -242,53 +203,13 @@ public class ClientProxy implements IClient {
     }
     //TODO : when the game ends, clear the commands list and erase the key
 
-    /**
-     * The client gets the list of commands through this function. After this has been executed, clears the command list.
-     * TODO : better to have authToken?
-     * @param gameID
-     * @param playerID
-     * @return
-     */
-    public Result getNotSeenCommands(String gameID, String playerID) {
-        GamePlayerPair gamePlayerPair = new GamePlayerPair(gameID, playerID);
-        if (notSeenCommands.containsKey(gamePlayerPair)) {
-            if (notSeenCommands.get(gamePlayerPair) != null) {
-                Result result = new Result(true, notSeenCommands.get(gamePlayerPair), null);
-                notSeenCommands.get(gamePlayerPair).clear();
-                return result;
-            }
+
+    //TODO : provide a way to check if commands are transmitted successfully or not
+    //TODO : get different commands for different games
+    public Result getNotSeenCommands(String gameID) {
+        if (notSeenCommands != null) {
+            return new Result(true, notSeenCommands, null);
         }
         return new Result(false, null, "Error : gamePlayerPair not found");
-    }
-
-
-    /**
-     * A helper function that allows us to use gameID and playerID as key.
-     */
-    public class GamePlayerPair {
-        String gameID;
-        String playerID;
-
-        public String getGameID() {
-            return gameID;
-        }
-
-        public void setGameID(String gameID) {
-            this.gameID = gameID;
-        }
-
-        public String getPlayerID() {
-            return playerID;
-        }
-
-        public void setPlayerID(String playerID) {
-            this.playerID = playerID;
-        }
-
-        public GamePlayerPair(String gameID, String playerID) {
-
-            this.gameID = gameID;
-            this.playerID = playerID;
-        }
     }
 }
