@@ -5,5 +5,5 @@ package model;
  */
 
 public enum State {
-    GAMELIST, LOBBY, GAME;
+    GAMELIST, LOBBY, GAME
 }

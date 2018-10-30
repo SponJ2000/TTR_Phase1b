@@ -5,6 +5,7 @@ import com.obfuscation.ttr_phase1b.gameViews.ITicketView;
 import java.util.List;
 
 import communication.Ticket;
+import model.FakeModel;
 import model.IGameModel;
 import model.ModelFacade;
 
@@ -17,7 +18,8 @@ public class TicketPresenter implements ITicketPresenter {
     public TicketPresenter(ITicketView view, OnBackListener listener) {
         this.view = view;
         this.listener = listener;
-        this.model = ModelFacade.getInstance();
+//        this.model = ModelFacade.getInstance();
+        this.model = FakeModel.getInstance();
     }
 
     @Override

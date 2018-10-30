@@ -4,10 +4,10 @@ package communication;
  * Created by hao on 10/27/18.
  */
 
-public class TrainCar {
-    TrainCarColor carColor;
+public class Car {
+    CarColor carColor;
 
-    public TrainCar(TrainCarColor carColor) {
+    public Car(CarColor carColor) {
         this.carColor = carColor;
     }
 }
