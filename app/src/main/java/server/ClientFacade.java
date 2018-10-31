@@ -1,15 +1,18 @@
 package server;
 
+import com.obfuscation.server.GenericCommand;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import communication.Card;
-import communication.DestinationTicketCard;
 import communication.Game;
 import communication.IClient;
 import communication.Message;
 import communication.Player;
 import communication.Ticket;
+import communication.CardColor;
 import model.ModelRoot;
 
 /**
@@ -17,19 +20,44 @@ import model.ModelRoot;
  */
 
 public class ClientFacade implements IClient{
+
+    //TEST
+    public static void main(String[] args) {
+        GenericCommand command = new GenericCommand(
+                "server.ClientFacade"
+                , "updateTrainCards"
+                , new String[]{String.class.getName(), List.class.getName()}
+                , new Object[] {"HELLO", new ArrayList<>(Arrays.asList(new Card(CardColor.BLUE), new Card(CardColor.BLACK)))});
+
+        try {
+            command.execute();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private static ClientFacade instance = new ClientFacade();
+    public static ClientFacade getInstance() {
+        return instance;
+    }
+
+    private ClientFacade() {
+
+    }
+
     @Override
     public void updateGameList(String gameID) {
-
+        //sever will never call this command
     }
 
     @Override
     public void updateGame(String gameID) {
-
+        //sever will never call this command
     }
 
     @Override
     public void initializeGame(Game game) {
-
+        ModelRoot.getInstance().setGame(game);
     }
 
     @Override
@@ -45,13 +73,20 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTrainCards(String gameID, List<Card> trainCards) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
-        if (g != null) {
-            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
-            if (p != null) {
-                p.setCards((ArrayList<Card>) trainCards);
+        try {
+            Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+
+            if (g != null) {
+                Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+                if (p != null) {
+                    p.setCards((ArrayList<Card>) trainCards);
+                }
             }
         }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

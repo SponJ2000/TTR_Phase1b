@@ -31,14 +31,17 @@ public class ClientProxy implements IClient {
     }
 
     public ClientProxy(String authToken) {
+        version = 0;
+        gameVersion = new HashMap<>();
         this.authToken = authToken;
     }
 
     /**
      * private member and class name strings
      */
-    private List<ICommand> notSeenCommands = new ArrayList<>();
-    private static final String CLIENT_FACADE = "ClientFacade";
+    private Map<String, List<ICommand>> notSeenCommands = new HashMap<>();
+    private Map<String, Integer> gameStateMap = new HashMap<>();
+    private static final String CLIENT_FACADE = "server.ClientFacade";
     private static final String STRING = "java.lang.String";
     private static final String INTEGER = Integer.TYPE.getName();
     private static final String CARD = Card.class.getName();
@@ -51,13 +54,6 @@ public class ClientProxy implements IClient {
      * getters and setters
      * @return
      */
-    public List<ICommand> getNotSeenCommands() {
-        return notSeenCommands;
-    }
-
-    public void setNotSeenCommands(List<ICommand> notSeenCommands) {
-        this.notSeenCommands = notSeenCommands;
-    }
 
     @Override
     public void initializeGame(Game game) {
@@ -66,7 +62,8 @@ public class ClientProxy implements IClient {
                 , "initializeGame"
                 , new String[]{GAME}
                 , new Object[] {game});
-        notSeenCommands.add(command);
+        notSeenCommands.put(game.getGameID(), new ArrayList<ICommand>());
+        notSeenCommands.get(game.getGameID()).add(command);
     }
 
     @Override
@@ -76,7 +73,7 @@ public class ClientProxy implements IClient {
                 , "updatePlayerPoints"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, plyerID, points});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -84,9 +81,9 @@ public class ClientProxy implements IClient {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainCards"
-                , new String[]{STRING, CARD}
+                , new String[]{STRING, LIST}
                 , new Object[] {gameID, trainCards});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -96,7 +93,7 @@ public class ClientProxy implements IClient {
                 , "updateTickets"
                 , new String[]{STRING, LIST}
                 , new Object[] {gameID, tickets});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -106,7 +103,7 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTrainCards"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, cardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -116,7 +113,7 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTrainCars"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, carNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -126,7 +123,7 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTickets"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, cardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -136,7 +133,7 @@ public class ClientProxy implements IClient {
                 , "updateTrainDeck"
                 , new String[]{STRING, CARD, INTEGER}
                 , new Object[] {gameID, faceCards, downCardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -146,7 +143,7 @@ public class ClientProxy implements IClient {
                 , "updateDestinationDeck"
                 , new String[]{STRING, INTEGER}
                 , new Object[] {gameID, cardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -156,7 +153,7 @@ public class ClientProxy implements IClient {
                 , "updateDestinationDeck"
                 , new String[]{STRING, STRING, STRING}
                 , new Object[] {gameID, playerID, routeID});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -166,7 +163,7 @@ public class ClientProxy implements IClient {
                 , "updateChat"
                 , new String[]{STRING, MESSAGE}
                 , new Object[] {gameID, m});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     private int version;
@@ -205,11 +202,16 @@ public class ClientProxy implements IClient {
 
 
     //TODO : provide a way to check if commands are transmitted successfully or not
-    //TODO : get different commands for different games
-    public Result getNotSeenCommands(String gameID) {
+    //TODO : clients have to keep track of games and the last command id, and send them (keep map<gameID, commandID>)
+    public Result getNotSeenCommands(String gameID, Integer state) {
         if (notSeenCommands != null) {
-            return new Result(true, notSeenCommands, null);
+            if (notSeenCommands.get(gameID) != null) {
+                if (state + 1 < notSeenCommands.get(gameID).size()) {
+                    List<ICommand> commands = notSeenCommands.get(gameID).subList(state + 1, notSeenCommands.get(gameID).size() - 1);
+                    return new Result(true, notSeenCommands.get(gameID), null);
+                }
+            }
         }
-        return new Result(false, null, "Error : gamePlayerPair not found");
+        return new Result(false, null, "Error : commands are null");
     }
 }

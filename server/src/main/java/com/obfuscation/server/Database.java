@@ -46,7 +46,8 @@ public class Database {
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
-    private List<PlayerColor> PlayerColors = Arrays.asList(PlayerColor.BLACK, PlayerColor.BLUE, PlayerColor.PURPLE, PlayerColor.RED, PlayerColor.YELLOW);
+
+    private List<PlayerColor> colors = Arrays.asList(PlayerColor.BLACK, PlayerColor.BLUE, PlayerColor.PURPLE, PlayerColor.RED, PlayerColor.YELLOW);
 
     public List<Game> getGameList() {
         return gameList;
@@ -139,9 +140,7 @@ public class Database {
             errorInfo = "Error: Invalid max players";
         }
         else valid = true;
-
         if(!valid) return new Result(valid, null, errorInfo);
-
         //check the userID
         String userID = game.getHost();
         if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
@@ -153,7 +152,7 @@ public class Database {
         game.setPlayers(playerList);
 
         gameList.add(game);
-
+        System.out.println("Get HERE");
         return new Result(true, gameList, null);
     }
 
@@ -259,9 +258,9 @@ public class Database {
         }
 
         //Assign PlayerColors
-        Collections.shuffle(PlayerColors);
+        Collections.shuffle(colors);
         for (int i = 0; i < players.size(); i++) {
-            players.get(i).setPlayerPlayerColor(PlayerColors.get(i));
+            players.get(i).setPlayerPlayerColor(colors.get(i));
         }
         return new Result(true, game, null);
     }

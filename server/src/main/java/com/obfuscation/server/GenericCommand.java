@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.UUID;
 
 import communication.ICommand;
 import communication.Result;
@@ -18,13 +19,18 @@ public class GenericCommand implements ICommand {
     public String methodName;
     public String[] parameterType;
     public Object[] parameterValue;
+    private String commandID;
+
+    public String getCommandID() {
+        return commandID;
+    }
 
     public GenericCommand(String className, String methodName, String[] parameterType, Object[] parameterValue) {
         this.className = className;
         this.methodName = methodName;
         this.parameterType = parameterType;
         this.parameterValue = parameterValue;
-
+        this.commandID = UUID.randomUUID().toString();
     }
 
     @Override
@@ -41,8 +47,11 @@ public class GenericCommand implements ICommand {
             for (int i = 0; i < parameterType.length; i++) {
                 try {
                     paramTypeClass[i] = Class.forName(parameterType[i]);
+                    System.out.println("A----------------");
                     System.out.println(parameterValue[i].toString());
+                    System.out.println("B-----------------");
                     parameterValue[i] = new Gson().fromJson(parameterValue[i].toString(), paramTypeClass[i]);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     return new Result(false, null, "Error: "+e.getMessage());

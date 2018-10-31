@@ -99,7 +99,9 @@ public class ServerProxy implements communication.IServer {
             String resultJson = clientCommunicator.post(genericCommand);
             System.out.println(resultJson);
             Serializer serializer = new Serializer();
-            return serializer.deserializeResult(resultJson);
+            Result result = serializer.deserializeResult(resultJson);
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@ " + result.toString());
+            return result;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -146,7 +148,7 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result CheckGameLobby(String authToken, String gameID) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGameLobby", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGameLobby", new String[]{STRING,STRING}, new Object[]{authToken, gameID});
         return RunCommand(genericCommand);
     }
 }

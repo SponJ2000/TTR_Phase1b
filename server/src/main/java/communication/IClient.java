@@ -16,14 +16,22 @@ public interface IClient {
     //TODO: this functon should be replaced with function that has specific purpose, like OpponentClaimRoute()...
     void updateGame(String gameID);
 
+    /**
+     * initialize game with colors and turn orders. Turn orders starts from index 0 (playerList), and increments
+     * @param game
+     */
     void initializeGame(Game game);
 
     void updatePlayerPoints(String gameID, String plyerID, Integer points);
 
-    //TODO: what dose this suppose to do? what do we want to do this card passed in as a parameter?
+    /**
+     * gets 2 (4 at the start of the game) cards frmo the trainCardDeck
+     * @param gameID
+     * @param trainCards (2 cards from the deck)
+     */
     void updateTrainCards(String gameID, List<Card> trainCards);
 
-    //ticket for choosing
+    //ticket for choosing, always three
     void updateTickets(String gameID, List<Ticket> tickets);
 
     void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum);

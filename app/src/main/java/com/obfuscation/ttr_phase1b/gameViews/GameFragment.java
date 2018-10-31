@@ -9,25 +9,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 
-//import com.google.android.gms.maps.CameraUpdateFactory;
-//import com.google.android.gms.maps.GoogleMap;
-//import com.google.android.gms.maps.OnMapReadyCallback;
-//import com.google.android.gms.maps.model.LatLng;
-//import com.google.android.gms.maps.model.MapStyleOptions;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
 import communication.GameMap;
-import communication.Player;
 import communication.Ticket;
 import gamePresenters.IGamePresenter;
+
+//import com.google.android.gms.maps.CameraUpdateFactory;
+//import com.google.android.gms.maps.GoogleMap;
+//import com.google.android.gms.maps.MapView;
+//import com.google.android.gms.maps.MapsInitializer;
+//import com.google.android.gms.maps.OnMapReadyCallback;
+//import com.google.android.gms.maps.model.CameraPosition;
+//import com.google.android.gms.maps.model.LatLng;
+//import com.google.android.gms.maps.model.MapStyleOptions;
+//import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class GameFragment extends Fragment implements IGameView {
@@ -97,7 +99,6 @@ public class GameFragment extends Fragment implements IGameView {
         mFaceCardViews[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "view chat");
                 mPresenter.chooseCard(0);
             }
         });
@@ -106,7 +107,6 @@ public class GameFragment extends Fragment implements IGameView {
         mFaceCardViews[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "view chat");
                 mPresenter.chooseCard(1);
             }
         });
@@ -115,7 +115,6 @@ public class GameFragment extends Fragment implements IGameView {
         mFaceCardViews[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "view chat");
                 mPresenter.chooseCard(2);
             }
         });
@@ -124,7 +123,6 @@ public class GameFragment extends Fragment implements IGameView {
         mFaceCardViews[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "view chat");
                 mPresenter.chooseCard(3);
             }
         });
@@ -133,7 +131,6 @@ public class GameFragment extends Fragment implements IGameView {
         mFaceCardViews[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "view chat");
                 mPresenter.chooseCard(4);
             }
         });
@@ -142,7 +139,6 @@ public class GameFragment extends Fragment implements IGameView {
         mDeck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "view chat");
                 mPresenter.chooseCard(-1);
             }
         });
@@ -209,6 +205,33 @@ public class GameFragment extends Fragment implements IGameView {
             mDeck.setEnabled(false);
         }
     }
+
+//    public void onMapReady(GoogleMap mMap) {
+//        googleMap = mMap;
+//
+//        try {
+//            // Customise the styling of the base map using a JSON object defined
+//            // in a raw resource file.
+//            boolean success = googleMap.setMapStyle(
+//                    MapStyleOptions.loadRawResourceStyle(
+//                            getActivity(), R.raw.map_style));
+//
+//            if (!success) {
+//                Log.e(TAG, "Style parsing failed.");
+//            }
+//        } catch (Resources.NotFoundException e) {
+//            Log.e(TAG, "Can't find style. Error: ", e);
+//        }
+//
+//
+//        // For dropping a marker at a point on the Map
+//        LatLng ny = new LatLng(41, 74);
+//        googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
+//
+//        // For zooming automatically to the location of the marker
+//        CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
+//        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

@@ -5,5 +5,7 @@ package communication;
  */
 
 public enum CarColor {
-    BLUE, RED, GREEN, YELLOW, BLACK;
+
+    BLUE, RED, GREEN, YELLOW, BLACK
+
 }

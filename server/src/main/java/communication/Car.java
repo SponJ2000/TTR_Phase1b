@@ -5,9 +5,9 @@ package communication;
  */
 
 public class Car {
-    CarColor carColor;
+    PlayerColor carColor;
 
-    public Car(CarColor carColor) {
-        this.carColor = carColor;
+    public Car(PlayerColor carColor) {
+        carColor = carColor;
     }
 }
