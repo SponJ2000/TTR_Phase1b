@@ -57,6 +57,14 @@ public class GameFragment extends Fragment implements IGameView {
 //    MapView mMapView;
 //    private GoogleMap googleMap;
 
+    public GameFragment() {
+        mUsername = null;
+        mIsTurn = false;
+        mCards = null;
+        mFaceCardViews = null;
+        mTickets = null;
+    }
+
     public static GameFragment newInstance() {
         return new GameFragment();
     }
@@ -197,12 +205,12 @@ public class GameFragment extends Fragment implements IGameView {
 
     private void changeAccessibility() {
         if(mIsTurn) {
-            for(int i = 0; i < mFaceCards.size(); i++) {
+            for(int i = 0; i < mFaceCardViews.length; i++) {
                 mFaceCardViews[i].setEnabled(true);
             }
             mDeck.setEnabled(true);
         }else {
-            for(int i = 0; i < mFaceCards.size(); i++) {
+            for(int i = 0; i < mFaceCardViews.length; i++) {
                 mFaceCardViews[i].setEnabled(false);
             }
             mDeck.setEnabled(false);
