@@ -87,8 +87,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mPresenter.update();
-
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
         mTickets = new ArrayList<>();
@@ -178,14 +176,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                 mPresenter.chooseCard(-1);
             }
         });
+        mDeck.setBackgroundResource(R.drawable.card_deck2);
 
         mDeckSize = rootView.findViewById(R.id.txt_deck);
-
-        mPlayer = mPresenter.getPlayer();
-
-        initUI();
-
-        changeAccessibility();
 
 
         //Gets MapView from xml layout
@@ -232,7 +225,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             }
         });
 
+        mPresenter.update();
 
+        changeAccessibility();
 
         return rootView;
 
@@ -282,17 +277,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             }
             mDeck.setEnabled(false);
         }
-    }
-
-    private void initUI(){
-        mDeck.setBackgroundResource(R.drawable.card_deck2);
-
-        //Init face cards
-        updateCards();
-
-        //Set color elements
-        setColor();
-
     }
 
     private void updateCards(){
@@ -442,11 +426,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void updateUI() {
-        if(mCards != null) {
+        if(mPlayer != null) {
+            setColor();
+        }if(mCards != null) {
 
         }if(mFaceCards != null) {
             updateCards();
-
         }if(mTickets != null) {
 
         }
