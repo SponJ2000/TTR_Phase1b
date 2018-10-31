@@ -19,6 +19,7 @@ public class Player {
 
     private Integer ticketNum;
     private Integer trainCarNum;
+    private Integer cardNum;
     private PlayerColor playerPlayerColor;
 
 
@@ -48,6 +49,13 @@ public class Player {
         claimedRoutesID = new ArrayList<String>();
     }
 
+    public Integer getCardNum() {
+        return cardNum;
+    }
+
+    public void setCardNum(Integer cardNum) {
+        this.cardNum = cardNum;
+    }
 
     public Integer getTicketNum() {
         return ticketNum;

@@ -102,7 +102,8 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
-
+        ModelRoot m = ModelRoot.getInstance();
+        m.getGameByGameID(gameID).getPlayerbyID(playerID).setCardNum(cardNum);
     }
 
     @Override
