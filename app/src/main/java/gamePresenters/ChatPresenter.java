@@ -24,6 +24,7 @@ public class ChatPresenter implements IChatPresenter {
     @Override
     public void updateInfo(Object result) {
         view.setMessages(model.getMessages());
+        view.setUsername(model.getUserName());
         view.updateUI();
     }
 
@@ -34,12 +35,12 @@ public class ChatPresenter implements IChatPresenter {
 
     @Override
     public void goBack() {
-        this.listener.onBack();
+        listener.onBack();
     }
 
     @Override
     public void onSend(Message message) {
-        this.model.sendMessage(message);
+        model.sendMessage(message);
     }
 
 }

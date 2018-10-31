@@ -147,6 +147,8 @@ public class GameFragment extends Fragment implements IGameView {
             }
         });
 
+        changeAccessibility();
+
 //        mMapView = (MapView) rootView.findViewById(R.id.mapView);
 //        mMapView.onCreate(savedInstanceState);
 //
@@ -194,6 +196,20 @@ public class GameFragment extends Fragment implements IGameView {
 
     }
 
+    private void changeAccessibility() {
+        if(mIsTurn) {
+            for(int i = 0; i < mFaceCards.size(); i++) {
+                mFaceCardViews[i].setEnabled(true);
+            }
+            mDeck.setEnabled(true);
+        }else {
+            for(int i = 0; i < mFaceCards.size(); i++) {
+                mFaceCardViews[i].setEnabled(false);
+            }
+            mDeck.setEnabled(false);
+        }
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -235,7 +251,7 @@ public class GameFragment extends Fragment implements IGameView {
 
         }if(mFaceCards != null) {
             for(int i = 0; i < mFaceCards.size(); i++) {
-//                mFaceCardViews[i].setcolor
+//                mFaceCardViews[i].setImageDrawable();
             }
         }if(mTickets != null) {
 
@@ -270,5 +286,6 @@ public class GameFragment extends Fragment implements IGameView {
 //        super.onLowMemory();
 //        mMapView.onLowMemory();
 //    }
+
 }
 

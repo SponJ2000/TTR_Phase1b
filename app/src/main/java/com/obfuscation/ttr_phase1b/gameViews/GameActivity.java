@@ -49,18 +49,19 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
     @Override
     public void onShow(Shows show) {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.container);
+        Fragment fragment;
         switch (show) {
             case chat:
                 fragment = ChatFragment.newInstance();
                 PresenterFacade.getInstance().setPresenter( new ChatPresenter((IChatView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
             case tickets:
                 fragment = TicketFragment.newInstance();
                 PresenterFacade.getInstance().setPresenter( new TicketPresenter((ITicketView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
         }
-        fm.beginTransaction().add(R.id.container, fragment).commit();
         Log.d(TAG, "showing a " + show + " fragment");
     }
 
@@ -70,7 +71,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
 
         Fragment fragment = GameFragment.newInstance();
         PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
-        fm.beginTransaction().add(R.id.container, fragment).commit();
+        fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game fragment back in");
     }
 

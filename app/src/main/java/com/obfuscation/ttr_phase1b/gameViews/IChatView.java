@@ -12,4 +12,6 @@ public interface IChatView extends IView {
 
     void setMessages(List<Message> messages);
 
+    void setUsername(String username);
+
 }

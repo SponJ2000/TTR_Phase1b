@@ -33,11 +33,14 @@ public class ChatFragment extends Fragment implements IChatView {
 
     private IChatPresenter mPresenter;
 
+    private String mUsername;
+
     private List<Message> mMessages;
 
     private Message mPlayerMessage;
 
     private EditText mPlayerMessageText;
+    private Button mBackButton;
     private Button mSendButton;
 
     private RecyclerView mMessageRecycler;
@@ -68,7 +71,7 @@ public class ChatFragment extends Fragment implements IChatView {
 
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        mPlayerMessage = new Message("");
+        mPlayerMessage = new Message(mUsername);
         mPlayerMessageText = (EditText) view.findViewById(R.id.player_message);
         mPlayerMessageText.setText("");
         mPlayerMessageText.addTextChangedListener(new TextWatcher() {
@@ -87,11 +90,23 @@ public class ChatFragment extends Fragment implements IChatView {
             }
         });
 
+        mBackButton = view.findViewById(R.id.chat_back);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Now sending message");
+                mPresenter.goBack();
+            }
+        });
+
         mSendButton = (Button) view.findViewById(R.id.send_message_button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now sending message");
+                mPresenter.onSend(mPlayerMessage);
+                mPlayerMessage = new Message(mUsername);
+                mPlayerMessageText.setText("");
             }
         });
 
@@ -116,6 +131,11 @@ public class ChatFragment extends Fragment implements IChatView {
     @Override
     public void setMessages(List<Message> messages) {
         mMessages = messages;
+    }
+
+    @Override
+    public void setUsername(String username) {
+        mUsername = username;
     }
 
     @Override
