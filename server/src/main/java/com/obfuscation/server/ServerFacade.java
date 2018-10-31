@@ -264,6 +264,9 @@ public class ServerFacade implements IServer {
         return null;
     }
 
+    // -1 -> from the deck
+    // index -> faceup
+    // returns result with the card
     @Override
     public Result DrawTrainCard(Integer index, String authToken) { //TODO : need gameID
 //        Result result = db.drawTrainCard(gameID, );
@@ -275,17 +278,24 @@ public class ServerFacade implements IServer {
         return null;
     }
 
+    //
     @Override
-    public Result GetTickets(String authToken) { //TODO : need gameID
+    public Result GetTickets(String gameID, String authToken) { //TODO : need gameID
+
         //return the tickets to the clients
-        return null;
+        return new Result(true, db.getTickets(gameID, authToken), null);
     }
 
+    //
     @Override
-    public Result ReturnTickets(List<Ticket> tickets, String authToken) {
-        //put them back in the deck
-
-        //delete those cards in the deck
-        return null;
+    public Result ReturnTickets(String gameID, String authToken, List<Ticket> ticketsToKeep) {
+        Result result = db.setTickets(gameID, authToken, ticketsToKeep);
+        String playerID = db.findPlayerIDByAuthToken(authToken);
+        if (result.isSuccess()) {
+            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                clientProxy.updateOpponentTickets(gameID, playerID, (Integer) result.getData());
+            }
+        }
+        return result;
     }
 }

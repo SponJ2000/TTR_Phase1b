@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
@@ -26,15 +24,15 @@ import gamePresenters.IGamePresenter;
 
 import static android.support.constraint.Constraints.TAG;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.MarkerOptions;
+//import com.google.android.gms.maps.CameraUpdateFactory;
+//import com.google.android.gms.maps.GoogleMap;
+//import com.google.android.gms.maps.MapView;
+//import com.google.android.gms.maps.MapsInitializer;
+//import com.google.android.gms.maps.OnMapReadyCallback;
+//import com.google.android.gms.maps.model.CameraPosition;
+//import com.google.android.gms.maps.model.LatLng;
+//import com.google.android.gms.maps.model.MapStyleOptions;
+//import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class GameFragment extends Fragment implements IGameView {
@@ -56,8 +54,8 @@ public class GameFragment extends Fragment implements IGameView {
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
 
-    MapView mMapView;
-    private GoogleMap googleMap;
+//    MapView mMapView;
+//    private GoogleMap googleMap;
 
     public static GameFragment newInstance() {
         return new GameFragment();

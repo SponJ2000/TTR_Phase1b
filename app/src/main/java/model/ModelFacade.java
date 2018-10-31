@@ -1,6 +1,7 @@
 package model;
 
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +104,8 @@ public class ModelFacade implements IGameModel {
     @Override
     public void chooseTickets(List<Ticket> tickets) {
         GenericTask genericTask = new GenericTask("ChooseTicket");
-        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), tickets);
+
+        genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken(), tickets);
         ModelRoot.getInstance().setTicketsWanted((ArrayList<Ticket>) tickets);
     }
 

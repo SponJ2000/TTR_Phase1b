@@ -28,11 +28,52 @@ public class Ticket {
     }
 
     @Override
+    public int hashCode() {
+        int result = city1.hashCode();
+        result = 31 * result + city2.hashCode();
+        result = 31 * result + value;
+        return result;
+    }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (o == null) {
+//            return false;
+//        }
+//
+//        if (o == this) {
+//            return true;
+//        }
+//
+//        if (!(o instanceof Ticket)) {
+//            return false;
+//        }
+//
+//        Ticket t = (Ticket) o;
+//
+//        if (this.city1.)
+//        return super.equals(o);
+//    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Ticket)) return false;
+
+        Ticket ticket = (Ticket) o;
+
+        if (getValue() != ticket.getValue()) return false;
+        if (!getCity1().equals(ticket.getCity1())) return false;
+        return getCity2().equals(ticket.getCity2());
+    }
+
     public String toString() {
         return "Ticket{" +
                 "city1=" + city1 +
                 ", city2=" + city2 +
                 ", value=" + value +
                 '}';
+
     }
 }
