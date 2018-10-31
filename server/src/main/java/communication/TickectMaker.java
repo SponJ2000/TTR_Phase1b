@@ -8,7 +8,7 @@ import java.util.Scanner;
  * Created by hao on 10/27/18.
  */
 
-public class DestinationTickectCardMaker {
+public class TickectMaker {
     public ArrayList<Ticket> MakeCards(){
         ArrayList<Ticket> result = new ArrayList<Ticket>();
         try {

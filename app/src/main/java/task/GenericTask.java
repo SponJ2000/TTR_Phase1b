@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,7 +135,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         if (result.isSuccess()) {
             ModelRoot m = ModelRoot.getInstance();
             String userName = m.getUserName();
-            m.getGame().getUserPlayer(userName).addCardToOwnedFromOptions(m.getWantedCardIndex());
+            if (result.getData() == null) {
+                ArrayList<Ticket> ticketsRecieved = (ArrayList<Ticket>)result.getData();
+                ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).addTickets(ticketsRecieved);
+            }
         }
     }
 

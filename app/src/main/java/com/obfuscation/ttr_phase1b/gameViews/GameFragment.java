@@ -66,8 +66,11 @@ public class GameFragment extends Fragment implements IGameView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+<<<<<<< HEAD
         mPresenter.update();
 
+=======
+>>>>>>> master
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
         mPlayersButton = rootView.findViewById(R.id.players_button);

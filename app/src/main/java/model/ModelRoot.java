@@ -30,7 +30,6 @@ public class ModelRoot {
     private String userName;
 
     private ArrayList<Ticket> ticketsWanted;
-    private int wantedCardIndex;
 
     public ModelRoot() {
         this.state = State.GAMELIST;
@@ -96,13 +95,5 @@ public class ModelRoot {
 
     public void setTicketsWanted(ArrayList<Ticket> ticketsWanted) {
         this.ticketsWanted = ticketsWanted;
-    }
-
-    public int getWantedCardIndex() {
-        return wantedCardIndex;
-    }
-
-    public void setWantedCardIndex(int wantedCardIndex) {
-        this.wantedCardIndex = wantedCardIndex;
     }
 }
