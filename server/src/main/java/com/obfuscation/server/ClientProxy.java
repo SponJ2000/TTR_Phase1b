@@ -206,7 +206,7 @@ public class ClientProxy implements IClient {
             if (notSeenCommands.get(gameID) != null) {
                 if (state + 1 < notSeenCommands.get(gameID).size()) {
                     List<ICommand> commands = notSeenCommands.get(gameID).subList(state + 1, notSeenCommands.get(gameID).size() - 1);
-                    return new Result(true, notSeenCommands.get(gameID), null);
+                    return new Result(true, commands, null);
                 }
             }
         }
