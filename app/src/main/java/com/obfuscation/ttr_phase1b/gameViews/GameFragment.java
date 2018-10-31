@@ -104,8 +104,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTicketsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "view tickets");
-                mPresenter.showTickets();
+                if(mIsTurn) {
+                    Log.d(TAG, "view tickets");
+                    mPresenter.showTickets();
+                }
             }
         });
 

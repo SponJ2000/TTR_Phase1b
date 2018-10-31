@@ -13,6 +13,7 @@ tools:context=".gameViews.TicketFragment">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:padding="20dp">
 
         <TextView
@@ -21,7 +22,7 @@ tools:context=".gameViews.TicketFragment">
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:textSize="25dp"
-            android:text="Choose at Least 1"/>
+            android:text="Choose at Least 2"/>
 
     </RelativeLayout>
 
@@ -29,7 +30,7 @@ tools:context=".gameViews.TicketFragment">
         android:id="@+id/ticket_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="10"/>
 
     <Button
         android:id="@+id/ticket_done_button"
@@ -37,6 +38,7 @@ tools:context=".gameViews.TicketFragment">
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:padding="20dp"
+        android:layout_weight="1"
         android:text="Done"/>
 
 </LinearLayout>

@@ -19,8 +19,8 @@ public class TicketPresenter implements ITicketPresenter {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
-        model = ModelFacade.getInstance();
-//        model = FakeModel.getInstance();
+//        model = ModelFacade.getInstance();
+        model = FakeModel.getInstance();
     }
 
     @Override
@@ -32,6 +32,7 @@ public class TicketPresenter implements ITicketPresenter {
     @Override
     public void updateInfo(Object result) {
         view.setTickets(model.getChoiceTickets());
+        view.setIsTurn(model.isMyTurn());
         view.updateUI();
     }
 

@@ -34,9 +34,11 @@ public class TicketFragment extends Fragment implements ITicketView {
 
     private ITicketPresenter mPresenter;
 
+    private boolean mIsTurn;
     private List<Ticket> mTickets;
     private boolean[] mChosenTickets;
 
+    private TextView mHeader;
     private Button mDoneButton;
     private TicketAdapter mTicketAdapter;
     private RecyclerView mTicketRecycler;
@@ -65,12 +67,7 @@ public class TicketFragment extends Fragment implements ITicketView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ticket, container, false);
 
-//      Check to see if we are at beginning of game or not;
-//      if we are, then the player needs to select 2 tickets
-        if(true) {
-            TextView tv = (TextView) view.findViewById(R.id.ticket_header);
-            tv.setText("Choose at least 2");
-        }
+        mHeader = (TextView) view.findViewById(R.id.ticket_header);
 
         mDoneButton = (Button) view.findViewById(R.id.ticket_done_button);
         mDoneButton.setOnClickListener(new View.OnClickListener() {
@@ -102,18 +99,31 @@ public class TicketFragment extends Fragment implements ITicketView {
     }
 
     private void changeAccessibility() {
+//      Check to see if it is out turn; if it is then we need to select 2 tickets
+//      else we select 1
+        int chosen = 0;
         for(int i = 0; i < mChosenTickets.length; i++) {
             if(mChosenTickets[i]) {
-                mDoneButton.setEnabled(true);
-                return;
+                ++chosen;
             }
         }
-        mDoneButton.setEnabled(false);
+        if(!mIsTurn && chosen >= 2) {
+            mDoneButton.setEnabled(true);
+        }else if(mIsTurn && chosen >= 1) {
+            mDoneButton.setEnabled(true);
+        }else {
+            mDoneButton.setEnabled(false);
+        }
     }
 
     @Override
     public void setTickets(List<Ticket> tickets) {
         mTickets = tickets;
+    }
+
+    @Override
+    public void setIsTurn(boolean isTurn) {
+        mIsTurn = isTurn;
     }
 
     @Override
@@ -123,6 +133,10 @@ public class TicketFragment extends Fragment implements ITicketView {
             Log.d(TAG+"_updateUI", "ticketlist: " + mTickets);
             mTicketAdapter = new TicketAdapter(mTickets);
             mTicketRecycler.setAdapter(mTicketAdapter);
+        }
+        if(mIsTurn) {
+            mHeader.setText("Choose at least 1");
+            changeAccessibility();
         }
     }
 
