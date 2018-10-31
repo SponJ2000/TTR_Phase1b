@@ -95,9 +95,14 @@ public class Poller {
 
     private static void CheckandUpdateGame() {
         ServerProxy serverProxy = new ServerProxy();
+        System.out.println("check and update gamem is called");
         Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getGame().getState());
         if (result.isSuccess()) {
+
             ArrayList<GenericCommand> commands = (ArrayList<GenericCommand>)result.getData();
+            System.out.print("get a list of of command with size" );
+            System.out.print(commands.size());
+            System.out.print('\n');
             for (GenericCommand c: commands) {
                 c.execute();
                 PresenterFacade.getInstance().updatePresenter(result);
