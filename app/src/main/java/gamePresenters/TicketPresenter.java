@@ -7,6 +7,7 @@ import java.util.List;
 import communication.Ticket;
 import model.FakeModel;
 import model.IGameModel;
+import model.ModelFacade;
 
 public class TicketPresenter implements ITicketPresenter {
 
@@ -18,8 +19,8 @@ public class TicketPresenter implements ITicketPresenter {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
-//        model = ModelFacade.getInstance();
-        model = FakeModel.getInstance();
+        model = ModelFacade.getInstance();
+//        model = FakeModel.getInstance();
     }
 
     @Override

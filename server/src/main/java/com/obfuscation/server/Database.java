@@ -46,6 +46,22 @@ public class Database {
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
+    public Game dummyGame = new Game();
+
+    public void setDummyGame() {
+        dummyGame.setGameID("GAME");
+        dummyGame.setHost("Bob");
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(new Player("Bob", "Bob"));
+        players.add(new Player("Joe", "Joe"));
+        dummyGame.setPlayers(players);
+        gameList.add(dummyGame);
+        authTokenMap.put("Bob", "authBob");
+        authTokenMap.put("Joe", "authJoe");
+        loginInfo.put("Bob", "password");
+        loginInfo.put("Joe", "password");
+        setupGame("GAME");
+    }
 
     private List<PlayerColor> colors = Arrays.asList(PlayerColor.BLACK, PlayerColor.BLUE, PlayerColor.PURPLE, PlayerColor.RED, PlayerColor.YELLOW);
 

@@ -156,11 +156,20 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    //ask for three new tickext to choose from
+    public void updateChoiceTickets() {
+
+    }
+
+
+    @Override
+    //update the list of cards user has
     public void updateCards() {
 
     }
 
     @Override
+    //whenever we choose a new cards
     public void updateFaceCards() {
 
     }
@@ -200,14 +209,11 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    //ask server
     public void updateTickets() {
 
     }
 
-    @Override
-    public void updateChoiceTickets() {
-
-    }
 
     @Override
     public boolean isMyTurn() {
@@ -216,7 +222,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public String getUserName() {
-        return null;
+        return ModelRoot.getInstance().getUserName();
     }
 
     @Override
@@ -226,7 +232,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Card> getFaceCards() {
-        return mFaceCards;
+        return ModelRoot.getInstance().getGame().getFaceUpTrainCarCards();
     }
 
     public Player getPlayer() {

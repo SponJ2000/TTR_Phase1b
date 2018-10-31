@@ -47,7 +47,11 @@ public class ServerFacade implements IServer {
     }
 
     private ServerFacade() {
-
+        clientproxies.add(new ClientProxy("authBob"));
+        clientproxies.add(new ClientProxy("authJoe"));
+        gameIDclientProxyMap.put("GAME", new ArrayList<ClientProxy>());
+        gameIDclientProxyMap.get("GAME").add(clientproxies.get(0));
+        gameIDclientProxyMap.get("GAME").add(clientproxies.get(1));
     }
 
     private ClientProxy getClientProxyByAuthToken(String authToken) {

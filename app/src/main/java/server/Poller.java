@@ -55,7 +55,7 @@ public class Poller {
         running = true;
         System.out.println("Poller Starting");
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
-        ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,2,checkTime, TimeUnit.SECONDS);
+        ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,1,checkTime, TimeUnit.SECONDS);
 
     }
 
@@ -81,7 +81,6 @@ public class Poller {
             Integer versionNum = (Integer) result.getData();
             System.out.println(versionNum + " : " + gameVersion);
             if (!versionNum.equals(gameVersion)) {
-                System.out.println(")))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))");
                 ModelFacade.getInstance().UpdateGame();
                 gameVersion = versionNum;
                 //what to do after game is updated
@@ -95,9 +94,14 @@ public class Poller {
 
     private static void CheckandUpdateGame() {
         ServerProxy serverProxy = new ServerProxy();
+        System.out.println("check and update gamem is called");
         Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getGame().getState());
         if (result.isSuccess()) {
+
             ArrayList<GenericCommand> commands = (ArrayList<GenericCommand>)result.getData();
+            System.out.print("get a list of of command with size" );
+            System.out.print(commands.size());
+            System.out.print('\n');
             for (GenericCommand c: commands) {
                 c.execute();
                 PresenterFacade.getInstance().updatePresenter(result);

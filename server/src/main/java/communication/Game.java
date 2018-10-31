@@ -25,6 +25,7 @@ public class Game {
     private GameMap mMap;
     //Client only data member-----------------------------------------
     private int state;
+    private boolean gameStarted = false;
 
     //stop delete this data member, client need this
     private int ticketsRemainNum;
@@ -44,6 +45,14 @@ public class Game {
 
     //----------------------------------------------------------------
 
+
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
 
     public int getTicketsRemainNum() {
         return ticketsRemainNum;

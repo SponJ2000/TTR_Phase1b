@@ -14,6 +14,7 @@ import communication.Player;
 import communication.Ticket;
 import communication.CardColor;
 import model.ModelRoot;
+import model.State;
 
 /**
  * Created by hao on 10/25/18.
@@ -58,11 +59,14 @@ public class ClientFacade implements IClient{
     @Override
     public void initializeGame(Game game) {
         ModelRoot.getInstance().setGame(game);
+        ModelRoot.getInstance().getGame().setGameStarted(true);
+        ModelRoot.getInstance().setState(State.GAME);
     }
 
     @Override
+    //it is only access the current
     public void updatePlayerPoints(String gameID, String plyerID, Integer points) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             Player p = g.getPlayerbyID(plyerID);
             if (p != null) {
@@ -74,7 +78,7 @@ public class ClientFacade implements IClient{
     @Override
     public void updateTrainCards(String gameID, List<Card> trainCards) {
         try {
-            Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+            Game g = ModelRoot.getInstance().getGame();
 
             if (g != null) {
                 Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
@@ -91,7 +95,7 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTickets(String gameID, List<Ticket> tickets) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
@@ -103,12 +107,12 @@ public class ClientFacade implements IClient{
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
         ModelRoot m = ModelRoot.getInstance();
-        m.getGameByGameID(gameID).getPlayerbyID(playerID).setCardNum(cardNum);
+        m.getGame().getPlayerbyID(playerID).setCardNum(cardNum);
     }
 
     @Override
     public void updateOpponentTrainCars(String gameID, String playerID, Integer carNum) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             Player p = g.getPlayerbyID(playerID);
             if (p != null) {
@@ -119,7 +123,7 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateOpponentTickets(String gameID, String playerID, Integer cardNum) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             Player p = g.getPlayerbyID(playerID);
             if (p != null) {
@@ -130,7 +134,7 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.setFaceUpTrainCarCards(faceCards);
         }
@@ -139,7 +143,7 @@ public class ClientFacade implements IClient{
     //upate number of card in the deck
     @Override
     public void updateDestinationDeck(String gameID, Integer cardNum) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             ModelRoot.getInstance().getGame().setTicketsRemainNum(cardNum);
 
@@ -148,7 +152,7 @@ public class ClientFacade implements IClient{
 
     @Override
     public void claimRoute(String gameID, String playerID, String routeID) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.getPlayerbyID(playerID).addRouteAsClaimed(routeID);
         }
@@ -156,9 +160,11 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateChat(String gameID, Message m) {
-        Game g = ModelRoot.getInstance().getGameByGameID(gameID);
+        System.out.println("trying to insert"+ m.getText());
+        Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.insertMessage(m);
+            System.out.println("inserted a new chat"+ m.getText());
         }
     }
 }
