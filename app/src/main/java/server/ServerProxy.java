@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import communication.*;
+import model.ModelRoot;
 
 /**
  * Created by hao on 10/5/18.
@@ -134,8 +135,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result ReturnTickets(List<Integer> ticketsWantedIndex, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{LIST,STRING}, new Object[]{ticketsWantedIndex, authToken});
+    public Result ReturnTickets(String gameID, String authToken,  List<Ticket> ticketsToKeep) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{STRING,STRING,LIST}, new Object[]{ModelRoot.getInstance().getGame().getGameID(), authToken,ticketsToKeep});
         return RunCommand(genericCommand);
     }
 
