@@ -2,6 +2,7 @@ package com.obfuscation.ttr_phase1b.activity;
 
 import android.util.Log;
 
+import gamePresenters.GamePresenter;
 import model.ModelFacade;
 import model.State;
 
@@ -31,6 +32,8 @@ public class PresenterFacade {
             ModelFacade.getInstance().UpdateState(State.GAMELIST);
         }else if(mPresenter.getClass() == LobbyFragment.class) {
             ModelFacade.getInstance().UpdateState(State.LOBBY);
+        }else if(mPresenter.getClass() == GamePresenter.class) {
+            ModelFacade.getInstance().UpdateState(State.GAME);
         }
     }
 
