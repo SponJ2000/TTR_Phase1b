@@ -27,11 +27,11 @@ public class PresenterFacade {
     public void setPresenter(IPresenter presenter) {
         Log.d(TAG, "setPresenter: setting");
         mPresenter = presenter;
-//        if(mPresenter.getClass() == GameListFragment.class) {
-//            ModelFacade.getInstance().UpdateState(State.GAMELIST);
-//        }else if(mPresenter.getClass() == LobbyFragment.class) {
-//            ModelFacade.getInstance().UpdateState(State.LOBBY);
-//        }
+        if(mPresenter.getClass() == GameListFragment.class) {
+            ModelFacade.getInstance().UpdateState(State.GAMELIST);
+        }else if(mPresenter.getClass() == LobbyFragment.class) {
+            ModelFacade.getInstance().UpdateState(State.LOBBY);
+        }
     }
 
     public void updatePresenter(Object data) {

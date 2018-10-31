@@ -156,9 +156,11 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateChat(String gameID, Message m) {
+        System.out.println("trying to insert"+ m.getText());
         Game g = ModelRoot.getInstance().getGameByGameID(gameID);
         if (g != null) {
             g.insertMessage(m);
+            System.out.println("inserted a new chat"+ m.getText());
         }
     }
 }
