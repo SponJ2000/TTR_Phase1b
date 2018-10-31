@@ -124,10 +124,6 @@ public class Player {
         return playerName;
     }
 
-    public void addCardToOwnedFromOptions(Integer index) {
-        cards.add(cardToChoose.get(index));
-    }
-
     public ArrayList<Card> getCardToChoose() {
         return cardToChoose;
     }

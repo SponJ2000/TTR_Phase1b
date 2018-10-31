@@ -140,7 +140,7 @@ public class ClientFacade implements IClient{
     public void updateDestinationDeck(String gameID, Integer cardNum) {
         Game g = ModelRoot.getInstance().getGameByGameID(gameID);
         if (g != null) {
-//TODO: 1111111111111111111111111111111111111111
+            ModelRoot.getInstance().getGame().setTicketsRemainNum(cardNum);
 
         }
     }
