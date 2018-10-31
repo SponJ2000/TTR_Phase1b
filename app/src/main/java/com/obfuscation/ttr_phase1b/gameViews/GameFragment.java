@@ -87,6 +87,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        mPresenter.update();
+
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
         mTickets = new ArrayList<>();
@@ -179,8 +181,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mDeckSize = rootView.findViewById(R.id.txt_deck);
 
-        mPresenter.update();
-
         mPlayer = mPresenter.getPlayer();
 
         initUI();
@@ -194,53 +194,18 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mMapView.getMapAsync(this);
 
-//        mMapView.onResume();
-//
-//        try {
-//            MapsInitializer.initialize(getActivity().getApplicationContext());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        mMapView.getMapAsync(new OnMapReadyCallback() {
-//            @Override
-//            public void onMapReady(GoogleMap mMap) {
-//                googleMap = mMap;
-//
-//                try {
-//                    // Customise the styling of the base map using a JSON object defined
-//                    // in a raw resource file.
-//                    boolean success = googleMap.setMapStyle(
-//                            MapStyleOptions.loadRawResourceStyle(
-//                                    getActivity(), R.raw.map_style));
-//
-//                    if (!success) {
-//                        Log.e(TAG, "Style parsing failed.");
-//                    }
-//                } catch (Resources.NotFoundException e) {
-//                    Log.e(TAG, "Can't find style. Error: ", e);
-//                }
-//
-//
-//                // For dropping a marker at a point on the Map
-//                LatLng ny = new LatLng(41, 74);
-//                googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
-//
-//                // For zooming automatically to the location of the marker
-//                CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
-//                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//            }
-//        });
+        mMapView.onResume();
 
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-
-        return rootView;
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        //googleMap = mMap;
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
 
                 try {
                     // Customise the styling of the base map using a JSON object defined
@@ -257,15 +222,50 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                 }
 
 
-                // Drop markers on all the cities
+                // For dropping a marker at a point on the Map
                 LatLng ny = new LatLng(41, 74);
                 googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
 
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        });
 
-                //Add routes here
+
+
+        return rootView;
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //googleMap = mMap;
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            getActivity(), R.raw.map_style));
+
+            if (!success) {
+                Log.e(TAG, "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e(TAG, "Can't find style. Error: ", e);
+        }
+
+
+        // Drop markers on all the cities
+        LatLng ny = new LatLng(41, 74);
+        googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
+
+        // For zooming automatically to the location of the marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        //Add routes here
 
         
     }
@@ -330,8 +330,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                 case LOCOMOTIVE:
                     faceCardView.setImageResource(R.drawable.card_loc);
                     break;
-                    default:
-                        faceCardView.setImageResource(R.drawable.card_blank);
+                default:
+                    faceCardView.setImageResource(R.drawable.card_blank);
             }
             i++;
         }

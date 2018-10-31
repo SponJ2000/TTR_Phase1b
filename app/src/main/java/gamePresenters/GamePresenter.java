@@ -38,6 +38,7 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
+        view.setPlayer(model.getPlayer());
         view.setIsTurn(model.isMyTurn());
         view.setCards(model.getCards());
         view.setFaceCards(model.getFaceCards());
