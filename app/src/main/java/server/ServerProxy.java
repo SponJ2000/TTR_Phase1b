@@ -111,8 +111,8 @@ public class ServerProxy implements communication.IServer {
 
     //Phase 2 stuff
     @Override
-    public Result GetUpdates(String authToken, String gameID, String commandID) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetUpdates", new String[]{STRING, STRING, STRING}, new Object[]{authToken, gameID, commandID});
+    public Result GetUpdates(String authToken, String gameID, Integer state) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetUpdates", new String[]{STRING, STRING, INTEGER}, new Object[]{authToken, gameID, state});
         return RunCommand(genericCommand);
     }
 

@@ -176,10 +176,15 @@ public class ServerFacade implements IServer {
                 clientProxy.updateDestinationDeck(gameID, game.getTickets().size());
             }
 
-            //update destination cards for each player (4 cards)
+            //update train cards for each player (4 cards)
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                 String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
                 clientProxy.updateTrainCards(gameID, game.getPlayerbyID(playerID).getCards());
+            }
+
+            //update train card deck
+            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                clientProxy.updateTrainDeck(gameID, game.getTrainCards(), game.getTrainCards().size());
             }
         }
         return result;
@@ -193,10 +198,10 @@ public class ServerFacade implements IServer {
      * @return
      */
     @Override
-    public Result GetUpdates(String authToken, String gameID, String commandID) {
+    public Result GetUpdates(String authToken, String gameID, Integer state) {
         for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
             if (clientProxy.getAuthToken().equals(authToken)) {
-                return new Result(true, clientProxy.getNotSeenCommands(gameID, commandID), null);
+                return new Result(true, clientProxy.getNotSeenCommands(gameID, state), null);
             }
         }
         return new Result(false, null, "Error : Client not found");
@@ -246,8 +251,6 @@ public class ServerFacade implements IServer {
             }
 
             System.out.println("With isSuccess" + result.isSuccess());
-
-
             return result;
         }
         catch (Exception e) {
@@ -262,17 +265,27 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result DrawTrainCard(Integer index, String authToken) {
+    public Result DrawTrainCard(Integer index, String authToken) { //TODO : need gameID
+//        Result result = db.drawTrainCard(gameID, );
+//        //update tickets (distribute 3 cards)
+//        for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+//            String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
+//            clientProxy.updateTickets(gameID, game.getPlayerbyID(playerID).getTickets());
+//        }
         return null;
     }
 
     @Override
-    public Result GetTickets(String authToken) {
+    public Result GetTickets(String authToken) { //TODO : need gameID
+        //return the tickets to the clients
         return null;
     }
 
     @Override
     public Result ReturnTickets(List<Ticket> tickets, String authToken) {
+        //put them back in the deck
+
+        //delete those cards in the deck
         return null;
     }
 }

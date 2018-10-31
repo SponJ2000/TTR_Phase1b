@@ -120,7 +120,7 @@ public interface IServer {
      * @return          a Result object containing all update commands
      */
 
-    Result GetUpdates(String authToken, String gameID, String commandID);
+    Result GetUpdates(String authToken, String gameID, Integer state);
 
     /**
      * User claim a route on the map with his cards

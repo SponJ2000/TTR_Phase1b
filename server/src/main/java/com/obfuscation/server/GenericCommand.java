@@ -47,8 +47,11 @@ public class GenericCommand implements ICommand {
             for (int i = 0; i < parameterType.length; i++) {
                 try {
                     paramTypeClass[i] = Class.forName(parameterType[i]);
+                    System.out.println("A----------------");
                     System.out.println(parameterValue[i].toString());
+                    System.out.println("B-----------------");
                     parameterValue[i] = new Gson().fromJson(parameterValue[i].toString(), paramTypeClass[i]);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     return new Result(false, null, "Error: "+e.getMessage());

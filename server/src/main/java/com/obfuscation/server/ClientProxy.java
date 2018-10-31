@@ -40,7 +40,8 @@ public class ClientProxy implements IClient {
      * private member and class name strings
      */
     private Map<String, List<ICommand>> notSeenCommands = new HashMap<>();
-    private static final String CLIENT_FACADE = "ClientFacade";
+    private Map<String, Integer> gameStateMap = new HashMap<>();
+    private static final String CLIENT_FACADE = "server.ClientFacade";
     private static final String STRING = "java.lang.String";
     private static final String INTEGER = Integer.TYPE.getName();
     private static final String CARD = Card.class.getName();
@@ -80,7 +81,7 @@ public class ClientProxy implements IClient {
         ICommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainCards"
-                , new String[]{STRING, CARD}
+                , new String[]{STRING, LIST}
                 , new Object[] {gameID, trainCards});
         notSeenCommands.get(gameID).add(command);
     }
@@ -202,26 +203,11 @@ public class ClientProxy implements IClient {
 
     //TODO : provide a way to check if commands are transmitted successfully or not
     //TODO : clients have to keep track of games and the last command id, and send them (keep map<gameID, commandID>)
-    public Result getNotSeenCommands(String gameID, String lastCommandID) {
+    public Result getNotSeenCommands(String gameID, Integer state) {
         if (notSeenCommands != null) {
             if (notSeenCommands.get(gameID) != null) {
-                //first time
-                if (lastCommandID == null) {
-                    return new Result(true, notSeenCommands.get(gameID), null);
-                }
-                int index = -1;
-                for (int i = 0; i < notSeenCommands.get(gameID).size(); i++) {
-                    ICommand command = notSeenCommands.get(gameID).get(i);
-                    GenericCommand genericCommand = (GenericCommand) command;
-                    if (lastCommandID.equals(genericCommand.getCommandID())) {
-                        index = i;
-                        break;
-                    }
-                }
-                if (index != -1) {
-
-                    //removes the previous commands that has been transmitted
-                    notSeenCommands.get(gameID).subList(0, index).clear();
+                if (state + 1 < notSeenCommands.get(gameID).size()) {
+                    List<ICommand> commands = notSeenCommands.get(gameID).subList(state + 1, notSeenCommands.get(gameID).size() - 1);
                     return new Result(true, notSeenCommands.get(gameID), null);
                 }
             }

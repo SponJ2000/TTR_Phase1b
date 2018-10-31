@@ -24,7 +24,7 @@ public class Poller {
     private static boolean running = false;
     private static ScheduledExecutorService scheduledExecutorService;
     private static ScheduledFuture scheduledFuture;
-    private static final int checkTime = 2;
+    private static final int checkTime = 1;
 
     private static final Runnable CheckUpdates = new Runnable() {
         @Override
@@ -75,9 +75,12 @@ public class Poller {
     private static void CheckandUpdateGameLobby() {
         ServerProxy serverProxy = new ServerProxy();
         Result result = serverProxy.CheckGameLobby(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID());
+        System.out.println("TEST : " + result.toString());
         if (result.isSuccess()) {
             Integer versionNum = (Integer) result.getData();
+            System.out.println(versionNum + " : " + gameVersion);
             if (!versionNum.equals(gameVersion)) {
+                System.out.println(")))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))");
                 ModelFacade.getInstance().UpdateGame();
                 gameVersion = versionNum;
                 //what to do after game is updated
@@ -104,10 +107,12 @@ public class Poller {
     }
 
     private static void CheckandUpdateGameList() {
+        System.out.println("Poller working");
         ServerProxy serverProxy = new ServerProxy();
         Result result = serverProxy.CheckGameList(ModelRoot.getInstance().getAuthToken());
         if (result.isSuccess()) {
             Integer versionNum = (Integer) result.getData();
+            System.out.println(versionNum + " " + gameListVersion);
             if (!versionNum.equals(gameListVersion)) {
                 ModelFacade.getInstance().UpdateGameList();
                 gameListVersion = versionNum;
