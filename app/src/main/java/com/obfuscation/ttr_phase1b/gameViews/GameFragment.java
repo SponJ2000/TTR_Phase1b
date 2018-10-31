@@ -54,7 +54,7 @@ public class GameFragment extends Fragment implements IGameView {
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
 
-    //    MapView mMapView;
+//    MapView mMapView;
 //    private GoogleMap googleMap;
 
     public static GameFragment newInstance() {
