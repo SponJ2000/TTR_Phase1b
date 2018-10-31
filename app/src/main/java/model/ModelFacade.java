@@ -1,21 +1,16 @@
 package model;
 
 
-import com.obfuscation.server.GenericCommand;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
-import communication.DestinationTicketCard;
 import communication.Game;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
 import communication.Ticket;
-import communication.TrainCarCard;
 import server.Poller;
-import server.ServerProxy;
 import task.GenericTask;
 
 /**

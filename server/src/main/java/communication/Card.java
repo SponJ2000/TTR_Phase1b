@@ -5,17 +5,17 @@ package communication;
  */
 
 public class Card {
-    public TrainCarCardColor getColor() {
+    public CardColor getColor() {
         return color;
     }
 
-    public void setColor(TrainCarCardColor color) {
+    public void setColor(CardColor color) {
         this.color = color;
     }
 
-    private TrainCarCardColor color;
+    private CardColor color;
 
-    public Card(TrainCarCardColor color) {
+    public Card(CardColor color) {
         this.color = color;
     }
 

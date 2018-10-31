@@ -2,19 +2,17 @@ package server;
 
 import com.obfuscation.server.GenericCommand;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import communication.Card;
-import communication.DestinationTicketCard;
 import communication.Game;
 import communication.IClient;
 import communication.Message;
 import communication.Player;
 import communication.Ticket;
-import communication.TrainCarCardColor;
+import communication.CardColor;
 import model.ModelRoot;
 
 /**
@@ -29,7 +27,7 @@ public class ClientFacade implements IClient{
                 "server.ClientFacade"
                 , "updateTrainCards"
                 , new String[]{String.class.getName(), List.class.getName()}
-                , new Object[] {"HELLO", new ArrayList<>(Arrays.asList(new Card(TrainCarCardColor.BLUE), new Card(TrainCarCardColor.BLACK)))});
+                , new Object[] {"HELLO", new ArrayList<>(Arrays.asList(new Card(CardColor.BLUE), new Card(CardColor.BLACK)))});
 
         try {
             command.execute();

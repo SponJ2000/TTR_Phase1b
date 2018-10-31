@@ -1,6 +1,7 @@
 package server;
 
 import com.obfuscation.server.GenericCommand;
+import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -99,6 +100,8 @@ public class Poller {
             ArrayList<GenericCommand> commands = (ArrayList<GenericCommand>)result.getData();
             for (GenericCommand c: commands) {
                 c.execute();
+                PresenterFacade.getInstance().updatePresenter(result);
+                ModelRoot.getInstance().getGame().stateIncreament();
             }
         }
         else {
@@ -116,6 +119,7 @@ public class Poller {
             if (!versionNum.equals(gameListVersion)) {
                 ModelFacade.getInstance().UpdateGameList();
                 gameListVersion = versionNum;
+
             }
         }
 

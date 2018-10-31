@@ -8,6 +8,6 @@ public class Route {
     private City city1;
     private City city2;
     private int length;
-    private color color;
+    private CardColor cardColor;
     private Player claimedBy = null;
 }
