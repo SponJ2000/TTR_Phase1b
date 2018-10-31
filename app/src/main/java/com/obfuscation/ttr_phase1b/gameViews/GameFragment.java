@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 //import com.google.android.gms.maps.CameraUpdateFactory;
 //import com.google.android.gms.maps.GoogleMap;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
@@ -35,9 +37,13 @@ public class GameFragment extends Fragment implements IGameView {
     private IGamePresenter mPresenter;
 
     private String mUsername;
+    private boolean mIsTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
     private List<Ticket> mTickets;
+
+    private ImageView[] mFaceCardViews;
+    private ImageView mDeck;
 
     private FloatingActionButton mPlayersButton;
     private FloatingActionButton mTicketsButton;
@@ -83,6 +89,61 @@ public class GameFragment extends Fragment implements IGameView {
             public void onClick(View view) {
                 Log.d(TAG, "view chat");
                 mPresenter.showChat();
+            }
+        });
+
+        mFaceCardViews = new ImageView[5];
+        mFaceCardViews[0] = rootView.findViewById(R.id.card1);
+        mFaceCardViews[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view chat");
+                mPresenter.chooseCard(0);
+            }
+        });
+
+        mFaceCardViews[1] = rootView.findViewById(R.id.card2);
+        mFaceCardViews[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view chat");
+                mPresenter.chooseCard(1);
+            }
+        });
+
+        mFaceCardViews[2] = rootView.findViewById(R.id.card3);
+        mFaceCardViews[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view chat");
+                mPresenter.chooseCard(2);
+            }
+        });
+
+        mFaceCardViews[3] = rootView.findViewById(R.id.card4);
+        mFaceCardViews[3].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view chat");
+                mPresenter.chooseCard(3);
+            }
+        });
+
+        mFaceCardViews[4] = rootView.findViewById(R.id.card5);
+        mFaceCardViews[4].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view chat");
+                mPresenter.chooseCard(4);
+            }
+        });
+
+        mDeck = rootView.findViewById(R.id.deck);
+        mDeck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view chat");
+                mPresenter.chooseCard(-1);
             }
         });
 
@@ -164,11 +225,18 @@ public class GameFragment extends Fragment implements IGameView {
     }
 
     @Override
+    public void setIsTurn(boolean isTurn) {
+        mIsTurn = isTurn;
+    }
+
+    @Override
     public void updateUI() {
         if(mCards != null) {
 
         }if(mFaceCards != null) {
-
+            for(int i = 0; i < mFaceCards.size(); i++) {
+//                mFaceCardViews[i].setcolor
+            }
         }if(mTickets != null) {
 
         }

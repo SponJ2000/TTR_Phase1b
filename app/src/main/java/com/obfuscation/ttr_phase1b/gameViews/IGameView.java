@@ -22,4 +22,6 @@ public interface IGameView extends IView {
 
     void setUsername(String username);
 
+    void setIsTurn(boolean isTurn);
+
 }

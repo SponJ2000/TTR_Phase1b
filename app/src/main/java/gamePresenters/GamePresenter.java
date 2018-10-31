@@ -28,9 +28,7 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
-        if(model.isMyTurn()) {
-//          is my turn, so do something
-        }
+        view.setIsTurn(model.isMyTurn());
         view.setCards(model.getCards());
         view.setFaceCards(model.getFaceCards());
         view.setMap(model.getMap());
@@ -49,6 +47,11 @@ public class GamePresenter implements IGamePresenter {
     }
 
     public void showMap() {
+    }
+
+    @Override
+    public void chooseCard(int index) {
+        model.chooseCard(index);
     }
 
     public void showMenu() {
