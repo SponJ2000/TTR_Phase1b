@@ -32,6 +32,7 @@ public class TicketPresenter implements ITicketPresenter {
     @Override
     public void updateInfo(Object result) {
         view.setTickets(model.getChoiceTickets());
+        view.setIsTurn(model.isMyTurn());
         view.updateUI();
     }
 
