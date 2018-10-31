@@ -168,7 +168,7 @@ public interface IServer {
      * @param authToken a String object containing the user's authToken
      * @return          a Result object contain three ticktes.
      */
-    Result GetTickets(String authToken);
+    Result GetTickets(String gameID, String authToken);
 
     /**
      * user put back the tickets he doesnt want to keep
@@ -188,7 +188,7 @@ public interface IServer {
      * @param authToken a String of unique authToken
      * @return          a result object containing an boolean indicate of success of this call
      */
-    Result ReturnTickets(List<Ticket> tickets, String authToken);
+    Result ReturnTickets(String gameID, String authToken, List<Ticket> ticketsToKeep);
 
 
     //TODO: functions below should be consided deprecated

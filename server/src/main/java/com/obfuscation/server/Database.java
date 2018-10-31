@@ -408,4 +408,49 @@ public class Database {
         authTokens.add(authToken);
         return authToken;
     }
+
+    List<Ticket> getTickets(String gameID, String authToken) {
+        Game game = getGame(gameID);
+        List<Ticket> tickets = game.getTickets();
+
+        ArrayList<Ticket> playerTickets = new ArrayList<>();
+        if (tickets.size() < 3) {
+            return tickets;
+        }
+        for (int i = 0; i < 3; i++) {
+            Ticket ticket = tickets.get(i);
+            playerTickets.add(ticket);
+          //  tickets.remove(0);
+        }
+        return playerTickets;
+    }
+
+    Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
+        Game game = getGame(gameID);
+        String playerID = findPlayerIDByAuthToken(authToken);
+        for (Player player : game.getPlayers()) {
+            if (player.getId().equals(playerID)) {
+                ArrayList<Ticket> prevTickets = player.getTickets();
+                prevTickets.addAll(tickets);
+                player.setTickets(prevTickets);
+                List<Ticket> ticketDeck = game.getTickets();
+                //TODO : if the deck size is less then 3?
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < tickets.size(); j++) {
+                        if (ticketDeck.get(i).equals(tickets.get(j))) {
+                            ticketDeck.remove(i);
+                        }
+                    }
+                }
+                // place not chosen cards to the deck
+                for (int i = 0; i < 3 - tickets.size(); i++) {
+                    Ticket topTicket = ticketDeck.get(0);
+                    ticketDeck.add(topTicket);
+                    ticketDeck.remove(0);
+                }
+                return new Result(true, player.getTickets().size(), null);
+            }
+        }
+        return new Result(false, null, "Error : player not found");
+    }
 }
