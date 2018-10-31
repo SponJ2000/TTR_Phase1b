@@ -1,6 +1,7 @@
 package com.obfuscation.ttr_phase1b.gameViews;
 
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,18 +28,18 @@ import communication.PlayerColor;
 import communication.Ticket;
 import gamePresenters.IGamePresenter;
 
-//import com.google.android.gms.maps.CameraUpdateFactory;
-//import com.google.android.gms.maps.GoogleMap;
-//import com.google.android.gms.maps.MapView;
-//import com.google.android.gms.maps.MapsInitializer;
-//import com.google.android.gms.maps.OnMapReadyCallback;
-//import com.google.android.gms.maps.model.CameraPosition;
-//import com.google.android.gms.maps.model.LatLng;
-//import com.google.android.gms.maps.model.MapStyleOptions;
-//import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class GameFragment extends Fragment implements IGameView {
+public class GameFragment extends Fragment implements IGameView, OnMapReadyCallback {
 
     private static final String TAG = "ChatFrag";
 
@@ -66,8 +67,8 @@ public class GameFragment extends Fragment implements IGameView {
     private Player mPlayer;
     private GameMap mMap;
 
-//    MapView mMapView;
-//    private GoogleMap googleMap;
+    MapView mMapView;
+    private GoogleMap googleMap;
 
     public GameFragment() {
         mUsername = null;
@@ -184,9 +185,13 @@ public class GameFragment extends Fragment implements IGameView {
 
         changeAccessibility();
 
-//        mMapView = (MapView) rootView.findViewById(R.id.mapView);
-//        mMapView.onCreate(savedInstanceState);
-//
+
+        //Gets MapView from xml layout
+        mMapView = rootView.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.getMapAsync(this);
+
 //        mMapView.onResume();
 //
 //        try {
@@ -229,6 +234,38 @@ public class GameFragment extends Fragment implements IGameView {
 
         return rootView;
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //googleMap = mMap;
+
+                try {
+                    // Customise the styling of the base map using a JSON object defined
+                    // in a raw resource file.
+                    boolean success = googleMap.setMapStyle(
+                            MapStyleOptions.loadRawResourceStyle(
+                                    getActivity(), R.raw.map_style));
+
+                    if (!success) {
+                        Log.e(TAG, "Style parsing failed.");
+                    }
+                } catch (Resources.NotFoundException e) {
+                    Log.e(TAG, "Can't find style. Error: ", e);
+                }
+
+
+                // Drop markers on all the cities
+                LatLng ny = new LatLng(41, 74);
+                googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
+
+                // For zooming automatically to the location of the marker
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                //Add routes here
+
+        
     }
 
     private void changeAccessibility() {
@@ -428,29 +465,29 @@ public class GameFragment extends Fragment implements IGameView {
         mTrainsView.setText(new StringBuilder(trains).toString());
     }
 
-    //    @Override
-//    public void onResume() {
-//        super.onResume();
-//        mMapView.onResume();
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        mMapView.onPause();
-//    }
-//
-//    @Override
-//    public void onDestroy() {
-//        super.onDestroy();
-//        mMapView.onDestroy();
-//    }
-//
-//    @Override
-//    public void onLowMemory() {
-//        super.onLowMemory();
-//        mMapView.onLowMemory();
-//    }
+        @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
 
 }
 
