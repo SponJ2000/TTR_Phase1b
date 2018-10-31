@@ -1,5 +1,6 @@
 package com.obfuscation.ttr_phase1b.gameViews;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,8 @@ import communication.Card;
 import communication.GameMap;
 import communication.Ticket;
 import gamePresenters.IGamePresenter;
+
+import static android.support.constraint.Constraints.TAG;
 
 //import com.google.android.gms.maps.CameraUpdateFactory;
 //import com.google.android.gms.maps.GoogleMap;
@@ -166,7 +169,7 @@ public class GameFragment extends Fragment implements IGameView {
 //                    // in a raw resource file.
 //                    boolean success = googleMap.setMapStyle(
 //                            MapStyleOptions.loadRawResourceStyle(
-//                                    this, R.raw.map_style.json));
+//                                    getActivity(), R.raw.map_style));
 //
 //                    if (!success) {
 //                        Log.e(TAG, "Style parsing failed.");
@@ -205,33 +208,6 @@ public class GameFragment extends Fragment implements IGameView {
             mDeck.setEnabled(false);
         }
     }
-
-//    public void onMapReady(GoogleMap mMap) {
-//        googleMap = mMap;
-//
-//        try {
-//            // Customise the styling of the base map using a JSON object defined
-//            // in a raw resource file.
-//            boolean success = googleMap.setMapStyle(
-//                    MapStyleOptions.loadRawResourceStyle(
-//                            getActivity(), R.raw.map_style));
-//
-//            if (!success) {
-//                Log.e(TAG, "Style parsing failed.");
-//            }
-//        } catch (Resources.NotFoundException e) {
-//            Log.e(TAG, "Can't find style. Error: ", e);
-//        }
-//
-//
-//        // For dropping a marker at a point on the Map
-//        LatLng ny = new LatLng(41, 74);
-//        googleMap.addMarker(new MarkerOptions().position(ny).title("New York").snippet("Aka \"Not Old York\""));
-//
-//        // For zooming automatically to the location of the marker
-//        CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(12).build();
-//        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
