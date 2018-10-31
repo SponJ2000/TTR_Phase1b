@@ -1,11 +1,9 @@
 package model;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
-import communication.DestinationTickectCardMaker;
-import communication.DestinationTicketCard;
+import communication.TickectMaker;
+import communication.Ticket;
 
 /**
  * Created by hao on 10/27/18.
@@ -14,9 +12,9 @@ import communication.DestinationTicketCard;
 public class TestingDummy {
 
     public static void main(String[] argv) {
-        DestinationTickectCardMaker cardMaker = new DestinationTickectCardMaker();
+        TickectMaker cardMaker = new TickectMaker();
 
-        ArrayList<DestinationTicketCard> cardDeck = cardMaker.MakeCards();
+        ArrayList<Ticket> cardDeck = cardMaker.MakeCards();
 
         System.out.println(cardDeck.size());
     }
