@@ -39,7 +39,7 @@ public class ClientProxy implements IClient {
     /**
      * private member and class name strings
      */
-    private List<ICommand> notSeenCommands = new ArrayList<>();
+    private Map<String, List<ICommand>> notSeenCommands = new HashMap<>();
     private static final String CLIENT_FACADE = "ClientFacade";
     private static final String STRING = "java.lang.String";
     private static final String INTEGER = Integer.TYPE.getName();
@@ -53,13 +53,6 @@ public class ClientProxy implements IClient {
      * getters and setters
      * @return
      */
-    public List<ICommand> getNotSeenCommands() {
-        return notSeenCommands;
-    }
-
-    public void setNotSeenCommands(List<ICommand> notSeenCommands) {
-        this.notSeenCommands = notSeenCommands;
-    }
 
     @Override
     public void initializeGame(Game game) {
@@ -68,7 +61,8 @@ public class ClientProxy implements IClient {
                 , "initializeGame"
                 , new String[]{GAME}
                 , new Object[] {game});
-        notSeenCommands.add(command);
+        notSeenCommands.put(game.getGameID(), new ArrayList<ICommand>());
+        notSeenCommands.get(game.getGameID()).add(command);
     }
 
     @Override
@@ -78,7 +72,7 @@ public class ClientProxy implements IClient {
                 , "updatePlayerPoints"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, plyerID, points});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -88,7 +82,7 @@ public class ClientProxy implements IClient {
                 , "updateTrainCards"
                 , new String[]{STRING, CARD}
                 , new Object[] {gameID, trainCards});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -98,7 +92,7 @@ public class ClientProxy implements IClient {
                 , "updateTickets"
                 , new String[]{STRING, LIST}
                 , new Object[] {gameID, tickets});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -108,7 +102,7 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTrainCards"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, cardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -118,7 +112,7 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTrainCars"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, carNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -128,7 +122,7 @@ public class ClientProxy implements IClient {
                 , "updateOpponentTickets"
                 , new String[]{STRING, STRING, INTEGER}
                 , new Object[] {gameID, playerID, cardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -138,7 +132,7 @@ public class ClientProxy implements IClient {
                 , "updateTrainDeck"
                 , new String[]{STRING, CARD, INTEGER}
                 , new Object[] {gameID, faceCards, downCardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -148,7 +142,7 @@ public class ClientProxy implements IClient {
                 , "updateDestinationDeck"
                 , new String[]{STRING, INTEGER}
                 , new Object[] {gameID, cardNum});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -158,7 +152,7 @@ public class ClientProxy implements IClient {
                 , "updateDestinationDeck"
                 , new String[]{STRING, STRING, STRING}
                 , new Object[] {gameID, playerID, routeID});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
@@ -168,7 +162,7 @@ public class ClientProxy implements IClient {
                 , "updateChat"
                 , new String[]{STRING, MESSAGE}
                 , new Object[] {gameID, m});
-        notSeenCommands.add(command);
+        notSeenCommands.get(gameID).add(command);
     }
 
     private int version;
@@ -189,7 +183,6 @@ public class ClientProxy implements IClient {
     public void updateGame(String gameID) {
         int v = gameVersion.get(gameID);
         v += 1;
-        System.out.println(authToken + " " + gameID + " IIIIIIIIIIIIIIIIIIINcrease v " + v);
         gameVersion.put(gameID, v);
     }
 
@@ -208,11 +201,31 @@ public class ClientProxy implements IClient {
 
 
     //TODO : provide a way to check if commands are transmitted successfully or not
-    //TODO : get different commands for different games
-    public Result getNotSeenCommands(String gameID) {
+    //TODO : clients have to keep track of games and the last command id, and send them (keep map<gameID, commandID>)
+    public Result getNotSeenCommands(String gameID, String lastCommandID) {
         if (notSeenCommands != null) {
-            return new Result(true, notSeenCommands, null);
+            if (notSeenCommands.get(gameID) != null) {
+                //first time
+                if (lastCommandID == null) {
+                    return new Result(true, notSeenCommands.get(gameID), null);
+                }
+                int index = -1;
+                for (int i = 0; i < notSeenCommands.get(gameID).size(); i++) {
+                    ICommand command = notSeenCommands.get(gameID).get(i);
+                    GenericCommand genericCommand = (GenericCommand) command;
+                    if (lastCommandID.equals(genericCommand.getCommandID())) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index != -1) {
+
+                    //removes the previous commands that has been transmitted
+                    notSeenCommands.get(gameID).subList(0, index).clear();
+                    return new Result(true, notSeenCommands.get(gameID), null);
+                }
+            }
         }
-        return new Result(false, null, "Error : gamePlayerPair not found");
+        return new Result(false, null, "Error : commands are null");
     }
 }
