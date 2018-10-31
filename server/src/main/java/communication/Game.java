@@ -182,6 +182,10 @@ public class Game {
         state = nState;
     }
 
+    public void stateIncreament(){
+        state++;
+    }
+
     public void increaseGameState(){
         state++;
     }

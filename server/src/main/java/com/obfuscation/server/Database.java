@@ -14,10 +14,10 @@ import communication.City;
 import communication.Game;
 import communication.Message;
 import communication.Player;
+import communication.PlayerColor;
 import communication.Result;
 import communication.Ticket;
-import communication.TrainCarCardColor;
-import communication.color;
+import communication.CardColor;
 
 /**
  * Created by jalton on 10/3/18.
@@ -46,7 +46,7 @@ public class Database {
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
-    private List<color> colors = Arrays.asList(color.BLACK, color.BLUE, color.PURPLE, color.RED, color.YELLOW);
+    private List<PlayerColor> colors = Arrays.asList(PlayerColor.BLACK, PlayerColor.BLUE, PlayerColor.PURPLE, PlayerColor.RED, PlayerColor.YELLOW);
 
     public List<Game> getGameList() {
         return gameList;
@@ -174,14 +174,14 @@ public class Database {
         //initialize traincards
         ArrayList<Card> trainCards = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
-            Card purpleCard = new Card(TrainCarCardColor.PURPLE);
-            Card blueCard = new Card(TrainCarCardColor.BLUE);
-            Card orangeCard = new Card(TrainCarCardColor.ORANGE);
-            Card whiteCard = new Card(TrainCarCardColor.WHITE);
-            Card greenCard = new Card(TrainCarCardColor.GREEN);
-            Card redCard = new Card(TrainCarCardColor.RED);
-            Card blackCard = new Card(TrainCarCardColor.BLACK);
-            Card yellowCard = new Card(TrainCarCardColor.YELLOW);
+            Card purpleCard = new Card(CardColor.PURPLE);
+            Card blueCard = new Card(CardColor.BLUE);
+            Card orangeCard = new Card(CardColor.ORANGE);
+            Card whiteCard = new Card(CardColor.WHITE);
+            Card greenCard = new Card(CardColor.GREEN);
+            Card redCard = new Card(CardColor.RED);
+            Card blackCard = new Card(CardColor.BLACK);
+            Card yellowCard = new Card(CardColor.YELLOW);
             trainCards.add(purpleCard);
             trainCards.add(blueCard);
             trainCards.add(orangeCard);
@@ -192,7 +192,7 @@ public class Database {
             trainCards.add(yellowCard);
         }
         for (int i = 0; i < 14; i++) {
-            Card LocomotiveCard = new Card(TrainCarCardColor.LOCOMOTIVE);
+            Card LocomotiveCard = new Card(CardColor.LOCOMOTIVE);
         }
         Collections.shuffle(trainCards);
         game.setTrainCards(trainCards);
@@ -259,7 +259,7 @@ public class Database {
         //Assign colors
         Collections.shuffle(colors);
         for (int i = 0; i < players.size(); i++) {
-            players.get(i).setPlayerColor(colors.get(i));
+            players.get(i).setPlayerPlayerColor(colors.get(i));
         }
         return new Result(true, game, null);
     }
