@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import communication.Card;
-import communication.DestinationTicketCard;
 import communication.Game;
 import communication.IClient;
 import communication.ICommand;
 import communication.Message;
-import communication.Player;
 import communication.Result;
 import communication.Ticket;
 
