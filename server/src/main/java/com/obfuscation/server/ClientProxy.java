@@ -208,6 +208,9 @@ public class ClientProxy implements IClient {
                     List<ICommand> commands = notSeenCommands.get(gameID).subList(state + 1, notSeenCommands.get(gameID).size() - 1);
                     return new Result(true, commands, null);
                 }
+                else {
+                    return new Result(true, new ArrayList<>(), null);
+                }
             }
         }
         return new Result(false, null, "Error : commands are null");
