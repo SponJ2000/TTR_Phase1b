@@ -233,6 +233,15 @@ public class Database {
             }
             player.setCards(playerTrainCards);
         }
+        ArrayList<Card> faceUpTrainCards = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Card card = trainCards.get(0);
+            faceUpTrainCards.add(card);
+            trainCards.remove(0);
+        }
+
+        // set faceup cards
+        game.setFaceUpTrainCarCards(faceUpTrainCards);
 
         game.setTrainCards(trainCards);
 
