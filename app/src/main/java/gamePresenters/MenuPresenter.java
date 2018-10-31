@@ -9,6 +9,7 @@ public class MenuPresenter implements IMenuPresenter {
 
     public MenuPresenter(IMenuView view, MenuListener listener) {
         this.view = view;
+        view.setPresenter(this);
         this.listener = listener;
     }
 
@@ -30,5 +31,10 @@ public class MenuPresenter implements IMenuPresenter {
     @Override
     public void updateInfo(Object result) {
         view.updateUI();
+    }
+
+    @Override
+    public void update() {
+
     }
 }

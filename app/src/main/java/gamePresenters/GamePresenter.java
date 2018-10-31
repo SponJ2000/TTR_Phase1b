@@ -1,11 +1,16 @@
 package gamePresenters;
 
+import android.util.Log;
+
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 
+import model.FakeModel;
 import model.IGameModel;
 import model.ModelFacade;
 
 public class GamePresenter implements IGamePresenter {
+
+    private static String TAG = "obfuscate";
 
     private IGameView view;
     private OnShowListener listener;
@@ -13,8 +18,11 @@ public class GamePresenter implements IGamePresenter {
 
     public GamePresenter(IGameView view, OnShowListener listener) {
         this.view = view;
+        view.setPresenter(this);
         this.listener = listener;
-        this.model = ModelFacade.getInstance();
+//        model = ModelFacade.getInstance();
+        model = FakeModel.getInstance();
+        view.setUsername(model.getUserName());
     }
 
 
@@ -24,9 +32,17 @@ public class GamePresenter implements IGamePresenter {
 //          is my turn, so do something
         }
         view.setCards(model.getCards());
+        view.setFaceCards(model.getFaceCards());
         view.setMap(model.getMap());
-        view.setUsername(model.getUserName());
+        view.setTickets(model.getTickets());
         view.updateUI();
+    }
+
+    @Override
+    public void update() {
+        model.updateCards();
+        model.updateFaceCards();
+        model.updateTickets();
     }
 
     public void showPlayerInfo() {

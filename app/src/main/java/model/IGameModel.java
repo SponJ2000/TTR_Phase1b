@@ -17,12 +17,20 @@ public interface IGameModel {
     GameMap getMap();
 
 
+    void updateTickets();
+
+    void updateChoiceTickets();
+
     List<Ticket> getTickets();
 
-    List<Ticket> getTicketsToChoose();
+    List<Ticket> getChoiceTickets();
 
     void chooseTickets(List<Ticket> tickets);
 
+
+    void updateCards();
+
+    void updateFaceCards();
 
     List<Card> getCards();
 
@@ -30,6 +38,8 @@ public interface IGameModel {
 
     void chooseCard(int index);
 
+
+    void updateMessages();
 
     List<Message> getMessages();
 

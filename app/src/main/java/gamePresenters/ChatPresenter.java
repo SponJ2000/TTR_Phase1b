@@ -17,14 +17,19 @@ public class ChatPresenter implements IChatPresenter {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
-//        this.model = ModelFacade.getInstance();
-        this.model = FakeModel.getInstance();
+//        model = ModelFacade.getInstance();
+        model = FakeModel.getInstance();
     }
 
     @Override
     public void updateInfo(Object result) {
         view.setMessages(model.getMessages());
         view.updateUI();
+    }
+
+    @Override
+    public void update() {
+        model.updateMessages();
     }
 
     @Override

@@ -61,7 +61,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 break;
         }
         fm.beginTransaction().add(R.id.container, fragment).commit();
-        Log.d(TAG, "showing a fragment");
+        Log.d(TAG, "showing a " + show + " fragment");
     }
 
     @Override

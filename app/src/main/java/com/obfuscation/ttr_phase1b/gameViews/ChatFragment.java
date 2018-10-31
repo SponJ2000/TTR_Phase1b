@@ -63,7 +63,10 @@ public class ChatFragment extends Fragment implements IChatView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
+
+        mPresenter.update();
+
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         mPlayerMessage = new Message("");
         mPlayerMessageText = (EditText) view.findViewById(R.id.player_message);
@@ -118,7 +121,7 @@ public class ChatFragment extends Fragment implements IChatView {
     @Override
     public void updateUI() {
         Log.d(TAG, "getting updated");
-        if(mMessageRecycler != null) {
+        if(mMessageRecycler != null && mMessages != null) {
             Log.d(TAG+"_updateUI", "gamelist: " + mMessages);
             mMessageAdapter = new MessageAdapter(mMessages);
             mMessageRecycler.setAdapter(mMessageAdapter);
@@ -161,12 +164,12 @@ public class ChatFragment extends Fragment implements IChatView {
 
         public MessageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.gamelist_view, parent, false);
+            View view = inflater.inflate(R.layout.fragment_chat_list, parent, false);
             return new MessageHolder(view);
         }
 
         public void onBindViewHolder(MessageHolder holder, int position) {
-            Log.d(TAG+"_adapter", "game[" + position + "]: " + mMessages.get(position));
+            Log.d(TAG+"_adapter", "message[" + position + "]: " + mMessages.get(position));
             holder.bind(mMessages.get(position));
         }
 

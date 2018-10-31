@@ -154,6 +154,11 @@ public class LoginFragment extends Fragment implements IPresenter {
         }
     }
 
+    @Override
+    public void update() {
+
+    }
+
     //  sets up the activity as the listener so we can tell it when to change frags
     @Override
     public void onAttach(Context context) {

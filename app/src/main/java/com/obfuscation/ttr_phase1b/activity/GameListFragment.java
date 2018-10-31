@@ -152,8 +152,13 @@ public class GameListFragment extends Fragment implements IPresenter {
         updateUI();
     }
 
+    @Override
+    public void update() {
 
-//  tells the activity to change fragments to either the create game frag if selection == "create"
+    }
+
+
+    //  tells the activity to change fragments to either the create game frag if selection == "create"
 //  or the lobby frag if selection == "join"
     public void onGameSelect(String gameSelection) {
         if (mListener != null) {

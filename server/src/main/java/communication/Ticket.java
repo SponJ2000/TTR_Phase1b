@@ -26,4 +26,13 @@ public class Ticket {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "city1=" + city1 +
+                ", city2=" + city2 +
+                ", value=" + value +
+                '}';
+    }
 }

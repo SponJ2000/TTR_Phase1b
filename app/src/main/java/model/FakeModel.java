@@ -97,7 +97,7 @@ public class FakeModel implements IGameModel {
     }
 
     public static FakeModel getInstance() {
-        if(model != null) {
+        if(model == null) {
             model = new FakeModel();
         }
         return model;
@@ -119,14 +119,24 @@ public class FakeModel implements IGameModel {
         return null;
     }
 
-//  tickets
+    //  tickets
+    @Override
+    public void updateTickets() {
+        PresenterFacade.getInstance().updatePresenter(true);
+    }
+
+    @Override
+    public void updateChoiceTickets() {
+        PresenterFacade.getInstance().updatePresenter(true);
+    }
+
     @Override
     public List<Ticket> getTickets() {
         return userTickets;
     }
 
     @Override
-    public List<Ticket> getTicketsToChoose() {
+    public List<Ticket> getChoiceTickets() {
         choiceTickets = new ArrayList<>();
         for(int i = 0; i < 3; i++) {
             choiceTickets.add(allTickets.get(allTickInd));
@@ -144,7 +154,17 @@ public class FakeModel implements IGameModel {
         choiceTickets = null;
     }
 
-//  cards
+    //  cards
+    @Override
+    public void updateCards() {
+        PresenterFacade.getInstance().updatePresenter(true);
+    }
+
+    @Override
+    public void updateFaceCards() {
+        PresenterFacade.getInstance().updatePresenter(true);
+    }
+
     @Override
     public List<Card> getFaceCards() {
         return faceupCards;
@@ -166,7 +186,12 @@ public class FakeModel implements IGameModel {
         }
     }
 
-//  messages
+    //  messages
+    @Override
+    public void updateMessages() {
+        PresenterFacade.getInstance().updatePresenter(true);
+    }
+
     @Override
     public List<Message> getMessages() {
         return messages;

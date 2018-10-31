@@ -108,10 +108,25 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public void updateCards() {
+
+    }
+
+    @Override
+    public void updateFaceCards() {
+
+    }
+
+    @Override
     public void chooseCard(int index) {
         GenericTask genericTask = new GenericTask("DrawTrainCard");
         genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
         ModelRoot.getInstance().setWantedCardIndex(index);
+    }
+
+    @Override
+    public void updateMessages() {
+
     }
 
     //Called by presenter
@@ -135,6 +150,16 @@ public class ModelFacade implements IGameModel {
     @Override
     public GameMap getMap() {
         return ModelRoot.getInstance().getGame().getmMap();
+    }
+
+    @Override
+    public void updateTickets() {
+
+    }
+
+    @Override
+    public void updateChoiceTickets() {
+
     }
 
     @Override
@@ -172,7 +197,7 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    public List<Ticket> getTicketsToChoose() {
+    public List<Ticket> getChoiceTickets() {
         return ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
     }
 

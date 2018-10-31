@@ -24,6 +24,7 @@ import java.util.List;
 import communication.Card;
 import communication.GameMap;
 import communication.Player;
+import communication.Ticket;
 import gamePresenters.IGamePresenter;
 
 
@@ -35,6 +36,8 @@ public class GameFragment extends Fragment implements IGameView {
 
     private String mUsername;
     private List<Card> mCards;
+    private List<Card> mFaceCards;
+    private List<Ticket> mTickets;
 
     private FloatingActionButton mPlayersButton;
     private FloatingActionButton mTicketsButton;
@@ -52,7 +55,7 @@ public class GameFragment extends Fragment implements IGameView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-
+        mPresenter.update();
 
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
@@ -146,13 +149,29 @@ public class GameFragment extends Fragment implements IGameView {
     }
 
     @Override
+    public void setFaceCards(List<Card> cards) {
+        mFaceCards = cards;
+    }
+
+    @Override
+    public void setTickets(List<Ticket> tickets) {
+        mTickets = tickets;
+    }
+
+    @Override
     public void setUsername(String username) {
         mUsername = username;
     }
 
     @Override
     public void updateUI() {
+        if(mCards != null) {
 
+        }if(mFaceCards != null) {
+
+        }if(mTickets != null) {
+
+        }
     }
 
     @Override
