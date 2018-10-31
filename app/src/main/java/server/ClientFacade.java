@@ -14,6 +14,7 @@ import communication.Player;
 import communication.Ticket;
 import communication.CardColor;
 import model.ModelRoot;
+import model.State;
 
 /**
  * Created by hao on 10/25/18.
@@ -59,6 +60,7 @@ public class ClientFacade implements IClient{
     public void initializeGame(Game game) {
         ModelRoot.getInstance().setGame(game);
         ModelRoot.getInstance().getGame().setGameStarted(true);
+        ModelRoot.getInstance().setState(State.GAME);
     }
 
     @Override
