@@ -59,6 +59,9 @@ public class TicketFragment extends Fragment implements ITicketView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        mPresenter.update();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ticket, container, false);
 
@@ -116,7 +119,7 @@ public class TicketFragment extends Fragment implements ITicketView {
     @Override
     public void updateUI() {
         Log.d(TAG, "getting updated");
-        if(mTicketRecycler != null) {
+        if(mTicketRecycler != null && mTickets != null) {
             Log.d(TAG+"_updateUI", "ticketlist: " + mTickets);
             mTicketAdapter = new TicketAdapter(mTickets);
             mTicketRecycler.setAdapter(mTicketAdapter);
@@ -146,15 +149,17 @@ public class TicketFragment extends Fragment implements ITicketView {
 
         public void bind(Ticket ticket, int index) {
             mTicket = index;
-            mDescription.setText(ticket.getValue());
-            mPoints.setText(ticket.getValue());
+            mDescription.setText(ticket.getCity1() + " to " + ticket.getCity2());
+            mPoints.setText("" + ticket.getValue());
             mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (buttonView.isChecked()) {
                         mChosenTickets[mTicket] = true;
+                        changeAccessibility();
                     } else {
                         mChosenTickets[mTicket] = false;
+                        changeAccessibility();
                     }
                 }
 
@@ -173,12 +178,12 @@ public class TicketFragment extends Fragment implements ITicketView {
 
         public TicketHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.gamelist_view, parent, false);
+            View view = inflater.inflate(R.layout.ticket_view, parent, false);
             return new TicketHolder(view);
         }
 
         public void onBindViewHolder(TicketHolder holder, int position) {
-            Log.d(TAG+"_adapter", "game[" + position + "]: " + mTickets.get(position));
+            Log.d(TAG+"_adapter", "tickets[" + position + "]: " + mTickets.get(position));
             holder.bind(mTickets.get(position), position);
         }
 

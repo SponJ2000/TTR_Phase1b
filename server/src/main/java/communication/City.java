@@ -25,4 +25,12 @@ public class City {
     public int hashCode() {
         return name.hashCode();
     }
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

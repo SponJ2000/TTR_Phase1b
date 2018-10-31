@@ -5,5 +5,5 @@ package communication;
  */
 
 public enum CardColor {
-    PURPLE, BLUE, ORANGE, WHITE, GREEN, YELLOW, BLACK, RED, LOCOMOTIVE;
+    PURPLE, BLUE, ORANGE, WHITE, GREEN, YELLOW, BLACK, RED, LOCOMOTIVE
 }

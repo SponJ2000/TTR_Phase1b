@@ -67,4 +67,13 @@ public class Ticket {
         if (!getCity1().equals(ticket.getCity1())) return false;
         return getCity2().equals(ticket.getCity2());
     }
+
+    public String toString() {
+        return "Ticket{" +
+                "city1=" + city1 +
+                ", city2=" + city2 +
+                ", value=" + value +
+                '}';
+
+    }
 }

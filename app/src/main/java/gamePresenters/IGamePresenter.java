@@ -9,6 +9,7 @@ public interface IGamePresenter extends IPresenter{
     void showTickets();
     void showChat();
     void showMap();
+    void chooseCard(int index);
 
     /**
      * This interface must be implemented by activities that contain this

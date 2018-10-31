@@ -152,7 +152,12 @@ public class LobbyFragment extends Fragment implements IPresenter {
         updateUI();
     }
 
-//  tells the listener (the activity) to change the fragment back to the game list
+    @Override
+    public void update() {
+
+    }
+
+    //  tells the listener (the activity) to change the fragment back to the game list
     public void onGameLeave() {
         if (mListener != null) {
             mListener.onGameLeave();

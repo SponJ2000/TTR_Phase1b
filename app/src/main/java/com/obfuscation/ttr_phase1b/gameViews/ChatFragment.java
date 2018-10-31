@@ -33,11 +33,14 @@ public class ChatFragment extends Fragment implements IChatView {
 
     private IChatPresenter mPresenter;
 
+    private String mUsername;
+
     private List<Message> mMessages;
 
     private Message mPlayerMessage;
 
     private EditText mPlayerMessageText;
+    private Button mBackButton;
     private Button mSendButton;
 
     private RecyclerView mMessageRecycler;
@@ -63,9 +66,12 @@ public class ChatFragment extends Fragment implements IChatView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        mPlayerMessage = new Message("");
+        mPresenter.update();
+
+        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        mPlayerMessage = new Message(mUsername);
         mPlayerMessageText = (EditText) view.findViewById(R.id.player_message);
         mPlayerMessageText.setText("");
         mPlayerMessageText.addTextChangedListener(new TextWatcher() {
@@ -84,11 +90,23 @@ public class ChatFragment extends Fragment implements IChatView {
             }
         });
 
+        mBackButton = view.findViewById(R.id.chat_back);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Now sending message");
+                mPresenter.goBack();
+            }
+        });
+
         mSendButton = (Button) view.findViewById(R.id.send_message_button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now sending message");
+                mPresenter.onSend(mPlayerMessage);
+                mPlayerMessage = new Message(mUsername);
+                mPlayerMessageText.setText("");
             }
         });
 
@@ -116,9 +134,14 @@ public class ChatFragment extends Fragment implements IChatView {
     }
 
     @Override
+    public void setUsername(String username) {
+        mUsername = username;
+    }
+
+    @Override
     public void updateUI() {
         Log.d(TAG, "getting updated");
-        if(mMessageRecycler != null) {
+        if(mMessageRecycler != null && mMessages != null) {
             Log.d(TAG+"_updateUI", "gamelist: " + mMessages);
             mMessageAdapter = new MessageAdapter(mMessages);
             mMessageRecycler.setAdapter(mMessageAdapter);
@@ -161,12 +184,12 @@ public class ChatFragment extends Fragment implements IChatView {
 
         public MessageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.gamelist_view, parent, false);
+            View view = inflater.inflate(R.layout.fragment_chat_list, parent, false);
             return new MessageHolder(view);
         }
 
         public void onBindViewHolder(MessageHolder holder, int position) {
-            Log.d(TAG+"_adapter", "game[" + position + "]: " + mMessages.get(position));
+            Log.d(TAG+"_adapter", "message[" + position + "]: " + mMessages.get(position));
             holder.bind(mMessages.get(position));
         }
 

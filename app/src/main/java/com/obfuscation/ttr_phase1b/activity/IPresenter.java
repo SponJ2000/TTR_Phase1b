@@ -4,4 +4,6 @@ public interface IPresenter {
 
     void updateInfo(Object result);
 
+    void update();
+
 }
