@@ -4,8 +4,10 @@ package model;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import communication.Card;
+import communication.CardColor;
 import communication.Game;
 import communication.GameMap;
 import communication.Message;
@@ -22,7 +24,7 @@ public class ModelFacade implements IGameModel {
 
     private static ModelFacade modelFacade;
 
-
+    private List<Card> mFaceCards;
 
     private ModelFacade() {
         Player mHost = new Player("Bob (the host)");
@@ -31,6 +33,45 @@ public class ModelFacade implements IGameModel {
         fakePlayers.add( new Player("player 2") );
         fakePlayers.add( new Player("player 3") );
         fakePlayers.add( new Player("player 4") );
+
+        mFaceCards = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            int rando = ThreadLocalRandom.current().nextInt(0,9);
+
+            switch (rando) {
+                case 0:
+                    mFaceCards.add(new Card(CardColor.RED));
+                    break;
+                case 1:
+                    mFaceCards.add(new Card(CardColor.PURPLE));
+                    break;
+                case 2:
+                    mFaceCards.add(new Card(CardColor.BLUE));
+                    break;
+                case 3:
+                    mFaceCards.add(new Card(CardColor.GREEN));
+                    break;
+                case 4:
+                    mFaceCards.add(new Card(CardColor.YELLOW));
+                    break;
+                case 5:
+                    mFaceCards.add(new Card(CardColor.ORANGE));
+                    break;
+                case 6:
+                    mFaceCards.add(new Card(CardColor.BLACK));
+                    break;
+                case 7:
+                    mFaceCards.add(new Card(CardColor.WHITE));
+                    break;
+                case 8:
+                    mFaceCards.add(new Card(CardColor.LOCOMOTIVE));
+                    break;
+                default:
+            }
+        }
+
+
 //        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
     }
 
@@ -39,6 +80,11 @@ public class ModelFacade implements IGameModel {
             modelFacade = new ModelFacade();
         }
         return modelFacade;
+    }
+
+    @Override
+    public int getDeckSize() {
+        return 30;
     }
 
     public void Login(String userName, String password){
@@ -180,7 +226,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Card> getFaceCards() {
-        return null;
+        return mFaceCards;
     }
 
     public Player getPlayer() {

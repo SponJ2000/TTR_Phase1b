@@ -174,6 +174,10 @@ public class Game {
         this.mMaxPlayers = mMaxPlayers;
     }
 
+    public int getDeckSize(){
+        return trainCards.size();
+    }
+
     public int getState(){
         return state;
     }

@@ -4,6 +4,7 @@ import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import communication.Card;
 import communication.CardColor;
@@ -12,6 +13,7 @@ import communication.Game;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerColor;
 import communication.Ticket;
 
 public class FakeModel implements IGameModel {
@@ -34,14 +36,21 @@ public class FakeModel implements IGameModel {
 
     private List<Message> messages;
 
+    private Player mPlayer;
+
     private FakeModel() {
 
         Player mHost = new Player("Bob (the host)");
+
         List<Player> fakePlayers = new ArrayList<>();
         fakePlayers.add(mHost);
         fakePlayers.add( new Player("player 2") );
         fakePlayers.add( new Player("player 3") );
         fakePlayers.add( new Player("player 4") );
+
+        mPlayer = mHost;
+
+        initPlayer();
 
         userName = "Bob";
         game = new Game();
@@ -103,7 +112,42 @@ public class FakeModel implements IGameModel {
         return model;
     }
 
-//  metadata
+    private void initPlayer(){
+        PlayerColor color = PlayerColor.BLACK;
+
+        int rando = ThreadLocalRandom.current().nextInt(0,5);
+        switch (rando) {
+            case 0:
+                color = PlayerColor.RED;
+                break;
+            case 1:
+                color = PlayerColor.PURPLE;
+                break;
+            case 2:
+                color = PlayerColor.YELLOW;
+                break;
+            case 3:
+                color = PlayerColor.BLACK;
+                break;
+            case 4:
+                color = PlayerColor.BLUE;
+                break;
+        }
+
+        mPlayer.setPlayerColor(color);
+    }
+
+    @Override
+    public Player getPlayer() {
+        return mPlayer;
+    }
+
+    @Override
+    public int getDeckSize() {
+        return game.getDeckSize();
+    }
+
+    //  metadata
     @Override
     public boolean isMyTurn() {
         return false;

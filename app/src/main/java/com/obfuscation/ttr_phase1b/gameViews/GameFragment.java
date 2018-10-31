@@ -1,6 +1,6 @@
 package com.obfuscation.ttr_phase1b.gameViews;
 
-import android.content.res.Resources;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,18 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
 import communication.GameMap;
+import communication.Player;
+import communication.PlayerColor;
 import communication.Ticket;
 import gamePresenters.IGamePresenter;
-
-import static android.support.constraint.Constraints.TAG;
 
 //import com.google.android.gms.maps.CameraUpdateFactory;
 //import com.google.android.gms.maps.GoogleMap;
@@ -49,10 +52,19 @@ public class GameFragment extends Fragment implements IGameView {
 
     private ImageView[] mFaceCardViews;
     private ImageView mDeck;
+    private TextView mDeckSize;
 
     private FloatingActionButton mPlayersButton;
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
+
+    private LinearLayout mBoard;
+    private TextView mTicketsView;
+    private TextView mPointsView;
+    private TextView mTrainsView;
+
+    private Player mPlayer;
+    private GameMap mMap;
 
 //    MapView mMapView;
 //    private GoogleMap googleMap;
@@ -66,9 +78,9 @@ public class GameFragment extends Fragment implements IGameView {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        mPresenter.update();
-
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
+
+        mTickets = new ArrayList<>();
 
         mPlayersButton = rootView.findViewById(R.id.players_button);
         mPlayersButton.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +108,14 @@ public class GameFragment extends Fragment implements IGameView {
                 mPresenter.showChat();
             }
         });
+
+        mBoard = rootView.findViewById(R.id.bottom_board);
+        mTicketsView = rootView.findViewById(R.id.txt_tickets);
+        mPointsView = rootView.findViewById(R.id.txt_points);
+        mTrainsView = rootView.findViewById(R.id.txt_trains);
+
+        mPointsView.setText("0");
+        mTrainsView.setText("30");
 
         mFaceCardViews = new ImageView[5];
         mFaceCardViews[0] = rootView.findViewById(R.id.card1);
@@ -145,6 +165,14 @@ public class GameFragment extends Fragment implements IGameView {
                 mPresenter.chooseCard(-1);
             }
         });
+
+        mDeckSize = rootView.findViewById(R.id.txt_deck);
+
+        mPresenter.update();
+
+        mPlayer = mPresenter.getPlayer();
+
+        initUI();
 
         changeAccessibility();
 
@@ -209,6 +237,112 @@ public class GameFragment extends Fragment implements IGameView {
         }
     }
 
+    private void initUI(){
+        mDeck.setBackgroundResource(R.drawable.card_deck2);
+
+        //Init face cards
+        updateCards();
+
+        //Set color elements
+        setColor();
+
+    }
+
+    private void updateCards(){
+        int i = 0;
+
+        while (i < mFaceCards.size()) {
+            Card card = mFaceCards.get(i);
+            ImageView faceCardView = mFaceCardViews[i];
+
+            switch (card.getColor()) {
+                case RED:
+                    faceCardView.setImageResource(R.drawable.card_red);
+                    break;
+                case ORANGE:
+                    faceCardView.setImageResource(R.drawable.card_ora);
+                    break;
+                case YELLOW:
+                    faceCardView.setImageResource(R.drawable.card_yel);
+                    break;
+                case GREEN:
+                    faceCardView.setImageResource(R.drawable.card_gre);
+                    break;
+                case BLUE:
+                    faceCardView.setImageResource(R.drawable.card_blu);
+                    break;
+                case PURPLE:
+                    faceCardView.setImageResource(R.drawable.card_pur);
+                    break;
+                case BLACK:
+                    faceCardView.setImageResource(R.drawable.card_bla);
+                    break;
+                case WHITE:
+                    faceCardView.setImageResource(R.drawable.card_whi);
+                    break;
+                case LOCOMOTIVE:
+                    faceCardView.setImageResource(R.drawable.card_loc);
+                    break;
+                    default:
+                        faceCardView.setImageResource(R.drawable.card_blank);
+            }
+            i++;
+        }
+
+        while (i < 5) {
+            ImageView faceCardView = mFaceCardViews[i];
+            faceCardView.setImageResource(R.drawable.card_blank);
+
+            mDeckSize.setText(mPresenter.getDeckSize());
+        }
+
+
+
+    }
+
+    private void setColor() {
+        PlayerColor color = mPlayer.getPlayerColor();
+
+        ColorStateList stateList = null;
+        int colorid = 0;
+        int colorid2 = 0;
+        int board = 0;
+
+        switch(color) {
+            case RED:
+                colorid = R.color.playerRed;
+                colorid2 = R.color.playerRedLight;
+                board = R.drawable.board_r;
+                break;
+            case YELLOW:
+                colorid = R.color.playerYellow;
+                colorid2 = R.color.playerYellowLight;
+                board = R.drawable.board_y;
+                break;
+            case PURPLE:
+                colorid = R.color.playerPurple;
+                colorid2 = R.color.playerPurpleLight;
+                board = R.drawable.board_p;
+                break;
+            case BLACK:
+                colorid = R.color.playerBlack;
+                colorid2 = R.color.playerBlackLight;
+                board = R.drawable.board_bla;
+                break;
+            case BLUE:
+                colorid = R.color.playerBlue;
+                colorid2 = R.color.playerBlueLight;
+                board = R.drawable.board_blu;
+                break;
+        }
+
+        mChatButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorid)));
+        mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorid)));
+        mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorid)));
+
+        mBoard.setBackgroundResource(board);
+    }
+
 //    @Override
 //    public void onMapReady(GoogleMap googleMap) {
 //
@@ -217,11 +351,18 @@ public class GameFragment extends Fragment implements IGameView {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
     }
 
     @Override
     public void setMap(GameMap map) {
+        mMap = map;
+    }
 
+    @Override
+    public void setPlayer(Player player) {
+        mPlayer = player;
     }
 
     @Override
@@ -232,11 +373,14 @@ public class GameFragment extends Fragment implements IGameView {
     @Override
     public void setFaceCards(List<Card> cards) {
         mFaceCards = cards;
+        updateCards();
     }
 
     @Override
     public void setTickets(List<Ticket> tickets) {
         mTickets = tickets;
+
+        mTicketsView.setText(new StringBuilder(tickets.size()).toString());
     }
 
     @Override
@@ -254,9 +398,8 @@ public class GameFragment extends Fragment implements IGameView {
         if(mCards != null) {
 
         }if(mFaceCards != null) {
-            for(int i = 0; i < mFaceCards.size(); i++) {
-//                mFaceCardViews[i].setImageDrawable();
-            }
+            updateCards();
+
         }if(mTickets != null) {
 
         }
@@ -267,7 +410,17 @@ public class GameFragment extends Fragment implements IGameView {
         mPresenter = (IGamePresenter) presenter;
     }
 
-//    @Override
+    @Override
+    public void setPoints(int points) {
+        mPointsView.setText(new StringBuilder(points).toString());
+    }
+
+    @Override
+    public void setTrains(int trains) {
+        mTrainsView.setText(new StringBuilder(trains).toString());
+    }
+
+    //    @Override
 //    public void onResume() {
 //        super.onResume();
 //        mMapView.onResume();

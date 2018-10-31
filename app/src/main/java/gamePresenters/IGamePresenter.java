@@ -2,6 +2,8 @@ package gamePresenters;
 
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
+import communication.Player;
+
 public interface IGamePresenter extends IPresenter{
 
     void showMenu();
@@ -17,8 +19,12 @@ public interface IGamePresenter extends IPresenter{
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface OnShowListener {
+    interface OnShowListener {
         void onShow(Shows show);
     }
+
+    int getDeckSize();
+
+    Player getPlayer();
 
 }

@@ -29,70 +29,9 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="4dp"
             android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/card1"
-                android:layout_width="45dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                android:src="@color/trainBlack"
-                tools:srcCompat="@drawable/card_bla" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/card2"
-                android:layout_width="45dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                tools:srcCompat="@drawable/card_blu" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/card3"
-                android:layout_width="45dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                tools:srcCompat="@drawable/card_gre" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/card4"
-                android:layout_width="45dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/card_ora" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/card5"
-                android:layout_width="45dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                tools:srcCompat="@drawable/card_loc" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="55dp"
@@ -104,23 +43,58 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:srcCompat="@drawable/card_deck2" />
 
                 <TextView
                     android:id="@+id/txt_deck"
+                    style="@style/CardOverlayText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
-                    style="@style/CardOverlayText"
-                    android:text="30"
                     android:layout_weight="1"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="30"
                     app:layout_constraintStart_toStartOf="parent"
-                     />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/card1"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                tools:srcCompat="@drawable/card_bla" />
+
+            <ImageView
+                android:id="@+id/card3"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                tools:srcCompat="@drawable/card_gre" />
+
+            <ImageView
+                android:id="@+id/card2"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                tools:srcCompat="@drawable/card_blu" />
+
+            <ImageView
+                android:id="@+id/card4"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/card_ora" />
+
+            <ImageView
+                android:id="@+id/card5"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                tools:srcCompat="@drawable/card_loc" />
+
 
         </LinearLayout>
 
@@ -129,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_above="@id/bottom_bar"
+            android:layout_above="@id/bottom_board"
             android:layout_marginHorizontal="12dp"
             tools:layout_editor_absoluteX="34dp"
             tools:layout_editor_absoluteY="135dp">
@@ -140,7 +114,6 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@drawable/ic_ticket_w"
-                app:backgroundTint="@color/playerBlack"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="266dp" />
 
@@ -179,11 +152,11 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/bottom_bar"
+            android:id="@+id/bottom_board"
             android:layout_width="match_parent"
             android:layout_height="112dp"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/board_b"
+            android:background="@drawable/board_bla"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -193,7 +166,8 @@
                 android:layout_height="64dp"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginHorizontal="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
                 >
 
                 <TextView
@@ -201,7 +175,6 @@
                     style="@style/CardOverlayText"
                     android:layout_width="72dp"
                     android:layout_height="28dp"
-                    android:layout_weight="1"
                     android:text="10"
                     />
 
@@ -210,7 +183,6 @@
                     style="@style/CardOverlayText"
                     android:layout_width="72dp"
                     android:layout_height="28dp"
-                    android:layout_weight="1"
                     android:text="10"
                     />
 
@@ -241,7 +213,8 @@
                         style="@style/CardOverlayText"
                         android:layout_width="48dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:text="5" />
 
@@ -250,7 +223,8 @@
                         style="@style/CardOverlayText"
                         android:layout_width="48dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
 
                         android:text="5" />
@@ -260,7 +234,8 @@
                         style="@style/CardOverlayText"
                         android:layout_width="48dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:text="5" />
 
@@ -296,7 +271,8 @@
                         style="@style/CardOverlayText"
                         android:layout_width="48dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:text="5" />
 
@@ -305,7 +281,8 @@
                         style="@style/CardOverlayText"
                         android:layout_width="48dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
 
                         android:text="5" />
@@ -315,7 +292,8 @@
                         style="@style/CardOverlayText"
                         android:layout_width="48dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="5dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:text="5" />
 

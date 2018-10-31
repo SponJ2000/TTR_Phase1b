@@ -269,7 +269,7 @@ public class Database {
         //Assign PlayerColors
         Collections.shuffle(colors);
         for (int i = 0; i < players.size(); i++) {
-            players.get(i).setPlayerPlayerColor(colors.get(i));
+            players.get(i).setPlayerColor(colors.get(i));
         }
         return new Result(true, game, null);
     }

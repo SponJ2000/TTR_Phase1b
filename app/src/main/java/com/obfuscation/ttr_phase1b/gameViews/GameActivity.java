@@ -41,6 +41,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         if (fragment == null) {
             fragment = GameFragment.newInstance();
             PresenterFacade.getInstance().setPresenter(new GamePresenter((IGameView) fragment, this));
+
             fm.beginTransaction().add(R.id.container, fragment).commit();
             Log.d(TAG, "Loaded the game fragment");
         }

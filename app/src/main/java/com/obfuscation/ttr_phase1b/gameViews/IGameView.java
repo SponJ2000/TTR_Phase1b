@@ -4,6 +4,7 @@ import java.util.List;
 
 import communication.Card;
 import communication.GameMap;
+import communication.Player;
 import communication.Ticket;
 
 /**
@@ -23,5 +24,11 @@ public interface IGameView extends IView {
     void setUsername(String username);
 
     void setIsTurn(boolean isTurn);
+
+    void setPlayer(Player player);
+
+    void setPoints(int points);
+
+    void setTrains(int trains);
 
 }

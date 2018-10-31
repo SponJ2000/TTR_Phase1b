@@ -184,7 +184,7 @@ public interface IServer {
      * @post    a list of tickets being added to the bottom of DestTicket deck
      *          the card which being sent by DrawDestTickets, but not returned will be assign to this user
      *
-     * @param tickets   a list of tickets that user want to return
+     * @param ticketsToKeep   a list of tickets that user want to keep
      * @param authToken a String of unique authToken
      * @return          a result object containing an boolean indicate of success of this call
      */

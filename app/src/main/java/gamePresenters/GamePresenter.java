@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 
+import communication.Player;
 import model.FakeModel;
 import model.IGameModel;
 import model.ModelFacade;
@@ -25,6 +26,15 @@ public class GamePresenter implements IGamePresenter {
         view.setUsername(model.getUserName());
     }
 
+    @Override
+    public int getDeckSize() {
+        return model.getDeckSize();
+    }
+
+    @Override
+    public Player getPlayer() {
+        return model.getPlayer();
+    }
 
     @Override
     public void updateInfo(Object result) {
