@@ -143,11 +143,20 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public String getUserName() {
+        return null;
+    }
+
+    @Override
     public List<Card> getCards() {
         return getPlayer().getCards();
     }
 
     @Override
+    public List<Card> getFaceCards() {
+        return null;
+    }
+
     public Player getPlayer() {
         Game g = ModelRoot.getInstance().getGame();
         if (g != null) {

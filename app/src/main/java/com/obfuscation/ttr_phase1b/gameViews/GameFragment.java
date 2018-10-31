@@ -3,10 +3,13 @@ package com.obfuscation.ttr_phase1b.gameViews;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 //import com.google.android.gms.maps.CameraUpdateFactory;
 //import com.google.android.gms.maps.GoogleMap;
@@ -26,14 +29,23 @@ import gamePresenters.IGamePresenter;
 
 public class GameFragment extends Fragment implements IGameView {
 
+    private static final String TAG = "ChatFrag";
+
+    private IGamePresenter mPresenter;
+
+    private String mUsername;
+    private List<Card> mCards;
+
+    private FloatingActionButton mPlayersButton;
+    private FloatingActionButton mTicketsButton;
+    private FloatingActionButton mChatButton;
+
+    //    MapView mMapView;
+//    private GoogleMap googleMap;
+
     public static GameFragment newInstance() {
         return new GameFragment();
     }
-
-//    MapView mMapView;
-//    private GoogleMap googleMap;
-
-    private IGamePresenter mPresenter;
 
     @Nullable
     @Override
@@ -43,6 +55,33 @@ public class GameFragment extends Fragment implements IGameView {
 
 
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
+
+        mPlayersButton = rootView.findViewById(R.id.players_button);
+        mPlayersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "View players");
+                mPresenter.showPlayerInfo();
+            }
+        });
+
+        mTicketsButton = rootView.findViewById(R.id.tickets_button);
+        mTicketsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view tickets");
+                mPresenter.showTickets();
+            }
+        });
+
+        mChatButton = rootView.findViewById(R.id.chat_button);
+        mChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view chat");
+                mPresenter.showChat();
+            }
+        });
 
 //        mMapView = (MapView) rootView.findViewById(R.id.mapView);
 //        mMapView.onCreate(savedInstanceState);
@@ -85,6 +124,8 @@ public class GameFragment extends Fragment implements IGameView {
 //            }
 //        });
 
+
+
         return rootView;
 
     }
@@ -101,12 +142,12 @@ public class GameFragment extends Fragment implements IGameView {
 
     @Override
     public void setCards(List<Card> cards) {
-
+        mCards = cards;
     }
 
     @Override
-    public void setPlayer(Player player) {
-
+    public void setUsername(String username) {
+        mUsername = username;
     }
 
     @Override

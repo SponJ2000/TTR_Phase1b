@@ -4,7 +4,6 @@ import java.util.List;
 
 import communication.Card;
 import communication.GameMap;
-import communication.Player;
 
 /**
  * Created by jalton on 10/24/18.
@@ -16,6 +15,6 @@ public interface IGameView extends IView {
 
     void setCards(List<Card> cards);
 
-    void setPlayer(Player player);
+    void setUsername(String username);
 
 }

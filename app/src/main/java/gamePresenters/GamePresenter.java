@@ -25,7 +25,7 @@ public class GamePresenter implements IGamePresenter {
         }
         view.setCards(model.getCards());
         view.setMap(model.getMap());
-        view.setPlayer(model.getPlayer());
+        view.setUsername(model.getUserName());
         view.updateUI();
     }
 
