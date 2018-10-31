@@ -34,10 +34,11 @@
 
             <ImageView
                 android:id="@+id/card1"
-                android:layout_width="32dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
-                android:src="@color/trainBlack" />
+                android:src="@color/trainBlack"
+                tools:srcCompat="@drawable/card_bla" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -46,10 +47,11 @@
 
             <ImageView
                 android:id="@+id/card2"
-                android:layout_width="32dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
-                android:src="@color/trainBlue" />
+                android:src="@color/trainBlue"
+                tools:srcCompat="@drawable/card_blu" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -58,10 +60,11 @@
 
             <ImageView
                 android:id="@+id/card3"
-                android:layout_width="32dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
-                android:src="@color/trainGreen" />
+                android:src="@color/trainGreen"
+                tools:srcCompat="@drawable/card_gre" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -70,10 +73,11 @@
 
             <ImageView
                 android:id="@+id/card4"
-                android:layout_width="32dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
-                android:src="@color/trainOrange" />
+                android:src="@color/trainOrange"
+                app:srcCompat="@drawable/card_ora" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -82,10 +86,11 @@
 
             <ImageView
                 android:id="@+id/card5"
-                android:layout_width="32dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
-                android:src="@color/trainPurple" />
+                android:src="@color/trainPurple"
+                tools:srcCompat="@drawable/card_loc" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -94,8 +99,8 @@
 
             <ImageView
                 android:id="@+id/deck"
-                android:layout_width="32dp"
-                android:layout_height="64dp"
+                android:layout_width="45dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
                 android:src="@android:color/darker_gray" />
 
@@ -116,7 +121,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:src="@drawable/tickets_icon1"
+                android:src="@drawable/ic_ticket_w"
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="266dp" />
 
@@ -155,9 +160,9 @@
         <LinearLayout
             android:id="@+id/bottom_bar"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="112dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/darker_gray"
+            android:background="@drawable/board_b"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="visible">
