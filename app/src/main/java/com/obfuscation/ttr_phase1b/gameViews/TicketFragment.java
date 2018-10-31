@@ -107,9 +107,9 @@ public class TicketFragment extends Fragment implements ITicketView {
                 ++chosen;
             }
         }
-        if(mIsTurn && chosen >= 2) {
+        if(!mIsTurn && chosen >= 2) {
             mDoneButton.setEnabled(true);
-        }else if(!mIsTurn && chosen >= 1) {
+        }else if(mIsTurn && chosen >= 1) {
             mDoneButton.setEnabled(true);
         }else {
             mDoneButton.setEnabled(false);
