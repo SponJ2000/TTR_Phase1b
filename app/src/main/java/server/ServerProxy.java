@@ -22,8 +22,7 @@ public class ServerProxy implements communication.IServer {
     private static final String INTEGER = "java.lang.Integer";
 //    TODO: helps to find the typeName
     private static final String ARRAYLISTCARD = "??";
-    private static final String LISTTICKET = "??";
-
+    private static final String LIST = List.class.getName();
 
     public ServerProxy() {
         clientCommunicator = new ClientCommunicator();
@@ -118,7 +117,7 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, ARRAYLISTCARD, STRING}, new Object[]{routeID, cards, authToken});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, LIST, STRING}, new Object[]{routeID, cards, authToken});
         return RunCommand(genericCommand);
     }
 
@@ -135,8 +134,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result ReturnTickets(List<Ticket> tickets, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{LISTTICKET,STRING}, new Object[]{tickets, authToken});
+    public Result ReturnTickets(List<Integer> ticketsWantedIndex, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{LIST,STRING}, new Object[]{ticketsWantedIndex, authToken});
         return RunCommand(genericCommand);
     }
 
