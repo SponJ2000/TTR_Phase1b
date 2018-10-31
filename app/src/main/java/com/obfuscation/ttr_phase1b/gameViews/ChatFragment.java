@@ -90,7 +90,7 @@ public class ChatFragment extends Fragment implements IChatView {
             }
         });
 
-        mBackButton = view.findViewById(R.id.chat_back);
+        mBackButton = view.findViewById(R.id.chat_back_button);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
