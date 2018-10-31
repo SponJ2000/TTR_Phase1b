@@ -209,6 +209,11 @@ public class GameFragment extends Fragment implements IGameView {
         }
     }
 
+//    @Override
+//    public void onMapReady(GoogleMap googleMap) {
+//
+//    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
