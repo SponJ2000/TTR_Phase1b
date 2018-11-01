@@ -7,11 +7,21 @@ package communication;
 public class Route {
     private City city1;
     private City city2;
-    private int length;
-    private CardColor cardColor;
+    private Integer length;
+    private GameColor cardColor;
     private Player claimedBy = null;
+    private double[] midPoint;
 
-    public Route() {
+    public Route(City city1, City city2, int length, GameColor cardColor) {
+        this.city1 = city1;
+        this.city2 = city2;
+        this.length = length;
+        this.cardColor = cardColor;
+
+        midPoint = new double[] {0.0,0.0};
+
+        midPoint[0] = (city1.getLat()+city2.getLat())/2.0;
+        midPoint[1] = (city1.getLng()+city2.getLng())/2.0;
     }
 
     public City getCity1() {
@@ -30,7 +40,7 @@ public class Route {
         this.city2 = city2;
     }
 
-    public int getLength() {
+    public Integer getLength() {
         return length;
     }
 
@@ -38,11 +48,11 @@ public class Route {
         this.length = length;
     }
 
-    public CardColor getCardColor() {
+    public GameColor getCardColor() {
         return cardColor;
     }
 
-    public void setCardColor(CardColor cardColor) {
+    public void setCardColor(GameColor cardColor) {
         this.cardColor = cardColor;
     }
 
@@ -52,5 +62,9 @@ public class Route {
 
     public void setClaimedBy(Player claimedBy) {
         this.claimedBy = claimedBy;
+    }
+
+    public double[] getMidPoint() {
+        return midPoint;
     }
 }

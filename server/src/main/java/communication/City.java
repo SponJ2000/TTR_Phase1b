@@ -6,9 +6,13 @@ package communication;
 
 public class City {
     private String name;
+    private int lat;
+    private int lng;
 
-    public City(String name) {
+    public City(String name, int lat, int lng) {
         this.name = name;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     @Override
@@ -27,6 +31,14 @@ public class City {
     }
     public String getName() {
         return name;
+    }
+
+    public int getLat() {
+        return lat;
+    }
+
+    public int getLng() {
+        return lng;
     }
 
     @Override

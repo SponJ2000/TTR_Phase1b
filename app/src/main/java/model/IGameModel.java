@@ -3,10 +3,13 @@ package model;
 import java.util.List;
 
 import communication.Card;
-import communication.CardColor;
+import communication.GameColor;
+import communication.GameColor;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.Result;
+import communication.Route;
 import communication.Ticket;
 
 public interface IGameModel {
@@ -19,6 +22,8 @@ public interface IGameModel {
     GameMap getMap();
 
     Player getPlayer();
+
+    Result claimRoute(Route route, Player player);
 
     void updateTickets();
 
@@ -53,7 +58,7 @@ public interface IGameModel {
 
     void addPoints(int p);
 
-    void useCards(CardColor color, int number);
+    void useCards(GameColor color, int number);
 
     void addTickets(List<Ticket> tickets);
 

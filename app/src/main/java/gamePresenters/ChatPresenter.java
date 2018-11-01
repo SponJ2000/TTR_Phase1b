@@ -17,8 +17,8 @@ public class ChatPresenter implements IChatPresenter {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
-        model = ModelFacade.getInstance();
-//        model = FakeModel.getInstance();
+//        model = ModelFacade.getInstance();
+        model = FakeModel.getInstance();
         view.setMessages(model.getMessages());
         view.setUsername(model.getUserName());
     }

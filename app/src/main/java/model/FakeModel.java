@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import communication.Card;
-import communication.CardColor;
+import communication.GameColor;
 import communication.City;
 import communication.Game;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
-import communication.PlayerColor;
+import communication.Result;
+import communication.Route;
 import communication.Ticket;
 
 public class FakeModel implements IGameModel {
@@ -68,26 +69,26 @@ public class FakeModel implements IGameModel {
         choiceTickets = null;
         allTickets = new ArrayList<>();
         City city1, city2;
-        city1 = new City("New York City");
-        city2 = new City("Los Angeles");
+        city1 = new City("New York City", 40, 73);
+        city2 = new City("Los Angeles", 34, 118);
         allTickets.add(new Ticket(city1, city2, 22));
-        city1 = new City("New York City");
-        city2 = new City("Florida");
+        city1 = new City("New York City", 40, 73);
+        city2 = new City("Florida", 25, 80);
         allTickets.add(new Ticket(city1, city2, 12));
-        city1 = new City("Seattle");
-        city2 = new City("Los Angeles");
+        city1 = new City("Seattle", 47, 122);
+        city2 = new City("Los Angeles", 34, 118);
         allTickets.add(new Ticket(city1, city2, 8));
-        city1 = new City("Kansas");
-        city2 = new City("Los Angeles");
+        city1 = new City("Kansas", 39, 94);
+        city2 = new City("Los Angeles", 34, 118);
         allTickets.add(new Ticket(city1, city2, 15));
-        city1 = new City("Los Angeles");
-        city2 = new City("Florida");
+        city1 = new City("Los Angeles", 34, 188);
+        city2 = new City("Florida", 25, 80);
         allTickets.add(new Ticket(city1, city2, 19));
-        city1 = new City("Seattle");
-        city2 = new City("Kansas");
+        city1 = new City("Seattle", 47, 122);
+        city2 = new City("Kansas",0,0);
         allTickets.add(new Ticket(city1, city2, 14));
-        city1 = new City("New York City");
-        city2 = new City("Kansas");
+        city1 = new City("New York City",0,0);
+        city2 = new City("Kansas",0,0);
         allTickets.add(new Ticket(city1, city2, 9));
         allTickInd = 0;
         game.setTickets((ArrayList<Ticket>) allTickets);
@@ -102,21 +103,23 @@ public class FakeModel implements IGameModel {
 
 
         faceupCards = new ArrayList<>();
-        faceupCards.add(new Card(CardColor.BLACK));
-        faceupCards.add(new Card(CardColor.BLACK));
-        faceupCards.add(new Card(CardColor.PURPLE));
-        faceupCards.add(new Card(CardColor.RED));
-        faceupCards.add(new Card(CardColor.YELLOW));
+        faceupCards.add(new Card(GameColor.BLACK));
+        faceupCards.add(new Card(GameColor.BLACK));
+        faceupCards.add(new Card(GameColor.PURPLE));
+        faceupCards.add(new Card(GameColor.RED));
+        faceupCards.add(new Card(GameColor.YELLOW));
         game.setFaceUpTrainCarCards((ArrayList<Card>) faceupCards);
 
+
         userCards = new ArrayList<>();
-        userCards.add(new Card(CardColor.LOCOMOTIVE));
-        userCards.add(new Card(CardColor.WHITE));
-        userCards.add(new Card(CardColor.BLACK));
-        userCards.add(new Card(CardColor.GREEN));
+        userCards.add(new Card(GameColor.LOCOMOTIVE));
+        userCards.add(new Card(GameColor.WHITE));
+        userCards.add(new Card(GameColor.BLACK));
+        userCards.add(new Card(GameColor.GREEN));
         mHost.setCards((ArrayList<Card>) userCards);
         mHost.setCardNum(userCards.size());
-        mHost.setPlayerColor(PlayerColor.RED);
+        mHost.setPlayerColor(GameColor.PLAYER_RED);
+
     }
 
     public static FakeModel getInstance() {
@@ -127,28 +130,34 @@ public class FakeModel implements IGameModel {
     }
 
     private void initPlayer(){
-        PlayerColor color = PlayerColor.BLACK;
+        GameColor color = GameColor.PLAYER_BLACK;
 
         int rando = ThreadLocalRandom.current().nextInt(0,5);
         switch (rando) {
             case 0:
-                color = PlayerColor.RED;
+                color = GameColor.PLAYER_RED;
                 break;
             case 1:
-                color = PlayerColor.PURPLE;
+                color = GameColor.PLAYER_PURPLE;
                 break;
             case 2:
-                color = PlayerColor.YELLOW;
+                color = GameColor.PLAYER_YELLOW;
                 break;
             case 3:
-                color = PlayerColor.BLACK;
+                color = GameColor.PLAYER_BLACK;
                 break;
             case 4:
-                color = PlayerColor.BLUE;
+                color = GameColor.PLAYER_BLUE;
                 break;
         }
 
         mPlayer.setPlayerColor(color);
+    }
+
+    @Override
+    public Result claimRoute(Route route, Player player) {
+        game.claimRoute(route, player);
+        return new Result(true, route, null);
     }
 
     @Override
@@ -174,7 +183,7 @@ public class FakeModel implements IGameModel {
 
     @Override
     public GameMap getMap() {
-        return null;
+        return game.getmMap();
     }
 
     //  tickets
@@ -238,9 +247,9 @@ public class FakeModel implements IGameModel {
             mPlayer.addCard(faceupCards.get(index));
 //            userCards.add(faceupCards.get(index));
             faceupCards.remove(index);
-            faceupCards.add(new Card(CardColor.GREEN));
+            faceupCards.add(new Card(GameColor.GREEN));
         }else {
-            mPlayer.addCard(new Card(CardColor.ORANGE));
+            mPlayer.addCard(new Card(GameColor.ORANGE));
         }
     }
 
@@ -272,7 +281,7 @@ public class FakeModel implements IGameModel {
     }
 
     @Override
-    public void useCards(CardColor color, int number) {
+    public void useCards(GameColor color, int number) {
         mPlayer.useCards(color, number);
     }
 

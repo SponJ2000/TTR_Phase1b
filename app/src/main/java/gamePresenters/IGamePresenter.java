@@ -5,7 +5,9 @@ import android.app.Activity;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
+import communication.GameMap;
 import communication.Player;
+import communication.Route;
 
 public interface IGamePresenter extends IPresenter{
 
@@ -15,6 +17,8 @@ public interface IGamePresenter extends IPresenter{
     void showChat();
     void showMap();
     void chooseCard(int index);
+    GameMap getMap();
+    void selectRoute(Route route, Player player);
     void onBack();
 
     void onChange(Activity activity);

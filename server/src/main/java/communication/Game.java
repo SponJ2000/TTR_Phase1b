@@ -108,6 +108,12 @@ public class Game {
 
         trainCards = new ArrayList<Card>();
         tickets = new ArrayList<Ticket>();
+
+        mMap = new GameMap();
+    }
+
+    public void claimRoute(Route route, Player player) {
+        mMap.claimRoute(route, player);
     }
 
     public void insertMessage(Message m) {

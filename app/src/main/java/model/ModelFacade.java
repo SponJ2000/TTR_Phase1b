@@ -9,11 +9,13 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import communication.Card;
-import communication.CardColor;
+import communication.GameColor;
 import communication.Game;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.Result;
+import communication.Route;
 import communication.Ticket;
 import server.Poller;
 import task.GenericTask;
@@ -43,31 +45,31 @@ public class ModelFacade implements IGameModel {
 
             switch (rando) {
                 case 0:
-                    mFaceCards.add(new Card(CardColor.RED));
+                    mFaceCards.add(new Card(GameColor.RED));
                     break;
                 case 1:
-                    mFaceCards.add(new Card(CardColor.PURPLE));
+                    mFaceCards.add(new Card(GameColor.PURPLE));
                     break;
                 case 2:
-                    mFaceCards.add(new Card(CardColor.BLUE));
+                    mFaceCards.add(new Card(GameColor.BLUE));
                     break;
                 case 3:
-                    mFaceCards.add(new Card(CardColor.GREEN));
+                    mFaceCards.add(new Card(GameColor.GREEN));
                     break;
                 case 4:
-                    mFaceCards.add(new Card(CardColor.YELLOW));
+                    mFaceCards.add(new Card(GameColor.YELLOW));
                     break;
                 case 5:
-                    mFaceCards.add(new Card(CardColor.ORANGE));
+                    mFaceCards.add(new Card(GameColor.ORANGE));
                     break;
                 case 6:
-                    mFaceCards.add(new Card(CardColor.BLACK));
+                    mFaceCards.add(new Card(GameColor.BLACK));
                     break;
                 case 7:
-                    mFaceCards.add(new Card(CardColor.WHITE));
+                    mFaceCards.add(new Card(GameColor.WHITE));
                     break;
                 case 8:
-                    mFaceCards.add(new Card(CardColor.LOCOMOTIVE));
+                    mFaceCards.add(new Card(GameColor.LOCOMOTIVE));
                     break;
                 default:
             }
@@ -75,6 +77,11 @@ public class ModelFacade implements IGameModel {
 
 
 //        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
+    }
+
+    @Override
+    public Result claimRoute(Route route, Player player) {
+        return null;
     }
 
     public static ModelFacade getInstance() {
@@ -161,7 +168,7 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    public void useCards(CardColor color, int number) {
+    public void useCards(GameColor color, int number) {
         getPlayer().useCards(color, number);
     }
 

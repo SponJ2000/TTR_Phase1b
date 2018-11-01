@@ -19,8 +19,8 @@ public class TickectMaker {
                 String endingCity = sc.nextLine();
                 System.out.println(endingCity);
                 int value = Integer.parseInt(sc.nextLine());
+                Ticket d = new Ticket(new City(beginningCity, 0, 0), new City(endingCity, 0,0),value);
                 System.out.println(value);
-                Ticket d = new Ticket(new City(beginningCity), new City(endingCity),value);
                 result.add(d);
                 sc.nextLine();
             }

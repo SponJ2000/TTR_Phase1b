@@ -6,17 +6,17 @@ package communication;
 
 public class Card {
 
-    private CardColor color;
+    private GameColor color;
 
-    public Card(CardColor color) {
+    public Card(GameColor color) {
         this.color = color;
     }
 
-    public CardColor getColor() {
+    public GameColor getColor() {
         return color;
     }
 
-    public void setColor(CardColor color) {
+    public void setColor(GameColor color) {
         this.color = color;
     }
 

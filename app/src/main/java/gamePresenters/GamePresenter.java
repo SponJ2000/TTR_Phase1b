@@ -7,11 +7,14 @@ import android.widget.Toast;
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
+import communication.GameColor;
+import communication.GameMap;
 import java.util.ArrayList;
 
-import communication.CardColor;
 import communication.City;
 import communication.Player;
+import communication.Result;
+import communication.Route;
 import communication.Ticket;
 import model.FakeModel;
 import model.IGameModel;
@@ -32,8 +35,8 @@ public class GamePresenter implements IGamePresenter {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
-        model = ModelFacade.getInstance();
-//        model = FakeModel.getInstance();
+//        model = ModelFacade.getInstance();
+        model = FakeModel.getInstance();
     }
 
     @Override
@@ -57,6 +60,19 @@ public class GamePresenter implements IGamePresenter {
         model.updateCards();
         model.updateFaceCards();
         model.updateTickets();
+    }
+
+    @Override
+    public GameMap getMap() {
+        return model.getMap();
+    }
+
+    @Override
+    public void selectRoute(Route route, Player player) {
+        Result r = model.claimRoute(route, player);
+        if(r.isSuccess()) {
+            view.updateRoute(route);
+        }
     }
 
     @Override
@@ -85,13 +101,13 @@ public class GamePresenter implements IGamePresenter {
                 break;
             case 2:
                 Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
-                model.useCards(CardColor.GREEN, 1);
+                model.useCards(GameColor.GREEN, 1);
                 break;
             case 3:
                 Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
                 ArrayList<Ticket> tickets = new ArrayList<>();
-                tickets.add(new Ticket(new City("berlin"), new City("helsinki"), 8));
-                tickets.add(new Ticket(new City("berlin"), new City("london"), 12));
+                tickets.add(new Ticket(new City("berlin",0,0), new City("helsinki",0,0), 8));
+                tickets.add(new Ticket(new City("berlin",0,0), new City("london",0,0), 12));
                 model.addTickets(tickets);
                 break;
             case 4:

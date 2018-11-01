@@ -23,4 +23,5 @@
     <color name="trainPurple">  #6c3483 </color>
     <color name="trainBlack">   #1c2833 </color>
     <color name="trainWhite">   #d0d3d4 </color>
+    <color name="trainGrey">   #606364 </color>
 </resources>
