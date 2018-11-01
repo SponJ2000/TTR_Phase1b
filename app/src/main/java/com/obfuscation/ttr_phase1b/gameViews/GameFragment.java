@@ -101,7 +101,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "make changes");
-                mPresenter.onChange();
+                mPresenter.onChange(getActivity());
             }
         });
 
