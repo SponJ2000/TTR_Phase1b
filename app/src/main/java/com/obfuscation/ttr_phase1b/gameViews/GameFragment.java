@@ -110,9 +110,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "View players");
-                PlayerInfoFragment playerInfoFrag = new PlayerInfoFragment();
-                playerInfoFrag.show(getFragmentManager(), "PlayerinfoFragment");
-                mPresenter.showPlayerInfo(playerInfoFrag);
+//                PlayerInfoDialogFragment playerInfoFrag = PlayerInfoDialogFragment.newInstance();
+//                playerInfoFrag.show(getFragmentManager(), "PlayerinfoDialogFragment");
+//                mPresenter.showPlayerInfo(playerInfoFrag);
+                mPresenter.showPlayerInfo(null);
             }
         });
 
