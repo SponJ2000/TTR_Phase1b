@@ -82,7 +82,7 @@ public class GamePresenter implements IGamePresenter {
                 break;
             case 2:
                 Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
-                model.useCards(CardColor.RED, 3);
+                model.useCards(CardColor.RED, 1);
                 break;
             case 3:
                 Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
@@ -106,6 +106,7 @@ public class GamePresenter implements IGamePresenter {
                 break;
             case 7:
                 Toast.makeText(activity, "add claimed route", Toast.LENGTH_SHORT).show();
+//                model.claimRoute();
                 break;
         }
         ++changeIndex;

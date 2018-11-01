@@ -1,6 +1,8 @@
 package model;
 
 
+import android.view.Display;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,13 +209,14 @@ public class ModelFacade implements IGameModel {
     @Override
     //whenever we choose a new cards
     public void updateFaceCards() {
-//not for this phase
+        ModelRoot.getInstance().getGame().takeCard(0);
     }
 
     @Override
     public void chooseCard(int index) {
-        GenericTask genericTask = new GenericTask("DrawTrainCard");
-        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
+        getPlayer().addCard(ModelRoot.getInstance().getGame().takeCard(index));
+//        GenericTask genericTask = new GenericTask("DrawTrainCard");
+//        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
     }
 
     @Override
