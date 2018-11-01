@@ -243,6 +243,20 @@ public class Game {
         currentPlayerIndex %= getPlayers().size();
     }
 
+    public Card takeCard(int index) {
+        Card card;
+        if(index < 0) {
+            card = trainCards.get(0);
+            trainCards.remove(0);
+        }else {
+            card = faceUpTrainCarCards.get(index);
+            faceUpTrainCarCards.remove(index);
+            faceUpTrainCarCards.add(trainCards.get(0));
+            trainCards.remove(0);
+        }
+        return card;
+    }
+
     @Override
     public String toString() {
         return "{ " + mGameID + ", " + mHost + ", " + mPlayers.size() + ", " + mMaxPlayers + " }";
