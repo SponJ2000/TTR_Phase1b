@@ -148,6 +148,11 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public List<Player> getPlayers() {
+        return ModelRoot.getInstance().getGame().getPlayers();
+    }
+
+    @Override
     public void chooseTickets(List<Ticket> tickets) {
         GenericTask genericTask = new GenericTask("ChooseTicket");
 
@@ -258,4 +263,9 @@ public class ModelFacade implements IGameModel {
     public List<Message> getMessages() {
         return GetCurrentGame().getMessages();
     }
+
+    public boolean isGameStarted() {
+        return false;
+    }
+
 }

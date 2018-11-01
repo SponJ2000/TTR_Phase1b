@@ -143,7 +143,9 @@ public class LobbyFragment extends Fragment implements IPresenter {
         if(ismLeaving) {
             ismLeaving = false;
             onGameLeave();
-        }else if(ismStarting) {
+        }
+        ismStarting = ModelFacade.getInstance().isGameStarted();
+        if(ismStarting) {
             ismStarting = false;
             onGameStart();
         }
