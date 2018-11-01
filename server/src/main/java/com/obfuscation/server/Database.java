@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import communication.ActiveUser;
 import communication.Card;
+import communication.City;
 import communication.Game;
 import communication.Message;
 import communication.Player;

@@ -281,7 +281,7 @@ public class FakeModel implements IGameModel {
     }
 
     @Override
-    public void useCards(CardColor color, int number) {
+    public void useCards(GameColor color, int number) {
         mPlayer.useCards(color, number);
     }
 
