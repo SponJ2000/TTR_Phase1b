@@ -270,7 +270,7 @@ public class Database {
             return new Result(false, null, "Error: Invalid token");
         }
 
-        if(game.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
+//        if(game.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
 
         game.startGame();
 

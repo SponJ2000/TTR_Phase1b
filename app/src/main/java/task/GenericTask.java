@@ -13,6 +13,7 @@ import communication.Message;
 import communication.Result;
 import communication.Serializer;
 import communication.Ticket;
+import model.ModelFacade;
 import model.ModelRoot;
 import server.Poller;
 import server.ServerProxy;
@@ -130,9 +131,20 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     }
 
     private void OnTickectsChoosen(Result result) {
+//        if (ModelFacade.getInstance().getTickets()!= null)
+//        System.out.println("ticket size is: " + ModelFacade.getInstance().getTickets().size());
+        System.out.println(result.toString());
         if (result.isSuccess()) {
+//            System.out.println("make ticket added to the player");
+//            System.out.println("ticket size is: " + ModelFacade.getInstance().getTickets().size());
+//            System.out.println("number of tickets owned: " + ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTickets());
             ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTickets(ModelRoot.getInstance().getTicketsWanted());
             ModelRoot.getInstance().setTicketsWanted(new ArrayList<Ticket>());
+//            System.out.println("number of tickets owned: " + ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTickets());
+        }
+        else {
+            System.out.println("errow masssage is ");
+            System.out.println(result.getErrorInfo());
         }
     }
 

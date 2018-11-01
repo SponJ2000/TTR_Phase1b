@@ -79,7 +79,7 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ChooseTicket", new String[]{STRING, STRING, LIST}, new Object[]{authToken, gameID, chosenTickets});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{STRING, STRING, LIST}, new Object[]{authToken, gameID, chosenTickets});
         return RunCommand(genericCommand);
     }
 

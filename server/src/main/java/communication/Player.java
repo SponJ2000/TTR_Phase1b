@@ -168,10 +168,13 @@ public class Player {
             tickets = new ArrayList<>();
         }
         tickets.addAll(moreTickets);
+        System.out.println("Tickets number changed : " + tickets.size());
     }
 
     public void setTickets(ArrayList<Ticket> tickets) {
+
         this.tickets = tickets;
+        System.out.println("Tickets number changed : " + tickets.size());
     }
 
     public ArrayList<Ticket> getTicketToChoose() {

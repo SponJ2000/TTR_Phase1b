@@ -185,6 +185,9 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void chooseTickets(List<Ticket> tickets) {
+        System.out.println("called choose ticket");
+        if (getTickets() != null)
+        System.out.println("ticket size is: " + getTickets().size());
         GenericTask genericTask = new GenericTask("ChooseTicket");
 
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken(), tickets);
@@ -194,6 +197,8 @@ public class ModelFacade implements IGameModel {
     @Override
     //ask for three new tickext to choose from server
     public void updateChoiceTickets() {
+
+
         GenericTask genericTask = new GenericTask("GetTickets");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
         System.out.println("called it onece once once");
@@ -286,7 +291,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Ticket> getTickets() {
-        return getPlayer().getTicketToChoose();
+        return getPlayer().getTickets();
     }
 
     @Override

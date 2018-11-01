@@ -120,7 +120,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
         updateUI();
 
         mStartButton.setEnabled(false);
-//        mStartButton.setEnabled(true);
+        mStartButton.setEnabled(true);
         return view;
     }
 
@@ -136,7 +136,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
             }else {
                 mStartButton.setEnabled(false);
             }
-//            mStartButton.setEnabled(true);
+            mStartButton.setEnabled(true);
         }else {
             isHost = false;
         }

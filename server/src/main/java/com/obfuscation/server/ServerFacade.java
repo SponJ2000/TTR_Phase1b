@@ -34,6 +34,7 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
+        System.out.println("called choose tickets in server");
         return new Result(true, db.getTickets(gameID, authToken), null);
     }
 
@@ -305,7 +306,7 @@ public class ServerFacade implements IServer {
         String playerID = db.findPlayerIDByAuthToken(authToken);
         if (result.isSuccess()) {
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                clientProxy.updateOpponentTickets(gameID, playerID, (Integer) result.getData());
+                clientProxy.updateOpponentTickets(gameID, playerID, ((ArrayList<Ticket>) result.getData()).size());
             }
         }
         return result;
