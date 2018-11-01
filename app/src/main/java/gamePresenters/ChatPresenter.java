@@ -23,6 +23,8 @@ public class ChatPresenter implements IChatPresenter {
 
     @Override
     public void updateInfo(Object result) {
+
+
         view.setMessages(model.getMessages());
         view.setUsername(model.getUserName());
         view.updateUI();

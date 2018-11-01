@@ -23,6 +23,7 @@ public class ServerFacade implements IServer {
         System.out.println("Updating the message");
         //FIXME**
         Result result = db.sendMessage(gameID, message.getText(), authToken);
+        System.out.println(result.toString());
         if(result.isSuccess()) {
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                 clientProxy.updateChat(gameID, (Message) result.getData());
@@ -163,6 +164,7 @@ public class ServerFacade implements IServer {
 
             //set colors and set orders
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                clientProxy.updateGame(gameID);
                 clientProxy.initializeGame(game);
             }
 

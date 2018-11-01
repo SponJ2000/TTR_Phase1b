@@ -59,7 +59,6 @@ public class ClientFacade implements IClient{
     @Override
     public void initializeGame(Game game) {
         ModelRoot.getInstance().setGame(game);
-        ModelRoot.getInstance().getGame().setGameStarted(true);
         ModelRoot.getInstance().setState(State.GAME);
     }
 
@@ -165,6 +164,12 @@ public class ClientFacade implements IClient{
         if (g != null) {
             g.insertMessage(m);
             System.out.println("inserted a new chat"+ m.getText());
+        }
+
+        g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            System.out.println("message has size of:  " + g.getMessages().size());
+
         }
     }
 }

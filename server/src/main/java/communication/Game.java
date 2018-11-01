@@ -17,6 +17,7 @@ public class Game {
     private ArrayList<Player> mPlayers;
     private ArrayList<Player> mAbsentPlayers;
     private ArrayList<Message> messages;
+    private boolean misStarted;
 
     private ArrayList<Card> trainCards;
     private ArrayList<Ticket> tickets;
@@ -25,7 +26,7 @@ public class Game {
     private GameMap mMap;
     //Client only data member-----------------------------------------
     private int state;
-    private boolean gameStarted = false;
+
 
     //stop delete this data member, client need this
     private int ticketsRemainNum;
@@ -44,15 +45,6 @@ public class Game {
     private HashMap<Integer, GenericCommand> stateCommandMap;
 
     //----------------------------------------------------------------
-
-
-    public boolean isGameStarted() {
-        return gameStarted;
-    }
-
-    public void setGameStarted(boolean gameStarted) {
-        this.gameStarted = gameStarted;
-    }
 
     public int getTicketsRemainNum() {
         return ticketsRemainNum;
@@ -95,7 +87,7 @@ public class Game {
         this.messages = messages;
     }
 
-    private boolean misStarted;
+
 
     public Game(String mGameID, String mUsername, ArrayList<Player> mPlayers, int mMaxPlayers) {
         this.mGameID = mGameID;

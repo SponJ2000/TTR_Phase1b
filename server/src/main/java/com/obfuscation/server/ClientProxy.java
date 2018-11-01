@@ -37,7 +37,7 @@ public class ClientProxy implements IClient {
     /**
      * private member and class name strings
      */
-    private Map<String, List<ICommand>> notSeenCommands = new HashMap<>();
+    private Map<String, List<GenericCommand>> notSeenCommands = new HashMap<>();
     private Map<String, Integer> gameStateMap = new HashMap<>();
     private static final String CLIENT_FACADE = "server.ClientFacade";
     private static final String STRING = "java.lang.String";
@@ -55,18 +55,18 @@ public class ClientProxy implements IClient {
 
     @Override
     public void initializeGame(Game game) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "initializeGame"
                 , new String[]{GAME}
                 , new Object[] {game});
-        notSeenCommands.put(game.getGameID(), new ArrayList<ICommand>());
+        notSeenCommands.put(game.getGameID(), new ArrayList<GenericCommand>());
         notSeenCommands.get(game.getGameID()).add(command);
     }
 
     @Override
     public void updatePlayerPoints(String gameID, String plyerID, Integer points) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updatePlayerPoints"
                 , new String[]{STRING, STRING, INTEGER}
@@ -76,7 +76,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateTrainCards(String gameID, List<Card> trainCards) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainCards"
                 , new String[]{STRING, LIST}
@@ -86,7 +86,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateTickets(String gameID, List<Ticket> tickets) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTickets"
                 , new String[]{STRING, LIST}
@@ -96,7 +96,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateOpponentTrainCards"
                 , new String[]{STRING, STRING, INTEGER}
@@ -106,7 +106,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateOpponentTrainCars(String gameID, String playerID, Integer carNum) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateOpponentTrainCars"
                 , new String[]{STRING, STRING, INTEGER}
@@ -116,7 +116,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateOpponentTickets(String gameID, String playerID, Integer cardNum) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateOpponentTickets"
                 , new String[]{STRING, STRING, INTEGER}
@@ -126,7 +126,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainDeck"
                 , new String[]{STRING, CARD, INTEGER}
@@ -136,7 +136,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateDestinationDeck(String gameID, Integer cardNum) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateDestinationDeck"
                 , new String[]{STRING, INTEGER}
@@ -146,7 +146,7 @@ public class ClientProxy implements IClient {
 
     @Override
     public void claimRoute(String gameID, String playerID, String routeID) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateDestinationDeck"
                 , new String[]{STRING, STRING, STRING}
@@ -156,12 +156,13 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateChat(String gameID, Message m) {
-        ICommand command = new GenericCommand(
+        GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateChat"
                 , new String[]{STRING, MESSAGE}
                 , new Object[] {gameID, m});
         notSeenCommands.get(gameID).add(command);
+        System.out.println("UPDATING CHAT : " + notSeenCommands.get(gameID).size());
     }
 
     private int version;
@@ -202,17 +203,33 @@ public class ClientProxy implements IClient {
     //TODO : provide a way to check if commands are transmitted successfully or not
     //TODO : clients have to keep track of games and the last command id, and send them (keep map<gameID, commandID>)
     public Result getNotSeenCommands(String gameID, Integer state) {
-        if (notSeenCommands != null) {
-            if (notSeenCommands.get(gameID) != null) {
-                if (state + 1 < notSeenCommands.get(gameID).size()) {
-                    List<ICommand> commands = notSeenCommands.get(gameID).subList(state + 1, notSeenCommands.get(gameID).size() - 1);
-                    return new Result(true, commands, null);
+        try {
+            System.out.println("state come in as: " + state.toString());
+            if (notSeenCommands != null) {
+                if (notSeenCommands.get(gameID) != null) {
+                    System.out.println("HAHA : " + notSeenCommands.get(gameID).size());
+                    if (state < notSeenCommands.get(gameID).size()) {
+                        List<GenericCommand> commands = new ArrayList<GenericCommand>(notSeenCommands.get(gameID).subList(state, notSeenCommands.get(gameID).size()));
+                        System.out.println(commands.size() + " AAAA");
+                        System.out.println("not null at least once");
+                        ArrayList<GenericCommand> g = new ArrayList<GenericCommand>();
+                        for (GenericCommand c : commands) {
+                            g.add((GenericCommand) c);
+                        }
+                        return new Result(true, g, null);
+                    } else {
+                        return new Result(true, new ArrayList<>(), null);
+                    }
                 }
                 else {
                     return new Result(true, new ArrayList<>(), null);
                 }
             }
+            return new Result(false, null, "Error : commands are null");
         }
-        return new Result(false, null, "Error : commands are null");
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
