@@ -93,10 +93,10 @@ public class ServerFacade implements IServer {
                 for (ClientProxy clientProxy : clientproxies) {
                     clientProxy.updateGameList(null);
                 }
+                gameIDclientProxyMap.get(gameID).add(getClientProxyByAuthToken(authToken));
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     clientProxy.updateGame(gameID);
                 }
-                gameIDclientProxyMap.get(gameID).add(getClientProxyByAuthToken(authToken));
             }
             return result;
         }
@@ -162,6 +162,7 @@ public class ServerFacade implements IServer {
             }
 
             //set colors and set orders
+            System.out.println(gameIDclientProxyMap.get(gameID).size());
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                 clientProxy.updateGame(gameID);
                 clientProxy.initializeGame(game);
