@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import communication.ActiveUser;
@@ -16,6 +18,7 @@ import communication.Message;
 import communication.Player;
 import communication.PlayerColor;
 import communication.Result;
+import communication.TickectMaker;
 import communication.Ticket;
 import communication.CardColor;
 
@@ -46,6 +49,7 @@ public class Database {
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
+    private HashMap<gameIDAuthPair, List<Ticket>> ticketsMap = new HashMap<>();
     public Game dummyGame = new Game();
 
     public void setDummyGame() {
@@ -216,25 +220,21 @@ public class Database {
 
         ArrayList<Ticket> tickets = new ArrayList<>();
         //initialize destTickets
-        for (int i = 0; i < 30; i++) {
-            //FIXME**
-            Ticket ticket = new Ticket(new City("CITY1"), new City("city2"), 100);
-            tickets.add(ticket);
-        }
+        tickets = new TickectMaker().MakeCards();
 
 
         Collections.shuffle(tickets);
 
-        //set player tickets
-        for (Player player : game.getPlayers()) {
-            ArrayList<Ticket> playerTickets = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                Ticket ticket = tickets.get(0);
-                playerTickets.add(ticket);
-                tickets.remove(0);
-            }
-            player.setTickets(playerTickets);
-        }
+//        //set player tickets
+//        for (Player player : game.getPlayers()) {
+//            ArrayList<Ticket> playerTickets = new ArrayList<>();
+//            for (int i = 0; i < 3; i++) {
+//                Ticket ticket = tickets.get(0);
+//                playerTickets.add(ticket);
+//                tickets.remove(0);
+//            }
+//            player.setTickets(playerTickets);
+//        }
 
         //set the deck
         game.setTickes(tickets);
@@ -288,6 +288,39 @@ public class Database {
             players.get(i).setPlayerColor(colors.get(i));
         }
         return new Result(true, game, null);
+    }
+
+    public class gameIDAuthPair {
+        String gameID;
+        String authToken;
+
+        public gameIDAuthPair(String gameID, String authToken) {
+            this.gameID = gameID;
+            this.authToken = authToken;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            gameIDAuthPair gameIDAuthPair = (Database.gameIDAuthPair) o;
+            return gameIDAuthPair.authToken.equals(authToken) && gameIDAuthPair.gameID.equals(gameID);
+        }
+
+        public String getGameID() {
+
+            return gameID;
+        }
+
+        public void setGameID(String gameID) {
+            this.gameID = gameID;
+        }
+
+        public String getAuthToken() {
+            return authToken;
+        }
+
+        public void setAuthToken(String authToken) {
+            this.authToken = authToken;
+        }
     }
 
     //TODO : do we need authtoken?
@@ -437,7 +470,7 @@ public class Database {
     List<Ticket> getTickets(String gameID, String authToken) {
         Game game = getGame(gameID);
         List<Ticket> tickets = game.getTickets();
-
+        ticketsMap.put(new gameIDAuthPair(gameID, authToken), new ArrayList<>());
         ArrayList<Ticket> playerTickets = new ArrayList<>();
         if (tickets.size() < 3) {
             return tickets;
@@ -445,37 +478,78 @@ public class Database {
         for (int i = 0; i < 3; i++) {
             Ticket ticket = tickets.get(i);
             playerTickets.add(ticket);
-          //  tickets.remove(0);
+            tickets.remove(0);
         }
+
+        String playerID = findPlayerIDByAuthToken(authToken);
+        for (Player player : game.getPlayers()) {
+            if (player.getId().equals(playerID)) {
+                player.setTicketToChoose(playerTickets);
+            }
+        }
+
+//        ticketsMap.put(new gameIDAuthPair(gameID, authToken), playerTickets);
         return playerTickets;
     }
 
     Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
         Game game = getGame(gameID);
-        String playerID = findPlayerIDByAuthToken(authToken);
-        for (Player player : game.getPlayers()) {
-            if (player.getId().equals(playerID)) {
-                ArrayList<Ticket> prevTickets = player.getTickets();
-                prevTickets.addAll(tickets);
-                player.setTickets(prevTickets);
-                List<Ticket> ticketDeck = game.getTickets();
-                //TODO : if the deck size is less then 3?
-                for (int i = 0; i < 3; i++) {
-                    for (int j = 0; j < tickets.size(); j++) {
-                        if (ticketDeck.get(i).equals(tickets.get(j))) {
-                            ticketDeck.remove(i);
-                        }
+        if (game != null) {
+            gameIDAuthPair gameIDAuthPair = new gameIDAuthPair(gameID, authToken);
+            String playerID = findPlayerIDByAuthToken(authToken);
+            ArrayList<Ticket> tickets1 = new ArrayList<>();
+
+            for (Player player : game.getPlayers()) {
+                if (player.getId().equals(playerID)) {
+                    tickets1 = player.getTicketToChoose();
+                }
+            }
+            Set<Integer> overlap = new HashSet<>();
+            for (int i = 0; i < tickets.size(); i++) {
+                for (int j = 0; j < tickets1.size(); j++) {
+                    if (tickets.get(i).equals(tickets1.get(j))) {
+                        overlap.add(j);
                     }
                 }
-                // place not chosen cards to the deck
-                for (int i = 0; i < 3 - tickets.size(); i++) {
-                    Ticket topTicket = ticketDeck.get(0);
-                    ticketDeck.add(topTicket);
-                    ticketDeck.remove(0);
-                }
-                return new Result(true, player.getTickets().size(), null);
             }
+            List<Ticket> ticketDeck = game.getTickets();
+            for (Integer i : overlap) {
+                ticketDeck.add(tickets1.get(i));
+            }
+            for (Player player : game.getPlayers()) {
+                if (player.getId().equals(playerID)) {
+                    player.setTickets((ArrayList<Ticket>) tickets);
+                    player.setTicketToChoose(new ArrayList<>());
+                }
+            }
+//            ticketsMap.get(gameIDAuthPair).clear();
+            return new Result(true, tickets, null);
         }
+//        Game game = getGame(gameID);
+//        String playerID = findPlayerIDByAuthToken(authToken);
+//        for (Player player : game.getPlayers()) {
+//            if (player.getId().equals(playerID)) {
+//                ArrayList<Ticket> prevTickets = player.getTickets();
+//                prevTickets.addAll(tickets);
+//                player.setTickets(prevTickets);
+//                List<Ticket> ticketDeck = game.getTickets();
+//                //TODO : if the deck size is less then 3?
+//                for (int i = 0; i < 3; i++) {
+//                    for (int j = 0; j < tickets.size(); j++) {
+//                        if (ticketDeck.get(i).equals(tickets.get(j))) {
+//                            ticketDeck.remove(i);
+//                        }
+//                    }
+//                }
+//                // place not chosen cards to the deck
+//                for (int i = 0; i < 3 - tickets.size(); i++) {
+//                    Ticket topTicket = ticketDeck.get(0);
+//                    ticketDeck.add(topTicket);
+//                    ticketDeck.remove(0);
+//                }
+//                return new Result(true, player.getTickets().size(), null);
+//            }
+//        }
         return new Result(false, null, "Error : player not found");
     }
 }
