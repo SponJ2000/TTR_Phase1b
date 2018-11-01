@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.obfuscation.server.GenericCommand;
 
+import java.util.ArrayList;
+
 import communication.ICommand;
 import communication.Result;
 
@@ -43,8 +45,17 @@ public class Serializer {
         return command;
     }
 
+    public Ticket deserializeTicket(String json){
+        Ticket ticket = gson.fromJson(json, Ticket.class);
+        return ticket;
+    }
+
     public Game deserializeGame(String json) {
         Game game = gson.fromJson(json, Game.class);
+        ArrayList<Player> players = new ArrayList<Player>();
+//        ArrayList<Object> playerJson = game.getPlayers();
+//        for()
         return game;
     }
+
 }

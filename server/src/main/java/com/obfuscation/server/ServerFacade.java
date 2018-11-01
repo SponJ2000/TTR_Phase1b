@@ -34,8 +34,7 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
-        //TODO : implement this!
-        return null;
+        return new Result(true, db.getTickets(gameID, authToken), null);
     }
 
     private Database db = Database.getInstance();

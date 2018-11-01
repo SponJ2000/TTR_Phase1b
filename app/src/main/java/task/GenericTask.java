@@ -149,14 +149,14 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void FetchTicketsOption(Result result) {
         if (result.isSuccess()) {
+            Serializer serializer = new Serializer();
             ArrayList<Object> objects = (ArrayList<Object>) result.getData();
 
             ArrayList<Ticket> ticketsToChoose = new ArrayList<Ticket>();
             for (Object o: objects) {
-                ticketsToChoose.add((Ticket) o);
+                ticketsToChoose.add((Ticket) serializer.deserializeTicket(o.toString()));
             }
             ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(ticketsToChoose);
         }
     }
-
 }
