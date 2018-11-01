@@ -225,16 +225,16 @@ public class Database {
 
         Collections.shuffle(tickets);
 
-        //set player tickets
-        for (Player player : game.getPlayers()) {
-            ArrayList<Ticket> playerTickets = new ArrayList<>();
-            for (int i = 0; i < 3; i++) {
-                Ticket ticket = tickets.get(0);
-                playerTickets.add(ticket);
-                tickets.remove(0);
-            }
-            player.setTickets(playerTickets);
-        }
+//        //set player tickets
+//        for (Player player : game.getPlayers()) {
+//            ArrayList<Ticket> playerTickets = new ArrayList<>();
+//            for (int i = 0; i < 3; i++) {
+//                Ticket ticket = tickets.get(0);
+//                playerTickets.add(ticket);
+//                tickets.remove(0);
+//            }
+//            player.setTickets(playerTickets);
+//        }
 
         //set the deck
         game.setTickes(tickets);
