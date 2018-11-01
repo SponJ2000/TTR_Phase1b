@@ -45,8 +45,14 @@ public class FakeModel implements IGameModel {
         List<Player> fakePlayers = new ArrayList<>();
         fakePlayers.add(mHost);
         fakePlayers.add( new Player("player 2") );
+        fakePlayers.get(1).setPoint(10);
+        fakePlayers.get(1).setTrainCarNum(37);
         fakePlayers.add( new Player("player 3") );
+        fakePlayers.get(2).setPoint(14);
+        fakePlayers.get(2).setTrainCarNum(36);
         fakePlayers.add( new Player("player 4") );
+        fakePlayers.get(3).setPoint(18);
+        fakePlayers.get(3).setTrainCarNum(39);
 
         mPlayer = mHost;
 
@@ -54,6 +60,7 @@ public class FakeModel implements IGameModel {
 
         userName = "Bob";
         game = new Game();
+        game.setPlayers((ArrayList<Player>) fakePlayers);
         state = State.GAME;
 
         userTickets = new ArrayList<>();
@@ -247,6 +254,11 @@ public class FakeModel implements IGameModel {
     public void sendMessage(Message message) {
         messages.add(message);
         PresenterFacade.getInstance().updatePresenter(null);
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        return game.getPlayers();
     }
 
 }

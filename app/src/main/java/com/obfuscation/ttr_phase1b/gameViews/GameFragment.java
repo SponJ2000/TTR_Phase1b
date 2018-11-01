@@ -107,6 +107,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                 Log.d(TAG, "View players");
                 PlayerInfoFragment playerInfoFrag = new PlayerInfoFragment();
                 playerInfoFrag.show(getFragmentManager(), "PlayerinfoFragment");
+                mPresenter.showPlayerInfo(playerInfoFrag);
             }
         });
 

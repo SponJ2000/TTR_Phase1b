@@ -48,4 +48,6 @@ public interface IGameModel {
 
     void sendMessage(Message message);
 
+    List<Player> getPlayers();
+
 }

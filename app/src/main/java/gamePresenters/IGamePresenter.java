@@ -1,13 +1,14 @@
 package gamePresenters;
 
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
+import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
 import communication.Player;
 
 public interface IGamePresenter extends IPresenter{
 
     void showMenu();
-    void showPlayerInfo();
+    void showPlayerInfo(IPlayerInfoView view);
     void showTickets();
     void showChat();
     void showMap();

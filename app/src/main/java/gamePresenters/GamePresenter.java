@@ -3,6 +3,7 @@ package gamePresenters;
 import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
+import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
 import communication.Player;
 import model.FakeModel;
@@ -13,6 +14,7 @@ public class GamePresenter implements IGamePresenter {
 
     private static String TAG = "obfuscate";
 
+    private IPlayerInfoView playerInfoView;
     private IGameView view;
     private OnShowListener listener;
     private IGameModel model;
@@ -44,7 +46,11 @@ public class GamePresenter implements IGamePresenter {
         model.updateTickets();
     }
 
-    public void showPlayerInfo() {
+    @Override
+    public void showPlayerInfo(IPlayerInfoView view) {
+        playerInfoView = view;
+        view.setPlayers(model.getPlayers());
+        view.updateUI();
     }
 
     public void showMap() {
