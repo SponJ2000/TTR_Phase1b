@@ -171,27 +171,28 @@ public class ServerFacade implements IServer {
             db.setupGame(gameID);
             game = db.getGame(gameID);
 
-//            //update tickets (distribute 3 cards)
-//            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-//                String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
-//                clientProxy.updateTickets(gameID, game.getPlayerbyID(playerID).getTickets());
-//            }
-//
-//            //update destination card deck number
-//            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-//                clientProxy.updateDestinationDeck(gameID, game.getTickets().size());
-//            }
-//
-//            //update train cards for each player (4 cards)
-//            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-//                String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
-//                clientProxy.updateTrainCards(gameID, game.getPlayerbyID(playerID).getCards());
-//            }
-//
-//            //update train card deck
-//            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-//                clientProxy.updateTrainDeck(gameID, game.getTrainCards(), game.getTrainCards().size());
-//            }
+            //update tickets (distribute 3 cards)
+            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
+                clientProxy.updateTickets(gameID, game.getPlayerbyID(playerID).getTickets());
+                Result result1 = GetTickets(gameID, clientProxy.getAuthToken());
+            }
+
+            //update destination card deck number
+            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                clientProxy.updateDestinationDeck(gameID, game.getTickets().size());
+            }
+
+            //update train cards for each player (4 cards)
+            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
+                clientProxy.updateTrainCards(gameID, game.getPlayerbyID(playerID).getCards());
+            }
+
+            //update train card deck
+            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                clientProxy.updateTrainDeck(gameID, game.getTrainCards(), game.getTrainCards().size());
+            }
         }
         return result;
     }

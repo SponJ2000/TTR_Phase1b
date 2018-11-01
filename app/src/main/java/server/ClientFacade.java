@@ -13,6 +13,7 @@ import communication.Message;
 import communication.Player;
 import communication.Ticket;
 import communication.CardColor;
+import model.ModelFacade;
 import model.ModelRoot;
 import model.State;
 
@@ -60,6 +61,7 @@ public class ClientFacade implements IClient{
     public void initializeGame(Game game) {
         ModelRoot.getInstance().setGame(game);
         ModelRoot.getInstance().setState(State.GAME);
+        ModelFacade.getInstance().getChoiceTickets();
     }
 
     @Override
@@ -98,7 +100,7 @@ public class ClientFacade implements IClient{
         if (g != null) {
             Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
             if (p != null) {
-                p.setTickets((ArrayList<Ticket>) tickets);
+                p.setTicketToChoose((ArrayList<Ticket>) tickets);
             }
         }
     }

@@ -147,6 +147,7 @@ public class ModelFacade implements IGameModel {
         genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), message);
     }
 
+
     @Override
     public List<Player> getPlayers() {
         return ModelRoot.getInstance().getGame().getPlayers();
@@ -161,9 +162,11 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    //ask for three new tickext to choose from
+    //ask for three new tickext to choose from server
     public void updateChoiceTickets() {
-        //not for this phase
+        GenericTask genericTask = new GenericTask("GetTickets");
+        genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
+
     }
 
 
