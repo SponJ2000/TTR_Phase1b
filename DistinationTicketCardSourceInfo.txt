@@ -1,16 +1,16 @@
-Los Angeles
-New York City
+Los_Angeles
+New_York_City
 21
 
 Duluth
 Houston
 8
 
-Sault Ste Marie
+Sault_Ste_Marie
 Nashville
 8
 
-New York
+New_York
 Atlanta
 6
 
@@ -23,7 +23,7 @@ Montréal
 20
 
 Duluth
-El Paso
+El_Paso
 10
 
 Toronto
@@ -35,34 +35,34 @@ Phoenix
 11
 
 Dallas
-New York City
+New_York_City
 11
 
 Calgary
-Salt Lake City
+Salt_Lake_City
 7
 
 Calgary
 Phoenix
 13
 
-Los Angeles
+Los_Angeles
 Miami
 20
 
 Winnipeg
-Little Rock
+Little_Rock
 11
 
-San Francisco
+San_Francisco
 Atlanta
 17
 
-Kansas City
+Kansas_City
 Houston
 5
 
-Los Angeles
+Los_Angeles
 Chicago
 16
 
@@ -71,11 +71,11 @@ Pittsburgh
 11
 
 Chicago
-Santa Fe
+Santa_Fe
 9
 
 Vancouver
-Santa Fe
+Santa_Fe
 13
 
 Boston
@@ -83,7 +83,7 @@ Miami
 12
 
 Chicago
-New Orleans
+New_Orleans
 7
 
 Montreal
@@ -91,15 +91,15 @@ Atlanta
 9
 
 Seattle
-New Yor
+New_York
 22
 
 Denver
-El Paso
+El_Paso
 4
 
 Helena
-Los Angeles
+Los_Angeles
 8
 
 Winnipeg
@@ -107,9 +107,9 @@ Houston
 12
 
 Montreal
-New Orleans
+New_Orleans
 13
 
-Sault Ste. Marie
-Oklahoma City
+Sault_Ste._Marie
+Oklahoma_City
 9
