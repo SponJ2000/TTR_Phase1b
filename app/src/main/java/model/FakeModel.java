@@ -263,27 +263,30 @@ public class FakeModel implements IGameModel {
 
     @Override
     public void addPoints(int p) {
-
+        mPlayer.addPoint(p);
     }
 
     @Override
     public void useCards(CardColor color, int number) {
-
+        mPlayer.useCards(color, number);
     }
 
     @Override
     public void addTickets(List<Ticket> tickets) {
-
+        mPlayer.addTickets((ArrayList<Ticket>) tickets);
     }
 
     @Override
     public void removeTicket(int index) {
-
+        mPlayer.removeTicket(index);
     }
 
     @Override
     public void updateOpponent() {
-
+        List<Player> players = game.getPlayers();
+        players.get(1).setTrainCarNum(12);
+        players.get(1).setCardNum(24);
+        players.get(1).setPoint(32);
     }
 
 }

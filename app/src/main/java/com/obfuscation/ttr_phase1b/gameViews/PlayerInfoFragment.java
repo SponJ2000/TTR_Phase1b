@@ -23,7 +23,7 @@ import gamePresenters.IGamePresenter;
 
 public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoView {
 
-    private static final String TAG = "PlayerInfo";
+    private static final String TAG = "PlayerInfoFrag";
 
     private IGamePresenter mPresenter;
 
@@ -57,7 +57,7 @@ public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoVie
     public void updateUI() {
         Log.d(TAG, "getting updated");
         if(mPlayerRecycler != null && mPlayers != null) {
-            Log.d(TAG+"_updateUI", "gamelist: " + mPlayers);
+            Log.d(TAG+"_updateUI", "mPlayers: " + mPlayers);
             mPlayerAdapter = new PlayerAdapter(mPlayers);
             mPlayerRecycler.setAdapter(mPlayerAdapter);
         }
@@ -121,6 +121,6 @@ public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoVie
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.showPlayerInfo(null);
+//        mPresenter.showPlayerInfo(null);
     }
 }
