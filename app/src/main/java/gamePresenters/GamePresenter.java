@@ -23,8 +23,8 @@ public class GamePresenter implements IGamePresenter {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
-//        model = ModelFacade.getInstance();
-        model = FakeModel.getInstance();
+        model = ModelFacade.getInstance();
+//        model = FakeModel.getInstance();
     }
 
     @Override

@@ -163,20 +163,20 @@ public class ModelFacade implements IGameModel {
     @Override
     //ask for three new tickext to choose from
     public void updateChoiceTickets() {
-
+        //not for this phase
     }
 
 
     @Override
     //update the list of cards user has
     public void updateCards() {
-
+//not for this phase
     }
 
     @Override
     //whenever we choose a new cards
     public void updateFaceCards() {
-
+//not for this phase
     }
 
     @Override
@@ -187,7 +187,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void updateMessages() {
-
+//not for this phase
     }
 
     //Called by presenter
@@ -216,7 +216,7 @@ public class ModelFacade implements IGameModel {
     @Override
     //ask server
     public void updateTickets() {
-
+//not for this phase
     }
 
 
@@ -265,7 +265,7 @@ public class ModelFacade implements IGameModel {
     }
 
     public boolean isGameStarted() {
-        return false;
+        return ModelRoot.getInstance().getGame().isStarted();
     }
 
 }
