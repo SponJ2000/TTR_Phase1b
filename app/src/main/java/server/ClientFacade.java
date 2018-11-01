@@ -60,7 +60,13 @@ public class ClientFacade implements IClient{
     @Override
     public void initializeGame(Game game) {
         try {
+            ArrayList<Ticket> tickets = ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
             ModelRoot.getInstance().setGame(game);
+            if (tickets != null) {
+                if (tickets.size() > 0) {
+                    ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(tickets);
+                }
+            }
             System.out.println("in printing game detail");
 
             Game g = ModelRoot.getInstance().getGame();

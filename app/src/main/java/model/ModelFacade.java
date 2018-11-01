@@ -196,6 +196,7 @@ public class ModelFacade implements IGameModel {
     public void updateChoiceTickets() {
         GenericTask genericTask = new GenericTask("GetTickets");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
+        System.out.println("called it onece once once");
 
     }
 
