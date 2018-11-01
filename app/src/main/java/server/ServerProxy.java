@@ -91,6 +91,7 @@ public class ServerProxy implements communication.IServer {
     @Override
     public Result CheckGame(String authToken, String gameID, Integer state) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGame", new String[]{STRING, STRING, INTEGER}, new Object[]{authToken, gameID, state});
+        System.out.println("from poller checking the game");
         return RunCommand(genericCommand);
     }
 

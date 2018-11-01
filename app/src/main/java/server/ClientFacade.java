@@ -166,5 +166,11 @@ public class ClientFacade implements IClient{
             g.insertMessage(m);
             System.out.println("inserted a new chat"+ m.getText());
         }
+
+        g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            System.out.println("message has size of:  " + g.getMessages().size());
+
+        }
     }
 }

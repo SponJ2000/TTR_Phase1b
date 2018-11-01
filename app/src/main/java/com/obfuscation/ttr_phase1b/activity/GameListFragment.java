@@ -188,7 +188,6 @@ public class GameListFragment extends Fragment implements IPresenter {
         public void bindGame(Game game, int gameNumber) {
 //            Log.d(TAG+"_holder", "game: " + game.toString());
             mGame = game;
-            System.out.println("wqeqweqweqw!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             mGameNumber = gameNumber;
             mGameIDView.setText(game.getGameID());
             mHostView.setText(game.getHost());

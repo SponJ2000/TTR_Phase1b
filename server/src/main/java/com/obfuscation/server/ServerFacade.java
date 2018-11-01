@@ -23,6 +23,7 @@ public class ServerFacade implements IServer {
         System.out.println("Updating the message");
         //FIXME**
         Result result = db.sendMessage(gameID, message.getText(), authToken);
+        System.out.println(result.toString());
         if(result.isSuccess()) {
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                 clientProxy.updateChat(gameID, (Message) result.getData());
@@ -237,7 +238,12 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result CheckGame(String authToken, String gameID, Integer state) {
-       return null;
+        for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+            if (clientProxy.getAuthToken().equals(authToken)) {
+                return clientProxy.getNotSeenCommands(gameID, state);
+            }
+        }
+        return new Result(false, null, "Error : Client not found");
     }
 
     @Override

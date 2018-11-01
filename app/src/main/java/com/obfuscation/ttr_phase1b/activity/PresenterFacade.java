@@ -12,6 +12,8 @@ public class PresenterFacade {
 
     private static PresenterFacade SINGLETON = new PresenterFacade();
 
+    private static boolean changed;
+
     private IPresenter mPresenter;
 
     private PresenterFacade() {

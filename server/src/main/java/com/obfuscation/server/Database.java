@@ -404,7 +404,7 @@ public class Database {
             if (playerID != null) {
                 Message messageObject = new Message(playerID, message);
                 game.getMessages().add(messageObject);
-                return new Result(false, messageObject, null);
+                return new Result(true, messageObject, null);
             }
         }
         return new Result(false, null, "Error : Invalid auth_token");
