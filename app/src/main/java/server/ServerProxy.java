@@ -79,7 +79,9 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{STRING, STRING, LIST}, new Object[]{authToken, gameID, chosenTickets});
+        System.out.println("CHOOOSE TICKEEEEEEEEET");
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ChooseTicket", new String[]{STRING, STRING, LIST}, new Object[]{authToken, gameID, chosenTickets});
+        System.out.println("GGG");
         return RunCommand(genericCommand);
     }
 
@@ -98,6 +100,7 @@ public class ServerProxy implements communication.IServer {
 
     private Result RunCommand(GenericCommand genericCommand){
         try {
+            System.out.println("RUNNING COMMAND " + genericCommand.methodName);
             String resultJson = clientCommunicator.post(genericCommand);
             System.out.println(resultJson);
             Serializer serializer = new Serializer();

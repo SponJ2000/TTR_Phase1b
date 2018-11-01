@@ -214,6 +214,7 @@ public class Database {
         for (int i = 0; i < 14; i++) {
             Card LocomotiveCard = new Card(GameColor.LOCOMOTIVE);
         }
+        System.out.println("TRAIN CARD SIZE " + trainCards.size());
         Collections.shuffle(trainCards);
         game.setTrainCards(trainCards);
 
@@ -226,7 +227,7 @@ public class Database {
         }
         tickets = new TickectMaker().MakeCards();
 
-
+        System.out.println("MAKER CARD SIZE " + tickets.size());
         Collections.shuffle(tickets);
 
 //        //set player tickets
@@ -249,9 +250,11 @@ public class Database {
             for (int i = 0; i < 4; i++) {
                 Card card = trainCards.get(0);
                 playerTrainCards.add(card);
-                playerTrainCards.remove(0);
+                trainCards.remove(0);
             }
             player.setCards(playerTrainCards);
+            System.out.println("CARD SET");
+            System.out.println(player.getCards().size());
         }
         ArrayList<Card> faceUpTrainCards = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -487,7 +490,7 @@ public class Database {
 
         String playerID = findPlayerIDByAuthToken(authToken);
         for (Player player : game.getPlayers()) {
-            if (player.getId().equals(playerID)) {
+            if (player.getPlayerName().equals(playerID)) {
                 player.setTicketToChoose(playerTickets);
             }
         }
@@ -497,38 +500,53 @@ public class Database {
     }
 
     Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
-        Game game = getGame(gameID);
-        if (game != null) {
-            gameIDAuthPair gameIDAuthPair = new gameIDAuthPair(gameID, authToken);
-            String playerID = findPlayerIDByAuthToken(authToken);
-            ArrayList<Ticket> tickets1 = new ArrayList<>();
+        try {
+            Game game = getGame(gameID);
+            if (game != null) {
+                gameIDAuthPair gameIDAuthPair = new gameIDAuthPair(gameID, authToken);
+                String playerID = findPlayerIDByAuthToken(authToken);
+                ArrayList<Ticket> tickets1 = new ArrayList<>();
 
-            for (Player player : game.getPlayers()) {
-                if (player.getId().equals(playerID)) {
-                    tickets1 = player.getTicketToChoose();
-                }
-            }
-            Set<Integer> overlap = new HashSet<>();
-            for (int i = 0; i < tickets.size(); i++) {
-                for (int j = 0; j < tickets1.size(); j++) {
-                    if (tickets.get(i).equals(tickets1.get(j))) {
-                        overlap.add(j);
+                for (Player player : game.getPlayers()) {
+                    if (player.getPlayerName().equals(playerID)) {
+                        tickets1 = player.getTicketToChoose();
                     }
                 }
-            }
-            List<Ticket> ticketDeck = game.getTickets();
-            for (Integer i : overlap) {
-                ticketDeck.add(tickets1.get(i));
-            }
-            for (Player player : game.getPlayers()) {
-                if (player.getId().equals(playerID)) {
-                    player.setTickets((ArrayList<Ticket>) tickets);
-                    player.setTicketToChoose(new ArrayList<>());
+                System.out.println("KEEP TICKET " + tickets.size());
+                System.out.println("PLAYER TICKET CHOOSE " + tickets1.size());
+                Set<Integer> overlap = new HashSet<>();
+                for (int i = 0; i < tickets.size(); i++) {
+                    for (int j = 0; j < tickets1.size(); j++) {
+                        System.out.println("EEE");
+                        try {
+                            System.out.println(tickets.get(i).getCity1() + "#");
+
+                            //FIXME** why is this not printing?
+                            System.out.println(tickets.get(i).toString());
+                            System.out.println(tickets1.get(j).toString());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (tickets.get(i).equals(tickets1.get(j))) {
+                            System.out.println("))))");
+                            overlap.add(j);
+                        }
+                    }
                 }
-            }
+                System.out.println("OVERLAP SIZE + " + overlap.size());
+                List<Ticket> ticketDeck = game.getTickets();
+                for (Integer i : overlap) {
+                    ticketDeck.add(tickets1.get(i));
+                }
+                for (Player player : game.getPlayers()) {
+                    if (player.getPlayerName().equals(playerID)) {
+                        player.setTickets((ArrayList<Ticket>) tickets);
+                        player.setTicketToChoose(new ArrayList<>());
+                    }
+                }
 //            ticketsMap.get(gameIDAuthPair).clear();
-            return new Result(true, tickets, null);
-        }
+                return new Result(true, tickets, null);
+            }
 //        Game game = getGame(gameID);
 //        String playerID = findPlayerIDByAuthToken(authToken);
 //        for (Player player : game.getPlayers()) {
@@ -554,6 +572,10 @@ public class Database {
 //                return new Result(true, player.getTickets().size(), null);
 //            }
 //        }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         return new Result(false, null, "Error : player not found");
     }
 }

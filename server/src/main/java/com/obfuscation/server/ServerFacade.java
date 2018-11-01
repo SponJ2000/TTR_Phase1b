@@ -9,8 +9,8 @@ import communication.Card;
 import communication.Game;
 import communication.IServer;
 import communication.Message;
-import communication.Player;
 import communication.Result;
+import communication.Serializer;
 import communication.Ticket;
 
 /**
@@ -175,6 +175,7 @@ public class ServerFacade implements IServer {
                 System.out.println("UPDATING : " + clientProxy.getAuthToken());
                 System.out.println(db.findPlayerIDByAuthToken(clientProxy.getAuthToken()));
                 clientProxy.updateGame(gameID);
+                clientProxy.updateGame(gameID);
                 clientProxy.initializeGame(game);
             }
 
@@ -196,12 +197,19 @@ public class ServerFacade implements IServer {
             //update train cards for each player (4 cards)
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                 String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
-                clientProxy.updateTrainCards(gameID, game.getPlayerbyID(playerID).getCards());
+                System.out.println("UPDATING TRAIN CARDS");
+                try {
+                    System.out.println(game.getPlayerByName(playerID).getCards());
+                    clientProxy.updateTrainCards(gameID, game.getPlayerByName(playerID).getCards());
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             //update train card deck
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                clientProxy.updateTrainDeck(gameID, game.getTrainCards(), game.getTrainCards().size());
+                clientProxy.updateTrainDeck(gameID, game.getFaceUpTrainCarCards(), game.getTrainCards().size());
             }
         }
         return result;
@@ -311,7 +319,13 @@ public class ServerFacade implements IServer {
     //
     @Override
     public Result ReturnTickets(String gameID, String authToken, List<Ticket> ticketsToKeep) {
-        Result result = db.setTickets(gameID, authToken, ticketsToKeep);
+        Serializer serializer = new Serializer();
+        ArrayList<Ticket> ticketsToChoose2 = new ArrayList<>();
+        for (Object o: ticketsToKeep) {
+            ticketsToChoose2.add((Ticket) serializer.deserializeTicket(o.toString()));
+        }
+        System.out.println("RETRUN TICKET CALLED");
+        Result result = db.setTickets(gameID, authToken, ticketsToChoose2);
         String playerID = db.findPlayerIDByAuthToken(authToken);
         if (result.isSuccess()) {
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {

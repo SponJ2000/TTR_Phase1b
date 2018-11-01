@@ -22,6 +22,7 @@ public class TickectMaker {
                 Ticket d = new Ticket(new City(beginningCity, 0, 0), new City(endingCity, 0,0),value);
                 System.out.println(value);
                 result.add(d);
+                if (sc.hasNextLine())
                 sc.nextLine();
             }
         }

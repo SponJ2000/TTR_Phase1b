@@ -11,6 +11,7 @@ import communication.Game;
 import communication.IClient;
 import communication.Message;
 import communication.Player;
+import communication.Serializer;
 import communication.Ticket;
 import communication.GameColor;
 import model.ModelFacade;
@@ -64,7 +65,12 @@ public class ClientFacade implements IClient{
             ModelRoot.getInstance().setGame(game);
             if (tickets != null) {
                 if (tickets.size() > 0) {
-                    ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(tickets);
+
+                    if (ModelRoot.getInstance().getGame() != null) {
+                        if (ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()) != null) {
+                            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(tickets);
+                        }
+                    }
                 }
             }
             System.out.println("in printing game detail");
@@ -103,13 +109,20 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTrainCards(String gameID, List<Card> trainCards) {
+        System.out.println("UPDATE TRAIN CARD GETTING CALLED");
+        System.out.println(trainCards.size());
+        Serializer serializer = new Serializer();
+        ArrayList<Card> cardD = new ArrayList<Card>();
+        for(Object O: trainCards) {
+            cardD.add(serializer.deserializeCard(O.toString()));
+        }
         try {
             Game g = ModelRoot.getInstance().getGame();
 
             if (g != null) {
                 Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
                 if (p != null) {
-                    p.setCards((ArrayList<Card>) trainCards);
+                    p.setCards(cardD);
                 }
             }
         }
@@ -165,6 +178,22 @@ public class ClientFacade implements IClient{
             g.setFaceUpTrainCarCards(faceCards);
         }
     }
+
+
+    public void updateTrainDeck(String gameID, List<Card> faceCards, Integer downCardNum) {
+        Game g = ModelRoot.getInstance().getGame();
+        Serializer serializer =  new Serializer();
+        ArrayList<Card> cardD = new ArrayList<Card>();
+        for(Object O: faceCards) {
+            cardD.add(serializer.deserializeCard(O.toString()));
+        }
+
+        if (g != null) {
+            g.setFaceUpTrainCarCards(cardD);
+
+        }
+    }
+
 
     //upate number of card in the deck
     @Override

@@ -58,4 +58,9 @@ public class Serializer {
         return game;
     }
 
+    public Card deserializeCard(String json) {
+        Card c = gson.fromJson(json, Card.class);
+        return c;
+    }
+
 }

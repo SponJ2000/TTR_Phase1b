@@ -198,12 +198,16 @@ public class ModelFacade implements IGameModel {
     @Override
     public void chooseTickets(List<Ticket> tickets) {
         System.out.println("called choose ticket");
+        System.out.println(tickets.size());
         if (getTickets() != null)
         System.out.println("ticket size is: " + getTickets().size());
-        GenericTask genericTask = new GenericTask("ChooseTicket");
+        GenericTask genericTask = new GenericTask("ReturnTickets");
 
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken(), tickets);
         ModelRoot.getInstance().setTicketsWanted((ArrayList<Ticket>) tickets);
+
+        //FIXME
+        getPlayer().setTickets((ArrayList<Ticket>)tickets);
     }
 
     @Override
@@ -222,6 +226,7 @@ public class ModelFacade implements IGameModel {
     //update the list of cards user has
     public void updateCards() {
 //not for this phase
+//        return ModelRoot.getInstance().getGame().getTrainCards();
     }
 
     @Override
@@ -308,7 +313,12 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Ticket> getChoiceTickets() {
-        return ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
+        if (ModelRoot.getInstance().getGame() != null){
+            if (ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName())!= null) {
+                return ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
+            }
+        }
+        return null;
     }
 
     @Override

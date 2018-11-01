@@ -41,7 +41,7 @@ public class ClientProxy implements IClient {
     private Map<String, Integer> gameStateMap = new HashMap<>();
     private static final String CLIENT_FACADE = "server.ClientFacade";
     private static final String STRING = "java.lang.String";
-    private static final String INTEGER = Integer.TYPE.getName();
+    private static final String INTEGER = "java.lang.Integer";
     private static final String CARD = Card.class.getName();
     private static final String TICKET = Ticket.class.getName();
     private static final String MESSAGE = Message.class.getName();
@@ -129,7 +129,7 @@ public class ClientProxy implements IClient {
         GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainDeck"
-                , new String[]{STRING, CARD, INTEGER}
+                , new String[]{STRING, LIST, INTEGER}
                 , new Object[] {gameID, faceCards, downCardNum});
         notSeenCommands.get(gameID).add(command);
     }
@@ -208,12 +208,21 @@ public class ClientProxy implements IClient {
             if (notSeenCommands != null) {
                 if (notSeenCommands.get(gameID) != null) {
                     System.out.println("HAHA : " + notSeenCommands.get(gameID).size());
+                    for (int i = 0; i < notSeenCommands.get(gameID).size(); i++) {
+                        System.out.println(notSeenCommands.get(gameID).get(i).methodName);
+                    }
+//                    for (int i = 0; i < notSeenCommands.get(gameID).size(); i++) {
+//                        System.out.println(notSeenCommands.get(gameID).);
+//                    }
                     if (state < notSeenCommands.get(gameID).size()) {
                         List<GenericCommand> commands = new ArrayList<GenericCommand>(notSeenCommands.get(gameID).subList(state, notSeenCommands.get(gameID).size()));
                         System.out.println(commands.size() + " AAAA");
                         System.out.println("not null at least once");
                         ArrayList<GenericCommand> g = new ArrayList<GenericCommand>();
                         for (GenericCommand c : commands) {
+                            System.out.println("COMMANDS GETTING ADDED");
+                            System.out.println(c.methodName);
+                            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
                             g.add((GenericCommand) c);
                         }
                         return new Result(true, g, null);

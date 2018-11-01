@@ -129,6 +129,15 @@ public class Game {
         return null;
     }
 
+    public Player getPlayerByName(String playerID) {
+        for(Player p: mPlayers) {
+            if (p.getPlayerName().equals(playerID)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
     public GameMap getmMap() {
         return mMap;
     }
