@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import communication.ActiveUser;
 import communication.Card;
-import communication.City;
 import communication.Game;
 import communication.Message;
 import communication.Player;
@@ -237,7 +236,7 @@ public class Database {
 //        }
 
         //set the deck
-        game.setTickes(tickets);
+        game.setTickets(tickets);
 
         //set player train cards
         for (Player player : game.getPlayers()) {

@@ -19,7 +19,7 @@ import model.ModelFacade;
 
 public class GamePresenter implements IGamePresenter {
 
-    private static String TAG = "obfuscate";
+    private static String TAG = "gamePres";
 
     private static int changeIndex = 0;
 
@@ -61,12 +61,15 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void showPlayerInfo(IPlayerInfoView view) {
-        playerInfoView = view;
-        if(playerInfoView != null) {
+        if(view == null) {
+            this.listener.onShow(Shows.playerInfo);
+        }else {
+            Log.d(TAG, "showPlayerInfo: " + model.getPlayers());
+            playerInfoView = view;
+            playerInfoView.setPresenter(this);
             playerInfoView.setPlayers(model.getPlayers());
             playerInfoView.updateUI();
         }
-
     }
 
     @Override
@@ -82,7 +85,7 @@ public class GamePresenter implements IGamePresenter {
                 break;
             case 2:
                 Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
-                model.useCards(CardColor.RED, 1);
+                model.useCards(CardColor.GREEN, 1);
                 break;
             case 3:
                 Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
@@ -120,6 +123,11 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void chooseCard(int index) {
         model.chooseCard(index);
+    }
+
+    @Override
+    public void onBack() {
+        this.listener.onShow(Shows.map);
     }
 
     public void showMenu() {

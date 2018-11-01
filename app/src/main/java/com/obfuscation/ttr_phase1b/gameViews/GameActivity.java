@@ -62,6 +62,16 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 PresenterFacade.getInstance().setPresenter( new TicketPresenter((ITicketView) fragment, this) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
+            case playerInfo:
+                fragment = PlayerInfoDialogFragment.newInstance();
+                ((IGamePresenter) PresenterFacade.getInstance().getPresenter()).showPlayerInfo((IPlayerInfoView) fragment);
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
+            case map:
+                fragment = GameFragment.newInstance();
+                PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
         }
         Log.d(TAG, "showing a " + show + " fragment");
     }

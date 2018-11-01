@@ -15,6 +15,7 @@ public interface IGamePresenter extends IPresenter{
     void showChat();
     void showMap();
     void chooseCard(int index);
+    void onBack();
 
     void onChange(Activity activity);
 

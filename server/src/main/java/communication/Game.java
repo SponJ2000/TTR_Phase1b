@@ -135,8 +135,8 @@ public class Game {
         return tickets;
     }
 
-    public void setTickes(ArrayList<Ticket> tickes) {
-        this.tickets = tickes;
+    public void setTickets(ArrayList<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
     public String getGameID() {
