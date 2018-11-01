@@ -126,7 +126,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void OnTickectsChoosen(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).addTickets(ModelRoot.getInstance().getTicketsWanted());
+            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTickets(ModelRoot.getInstance().getTicketsWanted());
             ModelRoot.getInstance().setTicketsWanted(new ArrayList<Ticket>());
         }
     }
@@ -137,7 +137,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             String userName = m.getUserName();
             if (result.getData() == null) {
                 ArrayList<Ticket> ticketsRecieved = (ArrayList<Ticket>)result.getData();
-                ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).addTickets(ticketsRecieved);
+                ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTickets(ticketsRecieved);
             }
         }
     }

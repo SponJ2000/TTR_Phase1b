@@ -23,8 +23,4 @@ public interface IGamePresenter extends IPresenter{
         void onShow(Shows show);
     }
 
-    int getDeckSize();
-
-    Player getPlayer();
-
 }

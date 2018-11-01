@@ -23,26 +23,16 @@ public class GamePresenter implements IGamePresenter {
         this.listener = listener;
 //        model = ModelFacade.getInstance();
         model = FakeModel.getInstance();
-        view.setUsername(model.getUserName());
-    }
-
-    @Override
-    public int getDeckSize() {
-        return model.getDeckSize();
-    }
-
-    @Override
-    public Player getPlayer() {
-        return model.getPlayer();
     }
 
     @Override
     public void updateInfo(Object result) {
         view.setPlayer(model.getPlayer());
+        view.setDeckSize(model.getDeckSize());
         view.setIsTurn(model.isMyTurn());
         view.setCards(model.getCards());
         view.setFaceCards(model.getFaceCards());
-        view.setMap(model.getMap());
+//        view.setMap(model.getMap());
         view.setTickets(model.getTickets());
         view.updateUI();
     }

@@ -103,6 +103,9 @@ public class FakeModel implements IGameModel {
         userCards.add(new Card(CardColor.WHITE));
         userCards.add(new Card(CardColor.BLACK));
         userCards.add(new Card(CardColor.GREEN));
+        mHost.setCards((ArrayList<Card>) userCards);
+        mHost.setCardNum(userCards.size());
+        mHost.setPlayerColor(PlayerColor.RED);
     }
 
     public static FakeModel getInstance() {
@@ -176,7 +179,7 @@ public class FakeModel implements IGameModel {
 
     @Override
     public List<Ticket> getTickets() {
-        return userTickets;
+        return mPlayer.getTickets();
     }
 
     @Override
@@ -192,9 +195,7 @@ public class FakeModel implements IGameModel {
 
     @Override
     public void chooseTickets(List<Ticket> tickets) {
-        for (Ticket ticket: tickets) {
-            userTickets.add(ticket);
-        }
+        mPlayer.addTickets((ArrayList<Ticket>) tickets);
         choiceTickets = null;
     }
 
@@ -216,17 +217,18 @@ public class FakeModel implements IGameModel {
 
     @Override
     public List<Card> getCards() {
-        return userCards;
+        return mPlayer.getCards();
     }
 
     @Override
     public void chooseCard(int index) {
         if(index > 0) {
-            userCards.add(faceupCards.get(index));
+            mPlayer.addCard(faceupCards.get(index));
+//            userCards.add(faceupCards.get(index));
             faceupCards.remove(index);
             faceupCards.add(new Card(CardColor.GREEN));
         }else {
-            userCards.add(new Card(CardColor.ORANGE));
+            mPlayer.addCard(new Card(CardColor.ORANGE));
         }
     }
 

@@ -22,6 +22,41 @@ public class Player {
     private Integer cardNum;
     private PlayerColor playerColor;
 
+    private Player() {
+        ticketToChoose = new ArrayList<>();
+        claimedRoutesID = new ArrayList<>();
+
+        trainCarNum = 40;
+        point = 0;
+        cardNum = 0;
+        ticketNum = 3;
+    }
+
+    public Player(String playerName) {
+        this.id = playerName;
+        this.playerName = playerName;
+
+        ticketToChoose = new ArrayList<>();
+        claimedRoutesID = new ArrayList<>();
+
+        trainCarNum = 40;
+        point = 0;
+        cardNum = 0;
+        ticketNum = 3;
+    }
+
+    public Player(String id, String playerName) {
+        this.id = id;
+        this.playerName = playerName;
+
+        ticketToChoose = new ArrayList<>();
+        claimedRoutesID = new ArrayList<>();
+
+        trainCarNum = 40;
+        point = 0;
+        cardNum = 0;
+        ticketNum = 3;
+    }
 
     public PlayerColor getPlayerColor() {
         return playerColor;
@@ -31,25 +66,10 @@ public class Player {
         this.playerColor = playerColor;
     }
 
-    public Player(String id, String playerName) {
-        this.id = id;
-        this.playerName = playerName;
-        tickets = new ArrayList<Ticket>();
-        ticketToChoose = new ArrayList<Ticket>();
-        cards = new ArrayList<Card>();
-        claimedRoutesID = new ArrayList<String>();
-    }
-
-    public Player(String playerName) {
-        this.id = null;
-        this.playerName = playerName;
-        tickets = new ArrayList<Ticket>();
-        ticketToChoose = new ArrayList<Ticket>();
-        cards = new ArrayList<Card>();
-        claimedRoutesID = new ArrayList<String>();
-    }
-
     public Integer getCardNum() {
+        if(cards != null) {
+            return cards.size();
+        }
         return cardNum;
     }
 
@@ -58,6 +78,9 @@ public class Player {
     }
 
     public Integer getTicketNum() {
+        if(tickets != null) {
+            return tickets.size();
+        }
         return ticketNum;
     }
 
@@ -93,35 +116,78 @@ public class Player {
         return cards;
     }
 
-    public Integer getPoint() {
-        return point;
+    public void removeCard(int i) {
+        cards.remove(i);
     }
 
-    public void setPoint(Integer point) {
-        this.point = point;
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+
+    public void addCards(ArrayList<Card> moreCards) {
+        if(cards == null) {
+            cards = new ArrayList<>();
+        }
+        cards.addAll(moreCards);
     }
 
     public void setCards(ArrayList<Card> cards) {
         this.cards = cards;
     }
 
+    public boolean useCards(CardColor color, int number) {
+        int i = 0;
+        while(i < cards.size() && number > 0) {
+            if(cards.get(i).getColor().equals(color)) {
+                cards.remove(i);
+                --number;
+            }else {
+                ++i;
+            }
+        }
+        if(number > 0) {
+            return false;
+        }
+        return true;
+    }
+
     public ArrayList<Ticket> getTickets() {
         return tickets;
+    }
+
+    public void removeTicket(int i) {
+        tickets.remove(i);
+    }
+
+    public void addTicket(Ticket ticket) {
+        tickets.add(ticket);
+    }
+
+    public void addTickets(ArrayList<Ticket> moreTickets) {
+        if(tickets == null) {
+            tickets = new ArrayList<>();
+        }
+        tickets.addAll(moreTickets);
     }
 
     public void setTickets(ArrayList<Ticket> tickets) {
         this.tickets = tickets;
     }
 
-    public void addTickets(ArrayList<Ticket> moreTickets) {
-        this.tickets.addAll(moreTickets);
-    }
     public ArrayList<Ticket> getTicketToChoose() {
         return ticketToChoose;
     }
 
     public void setTicketToChoose(ArrayList<Ticket> ticketToChoose) {
         this.ticketToChoose = ticketToChoose;
+    }
+
+    public Integer getPoint() {
+        return point;
+    }
+
+    public void setPoint(Integer point) {
+        this.point = point;
     }
 
     public String getId() {
@@ -138,5 +204,23 @@ public class Player {
 
     public void setCardToChoose(ArrayList<Card> cardToChoose) {
         this.cardToChoose = cardToChoose;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id='" + id + '\'' +
+                ", playerName='" + playerName + '\'' +
+                ", point=" + point +
+                ", tickets=" + tickets +
+                ", cards=" + cards +
+                ", claimedRoutesID=" + claimedRoutesID +
+                ", ticketToChoose=" + ticketToChoose +
+                ", cardToChoose=" + cardToChoose +
+                ", ticketNum=" + ticketNum +
+                ", trainCarNum=" + trainCarNum +
+                ", cardNum=" + cardNum +
+                ", playerColor=" + playerColor +
+                '}';
     }
 }

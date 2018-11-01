@@ -21,8 +21,6 @@ public interface IGameView extends IView {
 
     void setTickets(List<Ticket> tickets);
 
-    void setUsername(String username);
-
     void setIsTurn(boolean isTurn);
 
     void setPlayer(Player player);
@@ -30,5 +28,7 @@ public interface IGameView extends IView {
     void setPoints(int points);
 
     void setTrains(int trains);
+
+    void setDeckSize(int size);
 
 }

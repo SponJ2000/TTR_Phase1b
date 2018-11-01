@@ -2,6 +2,7 @@ package com.obfuscation.ttr_phase1b.gameViews;
 
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,7 +46,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private IGamePresenter mPresenter;
 
-    private String mUsername;
     private boolean mIsTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
@@ -54,10 +54,13 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private ImageView[] mFaceCardViews;
     private ImageView mDeck;
     private TextView mDeckSize;
+    private TextView[] mCardViews;
 
     private FloatingActionButton mPlayersButton;
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
+
+    private FloatingActionButton mChangeButton;
 
     private LinearLayout mBoard;
     private TextView mTicketsView;
@@ -71,7 +74,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private GoogleMap googleMap;
 
     public GameFragment() {
-        mUsername = null;
         mIsTurn = false;
         mCards = null;
         mFaceCardViews = null;
@@ -89,7 +91,14 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
-        mTickets = new ArrayList<>();
+        mChangeButton = rootView.findViewById(R.id.change_button);
+        mChangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "make changes");
+                onChangeButton();
+            }
+        });
 
         mPlayersButton = rootView.findViewById(R.id.players_button);
         mPlayersButton.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +135,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTrainsView = rootView.findViewById(R.id.txt_trains);
 
         mPointsView.setText("0");
-        mTrainsView.setText("30");
+        mTrainsView.setText("40");
 
         mFaceCardViews = new ImageView[5];
         mFaceCardViews[0] = rootView.findViewById(R.id.card1);
@@ -179,6 +188,17 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mDeck.setBackgroundResource(R.drawable.card_deck2);
 
         mDeckSize = rootView.findViewById(R.id.txt_deck);
+
+        mCardViews = new TextView[9];
+        mCardViews[0] = rootView.findViewById(R.id.txt_cards_orange);
+        mCardViews[1] = rootView.findViewById(R.id.txt_cards_green);
+        mCardViews[2] = rootView.findViewById(R.id.txt_cards_purple);
+        mCardViews[3] = rootView.findViewById(R.id.txt_cards_white);
+        mCardViews[4] = rootView.findViewById(R.id.txt_cards_locomotive);
+        mCardViews[5] = rootView.findViewById(R.id.txt_cards_red);
+        mCardViews[6] = rootView.findViewById(R.id.txt_cards_yellow);
+        mCardViews[7] = rootView.findViewById(R.id.txt_cards_blue);
+        mCardViews[8] = rootView.findViewById(R.id.txt_cards_black);
 
 
         //Gets MapView from xml layout
@@ -265,6 +285,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         
     }
 
+    private void onChangeButton() {
+
+    }
+
     private void changeAccessibility() {
         if(mIsTurn) {
             for(int i = 0; i < mFaceCardViews.length; i++) {
@@ -279,9 +303,46 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         }
     }
 
-    private void updateCards(){
-        int i = 0;
+    private void updateCards() {
+        int[] cardCnts = new int[mCardViews.length];
+        for(int i = 0; i < mCards.size(); i++) {
+            switch (mCards.get(i).getColor()) {
+                case ORANGE:
+                    cardCnts[0]++;
+                    break;
+                case GREEN:
+                    cardCnts[1]++;
+                    break;
+                case PURPLE:
+                    cardCnts[2]++;
+                    break;
+                case WHITE:
+                    cardCnts[3]++;
+                    break;
+                case LOCOMOTIVE:
+                    cardCnts[4]++;
+                    break;
+                case RED:
+                    cardCnts[5]++;
+                    break;
+                case YELLOW:
+                    cardCnts[6]++;
+                    break;
+                case BLUE:
+                    cardCnts[7]++;
+                    break;
+                case BLACK:
+                    cardCnts[8]++;
+                    break;
+            }
+        }
+        for(int i = 0; i < mCardViews.length; i++) {
+            mCardViews[i].setText("" + cardCnts[i]);
+        }
+    }
 
+    private void updateFaceCards() {
+        int i = 0;
         while (i < mFaceCards.size()) {
             Card card = mFaceCards.get(i);
             ImageView faceCardView = mFaceCardViews[i];
@@ -324,11 +385,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             ImageView faceCardView = mFaceCardViews[i];
             faceCardView.setImageResource(R.drawable.card_blank);
 
-            mDeckSize.setText(mPresenter.getDeckSize());
+            ++i;
         }
+    }
 
-
-
+    private void updateTickets() {
+        mTicketsView.setText("" + mTickets.size());
     }
 
     private void setColor() {
@@ -404,19 +466,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void setFaceCards(List<Card> cards) {
         mFaceCards = cards;
-        updateCards();
     }
 
     @Override
     public void setTickets(List<Ticket> tickets) {
         mTickets = tickets;
-
-        mTicketsView.setText(new StringBuilder(tickets.size()).toString());
-    }
-
-    @Override
-    public void setUsername(String username) {
-        mUsername = username;
     }
 
     @Override
@@ -427,13 +481,16 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void updateUI() {
         if(mPlayer != null) {
+            Log.d(TAG, "updateUI: player: " + mPlayer);
             setColor();
+            setPoints(mPlayer.getPoint());
+            setTrains(mPlayer.getTrainCarNum());
         }if(mCards != null) {
-
-        }if(mFaceCards != null) {
             updateCards();
+        }if(mFaceCards != null) {
+            updateFaceCards();
         }if(mTickets != null) {
-
+            updateTickets();
         }
     }
 
@@ -444,15 +501,20 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void setPoints(int points) {
-        mPointsView.setText(new StringBuilder(points).toString());
+        mPointsView.setText("" + points);
     }
 
     @Override
     public void setTrains(int trains) {
-        mTrainsView.setText(new StringBuilder(trains).toString());
+        mTrainsView.setText("" + trains);
     }
 
-        @Override
+    @Override
+    public void setDeckSize(int size) {
+        mDeckSize.setText("" + size);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();
