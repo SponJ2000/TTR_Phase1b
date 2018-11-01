@@ -69,7 +69,11 @@ public class ClientFacade implements IClient{
 
             System.out.println("has player: " + players.size());
             for (Player p : players) {
-                p.getPlayerColor().toString();
+                System.out.println("player get player color");
+                System.out.println("layer color is: " + p.getPlayerColor());
+                if (p.getPlayerColor() == null) {
+                    System.out.println("player color is null");
+                }
             }
 
             ModelRoot.getInstance().setState(State.GAME);
