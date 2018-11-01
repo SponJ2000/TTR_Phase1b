@@ -34,8 +34,8 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
-        //TODO : implement this!
-        return null;
+        System.out.println("called choose tickets in server");
+        return new Result(true, db.getTickets(gameID, authToken), null);
     }
 
     private Database db = Database.getInstance();
@@ -94,10 +94,10 @@ public class ServerFacade implements IServer {
                 for (ClientProxy clientProxy : clientproxies) {
                     clientProxy.updateGameList(null);
                 }
+                gameIDclientProxyMap.get(gameID).add(getClientProxyByAuthToken(authToken));
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     clientProxy.updateGame(gameID);
                 }
-                gameIDclientProxyMap.get(gameID).add(getClientProxyByAuthToken(authToken));
             }
             return result;
         }
@@ -163,6 +163,7 @@ public class ServerFacade implements IServer {
             }
 
             //set colors and set orders
+            System.out.println(gameIDclientProxyMap.get(gameID).size());
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                 clientProxy.updateGame(gameID);
                 clientProxy.initializeGame(game);
@@ -305,7 +306,7 @@ public class ServerFacade implements IServer {
         String playerID = db.findPlayerIDByAuthToken(authToken);
         if (result.isSuccess()) {
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                clientProxy.updateOpponentTickets(gameID, playerID, (Integer) result.getData());
+                clientProxy.updateOpponentTickets(gameID, playerID, ((ArrayList<Ticket>) result.getData()).size());
             }
         }
         return result;

@@ -104,7 +104,7 @@ public class Poller {
         System.out.print('\n');
 
         Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getGame().getState());
-
+        System.out.println(result.toString());
         if (result.isSuccess()) {
             System.out.println(result.toString());
             Serializer serializer = new Serializer();

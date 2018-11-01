@@ -168,10 +168,13 @@ public class Player {
             tickets = new ArrayList<>();
         }
         tickets.addAll(moreTickets);
+        System.out.println("Tickets number changed : " + tickets.size());
     }
 
     public void setTickets(ArrayList<Ticket> tickets) {
+
         this.tickets = tickets;
+        System.out.println("Tickets number changed : " + tickets.size());
     }
 
     public ArrayList<Ticket> getTicketToChoose() {
@@ -188,6 +191,10 @@ public class Player {
 
     public void setPoint(Integer point) {
         this.point = point;
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
     }
 
     public String getId() {

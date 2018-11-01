@@ -61,6 +61,7 @@ public class FakeModel implements IGameModel {
 
         userName = "Bob";
         game = new Game();
+        game.setHost(userName);
         game.setPlayers((ArrayList<Player>) fakePlayers);
         state = State.GAME;
 
@@ -90,6 +91,7 @@ public class FakeModel implements IGameModel {
         city2 = new City("Kansas",0,0);
         allTickets.add(new Ticket(city1, city2, 9));
         allTickInd = 0;
+        game.setTickets((ArrayList<Ticket>) allTickets);
 
         messages = new ArrayList<>();
         messages.add(new Message("angie", "hello people of earth"));
@@ -97,6 +99,7 @@ public class FakeModel implements IGameModel {
         messages.add(new Message("angie", "death in a box"));
         messages.add(new Message("harry", "?\n...okay..."));
         messages.add(new Message(userName, "whatsup my homies!"));
+        game.setMessages((ArrayList<Message>) messages);
 
 
         faceupCards = new ArrayList<>();
@@ -105,6 +108,8 @@ public class FakeModel implements IGameModel {
         faceupCards.add(new Card(GameColor.PURPLE));
         faceupCards.add(new Card(GameColor.RED));
         faceupCards.add(new Card(GameColor.YELLOW));
+        game.setFaceUpTrainCarCards((ArrayList<Card>) faceupCards);
+
 
         userCards = new ArrayList<>();
         userCards.add(new Card(GameColor.LOCOMOTIVE));
@@ -227,7 +232,7 @@ public class FakeModel implements IGameModel {
 
     @Override
     public List<Card> getFaceCards() {
-        return faceupCards;
+        return game.getFaceUpTrainCarCards();
     }
 
     @Override
@@ -237,6 +242,7 @@ public class FakeModel implements IGameModel {
 
     @Override
     public void chooseCard(int index) {
+        ArrayList<Card> faceupCards = game.getFaceUpTrainCarCards();
         if(index > 0) {
             mPlayer.addCard(faceupCards.get(index));
 //            userCards.add(faceupCards.get(index));
@@ -267,6 +273,34 @@ public class FakeModel implements IGameModel {
     @Override
     public List<Player> getPlayers() {
         return game.getPlayers();
+    }
+
+    @Override
+    public void addPoints(int p) {
+        mPlayer.addPoint(p);
+    }
+
+    @Override
+    public void useCards(CardColor color, int number) {
+        mPlayer.useCards(color, number);
+    }
+
+    @Override
+    public void addTickets(List<Ticket> tickets) {
+        mPlayer.addTickets((ArrayList<Ticket>) tickets);
+    }
+
+    @Override
+    public void removeTicket(int index) {
+        mPlayer.removeTicket(index);
+    }
+
+    @Override
+    public void updateOpponent() {
+        List<Player> players = game.getPlayers();
+        players.get(1).setTrainCarNum(12);
+        players.get(1).setCardNum(24);
+        players.get(1).setPoint(32);
     }
 
 }

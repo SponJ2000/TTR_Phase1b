@@ -59,9 +59,34 @@ public class ClientFacade implements IClient{
 
     @Override
     public void initializeGame(Game game) {
-        ModelRoot.getInstance().setGame(game);
-        ModelRoot.getInstance().setState(State.GAME);
-        ModelFacade.getInstance().getChoiceTickets();
+        try {
+            ArrayList<Ticket> tickets = ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
+            ModelRoot.getInstance().setGame(game);
+            if (tickets != null) {
+                if (tickets.size() > 0) {
+                    ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(tickets);
+                }
+            }
+            System.out.println("in printing game detail");
+
+            Game g = ModelRoot.getInstance().getGame();
+
+            List<Player> players = g.getPlayers();
+
+            System.out.println("has player: " + players.size());
+            for (Player p : players) {
+                System.out.println("player get player color");
+                System.out.println("layer color is: " + p.getPlayerColor());
+                if (p.getPlayerColor() == null) {
+                    System.out.println("player color is null");
+                }
+            }
+
+            ModelRoot.getInstance().setState(State.GAME);
+            ModelFacade.getInstance().getChoiceTickets();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

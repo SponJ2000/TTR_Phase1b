@@ -1,6 +1,9 @@
 package model;
 
 
+import android.view.Display;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -160,7 +163,38 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public void addPoints(int p) {
+        getPlayer().setPoint(p);
+    }
+
+    @Override
+    public void useCards(GameColor color, int number) {
+        getPlayer().useCards(color, number);
+    }
+
+    @Override
+    public void addTickets(List<Ticket> tickets) {
+        getPlayer().addTickets((ArrayList<Ticket>) tickets);
+    }
+
+    @Override
+    public void removeTicket(int index) {
+        getPlayer().removeTicket(index);
+    }
+
+    @Override
+    public void updateOpponent() {
+        List<Player> players = ModelRoot.getInstance().getGame().getPlayers();
+        players.get(1).setTrainCarNum(12);
+        players.get(1).setCardNum(24);
+        players.get(1).setPoint(32);
+    }
+
+    @Override
     public void chooseTickets(List<Ticket> tickets) {
+        System.out.println("called choose ticket");
+        if (getTickets() != null)
+        System.out.println("ticket size is: " + getTickets().size());
         GenericTask genericTask = new GenericTask("ChooseTicket");
 
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken(), tickets);
@@ -170,8 +204,11 @@ public class ModelFacade implements IGameModel {
     @Override
     //ask for three new tickext to choose from server
     public void updateChoiceTickets() {
+
+
         GenericTask genericTask = new GenericTask("GetTickets");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
+        System.out.println("called it onece once once");
 
     }
 
@@ -185,13 +222,14 @@ public class ModelFacade implements IGameModel {
     @Override
     //whenever we choose a new cards
     public void updateFaceCards() {
-//not for this phase
+        ModelRoot.getInstance().getGame().takeCard(0);
     }
 
     @Override
     public void chooseCard(int index) {
-        GenericTask genericTask = new GenericTask("DrawTrainCard");
-        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
+        getPlayer().addCard(ModelRoot.getInstance().getGame().takeCard(index));
+//        GenericTask genericTask = new GenericTask("DrawTrainCard");
+//        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
     }
 
     @Override
@@ -260,7 +298,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Ticket> getTickets() {
-        return getPlayer().getTicketToChoose();
+        return getPlayer().getTickets();
     }
 
     @Override

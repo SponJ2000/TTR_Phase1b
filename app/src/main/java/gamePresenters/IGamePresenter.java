@@ -1,5 +1,7 @@
 package gamePresenters;
 
+import android.app.Activity;
+
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
@@ -17,6 +19,9 @@ public interface IGamePresenter extends IPresenter{
     void chooseCard(int index);
     GameMap getMap();
     void selectRoute(Route route, Player player);
+    void onBack();
+
+    void onChange(Activity activity);
 
     /**
      * This interface must be implemented by activities that contain this

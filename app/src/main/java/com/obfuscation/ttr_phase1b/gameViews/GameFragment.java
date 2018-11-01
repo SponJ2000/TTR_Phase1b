@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
@@ -53,6 +54,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private static final String TAG = "ChatFrag";
 
     private IGamePresenter mPresenter;
+
+    private int changeIndex;
 
     private boolean mIsTurn;
     private List<Card> mCards;
@@ -92,6 +95,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
+        changeIndex = 0;
     }
 
     public static GameFragment newInstance() {
@@ -112,7 +116,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "make changes");
-                onChangeButton();
+                mPresenter.onChange(getActivity());
             }
         });
 
@@ -121,9 +125,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "View players");
-                PlayerInfoFragment playerInfoFrag = new PlayerInfoFragment();
-                playerInfoFrag.show(getFragmentManager(), "PlayerinfoFragment");
-                mPresenter.showPlayerInfo(playerInfoFrag);
+//                PlayerInfoDialogFragment playerInfoFrag = PlayerInfoDialogFragment.newInstance();
+//                playerInfoFrag.show(getFragmentManager(), "PlayerinfoDialogFragment");
+//                mPresenter.showPlayerInfo(playerInfoFrag);
+                mPresenter.showPlayerInfo(null);
             }
         });
 
@@ -223,8 +228,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
-
-
         mMapView.getMapAsync(this);
 
         mMapView.onResume();
@@ -247,7 +250,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //this.googleMap = googleMap;
+        //googleMap = mMap;
 
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -299,7 +302,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         //Add routes here
 
-
+        
     }
 
     private void initCities(GoogleMap googleMap) {

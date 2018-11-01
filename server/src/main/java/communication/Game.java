@@ -141,8 +141,8 @@ public class Game {
         return tickets;
     }
 
-    public void setTickes(ArrayList<Ticket> tickes) {
-        this.tickets = tickes;
+    public void setTickets(ArrayList<Ticket> tickets) {
+        this.tickets = tickets;
     }
 
     public String getGameID() {
@@ -247,6 +247,20 @@ public class Game {
     public void moveToNextTurn() {
         currentPlayerIndex++;
         currentPlayerIndex %= getPlayers().size();
+    }
+
+    public Card takeCard(int index) {
+        Card card;
+        if(index < 0) {
+            card = trainCards.get(0);
+            trainCards.remove(0);
+        }else {
+            card = faceUpTrainCarCards.get(index);
+            faceUpTrainCarCards.remove(index);
+            faceUpTrainCarCards.add(trainCards.get(0));
+            trainCards.remove(0);
+        }
+        return card;
     }
 
     @Override

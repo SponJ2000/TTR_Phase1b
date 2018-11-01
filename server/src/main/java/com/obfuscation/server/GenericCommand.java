@@ -35,6 +35,7 @@ public class GenericCommand implements ICommand {
 
     @Override
     public Result execute() {
+        System.out.println(this.toString());
         try {
             Class<?> retClass = Class.forName(className);
 
