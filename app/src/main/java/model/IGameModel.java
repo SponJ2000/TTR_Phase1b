@@ -3,6 +3,7 @@ package model;
 import java.util.List;
 
 import communication.Card;
+import communication.CardColor;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
@@ -49,5 +50,15 @@ public interface IGameModel {
     void sendMessage(Message message);
 
     List<Player> getPlayers();
+
+    void addPoints(int p);
+
+    void useCards(CardColor color, int number);
+
+    void addTickets(List<Ticket> tickets);
+
+    void removeTicket(int index);
+
+    void updateOpponent();
 
 }

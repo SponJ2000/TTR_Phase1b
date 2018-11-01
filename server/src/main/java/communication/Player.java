@@ -190,6 +190,10 @@ public class Player {
         this.point = point;
     }
 
+    public void addPoint(int point) {
+        this.point += point;
+    }
+
     public String getId() {
         return id;
     }

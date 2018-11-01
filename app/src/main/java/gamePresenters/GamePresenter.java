@@ -1,11 +1,18 @@
 package gamePresenters;
 
+import android.app.Activity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
+import java.util.ArrayList;
+
+import communication.CardColor;
+import communication.City;
 import communication.Player;
+import communication.Ticket;
 import model.FakeModel;
 import model.IGameModel;
 import model.ModelFacade;
@@ -13,6 +20,8 @@ import model.ModelFacade;
 public class GamePresenter implements IGamePresenter {
 
     private static String TAG = "obfuscate";
+
+    private static int changeIndex = 0;
 
     private IPlayerInfoView playerInfoView;
     private IGameView view;
@@ -58,6 +67,50 @@ public class GamePresenter implements IGamePresenter {
             playerInfoView.updateUI();
         }
 
+    }
+
+    @Override
+    public void onChange(Activity activity) {
+        switch (changeIndex) {
+            case 0:
+                Toast.makeText(activity, "update player points", Toast.LENGTH_SHORT).show();
+                model.addPoints(8);
+                break;
+            case 1:
+                Toast.makeText(activity, "add train cards", Toast.LENGTH_SHORT).show();
+                model.chooseCard(2);
+                break;
+            case 2:
+                Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
+                model.useCards(CardColor.RED, 3);
+                break;
+            case 3:
+                Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
+                ArrayList<Ticket> tickets = new ArrayList<>();
+                tickets.add(new Ticket(new City("berlin"), new City("helsinki"), 8));
+                tickets.add(new Ticket(new City("berlin"), new City("london"), 12));
+                model.addTickets(tickets);
+                break;
+            case 4:
+                Toast.makeText(activity, "remove tickets", Toast.LENGTH_SHORT).show();
+                model.removeTicket(1);
+                model.removeTicket(1);
+                break;
+            case 5:
+                Toast.makeText(activity, "update opponent cards and tickets", Toast.LENGTH_SHORT).show();
+                model.updateOpponent();
+                break;
+            case 6:
+                Toast.makeText(activity, "update face cards and deck", Toast.LENGTH_SHORT).show();
+                model.updateFaceCards();
+                break;
+            case 7:
+                Toast.makeText(activity, "add claimed route", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        ++changeIndex;
+        changeIndex %= 8;
+        updateInfo(true);
     }
 
     public void showMap() {

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
+import communication.CardColor;
 import communication.GameMap;
 import communication.Player;
 import communication.PlayerColor;
@@ -45,6 +47,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private static final String TAG = "ChatFrag";
 
     private IGamePresenter mPresenter;
+
+    private int changeIndex;
 
     private boolean mIsTurn;
     private List<Card> mCards;
@@ -78,6 +82,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
+        changeIndex = 0;
     }
 
     public static GameFragment newInstance() {
@@ -96,7 +101,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "make changes");
-                onChangeButton();
+                mPresenter.onChange();
             }
         });
 
@@ -285,10 +290,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         //Add routes here
 
         
-    }
-
-    private void onChangeButton() {
-
     }
 
     private void changeAccessibility() {
