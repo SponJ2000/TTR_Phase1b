@@ -96,6 +96,7 @@ public class Poller {
         ServerProxy serverProxy = new ServerProxy();
         System.out.println("check and update gamem is called");
         Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getGame().getState());
+        System.out.println(result.toString());
         if (result.isSuccess()) {
 
             ArrayList<GenericCommand> commands = (ArrayList<GenericCommand>)result.getData();
