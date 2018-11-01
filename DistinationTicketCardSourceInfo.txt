@@ -38,7 +38,8 @@ Dallas
 New York City
 11
 
-Calgary to Salt Lake City
+Calgary
+Salt Lake City
 7
 
 Calgary
