@@ -265,7 +265,7 @@ public class ModelFacade implements IGameModel {
     }
 
     public boolean isGameStarted() {
-        return false;
+        return ModelRoot.getInstance().getGame().isStarted();
     }
 
 }
