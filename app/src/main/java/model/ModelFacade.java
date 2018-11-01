@@ -92,6 +92,11 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public void setMyTurn(boolean isTurn) {
+
+    }
+
+    @Override
     public int getDeckSize() {
         return 30;
     }

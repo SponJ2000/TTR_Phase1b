@@ -33,6 +33,11 @@ public class ServerFacade implements IServer {
     }
 
     @Override
+    public Result DrawTrainCard(Integer index, String authToken) {
+        return null;
+    }
+
+    @Override
     public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
         System.out.println("called choose tickets in server");
         return new Result(true, db.getTickets(gameID, authToken), null);
@@ -284,16 +289,16 @@ public class ServerFacade implements IServer {
     // -1 -> from the deck
     // index -> faceup
     // returns result with the card
-    @Override
-    public Result DrawTrainCard(Integer index, String gameID, String authToken) { //TODO : need gameID
-//        Result result = db.drawTrainCard(gameID, );
-//        //update tickets (distribute 3 cards)
-//        for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-//            String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
-//            clientProxy.updateTickets(gameID, game.getPlayerbyID(playerID).getTickets());
-//        }
-        return null;
-    }
+//   card @Override
+//    public Result DrawTrainCard(Integer index, String gameID, String authToken) { //TODO : need gameID
+////        Result result = db.drawTrainCard(gameID, );
+////        //update tickets (distribute 3 cards)
+////        for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+////            String playerID = db.findPlayerIDByAuthToken(clientProxy.getAuthToken());
+////            clientProxy.updateTickets(gameID, game.getPlayerbyID(playerID).getTickets());
+////        }
+//        return null;
+//    }
 
     //
     @Override

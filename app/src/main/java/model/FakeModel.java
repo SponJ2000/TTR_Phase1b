@@ -37,9 +37,13 @@ public class FakeModel implements IGameModel {
 
     private List<Message> messages;
 
+    boolean myTurn;
+
     private Player mPlayer;
 
     private FakeModel() {
+
+        myTurn = false;
 
         Player mHost = new Player("Bob (the host)");
 
@@ -64,6 +68,19 @@ public class FakeModel implements IGameModel {
         game.setHost(userName);
         game.setPlayers((ArrayList<Player>) fakePlayers);
         state = State.GAME;
+
+        List<GameColor> colors = new ArrayList<>();
+        colors.add(GameColor.PLAYER_RED);
+        colors.add(GameColor.PLAYER_PURPLE);
+        colors.add(GameColor.PLAYER_BLUE);
+        colors.add(GameColor.PLAYER_YELLOW);
+        colors.add(GameColor.PLAYER_BLACK);
+
+        colors.remove(mPlayer.getPlayerColor());
+
+        for (int i = 1; i < game.getPlayers().size(); i++) {
+            game.getPlayers().get(i).setPlayerColor(colors.get(i));
+        }
 
         userTickets = new ArrayList<>();
         choiceTickets = null;
@@ -132,6 +149,8 @@ public class FakeModel implements IGameModel {
     private void initPlayer(){
         GameColor color = GameColor.PLAYER_BLACK;
 
+
+
         int rando = ThreadLocalRandom.current().nextInt(0,5);
         switch (rando) {
             case 0:
@@ -152,6 +171,8 @@ public class FakeModel implements IGameModel {
         }
 
         mPlayer.setPlayerColor(color);
+
+
     }
 
     @Override
@@ -173,7 +194,7 @@ public class FakeModel implements IGameModel {
     //  metadata
     @Override
     public boolean isMyTurn() {
-        return false;
+        return myTurn;
     }
 
     @Override
@@ -251,6 +272,11 @@ public class FakeModel implements IGameModel {
         }else {
             mPlayer.addCard(new Card(GameColor.ORANGE));
         }
+    }
+
+    @Override
+    public void setMyTurn(boolean isTurn) {
+        myTurn = isTurn;
     }
 
     //  messages

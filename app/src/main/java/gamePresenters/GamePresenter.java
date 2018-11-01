@@ -10,6 +10,8 @@ import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 import communication.GameColor;
 import communication.GameMap;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import communication.City;
 import communication.Player;
@@ -125,11 +127,29 @@ public class GamePresenter implements IGamePresenter {
                 break;
             case 7:
                 Toast.makeText(activity, "add claimed route", Toast.LENGTH_SHORT).show();
-//                model.claimRoute();
+                List<Route> routes = model.getMap().getRoutes();
+                Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
+
+                Player player = model.getPlayers().get(ThreadLocalRandom.current().nextInt(0, model.getPlayers().size()));
+                if( model.claimRoute(r, player).isSuccess()) {
+                    view.updateRoute(r);
+                }
                 break;
+            case 8:
+                if (model.isMyTurn()) {
+                    Toast.makeText(activity, "Not your turn", Toast.LENGTH_SHORT).show();
+                    model.setMyTurn(false);
+                    view.setIsTurn(false);
+                } else {
+                    Toast.makeText(activity, "Your turn!", Toast.LENGTH_SHORT).show();
+                    model.setMyTurn(true);
+                    view.setIsTurn(true);
+                }
+
+
         }
         ++changeIndex;
-        changeIndex %= 8;
+        changeIndex %= 9;
         updateInfo(true);
     }
 

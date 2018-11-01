@@ -16,6 +16,8 @@ public interface IGameModel {
 
     boolean isMyTurn();
 
+    void setMyTurn(boolean isTurn);
+
     String getUserName();
 
 

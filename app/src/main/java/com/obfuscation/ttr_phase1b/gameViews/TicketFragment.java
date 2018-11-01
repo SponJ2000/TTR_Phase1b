@@ -135,8 +135,10 @@ public class TicketFragment extends Fragment implements ITicketView {
             mTicketRecycler.setAdapter(mTicketAdapter);
         }
         if(mIsTurn) {
-            mHeader.setText("Choose at least 1");
-            changeAccessibility();
+            if (mHeader != null) {
+                mHeader.setText("Choose at least 1");
+                changeAccessibility();
+            }
         }
     }
 
