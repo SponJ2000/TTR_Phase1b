@@ -1,16 +1,17 @@
 package com.obfuscation.ttr_phase1b.gameViews;
 
-//import android.app.AlertDialog;
-//import android.app.Dialog;
-import android.app.Dialog;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.obfuscation.ttr_phase1b.R;
@@ -21,31 +22,53 @@ import java.util.List;
 import communication.Player;
 import gamePresenters.IGamePresenter;
 
-public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoView {
 
-    private static final String TAG = "PlayerInfoFrag";
+public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoView {
+
+    private static final String TAG = "PlayerDiaFrag";
 
     private IGamePresenter mPresenter;
 
+    private List<Player> mPlayers;
+
+    private Button mBackButton;
     private RecyclerView mPlayerRecycler;
     private PlayerAdapter mPlayerAdapter;
 
-    private List<Player> mPlayers;
+    public PlayerInfoDialogFragment() {
+    }
+
+    public static PlayerInfoDialogFragment newInstance() {
+        PlayerInfoDialogFragment fragment = new PlayerInfoDialogFragment();
+        return fragment;
+    }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // Get the layout inflater
-        LayoutInflater inflater = getActivity().getLayoutInflater();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
-        View view = inflater.inflate(R.layout.player_fragment, null);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_player_info_dialog, container, false);
+
+        mBackButton = view.findViewById(R.id.playerinfo_back_button);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Now sending message");
+                mPresenter.onBack();
+            }
+        });
+
         mPlayerRecycler = view.findViewById(R.id.playerinfo_recycler_view);
+        mPlayerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        builder.setView(view);
-        return builder.create();
+        updateUI();
+
+        return view;
     }
 
     @Override
@@ -85,10 +108,10 @@ public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoVie
         }
 
         public void bind(Player player) {
-            mPlayerNameView.setText(player.getPlayerName());
-            mPlayerPointView.setText(player.getPoint());
-            mPlayerCardsView.setText(player.getCardNum());
-            mPlayerTrainsView.setText(player.getTrainCarNum());
+            mPlayerNameView.setText("" + player.getPlayerName());
+            mPlayerPointView.setText("" + player.getPoint());
+            mPlayerCardsView.setText("" + player.getCardNum());
+            mPlayerTrainsView.setText("" + player.getTrainCarNum());
         }
 
     }
@@ -118,9 +141,4 @@ public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoVie
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        mPresenter.showPlayerInfo(null);
-    }
 }
