@@ -423,7 +423,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void selectRoute(Route route) {
-        mPresenter.selectRoute(route, mPlayer);
+        if (mIsTurn) {
+            mPresenter.selectRoute(route, mPlayer);
+        }
+        else Toast.makeText(getContext(), "Not your turn", Toast.LENGTH_SHORT);
     }
 
     private void onChangeButton() {
@@ -576,11 +579,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mBoard.setBackgroundResource(board);
     }
-
-//    @Override
-//    public void onMapReady(GoogleMap googleMap) {
-//
-//    }
 
 
     @Override
