@@ -118,4 +118,9 @@ public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoVie
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.showPlayerInfo(null);
+    }
 }

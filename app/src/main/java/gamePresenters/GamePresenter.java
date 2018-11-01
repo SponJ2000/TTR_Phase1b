@@ -37,6 +37,10 @@ public class GamePresenter implements IGamePresenter {
 //        view.setMap(model.getMap());
         view.setTickets(model.getTickets());
         view.updateUI();
+        if(playerInfoView != null) {
+            playerInfoView.setPlayers(model.getPlayers());
+            playerInfoView.updateUI();
+        }
     }
 
     @Override
@@ -49,8 +53,11 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void showPlayerInfo(IPlayerInfoView view) {
         playerInfoView = view;
-        view.setPlayers(model.getPlayers());
-        view.updateUI();
+        if(playerInfoView != null) {
+            playerInfoView.setPlayers(model.getPlayers());
+            playerInfoView.updateUI();
+        }
+
     }
 
     public void showMap() {
