@@ -480,7 +480,15 @@ public class Database {
             playerTickets.add(ticket);
             tickets.remove(0);
         }
-        ticketsMap.put(new gameIDAuthPair(gameID, authToken), playerTickets);
+
+        String playerID = findPlayerIDByAuthToken(authToken);
+        for (Player player : game.getPlayers()) {
+            if (player.getId().equals(playerID)) {
+                player.setTicketToChoose(playerTickets);
+            }
+        }
+
+//        ticketsMap.put(new gameIDAuthPair(gameID, authToken), playerTickets);
         return playerTickets;
     }
 
@@ -488,7 +496,14 @@ public class Database {
         Game game = getGame(gameID);
         if (game != null) {
             gameIDAuthPair gameIDAuthPair = new gameIDAuthPair(gameID, authToken);
-            ArrayList<Ticket> tickets1 = (ArrayList<Ticket>) ticketsMap.get(gameIDAuthPair);
+            String playerID = findPlayerIDByAuthToken(authToken);
+            ArrayList<Ticket> tickets1 = new ArrayList<>();
+
+            for (Player player : game.getPlayers()) {
+                if (player.getId().equals(playerID)) {
+                    tickets1 = player.getTicketToChoose();
+                }
+            }
             Set<Integer> overlap = new HashSet<>();
             for (int i = 0; i < tickets.size(); i++) {
                 for (int j = 0; j < tickets1.size(); j++) {
@@ -501,13 +516,13 @@ public class Database {
             for (Integer i : overlap) {
                 ticketDeck.add(tickets1.get(i));
             }
-            String playerID = findPlayerIDByAuthToken(authToken);
             for (Player player : game.getPlayers()) {
                 if (player.getId().equals(playerID)) {
                     player.setTickets((ArrayList<Ticket>) tickets);
+                    player.setTicketToChoose(new ArrayList<>());
                 }
             }
-            ticketsMap.get(gameIDAuthPair).clear();
+//            ticketsMap.get(gameIDAuthPair).clear();
             return new Result(true, tickets, null);
         }
 //        Game game = getGame(gameID);
