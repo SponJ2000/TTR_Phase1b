@@ -154,6 +154,34 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public void addPoints(int p) {
+        getPlayer().setPoint(p);
+    }
+
+    @Override
+    public void useCards(CardColor color, int number) {
+        getPlayer().useCards(color, number);
+    }
+
+    @Override
+    public void addTickets(List<Ticket> tickets) {
+        getPlayer().addTickets((ArrayList<Ticket>) tickets);
+    }
+
+    @Override
+    public void removeTicket(int index) {
+        getPlayer().removeTicket(index);
+    }
+
+    @Override
+    public void updateOpponent() {
+        List<Player> players = ModelRoot.getInstance().getGame().getPlayers();
+        players.get(1).setTrainCarNum(12);
+        players.get(1).setCardNum(24);
+        players.get(1).setPoint(32);
+    }
+
+    @Override
     public void chooseTickets(List<Ticket> tickets) {
         GenericTask genericTask = new GenericTask("ChooseTicket");
 

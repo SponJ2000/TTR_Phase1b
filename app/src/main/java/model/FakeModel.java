@@ -261,4 +261,29 @@ public class FakeModel implements IGameModel {
         return game.getPlayers();
     }
 
+    @Override
+    public void addPoints(int p) {
+
+    }
+
+    @Override
+    public void useCards(CardColor color, int number) {
+
+    }
+
+    @Override
+    public void addTickets(List<Ticket> tickets) {
+
+    }
+
+    @Override
+    public void removeTicket(int index) {
+
+    }
+
+    @Override
+    public void updateOpponent() {
+
+    }
+
 }
