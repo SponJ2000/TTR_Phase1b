@@ -129,16 +129,10 @@ public class LobbyFragment extends Fragment implements IPresenter {
             mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
             mLobbyRecycler.setAdapter(mLobbyAdapter);
         }
-        if(mHost != null && mHost.equals(ModelFacade.getInstance().GetUserName())) {
-            isHost = true;
-            if(mGame.getPlayerCount() > 1) {
-                mStartButton.setEnabled(true);
-            }else {
-                mStartButton.setEnabled(false);
-            }
-//            mStartButton.setEnabled(true);
+        if(isHost) {
+            mStartButton.setEnabled(true);
         }else {
-            isHost = false;
+            mStartButton.setEnabled(false);
         }
         mPlayerCount.setText(mGame.getPlayerCount() + "/" + mGame.getMaxPlayers());
     }
@@ -146,6 +140,11 @@ public class LobbyFragment extends Fragment implements IPresenter {
     @Override
     public void updateInfo(Object result) {
         Log.d(TAG, "getting updated");
+        if(mHost != null && mHost.equals(ModelFacade.getInstance().GetUserName())) {
+            isHost = true;
+        }else {
+            isHost = false;
+        }
         if(ismLeaving) {
             ismLeaving = false;
             onGameLeave();
