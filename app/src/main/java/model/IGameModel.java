@@ -6,6 +6,8 @@ import communication.Card;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.Result;
+import communication.Route;
 import communication.Ticket;
 
 public interface IGameModel {
@@ -18,6 +20,8 @@ public interface IGameModel {
     GameMap getMap();
 
     Player getPlayer();
+
+    Result claimRoute(Route route, Player player);
 
     void updateTickets();
 

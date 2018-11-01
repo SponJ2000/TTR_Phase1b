@@ -5,7 +5,10 @@ import android.util.Log;
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
+import communication.GameMap;
 import communication.Player;
+import communication.Result;
+import communication.Route;
 import model.FakeModel;
 import model.IGameModel;
 import model.ModelFacade;
@@ -23,8 +26,8 @@ public class GamePresenter implements IGamePresenter {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
-        model = ModelFacade.getInstance();
-//        model = FakeModel.getInstance();
+//        model = ModelFacade.getInstance();
+        model = FakeModel.getInstance();
     }
 
     @Override
@@ -48,6 +51,19 @@ public class GamePresenter implements IGamePresenter {
         model.updateCards();
         model.updateFaceCards();
         model.updateTickets();
+    }
+
+    @Override
+    public GameMap getMap() {
+        return model.getMap();
+    }
+
+    @Override
+    public void selectRoute(Route route, Player player) {
+        Result r = model.claimRoute(route, player);
+        if(r.isSuccess()) {
+            view.updateRoute(route);
+        }
     }
 
     @Override

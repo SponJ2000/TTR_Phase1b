@@ -12,7 +12,7 @@ import communication.IClient;
 import communication.Message;
 import communication.Player;
 import communication.Ticket;
-import communication.CardColor;
+import communication.GameColor;
 import model.ModelFacade;
 import model.ModelRoot;
 import model.State;
@@ -29,7 +29,7 @@ public class ClientFacade implements IClient{
                 "server.ClientFacade"
                 , "updateTrainCards"
                 , new String[]{String.class.getName(), List.class.getName()}
-                , new Object[] {"HELLO", new ArrayList<>(Arrays.asList(new Card(CardColor.BLUE), new Card(CardColor.BLACK)))});
+                , new Object[] {"HELLO", new ArrayList<>(Arrays.asList(new Card(GameColor.BLUE), new Card(GameColor.BLACK)))});
 
         try {
             command.execute();

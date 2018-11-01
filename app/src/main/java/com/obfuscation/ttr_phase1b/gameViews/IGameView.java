@@ -5,6 +5,7 @@ import java.util.List;
 import communication.Card;
 import communication.GameMap;
 import communication.Player;
+import communication.Route;
 import communication.Ticket;
 
 /**
@@ -30,5 +31,7 @@ public interface IGameView extends IView {
     void setTrains(int trains);
 
     void setDeckSize(int size);
+
+    void updateRoute(Route route);
 
 }

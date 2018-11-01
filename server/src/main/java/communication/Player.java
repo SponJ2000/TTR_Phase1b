@@ -20,7 +20,7 @@ public class Player {
     private Integer ticketNum;
     private Integer trainCarNum;
     private Integer cardNum;
-    private PlayerColor playerColor;
+    private GameColor playerColor;
 
     private Player() {
         ticketToChoose = new ArrayList<>();
@@ -58,11 +58,11 @@ public class Player {
         ticketNum = 3;
     }
 
-    public PlayerColor getPlayerColor() {
+    public GameColor getPlayerColor() {
         return playerColor;
     }
 
-    public void setPlayerColor(PlayerColor playerColor) {
+    public void setPlayerColor(GameColor playerColor) {
         this.playerColor = playerColor;
     }
 
@@ -135,7 +135,7 @@ public class Player {
         this.cards = cards;
     }
 
-    public boolean useCards(CardColor color, int number) {
+    public boolean useCards(GameColor color, int number) {
         int i = 0;
         while(i < cards.size() && number > 0) {
             if(cards.get(i).getColor().equals(color)) {
