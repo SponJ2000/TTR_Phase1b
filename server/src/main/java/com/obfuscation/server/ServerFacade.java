@@ -164,6 +164,7 @@ public class ServerFacade implements IServer {
 
             //set colors and set orders
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                clientProxy.updateGame(gameID);
                 clientProxy.initializeGame(game);
             }
 

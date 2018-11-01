@@ -62,7 +62,7 @@ public class Poller {
         running = true;
         System.out.println("Poller Starting");
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
-        ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,1,checkTime, TimeUnit.SECONDS);
+        ScheduledFuture scheduledFuture = scheduledExecutorService.scheduleAtFixedRate(CheckUpdates,1,1, TimeUnit.SECONDS);
 
     }
 

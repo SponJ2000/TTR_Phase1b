@@ -59,7 +59,6 @@ public class ClientFacade implements IClient{
     @Override
     public void initializeGame(Game game) {
         ModelRoot.getInstance().setGame(game);
-        ModelRoot.getInstance().getGame().setGameStarted(true);
         ModelRoot.getInstance().setState(State.GAME);
     }
 
