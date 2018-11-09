@@ -33,12 +33,20 @@ public class GamePresenter implements IGamePresenter {
     private OnShowListener listener;
     private IGameModel model;
 
+    private ITurnState state;
+
     public GamePresenter(IGameView view, OnShowListener listener) {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
         model = ModelFacade.getInstance();
 //        model = FakeModel.getInstance();
+
+        state = new NotTurn(this);
+    }
+
+    public void setState(ITurnState state){
+        this.state = state;
     }
 
     @Override
@@ -71,10 +79,12 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void selectRoute(Route route, Player player) {
-        Result r = model.claimRoute(route, player);
-        if(r.isSuccess()) {
-            view.updateRoute(route);
-        }
+//        Result r = model.claimRoute(route, player);
+//        if(r.isSuccess()) {
+//            view.updateRoute(route);
+//        }
+
+        state.selectRoute(route);
     }
 
     @Override
@@ -158,7 +168,13 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void chooseCard(int index) {
-        model.chooseCard(index);
+//        model.chooseCard(index);
+        if (index == 0) {
+            state.selectDeck();
+        }
+        else {
+            state.selectFaceUp(index);
+        }
     }
 
     @Override
@@ -178,4 +194,152 @@ public class GamePresenter implements IGamePresenter {
         this.listener.onShow(Shows.chat);
     }
 
+}
+
+
+class ITurnState {
+
+    void selectFaceUp(int index){}
+    void selectDeck(){}
+    void selectTicketsButton(){}
+    void selectTicket(Object ticket){}
+    void deselectTicket(Object ticket){}
+    void requestTickets(){}
+    void selectRoute(Route route){}
+    void deselectRoute(){}
+    void claimRoute(Route route){}
+}
+
+class NotTurn extends ITurnState {
+
+    private GamePresenter wrapper;
+
+    public NotTurn(GamePresenter wrapper) {
+        this.wrapper = wrapper;
+    }
+}
+
+class TurnNoSelection extends ITurnState {
+
+    private GamePresenter wrapper;
+
+    public TurnNoSelection(GamePresenter wrapper) {
+        this.wrapper = wrapper;
+    }
+
+    @Override
+    public void selectFaceUp(int index) {
+        //TODO: check if locomotive
+        //TODO: update hand and deck
+        wrapper.setState(new TurnOneCard(wrapper));
+    }
+
+    @Override
+    public void selectDeck() {
+        //TODO: update hand and deck
+        wrapper.setState(new TurnOneCard(wrapper));
+    }
+
+    @Override
+    public void selectTicketsButton() {
+        wrapper.setState(new TurnNoTickets(wrapper));
+    }
+
+    @Override
+    public void selectRoute(Route route) {
+        wrapper.setState(new TurnRouteSelected(wrapper));
+    }
+}
+
+class TurnNoTickets extends ITurnState {
+
+    private GamePresenter wrapper;
+
+    public TurnNoTickets(GamePresenter wrapper) {
+        this.wrapper = wrapper;
+    }
+
+    @Override
+    public void selectTicket(Object ticket) {
+        wrapper.setState(new TurnYesTickets(wrapper));
+    }
+}
+
+class TurnYesTickets extends ITurnState {
+
+    private GamePresenter wrapper;
+
+    public TurnYesTickets(GamePresenter wrapper) {
+        this.wrapper = wrapper;
+    }
+
+    @Override
+    public void selectTicket(Object ticket) {
+        //TODO: add ticket to selected tickets
+    }
+
+    @Override
+    public void deselectTicket(Object ticket) {
+        //TODO: check if you've got any tickets left
+        wrapper.setState(new TurnNoTickets(wrapper));
+    }
+
+    @Override
+    void requestTickets() {
+        //TODO: send request for tickets, then update UI
+        wrapper.setState(new NotTurn(wrapper));
+    }
+}
+
+class TurnRouteSelected extends ITurnState {
+
+    private GamePresenter wrapper;
+
+    public TurnRouteSelected(GamePresenter wrapper) {
+        this.wrapper = wrapper;
+    }
+
+    @Override
+    public void deselectTicket(Object ticket) {
+        wrapper.setState(new TurnNoSelection(wrapper));
+    }
+
+    @Override
+    public void selectRoute(Route route) {
+
+    }
+
+    @Override
+    public void deselectRoute() {
+
+    }
+
+    @Override
+    public void claimRoute(Route route) {
+        //TODO: check if you have enough cards
+        //TODO: if so, send request to the server and update UI
+        wrapper.setState(new NotTurn(wrapper));
+    }
+}
+
+class TurnOneCard extends ITurnState {
+
+    private GamePresenter wrapper;
+
+    public TurnOneCard(GamePresenter wrapper) {
+        this.wrapper = wrapper;
+    }
+
+    @Override
+    public void selectFaceUp(int index) {
+        //TODO: Check if locomotive
+        //TODO: If not, send request, update UI
+        wrapper.setState(new NotTurn(wrapper));
+    }
+
+    @Override
+    public void selectDeck() {
+        //TODO: send request to server, update UI
+        wrapper.setState(new NotTurn(wrapper));
+    }
 }
