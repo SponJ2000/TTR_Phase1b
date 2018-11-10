@@ -42,14 +42,14 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result JoinGame(String id, String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinGame", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
+    public Result JoinGameLobby(String id, String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinGameLobby", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
-    public Result CreateGame(communication.Game game, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CreateGame", new String[]{"communication.Game",STRING}, new Object[]{game, authToken});
+    public Result CreateLobby(GameLobby gameLobby, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CreateLobby", new String[]{"communication.GameLobby",STRING}, new Object[]{gameLobby, authToken});
         return RunCommand(genericCommand);
     }
 

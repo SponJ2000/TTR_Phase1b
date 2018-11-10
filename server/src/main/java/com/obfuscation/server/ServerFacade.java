@@ -119,7 +119,7 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result JoinGame(String id, String gameID, String authToken) {
+    public Result JoinGameLobby(String id, String gameID, String authToken) {
         try {
             if (!db.checkAuthToken(authToken, id)) {
                 return new Result(false, null, "Error: Invalid authorization");

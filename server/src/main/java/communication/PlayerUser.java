@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by urimaj on 11/9/18.
  */
 
-public class PlayerUser extends Player {
+public class PlayerUser extends Player implements IPlayer{
 
     private ArrayList<Ticket> tickets = new ArrayList<Ticket>();
     private ArrayList<Card> cards = new ArrayList<Card>();
@@ -114,5 +114,10 @@ public class PlayerUser extends Player {
 
     public void setCardToChoose(ArrayList<Card> cardToChoose) {
         this.cardToChoose = cardToChoose;
+    }
+
+    @Override
+    public PlayerIdentity getIdentity() {
+        return PlayerIdentity.USER;
     }
 }

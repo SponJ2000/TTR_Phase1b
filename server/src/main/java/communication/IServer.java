@@ -58,7 +58,7 @@ public interface IServer {
      * @param authToken a String object with the username's authToken
      * @return          a Result object containing a boolean indicating success
      */
-    Result JoinGame(String id, String gameID, String authToken);
+    Result JoinGameLobby(String id, String gameID, String authToken);
 
     /**
      * let the player leave the game
@@ -85,7 +85,7 @@ public interface IServer {
      *          authToken which is still valid and exist
      * @post    game is created with all the sepcification of the parameter game.
      *
-     * @param game      the game object, containing the game name and max player count
+     * @param gameLobby      the gameLobby object, containing the game name and max player count
      * @param authToken a String object containing the users authToken
      * @return          a Result object containing a boolean indication success
      */

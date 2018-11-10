@@ -38,6 +38,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     private static final String TAG = "GameCreationFrag";
 
     private String mUser;
+    //all game need to be swiched to gameClient
     private Game mGame;
 
     private Button mCancel;

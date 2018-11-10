@@ -52,10 +52,12 @@ public class Serializer {
 
     public Game deserializeGame(String json) {
         Game game = gson.fromJson(json, Game.class);
-        ArrayList<Player> players = new ArrayList<Player>();
-//        ArrayList<Object> playerJson = game.getPlayers();
-//        for()
         return game;
+    }
+
+    public GameLobby deserializeGameLobby(String json) {
+        GameLobby gameLobby = gson.fromJson(json, GameLobby.class);
+        return gameLobby;
     }
 
     public Card deserializeCard(String json) {

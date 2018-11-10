@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import communication.Game;
+import communication.GameLobby;
 import communication.Message;
 import communication.Result;
 import communication.Serializer;
@@ -41,12 +42,12 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.Login((String) params[0], (String) params[1]);
             case "Register":
                 return serverProxy.Register((String) params[0], (String) params[1]);
-            case "JoinGame":
-                return serverProxy.JoinGame((String) params[0], (String) params[1], (String) params[2]);
+            case "JoinGameLobby":
+                return serverProxy.JoinGameLobby((String) params[0], (String) params[1], (String) params[2]);
             case "LeaveGame":
                 return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
-            case "CreateGame":
-                return serverProxy.CreateGame((Game) params[0], (String) params[1]);
+            case "CreateLobby":
+                return serverProxy.CreateLobby((GameLobby) params[0], (String) params[1]);
             case "StartGame":
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
             case "GetGameList":
@@ -117,32 +118,26 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         if (result.isSuccess()) {
 
             ArrayList<Object> temp = (ArrayList<Object>) result.getData();
-            ArrayList<Game> games = new ArrayList<>();
+            ArrayList<GameLobby> gameLobbies = new ArrayList<>();
             for (int i = 0;i < temp.size(); i++) {
-                games.add(new Serializer().deserializeGame(temp.get(i).toString()));
+                gameLobbies.add(new Serializer().deserializeGameLobby(temp.get(i).toString()));
             }
-            ModelRoot.getInstance().setGameList(games);
+            ModelRoot.getInstance().setGameLobbies(gameLobbies);
 
         }
     }
 
     private void FetchGameFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().setGame((Game) result.getData());
+            ModelRoot.getInstance().setGame((GameLobby) result.getData());
         }
     }
 
     private void OnTickectsChoosen(Result result) {
-//        if (ModelFacade.getInstance().getTickets()!= null)
-//        System.out.println("ticket size is: " + ModelFacade.getInstance().getTickets().size());
         System.out.println(result.toString());
         if (result.isSuccess()) {
-//            System.out.println("make ticket added to the player");
-//            System.out.println("ticket size is: " + ModelFacade.getInstance().getTickets().size());
-//            System.out.println("number of tickets owned: " + ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTickets());
-            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTickets(ModelRoot.getInstance().getTicketsWanted());
+            ModelRoot.getInstance().getGame().getPlayerUser().setTickets(ModelRoot.getInstance().getTicketsWanted());
             ModelRoot.getInstance().setTicketsWanted(new ArrayList<Ticket>());
-//            System.out.println("number of tickets owned: " + ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTickets());
         }
         else {
             System.out.println("errow masssage is ");
@@ -156,7 +151,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             String userName = m.getUserName();
             if (result.getData() == null) {
                 ArrayList<Ticket> ticketsRecieved = (ArrayList<Ticket>)result.getData();
-                ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTickets(ticketsRecieved);
+                ModelRoot.getInstance().getGame().getPlayerUser().setTickets(ticketsRecieved);
             }
         }
     }
@@ -170,7 +165,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             for (Object o: objects) {
                 ticketsToChoose.add((Ticket) serializer.deserializeTicket(o.toString()));
             }
-            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(ticketsToChoose);
+            ModelRoot.getInstance().getGame().getPlayerUser().setTicketToChoose(ticketsToChoose);
         }
     }
 }

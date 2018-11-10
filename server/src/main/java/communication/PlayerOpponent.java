@@ -4,7 +4,7 @@ package communication;
  * Created by urimaj on 11/9/18.
  */
 
-public class PlayerOpponent extends Player {
+public class PlayerOpponent extends Player implements IPlayer{
 
     private Integer ticketNum;
     private Integer trainCarNum;
@@ -40,5 +40,10 @@ public class PlayerOpponent extends Player {
 
     public Integer getTrainCarNum() {
         return trainCarNum;
+    }
+
+    @Override
+    public PlayerIdentity getIdentity() {
+        return PlayerIdentity.OPPONENT;
     }
 }

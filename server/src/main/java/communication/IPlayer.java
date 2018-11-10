@@ -5,4 +5,6 @@ package communication;
  */
 
 public interface IPlayer {
+    public PlayerIdentity getIdentity();
+
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by jalton on 10/1/18.
  */
 
-public class Player {
+public class Player implements IPlayer{
     private String playerName;
     private Integer point;
     private ArrayList<String> claimedRoutesID = new ArrayList<>();
@@ -84,5 +84,9 @@ public class Player {
         this.playerColor = playerColor;
     }
 
+    @Override
+    public PlayerIdentity getIdentity() {
+        return PlayerIdentity.PLAYER;
+    }
 
 }

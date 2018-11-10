@@ -1,24 +1,17 @@
 package server;
 
 import com.obfuscation.server.GenericCommand;
-import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import communication.ICommand;
 import communication.Result;
 import communication.Serializer;
 import model.ModelFacade;
 import model.ModelRoot;
-import model.State;
 
 /**
  * Created by hao on 10/5/18.
@@ -37,9 +30,9 @@ public class Poller {
         @Override
         public void run() {
             if (running) {
-                System.out.println("***********************************************" + ModelRoot.getInstance().getState());
-                switch (ModelRoot.getInstance().getState()) {
-                    case GAMELIST:
+                System.out.println("***********************************************" + ModelRoot.getInstance().getDisplayState());
+                switch (ModelRoot.getInstance().getDisplayState()) {
+                    case GAMELOBBYLIST:
                         CheckandUpdateGameList();
                         break;
                     case LOBBY:

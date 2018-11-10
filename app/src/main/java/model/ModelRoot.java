@@ -1,10 +1,9 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import communication.Game;
-import communication.Player;
+import communication.GameClient;
+import communication.GameLobby;
 import communication.Ticket;
 
 /**
@@ -24,15 +23,16 @@ public class ModelRoot {
     }
 
     private String authToken;
-    private ArrayList<Game> gameList;
-    private Game game;
-    private State state;
+    private ArrayList<GameLobby> gameLobbies;
+    private GameClient game;
+    private GameLobby gameLobby;
+    private DisplayState displayState;
     private String userName;
 
     private ArrayList<Ticket> ticketsWanted;
 
     public ModelRoot() {
-        this.state = State.GAMELIST;
+        this.displayState = DisplayState.GAMELOBBYLIST;
     }
 
     public void setAuthToken (String s) {
@@ -43,39 +43,47 @@ public class ModelRoot {
         return authToken;
     }
 
-    public ArrayList<Game> getGameList() {
-        if (gameList == null) {
-            gameList = new ArrayList<Game>();
+    public ArrayList<GameLobby> gameLobbies() {
+        if (gameLobbies == null) {
+            gameLobbies = new ArrayList<GameLobby>();
         }
-        return gameList;
+        return gameLobbies;
     }
 
-    public void setGame(Game game) {
+    public void setGame(GameClient game) {
         this.game = game;
     }
 
-    public void setGameList(ArrayList<Game> games) {
-        this.gameList = games;
+    public void setGame(GameLobby gameLobby) {
+        GameClient gameClient = new GameClient(gameLobby.getGameID(),userName);
     }
 
-    public Game getGame(){
+    public ArrayList<GameLobby> getGameLobbies() {
+        return gameLobbies;
+    }
+
+    public void setGameLobbies(ArrayList<GameLobby> gameLobbies) {
+        this.gameLobbies = gameLobbies;
+    }
+
+    public GameClient getGame(){
         return game;
     }
 
-    public Game getGameByGameID(String gameID) {
-        for (Game g: gameList) {
-            if (g.getGameID().equals(gameID)) {
-                return g;
+    public GameLobby getGameLobbyById(String id) {
+        for (GameLobby gl: gameLobbies) {
+            if (gl.getGameID().equals(id)) {
+                return gl;
             }
         }
         return null;
     }
-    public State getState() {
-        return state;
+    public DisplayState getDisplayState() {
+        return displayState;
     }
 
-    public void setState(State state) {
-        this.state = state;
+    public void setDisplayState(DisplayState displayState) {
+        this.displayState = displayState;
     }
 
     public String getUserName() {
@@ -95,5 +103,13 @@ public class ModelRoot {
 
     public void setTicketsWanted(ArrayList<Ticket> ticketsWanted) {
         this.ticketsWanted = ticketsWanted;
+    }
+
+    public GameLobby getGameLobby() {
+        return gameLobby;
+    }
+
+    public void setGameLobby(GameLobby gameLobby) {
+        this.gameLobby = gameLobby;
     }
 }
