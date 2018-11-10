@@ -7,6 +7,7 @@ import java.util.Map;
 
 import communication.Card;
 import communication.Game;
+import communication.GameClient;
 import communication.IClient;
 import communication.ICommand;
 import communication.Message;
@@ -45,7 +46,7 @@ public class ClientProxy implements IClient {
     private static final String CARD = Card.class.getName();
     private static final String TICKET = Ticket.class.getName();
     private static final String MESSAGE = Message.class.getName();
-    private static final String GAME = Game.class.getName();
+    private static final String GAMECLIENT = GameClient.class.getName();
     private static final String LIST = List.class.getName();
 
     /**
@@ -54,11 +55,11 @@ public class ClientProxy implements IClient {
      */
 
     @Override
-    public void initializeGame(Game game) {
+    public void initializeGame(GameClient game) {
         GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "initializeGame"
-                , new String[]{GAME}
+                , new String[]{GAMECLIENT}
                 , new Object[] {game});
         notSeenCommands.put(game.getGameID(), new ArrayList<GenericCommand>());
         notSeenCommands.get(game.getGameID()).add(command);
@@ -174,7 +175,7 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updateGameList(String gameID) {
+    public void updateGameLobbyList(String gameID) {
         version++;
         if (gameID != null) gameVersion.put(gameID, 0);
     }

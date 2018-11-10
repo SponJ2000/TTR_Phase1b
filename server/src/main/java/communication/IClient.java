@@ -11,7 +11,7 @@ import java.util.List;
 public interface IClient {
 
 
-    void updateGameList(String gameID);
+    void updateGameLobbyList(String gameID);
 
     //TODO: this functon should be replaced with function that has specific purpose, like OpponentClaimRoute()...
     void updateGame(String gameID);
@@ -20,7 +20,7 @@ public interface IClient {
      * initialize game with colors and turn orders. Turn orders starts from index 0 (playerList), and increments
      * @param game
      */
-    void initializeGame(Game game);
+    void initializeGame(GameClient game);
 
     void updatePlayerPoints(String gameID, String plyerID, Integer points);
 

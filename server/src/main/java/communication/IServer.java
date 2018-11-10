@@ -89,7 +89,7 @@ public interface IServer {
      * @param authToken a String object containing the users authToken
      * @return          a Result object containing a boolean indication success
      */
-    Result CreateGame(Game game, String authToken);
+    Result CreateLobby(GameLobby gameLobby, String authToken);
 
     /**
      * the game owner can start the game, which will notify all other players in the room

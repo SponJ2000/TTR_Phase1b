@@ -35,26 +35,6 @@ public class Ticket {
         return result;
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (o == null) {
-//            return false;
-//        }
-//
-//        if (o == this) {
-//            return true;
-//        }
-//
-//        if (!(o instanceof Ticket)) {
-//            return false;
-//        }
-//
-//        Ticket t = (Ticket) o;
-//
-//        if (this.city1.)
-//        return super.equals(o);
-//    }
-
 
     @Override
     public boolean equals(Object o) {

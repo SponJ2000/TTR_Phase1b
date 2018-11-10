@@ -49,7 +49,7 @@ public class ClientFacade implements IClient{
     }
 
     @Override
-    public void updateGameList(String gameID) {
+    public void updateGameLobbyList(String gameID) {
         //sever will never call this command
     }
 
@@ -100,7 +100,7 @@ public class ClientFacade implements IClient{
     public void updatePlayerPoints(String gameID, String plyerID, Integer points) {
         Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getPlayerbyID(plyerID);
+            Player p = g.getPlayerbyUserName(plyerID);
             if (p != null) {
                 p.setPoint(points);
             }
@@ -146,14 +146,14 @@ public class ClientFacade implements IClient{
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
         ModelRoot m = ModelRoot.getInstance();
-        m.getGame().getPlayerbyID(playerID).setCardNum(cardNum);
+        m.getGame().getPlayerbyUserName(playerID).setCardNum(cardNum);
     }
 
     @Override
     public void updateOpponentTrainCars(String gameID, String playerID, Integer carNum) {
         Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getPlayerbyID(playerID);
+            Player p = g.getPlayerbyUserName(playerID);
             if (p != null) {
                 p.setTrainCarNum(carNum);
             }
@@ -164,7 +164,7 @@ public class ClientFacade implements IClient{
     public void updateOpponentTickets(String gameID, String playerID, Integer cardNum) {
         Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getPlayerbyID(playerID);
+            Player p = g.getPlayerbyUserName(playerID);
             if (p != null) {
                 p.setTicketNum(cardNum);
             }
@@ -209,7 +209,7 @@ public class ClientFacade implements IClient{
     public void claimRoute(String gameID, String playerID, String routeID) {
         Game g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            g.getPlayerbyID(playerID).addRouteAsClaimed(routeID);
+            g.getPlayerbyUserName(playerID).addRouteAsClaimed(routeID);
         }
     }
 
