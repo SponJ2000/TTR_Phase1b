@@ -85,6 +85,7 @@ public class PlayerUser extends Player implements IPlayer{
         return true;
     }
 
+    @Override
     public Integer getCardNum() {
         if(cards != null) {
             return cards.size();
@@ -92,6 +93,7 @@ public class PlayerUser extends Player implements IPlayer{
         return 0;
     }
 
+    @Override
     public Integer getTicketNum() {
         if(tickets != null) {
             return tickets.size();

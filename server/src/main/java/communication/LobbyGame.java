@@ -7,7 +7,7 @@ import java.util.UUID;
  * Created by urimaj on 11/9/18.
  */
 
-public class GameLobby {
+public class LobbyGame {
 
     private String gameID;
     private String host;
@@ -18,13 +18,13 @@ public class GameLobby {
 
     private boolean started;
 
-    public GameLobby(String host, int maxPlayers) {
+    public LobbyGame(String host, int maxPlayers) {
         this.host = host;
         this.maxPlayers = maxPlayers;
         this.gameID = UUID.randomUUID().toString();
     }
 
-    public GameLobby(String host) {
+    public LobbyGame(String host) {
         this.host = host;
 
     }

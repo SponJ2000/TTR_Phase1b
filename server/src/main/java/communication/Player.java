@@ -70,6 +70,14 @@ public class Player implements IPlayer{
         this.playerColor = playerColor;
     }
 
+    public Integer getCardNum() {
+        return 0;
+    }
+
+    public Integer getTicketNum() {
+        return 0;
+    }
+
 //    @Override
 //    public String toString() {
 //        return "Player{" +

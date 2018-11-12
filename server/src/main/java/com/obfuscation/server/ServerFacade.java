@@ -7,7 +7,7 @@ import java.util.Map;
 
 import communication.Card;
 import communication.GameClient;
-import communication.GameLobby;
+import communication.LobbyGame;
 import communication.GameServer;
 import communication.IServer;
 import communication.Message;
@@ -170,16 +170,16 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result CreateLobby(GameLobby gameLobby, String authToken) {
+    public Result CreateLobby(LobbyGame lobbyGame, String authToken) {
         try {
-            Result result = db.newGameLobby(gameLobby, authToken);
+            Result result = db.newGameLobby(lobbyGame, authToken);
             System.out.println("WHAT IS " + result.toString());
             if (result.isSuccess()) {
                 for (ClientProxy clientProxy : clientproxies) {
-                    clientProxy.updateGameLobbyList(gameLobby.getGameID());
+                    clientProxy.updateGameLobbyList(lobbyGame.getGameID());
                 }
-                gameIDclientProxyMap.put(gameLobby.getGameID(), new ArrayList<ClientProxy>());
-                gameIDclientProxyMap.get(gameLobby.getGameID()).add(getClientProxyByAuthToken(authToken));
+                gameIDclientProxyMap.put(lobbyGame.getGameID(), new ArrayList<ClientProxy>());
+                gameIDclientProxyMap.get(lobbyGame.getGameID()).add(getClientProxyByAuthToken(authToken));
             }
             System.out.println("CREATE " + result.toString());
             return result;

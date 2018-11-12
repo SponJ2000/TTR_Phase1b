@@ -25,10 +25,12 @@ public class PlayerOpponent extends Player implements IPlayer{
         this.ticketNum = ticketNum;
     }
 
+    @Override
     public Integer getTicketNum() {
         return ticketNum;
     }
 
+    @Override
     public Integer getCardNum() {
         return cardNum;
     }

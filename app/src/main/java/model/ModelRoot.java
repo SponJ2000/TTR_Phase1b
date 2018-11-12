@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 
 import communication.GameClient;
-import communication.GameLobby;
+import communication.LobbyGame;
 import communication.Ticket;
 
 /**
@@ -23,9 +23,9 @@ public class ModelRoot {
     }
 
     private String authToken;
-    private ArrayList<GameLobby> gameLobbies;
+    private ArrayList<LobbyGame> gameLobbies;
     private GameClient game;
-    private GameLobby gameLobby;
+    private LobbyGame lobbyGame;
     private DisplayState displayState;
     private String userName;
 
@@ -43,9 +43,9 @@ public class ModelRoot {
         return authToken;
     }
 
-    public ArrayList<GameLobby> gameLobbies() {
+    public ArrayList<LobbyGame> gameLobbies() {
         if (gameLobbies == null) {
-            gameLobbies = new ArrayList<GameLobby>();
+            gameLobbies = new ArrayList<LobbyGame>();
         }
         return gameLobbies;
     }
@@ -54,15 +54,15 @@ public class ModelRoot {
         this.game = game;
     }
 
-    public void setGame(GameLobby gameLobby) {
-        GameClient gameClient = new GameClient(gameLobby.getGameID(),userName);
+    public void setGame(LobbyGame lobbyGame) {
+        GameClient gameClient = new GameClient(lobbyGame.getGameID(),userName);
     }
 
-    public ArrayList<GameLobby> getGameLobbies() {
+    public ArrayList<LobbyGame> getLobbyGames() {
         return gameLobbies;
     }
 
-    public void setGameLobbies(ArrayList<GameLobby> gameLobbies) {
+    public void setGameLobbies(ArrayList<LobbyGame> gameLobbies) {
         this.gameLobbies = gameLobbies;
     }
 
@@ -70,8 +70,8 @@ public class ModelRoot {
         return game;
     }
 
-    public GameLobby getGameLobbyById(String id) {
-        for (GameLobby gl: gameLobbies) {
+    public LobbyGame getGameLobbyById(String id) {
+        for (LobbyGame gl: gameLobbies) {
             if (gl.getGameID().equals(id)) {
                 return gl;
             }
@@ -105,11 +105,11 @@ public class ModelRoot {
         this.ticketsWanted = ticketsWanted;
     }
 
-    public GameLobby getGameLobby() {
-        return gameLobby;
+    public LobbyGame getLobbyGame() {
+        return lobbyGame;
     }
 
-    public void setGameLobby(GameLobby gameLobby) {
-        this.gameLobby = gameLobby;
+    public void setLobbyGame(LobbyGame lobbyGame) {
+        this.lobbyGame = lobbyGame;
     }
 }

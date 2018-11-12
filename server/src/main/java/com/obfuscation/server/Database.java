@@ -14,7 +14,7 @@ import communication.ActiveUser;
 import communication.Card;
 import communication.City;
 import communication.Game;
-import communication.GameLobby;
+import communication.LobbyGame;
 import communication.GameServer;
 import communication.Message;
 import communication.Player;
@@ -48,7 +48,7 @@ public class Database {
 
     private Map<String, String> loginInfo;
     //TODO : make gameid and gamelobbyid same
-    private List<GameLobby> gameLobbyList;
+    private List<LobbyGame> lobbyGameList;
     private List<GameServer> gameList;
 
 
@@ -68,8 +68,8 @@ public class Database {
 
     private List<GameColor> colors = Arrays.asList(GameColor.PLAYER_BLACK, GameColor.PLAYER_BLUE, GameColor.PLAYER_PURPLE, GameColor.PLAYER_RED, GameColor.PLAYER_YELLOW);
 
-    public List<GameLobby> getGameList() {
-        return gameLobbyList;
+    public List<LobbyGame> getGameList() {
+        return lobbyGameList;
     }
 
     public List<ActiveUser> getActiveUsers() {
@@ -84,7 +84,7 @@ public class Database {
 
     private Database() {
         loginInfo = new HashMap<>();
-        gameLobbyList = new ArrayList<>();
+        lobbyGameList = new ArrayList<>();
         activeUsers = new ArrayList<>();
         authTokenMap = new HashMap<>();
         authTokens = new ArrayList<>();
@@ -136,47 +136,47 @@ public class Database {
         }
     }
 
-    Result newGameLobby(GameLobby gameLobby, String authToken){
+    Result newGameLobby(LobbyGame lobbyGame, String authToken){
         boolean valid = false;
         String errorInfo = null;
-        if(gameLobby == null) {
+        if(lobbyGame == null) {
             errorInfo = "Error: Game is null";
         }
-        else if(gameLobby.getGameID() == null || gameLobby.getGameID().equals("")) {
+        else if(lobbyGame.getGameID() == null || lobbyGame.getGameID().equals("")) {
             errorInfo = "Error: Invalid game name (cannot be blank)";
         }
-        else if(findGameByID(gameLobby.getGameID()) != null) {
+        else if(findGameByID(lobbyGame.getGameID()) != null) {
             errorInfo = "Error: Game name must be unique";
         }
-        else if (gameLobby.getHost() == null || gameLobby.getHost().equals("")) {
+        else if (lobbyGame.getHost() == null || lobbyGame.getHost().equals("")) {
             errorInfo = "Error: Invalid host name (cannot be blank)";
         }
-        else if (gameLobby.getPlayers() == null) {
+        else if (lobbyGame.getPlayers() == null) {
             errorInfo = "Error: Invalid Player List";
         }
-        else if(gameLobby.getMaxPlayers() < 2 || gameLobby.getMaxPlayers() > 5){
+        else if(lobbyGame.getMaxPlayers() < 2 || lobbyGame.getMaxPlayers() > 5){
             errorInfo = "Error: Invalid max players";
         }
         else valid = true;
         if(!valid) return new Result(valid, null, errorInfo);
         //check the userID
-        String userID = gameLobby.getHost();
+        String userID = lobbyGame.getHost();
         if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
 
         ActiveUser user = findUserByID(userID);
         if (user == null) return new Result(false, null, "Error: Invlaid user");
         ArrayList<Player> playerList = new ArrayList<>();
         playerList.add(user.getPlayer());
-        gameLobby.setPlayers(playerList);
+        lobbyGame.setPlayers(playerList);
 
-        gameLobbyList.add(gameLobby);
+        lobbyGameList.add(lobbyGame);
         System.out.println("Get HERE");
-        return new Result(true, gameLobbyList, null);
+        return new Result(true, lobbyGameList, null);
     }
 
     Result joinGame(String playerID, String gameID) {
         ActiveUser user = findUserByID(playerID);
-        GameLobby game = findGameLobbyByID(gameID);
+        LobbyGame game = findGameLobbyByID(gameID);
 
         if(user == null || game == null) {
             return new Result(false, null, "Error: Could not join game");
@@ -273,19 +273,19 @@ public class Database {
 
     }
     Result startGame(String gameID, String authToken) {
-        GameLobby gameLobby = findGameLobbyByID(gameID);
-        if (gameLobby == null) return new Result(false, null, "Error: gameLobby not found");
+        LobbyGame lobbyGame = findGameLobbyByID(gameID);
+        if (lobbyGame == null) return new Result(false, null, "Error: lobbyGame not found");
 
-        if(!checkAuthToken(authToken, gameLobby.getHost())) {
+        if(!checkAuthToken(authToken, lobbyGame.getHost())) {
             return new Result(false, null, "Error: Invalid token");
         }
 
-        if(gameLobby.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
+        if(lobbyGame.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
         GameServer game = new GameServer();
 
         //set players
         ArrayList<PlayerUser> players = new ArrayList<>();
-        for (Player p : gameLobby.getPlayers()) {
+        for (Player p : lobbyGame.getPlayers()) {
             players.add(new PlayerUser(p.getPlayerName()));
         }
         game.setPlayers(players);
@@ -308,7 +308,7 @@ public class Database {
 
     Result leaveGame(String gameID, String playerID) {
         ActiveUser user = findUserByID(playerID);
-        GameLobby game = findGameLobbyByID(gameID);
+        LobbyGame game = findGameLobbyByID(gameID);
 
         if(user == null || game == null) {
             return new Result(false, null, "Error: Could not leave game");
@@ -327,7 +327,7 @@ public class Database {
 
     Result rejoinGame(String gameID, String playerID) {
         Player player = findUserByID(playerID).getPlayer();
-        GameLobby game = findGameLobbyByID(gameID);
+        LobbyGame game = findGameLobbyByID(gameID);
 
         if(player == null || game == null) {
             return new Result(false, null, "Error: Could not rejoin game");
@@ -360,10 +360,10 @@ public class Database {
      * @param gameID
      * @return
      */
-    GameLobby findGameLobbyByID(String gameID){
-        for (GameLobby gameLobby: gameLobbyList) {
-            if (gameLobby.getGameID().equals(gameID)){
-                return gameLobby;
+    LobbyGame findGameLobbyByID(String gameID){
+        for (LobbyGame lobbyGame : lobbyGameList) {
+            if (lobbyGame.getGameID().equals(gameID)){
+                return lobbyGame;
             }
         }
         return null;

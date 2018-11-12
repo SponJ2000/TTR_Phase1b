@@ -9,7 +9,7 @@ import communication.Card;
 import communication.GameClient;
 import communication.GameColor;
 import communication.Game;
-import communication.GameLobby;
+import communication.LobbyGame;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
@@ -113,16 +113,16 @@ public class ModelFacade implements IGameModel {
         ModelRoot.getInstance().setUserName(userName);
     }
 
-    public void JoinGameLobby(GameLobby gameLobby) {
+    public void JoinGameLobby(LobbyGame lobbyGame) {
         GenericTask genericTask = new GenericTask("JoinGameLobby");
-        genericTask.execute(ModelRoot.getInstance().getUserName(), gameLobby.getGameID(), ModelRoot.getInstance().getAuthToken());
-        ModelRoot.getInstance().setGameLobby(gameLobby);
+        genericTask.execute(ModelRoot.getInstance().getUserName(), lobbyGame.getGameID(), ModelRoot.getInstance().getAuthToken());
+        ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
 
-    public void CreateGameLobby(GameLobby gameLobby) {
+    public void CreateGameLobby(LobbyGame lobbyGame) {
         GenericTask genericTask = new GenericTask("CreateGameLobby");
-        genericTask.execute(gameLobby, ModelRoot.getInstance().getAuthToken());
-        ModelRoot.getInstance().setGameLobby(gameLobby);
+        genericTask.execute(lobbyGame, ModelRoot.getInstance().getAuthToken());
+        ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
 
     public void LeaveGame(Game game) {
@@ -166,7 +166,7 @@ public class ModelFacade implements IGameModel {
     public List<Player> getPlayers() {
         ModelRoot mr = ModelRoot.getInstance();
         if(mr.getDisplayState() == DisplayState.LOBBY) {
-            return mr.getGameLobby().getPlayers();
+            return mr.getLobbyGame().getPlayers();
         }
         else
             return null;
@@ -260,8 +260,8 @@ public class ModelFacade implements IGameModel {
         return true;
     }
 
-    public ArrayList<GameLobby> GetGameLobbyList() {
-        return ModelRoot.getInstance().getGameLobbies();
+    public ArrayList<LobbyGame> GetLobbyGameList() {
+        return ModelRoot.getInstance().getLobbyGames();
     }
 
     public Game GetCurrentGame() {
@@ -334,10 +334,12 @@ public class ModelFacade implements IGameModel {
     }
 
     public boolean isGameStarted() {
-        return ModelRoot.getInstance().getGameLobby().isStarted();
+        return ModelRoot.getInstance().getLobbyGame().isStarted();
     }
 
 
-
+    public LobbyGame getLobbyGame() {
+        return ModelRoot.getInstance().getLobbyGame();
+    }
 
 }

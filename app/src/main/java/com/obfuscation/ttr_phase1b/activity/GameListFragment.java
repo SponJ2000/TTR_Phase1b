@@ -18,6 +18,7 @@ import com.obfuscation.ttr_phase1b.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.LobbyGame;
 import communication.Result;
 import model.ModelFacade;
 import communication.Game;
@@ -35,7 +36,7 @@ public class GameListFragment extends Fragment implements IPresenter {
     private static final String TAG = "GameListFrag";
 
     private int mSelectedGame;
-    private ArrayList<Game> mGameList;
+    private ArrayList<LobbyGame> mGameList;
     private boolean ismJoingGame;
 
     private Button mJoin;
@@ -93,7 +94,7 @@ public class GameListFragment extends Fragment implements IPresenter {
 
         ismJoingGame = false;
         mSelectedGame = -1;
-        mGameList = ModelFacade.getInstance().GetGameList();
+        mGameList = ModelFacade.getInstance().GetLobbyGameList();
         Log.d(TAG+"_constr", "gamelist: " + mGameList);
         if(mGameList == null) {
             mGameList = new ArrayList<>();

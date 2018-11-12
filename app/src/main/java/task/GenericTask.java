@@ -4,17 +4,14 @@ import android.os.AsyncTask;
 
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import communication.Game;
-import communication.GameLobby;
+import communication.LobbyGame;
 import communication.Message;
 import communication.Result;
 import communication.Serializer;
 import communication.Ticket;
-import model.ModelFacade;
 import model.ModelRoot;
 import server.Poller;
 import server.ServerProxy;
@@ -47,7 +44,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "LeaveGame":
                 return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
             case "CreateLobby":
-                return serverProxy.CreateLobby((GameLobby) params[0], (String) params[1]);
+                return serverProxy.CreateLobby((LobbyGame) params[0], (String) params[1]);
             case "StartGame":
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
             case "GetGameList":
@@ -118,7 +115,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         if (result.isSuccess()) {
 
             ArrayList<Object> temp = (ArrayList<Object>) result.getData();
-            ArrayList<GameLobby> gameLobbies = new ArrayList<>();
+            ArrayList<LobbyGame> gameLobbies = new ArrayList<>();
             for (int i = 0;i < temp.size(); i++) {
                 gameLobbies.add(new Serializer().deserializeGameLobby(temp.get(i).toString()));
             }
@@ -129,7 +126,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void FetchGameFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().setGame((GameLobby) result.getData());
+            ModelRoot.getInstance().setGame((LobbyGame) result.getData());
         }
     }
 

@@ -1,7 +1,5 @@
 package communication;
 
-import com.sun.org.apache.regexp.internal.RE;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,11 +83,11 @@ public interface IServer {
      *          authToken which is still valid and exist
      * @post    game is created with all the sepcification of the parameter game.
      *
-     * @param gameLobby      the gameLobby object, containing the game name and max player count
+     * @param lobbyGame      the lobbyGame object, containing the game name and max player count
      * @param authToken a String object containing the users authToken
      * @return          a Result object containing a boolean indication success
      */
-    Result CreateLobby(GameLobby gameLobby, String authToken);
+    Result CreateLobby(LobbyGame lobbyGame, String authToken);
 
     /**
      * the game owner can start the game, which will notify all other players in the room

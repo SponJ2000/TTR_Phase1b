@@ -19,8 +19,8 @@ import com.obfuscation.ttr_phase1b.gameViews.GameActivity;
 
 import java.util.List;
 
+import communication.LobbyGame;
 import model.ModelFacade;
-import communication.Game;
 import communication.Player;
 
 /**
@@ -31,7 +31,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
     private static final String TAG = "LobbyFrag";
 
     private String mHost;
-    private Game mGame;
+    private LobbyGame mGame;
     private boolean ismLeaving;
     private boolean ismStarting;
     private boolean isHost;
@@ -75,7 +75,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
         ismLeaving = false;
         ismStarting = false;
         isHost = false;
-        mGame = ModelFacade.getInstance().GetCurrentGame();
+        mGame = ModelFacade.getInstance().getLobbyGame();
         mHost = mGame.getHost();
 
         mLeaveButton = (Button) view.findViewById(R.id.leave_button);

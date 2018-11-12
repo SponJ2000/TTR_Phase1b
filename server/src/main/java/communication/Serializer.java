@@ -4,11 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.obfuscation.server.GenericCommand;
 
-import java.util.ArrayList;
-
-import communication.ICommand;
-import communication.Result;
-
 /**
  * Created by jalton on 10/1/18.
  */
@@ -55,9 +50,9 @@ public class Serializer {
         return game;
     }
 
-    public GameLobby deserializeGameLobby(String json) {
-        GameLobby gameLobby = gson.fromJson(json, GameLobby.class);
-        return gameLobby;
+    public LobbyGame deserializeGameLobby(String json) {
+        LobbyGame lobbyGame = gson.fromJson(json, LobbyGame.class);
+        return lobbyGame;
     }
 
     public Card deserializeCard(String json) {
