@@ -31,6 +31,7 @@ import java.util.Map;
 
 import communication.Card;
 import communication.City;
+import communication.Game;
 import communication.GameColor;
 import communication.GameMap;
 import communication.Player;
@@ -47,6 +48,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import static communication.GameColor.*;
 
 
 public class GameFragment extends Fragment implements IGameView, OnMapReadyCallback {
@@ -90,6 +93,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private LatLng selected;
 
+    private Map<GameColor, Integer> cardMap;
+
     public GameFragment() {
         mIsTurn = false;
         mCards = null;
@@ -108,6 +113,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                              @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
+
+        initCardMap();
 
         selected = null;
 
@@ -246,6 +253,20 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         return rootView;
 
+    }
+
+    private void initCardMap(){
+        cardMap = new HashMap<>();
+        cardMap.put(PURPLE, R.drawable.card_pur);
+        cardMap.put(BLUE, R.drawable.card_blu);
+        cardMap.put(ORANGE, R.drawable.card_ora);
+        cardMap.put(WHITE, R.drawable.card_whi);
+        cardMap.put(GREEN, R.drawable.card_gre);
+        cardMap.put(YELLOW, R.drawable.card_yel);
+        cardMap.put(BLACK, R.drawable.card_bla);
+        cardMap.put(RED, R.drawable.card_red);
+        cardMap.put(LOCOMOTIVE, R.drawable.card_loc);
+        cardMap.put(GREY, R.drawable.card_blank);
     }
 
     @Override
@@ -491,37 +512,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             Card card = mFaceCards.get(i);
             ImageView faceCardView = mFaceCardViews[i];
 
-            switch (card.getColor()) {
-                case RED:
-                    faceCardView.setImageResource(R.drawable.card_red);
-                    break;
-                case ORANGE:
-                    faceCardView.setImageResource(R.drawable.card_ora);
-                    break;
-                case YELLOW:
-                    faceCardView.setImageResource(R.drawable.card_yel);
-                    break;
-                case GREEN:
-                    faceCardView.setImageResource(R.drawable.card_gre);
-                    break;
-                case BLUE:
-                    faceCardView.setImageResource(R.drawable.card_blu);
-                    break;
-                case PURPLE:
-                    faceCardView.setImageResource(R.drawable.card_pur);
-                    break;
-                case BLACK:
-                    faceCardView.setImageResource(R.drawable.card_bla);
-                    break;
-                case WHITE:
-                    faceCardView.setImageResource(R.drawable.card_whi);
-                    break;
-                case LOCOMOTIVE:
-                    faceCardView.setImageResource(R.drawable.card_loc);
-                    break;
-                default:
-                    faceCardView.setImageResource(R.drawable.card_blank);
-            }
+            
             i++;
         }
 
@@ -655,7 +646,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             Log.d(TAG, "updateUI: player: " + mPlayer);
             setColor();
             setPoints(mPlayer.getPoint());
-            setTrains(mPlayer.getTrainCarNum());
+            setTrains(mPlayer.getCarNum());
         }if(mCards != null) {
             updateCards();
         }if(mFaceCards != null) {
