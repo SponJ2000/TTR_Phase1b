@@ -119,7 +119,7 @@ public class ModelFacade implements IGameModel {
         ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
 
-    public void CreateGameLobby(LobbyGame lobbyGame) {
+    public void createLobbyGame(LobbyGame lobbyGame) {
         GenericTask genericTask = new GenericTask("CreateGameLobby");
         genericTask.execute(lobbyGame, ModelRoot.getInstance().getAuthToken());
         ModelRoot.getInstance().setLobbyGame(lobbyGame);

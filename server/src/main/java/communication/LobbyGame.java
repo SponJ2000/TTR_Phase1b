@@ -1,6 +1,7 @@
 package communication;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -24,9 +25,15 @@ public class LobbyGame {
         this.gameID = UUID.randomUUID().toString();
     }
 
+    public LobbyGame(String gameid, String host, ArrayList<Player> players, int maxPlayers) {
+        this.gameID = gameid;
+        this.host = host;
+        this.players = players;
+        this.maxPlayers = maxPlayers;
+    }
+
     public LobbyGame(String host) {
         this.host = host;
-
     }
 
     public String getGameID() {
