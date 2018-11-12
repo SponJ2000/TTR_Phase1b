@@ -40,7 +40,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "register":
                 return serverProxy.Register((String) params[0], (String) params[1]);
             case "joinLobbyGame":
-                return serverProxy.JoinGameLobby((String) params[0], (String) params[1], (String) params[2]);
+                return serverProxy.JoinLobby((String) params[0], (String) params[1], (String) params[2]);
             case "leaveGame":
                 return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
             case "leaveLobbyGame":

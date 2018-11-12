@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public class GameServer extends Game {
 
-    private ArrayList<Card> trainCards;
-    private ArrayList<Ticket> tickets;
+    private ArrayList<Card> trainCards = new ArrayList<>();
+    private ArrayList<Ticket> tickets = new ArrayList<>();
     private int currentPlayerIndex = 0;
-    private ArrayList<PlayerUser> players;
+    private ArrayList<PlayerUser> players = new ArrayList<>();
 
     public ArrayList<Card> getTrainCards() {
         return trainCards;

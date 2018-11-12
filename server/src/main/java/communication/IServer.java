@@ -56,7 +56,7 @@ public interface IServer {
      * @param authToken a String object with the username's authToken
      * @return          a Result object containing a boolean indicating success
      */
-    Result JoinGameLobby(String id, String gameID, String authToken);
+    Result JoinLobby(String id, String gameID, String authToken);
 
     /**
      * let the player leave the game

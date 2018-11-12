@@ -145,14 +145,14 @@
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/exec";
-		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"CreateLobby\",\"parameterType\":[\"communication.GameLobby\",\"java.lang.String\"],\"parameterValue\":[{\"gameID\":\"gameID\",\"host\":\"Bob\",\"maxPlayers\":3,\"playerListVerisonNum\":0,\"players\":[],\"started\":false},\"masterKey\"]}");
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"CreateLobby\",\"parameterType\":[\"communication.LobbyGame\",\"java.lang.String\"],\"parameterValue\":[{\"gameID\":\"gameID\",\"host\":\"Bob\",\"maxPlayers\":3,\"playerListVerisonNum\":0,\"players\":[],\"started\":false},\"masterKey\"]}");
 	}
 
-	function getSingleEvent()
+	function joinLobby()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
-		document.getElementById("handleBox").value = "/event/[Replace_With_Event_ID]";
-		document.getElementById("requestBox").value = "";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"JoinLobby\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"id\",\"gameID\",\"authJoe\"]}");
+		document.getElementById("handleBox").value = "/exec";
 	}
 
 	function getAllPersons()
@@ -247,14 +247,12 @@
 							<b>If successful</b> : DATA : authorization token</br>
 						</li>
 						<li>
-							<a href="javascript:createLobby()">CREATE LOBBY</a> Use this to create a gameLobby object.</br>
-							<b>If successful</b> : DATA : gameLobby list</br>
+							<a href="javascript:createLobby()">CREATE LOBBY</a> Use this to create a LobbyGame object.</br>
+							<b>If successful</b> : DATA : LobbyGame list</br>
 						</li>
 						<li>
-							<a href="javascript:getSingleEvent()">/event/[eventID]</a> This API will return the single
-							event with the specified ID. The event must belong to a relative of the user associated
-							with the authorization token. The returned JSON contains the requested event object.
-							Authorization token is required.
+							<a href="javascript:joinLobby()">JOIN LOBBY</a> Use this to join lobby</br>
+							<b>If successful</b> : DATA : LobbyGame list</br>
 						</li>
 						<li>
 							<a href="javascript:getAllPersons()" >/person</a> This API will return ALL people

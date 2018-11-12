@@ -42,8 +42,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result JoinGameLobby(String id, String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinGameLobby", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
+    public Result JoinLobby(String id, String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinLobby", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
     }
 

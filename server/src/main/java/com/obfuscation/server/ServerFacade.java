@@ -119,7 +119,7 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result JoinGameLobby(String id, String gameID, String authToken) {
+    public Result JoinLobby(String id, String gameID, String authToken) {
         try {
             if (!db.checkAuthToken(authToken, id)) {
                 return new Result(false, null, "Error: Invalid authorization");
@@ -177,6 +177,7 @@ public class ServerFacade implements IServer {
     @Override
     public Result CreateLobby(LobbyGame lobbyGame, String authToken) {
         try {
+            System.out.println(authToken + " EEE");
             Result result = db.newGameLobby(lobbyGame, authToken);
             System.out.println("WHAT IS " + result.toString());
             if (result.isSuccess()) {
@@ -184,6 +185,7 @@ public class ServerFacade implements IServer {
                     clientProxy.updateGameLobbyList(lobbyGame.getGameID());
                 }
                 gameIDclientProxyMap.put(lobbyGame.getGameID(), new ArrayList<ClientProxy>());
+                System.out.println("AUTH TOKEN " + authToken);
                 gameIDclientProxyMap.get(lobbyGame.getGameID()).add(getClientProxyByAuthToken(authToken));
             }
             System.out.println("CREATE " + result.toString());

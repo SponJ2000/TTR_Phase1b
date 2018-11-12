@@ -48,8 +48,8 @@ public class Database {
 
     private Map<String, String> loginInfo;
     //TODO : make gameid and gamelobbyid same
-    private List<LobbyGame> lobbyGameList;
-    private List<GameServer> gameList;
+    private List<LobbyGame> lobbyGameList = new ArrayList<>();
+    private List<GameServer> gameList = new ArrayList<>();
 
 
     private List<ActiveUser> activeUsers;
@@ -59,10 +59,8 @@ public class Database {
 
     public void setDummyGame() {
         dummyGame.setGameID("GAME");
-        authTokenMap.put("Bob", "authBob");
-        authTokenMap.put("Joe", "authJoe");
-        loginInfo.put("Bob", "password");
-        loginInfo.put("Joe", "password");
+        gameList.add(dummyGame);
+
         setupGame("GAME");
     }
 
@@ -88,6 +86,13 @@ public class Database {
         activeUsers = new ArrayList<>();
         authTokenMap = new HashMap<>();
         authTokens = new ArrayList<>();
+        authTokenMap.put("Bob", "authBob");
+        authTokenMap.put("Joe", "authJoe");
+        loginInfo.put("Bob", "password");
+        loginInfo.put("Joe", "password");
+        login("Bob", "password");
+        login("Joe", "password");
+        setDummyGame();
     }
 
     Result register(String id, String password){
@@ -111,8 +116,9 @@ public class Database {
             if(loginInfo.get(id).equals(password)){
                 //Generate authToken
                 String authToken = generateAuthToken();
-                authTokenMap.put(id, authToken);
-
+                if (!id.equals("Bob") && !id.equals("Joe")) {
+                    authTokenMap.put(id, authToken);
+                }
                 //Add Player to Active Users
                 if(findUserByID(id) != null) {
                     ActiveUser user = findUserByID(id);
@@ -145,7 +151,7 @@ public class Database {
         else if(lobbyGame.getGameID() == null || lobbyGame.getGameID().equals("")) {
             errorInfo = "Error: Invalid game name (cannot be blank)";
         }
-        else if(findGameByID(lobbyGame.getGameID()) != null) {
+        else if(findGameLobbyByID(lobbyGame.getGameID()) != null) {
             errorInfo = "Error: Game name must be unique";
         }
         else if (lobbyGame.getHost() == null || lobbyGame.getHost().equals("")) {
@@ -161,6 +167,9 @@ public class Database {
         if(!valid) return new Result(valid, null, errorInfo);
         //check the userID
         String userID = lobbyGame.getHost();
+        System.out.println(authToken);
+        System.out.println(userID);
+
         if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
 
         ActiveUser user = findUserByID(userID);
