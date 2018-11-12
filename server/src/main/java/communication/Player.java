@@ -11,7 +11,7 @@ public class Player implements IPlayer{
     private Integer point;
     private ArrayList<String> claimedRoutesID = new ArrayList<>();
     private GameColor playerColor;
-    private Integer carNum;
+    private Integer trainNum;
 
 
 
@@ -51,15 +51,15 @@ public class Player implements IPlayer{
 
     public Player(String playerName) {
         this.playerName = playerName;
-        carNum = 40;
+        trainNum = 40;
     }
 
-    public int getCarNum(){
-        return carNum;
+    public int getTrainNum(){
+        return trainNum;
     }
 
-    public void setCarNum(int newNum){
-        carNum = newNum;
+    public void setTrainNum(int newNum){
+        trainNum = newNum;
     }
 
     public GameColor getPlayerColor() {

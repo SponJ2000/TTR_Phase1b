@@ -116,4 +116,9 @@ public interface IGameView extends IView {
      */
     void updateRoute(Route route);
 
+    /**
+     * Sends a message to the player in the form of a toast
+     * @param toast a String containing the toast to send
+     */
+    void sendToast(String toast);
 }
