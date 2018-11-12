@@ -235,7 +235,7 @@ public class FakeModel {
 //    }
 //
 //    @Override
-//    public void chooseTickets(List<Ticket> tickets) {
+//    public void selectTickets(List<Ticket> tickets) {
 //        mPlayer.addTickets((ArrayList<Ticket>) tickets);
 //        choiceTickets = null;
 //    }

@@ -43,6 +43,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.JoinGameLobby((String) params[0], (String) params[1], (String) params[2]);
             case "leaveGame":
                 return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
+            case "leaveLobbyGame":
+                return serverProxy.LeaveLobbyGame((String) params[0], (String) params[1], (String) params[2]);
             case "CreateLobby":
                 return serverProxy.CreateLobby((LobbyGame) params[0], (String) params[1]);
             case "startGame":

@@ -125,8 +125,9 @@ public class ModelFacade implements IGameModel {
         ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
 
-    public void leaveLobbyGame(LobbyGame game) {
-
+    public void leaveLobbyGame(LobbyGame lobbyGame) {
+        GenericTask genericTask = new GenericTask("leaveLobbyGame");
+        genericTask.execute(ModelRoot.getInstance().getUserName(), lobbyGame.getGameID(), ModelRoot.getInstance().getAuthToken());
     }
 
     public void leaveGame(Game game) {

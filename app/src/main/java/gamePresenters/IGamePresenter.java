@@ -13,12 +13,17 @@ public interface IGamePresenter extends IPresenter{
 
     void showMenu();
     void showPlayerInfo(IPlayerInfoView view);
-    void showTickets();
+    void selectTickets();
     void showChat();
     void showMap();
+
+    /**
+     *
+     * @param index -1 for the deck, 0-4 for the face-up cards
+     */
     void chooseCard(int index);
     GameMap getMap();
-    void selectRoute(Route route, Player player);
+    void claimRoute(Route route, Player player);
     void onBack();
 
     void onChange(Activity activity);
