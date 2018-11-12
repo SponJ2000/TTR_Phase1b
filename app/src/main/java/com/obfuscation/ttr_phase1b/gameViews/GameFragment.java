@@ -59,7 +59,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private int changeIndex;
 
-    private boolean mIsTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
     private List<Ticket> mTickets;
@@ -96,7 +95,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private Map<GameColor, Integer> colorMap;
 
     public GameFragment() {
-        mIsTurn = false;
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
@@ -144,10 +142,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTicketsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mIsTurn) {
-                    Log.d(TAG, "view tickets");
-                    mPresenter.showTickets();
-                }
+                mPresenter.selectTickets();
             }
         });
 
@@ -165,9 +160,35 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mPointsView = rootView.findViewById(R.id.txt_points);
         mTrainsView = rootView.findViewById(R.id.txt_trains);
 
-        mPointsView.setText("0");
-        mTrainsView.setText("40");
+        mPointsView.setText(mPlayer.getPoint());
+        mTrainsView.setText(mPlayer.getTrainNum());
 
+        initCardViews(rootView);
+
+
+        //Gets MapView from xml layout
+        mMapView = rootView.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.getMapAsync(this);
+
+        mMapView.onResume();
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(this);
+
+        mPresenter.update();
+
+        return rootView;
+
+    }
+
+    private void initCardViews(View rootView){
         mFaceCardViews = new ImageView[5];
         mFaceCardViews[0] = rootView.findViewById(R.id.card1);
         mFaceCardViews[0].setOnClickListener(new View.OnClickListener() {
@@ -230,30 +251,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mCardViews[6] = rootView.findViewById(R.id.txt_cards_yellow);
         mCardViews[7] = rootView.findViewById(R.id.txt_cards_blue);
         mCardViews[8] = rootView.findViewById(R.id.txt_cards_black);
-
-
-        //Gets MapView from xml layout
-        mMapView = rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-
-        mMapView.getMapAsync(this);
-
-        mMapView.onResume();
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mMapView.getMapAsync(this);
-
-        mPresenter.update();
-
-        changeAccessibility();
-
-        return rootView;
-
     }
 
     private void initCardMap(){
@@ -341,8 +338,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(5).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        //Add routes here
-
         
     }
 
@@ -421,25 +416,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void selectRoute(Route route) {
-        mPresenter.selectRoute(route, mPlayer);
+        mPresenter.claimRoute(route, mPlayer);
     }
 
     private void onChangeButton() {
 
-    }
-
-    private void changeAccessibility() {
-        if(mIsTurn) {
-            for(int i = 0; i < mFaceCardViews.length; i++) {
-                mFaceCardViews[i].setEnabled(true);
-            }
-            mDeck.setEnabled(true);
-        }else {
-            for(int i = 0; i < mFaceCardViews.length; i++) {
-                mFaceCardViews[i].setEnabled(false);
-            }
-            mDeck.setEnabled(false);
-        }
     }
 
     private void updateCards() {
@@ -586,11 +567,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void setTickets(List<Ticket> tickets) {
         mTickets = tickets;
-    }
-
-    @Override
-    public void setIsTurn(boolean isTurn) {
-        mIsTurn = isTurn;
     }
 
     @Override
