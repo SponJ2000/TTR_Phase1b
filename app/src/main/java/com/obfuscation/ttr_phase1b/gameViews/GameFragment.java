@@ -416,7 +416,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void selectRoute(Route route) {
-        mPresenter.selectRoute(route, mPlayer);
+        mPresenter.claimRoute(route, mPlayer);
     }
 
     private void onChangeButton() {

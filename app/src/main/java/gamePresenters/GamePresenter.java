@@ -77,13 +77,13 @@ public class GamePresenter implements IGamePresenter {
     }
 
     @Override
-    public void selectRoute(Route route, Player player) {
+    public void claimRoute(Route route, Player player) {
 //        Result r = model.claimRoute(route, player);
 //        if(r.isSuccess()) {
 //            view.updateRoute(route);
 //        }
 
-        state.selectRoute(route);
+        state.claimRoute(route, player);
     }
 
     @Override
@@ -205,9 +205,7 @@ class ITurnState {
     void selectTicket(Object ticket){}
     void deselectTicket(Object ticket){}
     void requestTickets(){}
-    void selectRoute(Route route){}
-    void deselectRoute(){}
-    void claimRoute(Route route){}
+    void claimRoute(Route route, Player player){}
 }
 
 class NotTurn extends ITurnState {
@@ -246,7 +244,7 @@ class TurnNoSelection extends ITurnState {
     }
 
     @Override
-    public void selectRoute(Route route) {
+    public void claimRoute(Route route, Player player) {
         //TODO: check if player has sufficient cards
         //TODO: allow player to choose cards if grey
         //TODO: send claim route

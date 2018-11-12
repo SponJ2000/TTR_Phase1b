@@ -23,7 +23,7 @@ public interface IGamePresenter extends IPresenter{
      */
     void chooseCard(int index);
     GameMap getMap();
-    void selectRoute(Route route, Player player);
+    void claimRoute(Route route, Player player);
     void onBack();
 
     void onChange(Activity activity);
