@@ -170,6 +170,11 @@ public class ServerFacade implements IServer {
     }
 
     @Override
+    public Result LeaveLobbyGame(String id, String gameID, String authToken) {
+        return null;
+    }
+
+    @Override
     public Result CreateLobby(LobbyGame lobbyGame, String authToken) {
         try {
             Result result = db.newGameLobby(lobbyGame, authToken);
