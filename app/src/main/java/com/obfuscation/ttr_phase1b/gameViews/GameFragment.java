@@ -31,7 +31,6 @@ import java.util.Map;
 
 import communication.Card;
 import communication.City;
-import communication.Game;
 import communication.GameColor;
 import communication.GameMap;
 import communication.Player;
@@ -444,10 +443,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void selectRoute(Route route) {
-        if (mIsTurn) {
-            mPresenter.selectRoute(route, mPlayer);
-        }
-        else Toast.makeText(getContext(), "Not your turn", Toast.LENGTH_SHORT);
+        mPresenter.selectRoute(route, mPlayer);
     }
 
     private void onChangeButton() {
@@ -509,10 +505,18 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private void updateFaceCards() {
         int i = 0;
         while (i < mFaceCards.size()) {
-            Card card = mFaceCards.get(i);
-            ImageView faceCardView = mFaceCardViews[i];
+            try {
+                Card card = mFaceCards.get(i);
+                ImageView faceCardView = mFaceCardViews[i];
 
-            
+                faceCardView.setImageResource(cardMap.get(card.getColor()));
+            }
+            catch (ArrayIndexOutOfBoundsException e) {
+                ImageView faceCardView = mFaceCardViews[i];
+
+                faceCardView.setImageResource(cardMap.get(GREY));
+            }
+
             i++;
         }
 
@@ -646,7 +650,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             Log.d(TAG, "updateUI: player: " + mPlayer);
             setColor();
             setPoints(mPlayer.getPoint());
-            setTrains(mPlayer.getCarNum());
+            setTrains(mPlayer.getTrainNum());
         }if(mCards != null) {
             updateCards();
         }if(mFaceCards != null) {
@@ -674,6 +678,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void setDeckSize(int size) {
         mDeckSize.setText("" + size);
+    }
+
+    @Override
+    public void sendToast(String toast) {
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
     }
 
     @Override
