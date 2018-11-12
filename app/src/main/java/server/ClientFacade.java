@@ -147,7 +147,7 @@ public class ClientFacade implements IClient{
         if (g != null) {
             IPlayer p = g.getPlayerByUserName(playerID);
             if (p != null) {
-                ((PlayerOpponent) p).setCarNum(carNum);
+                ((PlayerOpponent) p).setTrainNum(carNum);
             }
         }
     }

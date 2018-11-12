@@ -31,19 +31,19 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result Login(String id, String password) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "login", new String[]{STRING,STRING}, new Object[]{id,password});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "Login", new String[]{STRING,STRING}, new Object[]{id,password});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result Register(String id, String password) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "register", new String[]{STRING,STRING}, new Object[]{id,password});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "Register", new String[]{STRING,STRING}, new Object[]{id,password});
         return RunCommand(genericCommand);
     }
 
     @Override
     public Result JoinGameLobby(String id, String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "joinLobbyGame", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinGameLobby", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
     }
 
@@ -55,7 +55,7 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result StartGame(String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "startGame", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "StartGame", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
         return RunCommand(genericCommand);
     }
 
@@ -87,8 +87,13 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "leaveGame", new String[]{STRING, STRING, STRING}, new Object[]{id, gameID, authToken});
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "LeaveGame", new String[]{STRING, STRING, STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
+    }
+
+    @Override
+    public Result leaveLobbyGame(String id, String gameID, String authToken) {
+        return null;
     }
 
     @Override

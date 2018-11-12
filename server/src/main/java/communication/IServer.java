@@ -43,7 +43,7 @@ public interface IServer {
     Result Register(String id, String password);
 
     /**
-     * Join the user to a game
+     * Join the user to a game lobby
      *
      * @pre     username of the user already exist
      *          gameID of the game is already exist, still has empty spots, havent start
@@ -74,6 +74,8 @@ public interface IServer {
      * @return
      */
     Result LeaveGame(String id, String gameID, String authToken);
+
+    Result LeaveLobbyGame(String id, String gameID, String authToken);
 
     /**
      * get game properties as name and number of players allowed in the game, then create it
