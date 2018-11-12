@@ -35,17 +35,17 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
 
         switch (action) {
-            case "Login":
+            case "login":
                 return serverProxy.Login((String) params[0], (String) params[1]);
-            case "Register":
+            case "register":
                 return serverProxy.Register((String) params[0], (String) params[1]);
-            case "JoinGameLobby":
+            case "joinLobbyGame":
                 return serverProxy.JoinGameLobby((String) params[0], (String) params[1], (String) params[2]);
-            case "LeaveGame":
+            case "leaveGame":
                 return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
             case "CreateLobby":
                 return serverProxy.CreateLobby((LobbyGame) params[0], (String) params[1]);
-            case "StartGame":
+            case "startGame":
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
             case "GetGameList":
                 return serverProxy.GetGameList((String) params[0]);
@@ -76,10 +76,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     public void onPostExecute(Result result) {
 
         switch (action) {
-            case "Login":
+            case "login":
                 OnSignIn(result);
                 break;
-            case "Register":
+            case "register":
                 //need to update the authkey
                 OnSignIn(result);
                 break;

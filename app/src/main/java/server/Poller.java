@@ -68,7 +68,7 @@ public class Poller {
 
 
         if (!versionNum.equals(gameListVersion)) {
-            ModelFacade.getInstance().UpdateGameList();
+            ModelFacade.getInstance().updateGameList();
         }
     }
 
@@ -80,7 +80,7 @@ public class Poller {
             Integer versionNum = (Integer) result.getData();
             System.out.println(versionNum + " : " + gameVersion);
             if (!versionNum.equals(gameVersion)) {
-                ModelFacade.getInstance().UpdateGame();
+                ModelFacade.getInstance().updateGame();
                 gameVersion = versionNum;
             }
         }
@@ -148,7 +148,7 @@ public class Poller {
             Integer versionNum = (Integer) result.getData();
             System.out.println(versionNum + " " + gameListVersion);
             if (!versionNum.equals(gameListVersion)) {
-                ModelFacade.getInstance().UpdateGameList();
+                ModelFacade.getInstance().updateGameList();
                 gameListVersion = versionNum;
             }
         }

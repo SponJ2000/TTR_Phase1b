@@ -85,7 +85,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
                 Log.d(TAG, "Now leaving");
                 ismLeaving = true;
                 ismStarting = false;
-                ModelFacade.getInstance().LeaveGame(mGame);
+                ModelFacade.getInstance().leaveLobbyGame(mGame);
             }
         });
 
@@ -96,7 +96,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
                 Log.d(TAG, "Now starting");
                 ismLeaving = false;
                 ismStarting = true;
-                ModelFacade.getInstance().StartGame(mGame);
+                ModelFacade.getInstance().startGame(mGame.getGameID());
             }
         });
 
@@ -129,7 +129,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
             mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
             mLobbyRecycler.setAdapter(mLobbyAdapter);
         }
-        if(mHost != null && mHost.equals(ModelFacade.getInstance().GetUserName())) {
+        if(mHost != null && mHost.equals(ModelFacade.getInstance().getUserName())) {
             isHost = true;
             if(mGame.getPlayerCount() > 1) {
                 mStartButton.setEnabled(true);
@@ -157,7 +157,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
             ismStarting = false;
             onGameStart();
         }
-        mGame = ModelFacade.getInstance().GetCurrentGame();
+        mGame = ModelFacade.getInstance().getLobbyGame();
         mHost = mGame.getHost();
         updateUI();
     }

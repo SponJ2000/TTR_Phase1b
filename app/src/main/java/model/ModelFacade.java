@@ -101,20 +101,20 @@ public class ModelFacade implements IGameModel {
         return 30;
     }
 
-    public void Login(String userName, String password){
-        GenericTask genericTask = new GenericTask("Login");
+    public void login(String userName, String password){
+        GenericTask genericTask = new GenericTask("login");
         genericTask.execute(userName,password);
         ModelRoot.getInstance().setUserName(userName);
     }
 
-    public void Register(String userName, String password) {
-        GenericTask genericTask = new GenericTask("Register");
+    public void register(String userName, String password) {
+        GenericTask genericTask = new GenericTask("register");
         genericTask.execute(userName,password);
         ModelRoot.getInstance().setUserName(userName);
     }
 
-    public void JoinGameLobby(LobbyGame lobbyGame) {
-        GenericTask genericTask = new GenericTask("JoinGameLobby");
+    public void joinLobbyGame(LobbyGame lobbyGame) {
+        GenericTask genericTask = new GenericTask("joinLobbyGame");
         genericTask.execute(ModelRoot.getInstance().getUserName(), lobbyGame.getGameID(), ModelRoot.getInstance().getAuthToken());
         ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
@@ -125,22 +125,26 @@ public class ModelFacade implements IGameModel {
         ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
 
-    public void LeaveGame(Game game) {
-        GenericTask genericTask = new GenericTask("LeaveGame");
+    public void leaveLobbyGame(LobbyGame game) {
+
+    }
+
+    public void leaveGame(Game game) {
+        GenericTask genericTask = new GenericTask("leaveGame");
         genericTask.execute(ModelRoot.getInstance().getUserName(), game.getGameID(), ModelRoot.getInstance().getAuthToken());
     }
 
-    public void StartGame(Game game) {
-        GenericTask genericTask = new GenericTask("StartGame");
-        genericTask.execute(game.getGameID(), ModelRoot.getInstance().getAuthToken());
+    public void startGame(String gameId) {
+        GenericTask genericTask = new GenericTask("startGame");
+        genericTask.execute(gameId, ModelRoot.getInstance().getAuthToken());
     }
 
-    public void UpdateGameList() {
+    public void updateGameList() {
         GenericTask genericTask = new GenericTask("GetGameList");
         genericTask.execute(ModelRoot.getInstance().getAuthToken());
     }
 
-    public void UpdateGame() {
+    public void updateGame() {
         GenericTask genericTask = new GenericTask("GetGame");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken());
     }
@@ -161,7 +165,6 @@ public class ModelFacade implements IGameModel {
         genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), message);
     }
 
-
     @Override
     public List<Player> getPlayers() {
         ModelRoot mr = ModelRoot.getInstance();
@@ -171,8 +174,6 @@ public class ModelFacade implements IGameModel {
         else
             return null;
     }
-
-
 
     @Override
     public void addPoints(int p) {
@@ -255,21 +256,17 @@ public class ModelFacade implements IGameModel {
     }
 
     //Called by presenter
-    public boolean UpdateState(DisplayState displayState) {
+    public boolean updateState(DisplayState displayState) {
         ModelRoot.getInstance().setDisplayState(displayState);
         return true;
     }
 
-    public ArrayList<LobbyGame> GetLobbyGameList() {
+    public ArrayList<LobbyGame> getLobbyGameList() {
         return ModelRoot.getInstance().getLobbyGames();
     }
 
-    public Game GetCurrentGame() {
+    public Game getCurrentGame() {
         return ModelRoot.getInstance().getGame();
-    }
-
-    public String GetUserName() {
-        return ModelRoot.getInstance().getUserName();
     }
 
     @Override
@@ -330,7 +327,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Message> getMessages() {
-        return GetCurrentGame().getMessages();
+        return getCurrentGame().getMessages();
     }
 
     public boolean isGameStarted() {

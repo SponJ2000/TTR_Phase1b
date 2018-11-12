@@ -31,11 +31,11 @@ public class PresenterFacade {
         Log.d(TAG, "setPresenter: setting");
         mPresenter = presenter;
         if(mPresenter.getClass() == GameListFragment.class) {
-            ModelFacade.getInstance().UpdateState(DisplayState.GAMELOBBYLIST);
+            ModelFacade.getInstance().updateState(DisplayState.GAMELOBBYLIST);
         }else if(mPresenter.getClass() == LobbyFragment.class) {
-            ModelFacade.getInstance().UpdateState(DisplayState.LOBBY);
+            ModelFacade.getInstance().updateState(DisplayState.LOBBY);
         }else if(mPresenter.getClass() == TicketPresenter.class) {
-            ModelFacade.getInstance().UpdateState(DisplayState.GAME);
+            ModelFacade.getInstance().updateState(DisplayState.GAME);
         }
     }
 

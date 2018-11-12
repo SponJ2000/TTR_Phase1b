@@ -53,6 +53,10 @@ public class LobbyGame {
         this.maxPlayers = maxPlayers;
     }
 
+    public int getPlayerCount() {
+        return players.size();
+    }
+
     public int getPlayerListVerisonNum() {
         return playerListVerisonNum;
     }
