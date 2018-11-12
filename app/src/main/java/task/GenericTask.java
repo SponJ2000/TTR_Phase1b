@@ -4,16 +4,14 @@ import android.os.AsyncTask;
 
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import communication.Game;
+import communication.LobbyGame;
 import communication.Message;
 import communication.Result;
 import communication.Serializer;
 import communication.Ticket;
-import model.ModelFacade;
 import model.ModelRoot;
 import server.Poller;
 import server.ServerProxy;
@@ -37,17 +35,19 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
 
         switch (action) {
-            case "Login":
+            case "login":
                 return serverProxy.Login((String) params[0], (String) params[1]);
-            case "Register":
+            case "register":
                 return serverProxy.Register((String) params[0], (String) params[1]);
-            case "JoinGame":
-                return serverProxy.JoinGame((String) params[0], (String) params[1], (String) params[2]);
-            case "LeaveGame":
+            case "joinLobbyGame":
+                return serverProxy.JoinGameLobby((String) params[0], (String) params[1], (String) params[2]);
+            case "leaveGame":
                 return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
-            case "CreateGame":
-                return serverProxy.CreateGame((Game) params[0], (String) params[1]);
-            case "StartGame":
+            case "leaveLobbyGame":
+                return serverProxy.LeaveLobbyGame((String) params[0], (String) params[1], (String) params[2]);
+            case "CreateLobby":
+                return serverProxy.CreateLobby((LobbyGame) params[0], (String) params[1]);
+            case "startGame":
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
             case "GetGameList":
                 return serverProxy.GetGameList((String) params[0]);
@@ -78,10 +78,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     public void onPostExecute(Result result) {
 
         switch (action) {
-            case "Login":
+            case "login":
                 OnSignIn(result);
                 break;
-            case "Register":
+            case "register":
                 //need to update the authkey
                 OnSignIn(result);
                 break;
@@ -117,32 +117,26 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         if (result.isSuccess()) {
 
             ArrayList<Object> temp = (ArrayList<Object>) result.getData();
-            ArrayList<Game> games = new ArrayList<>();
+            ArrayList<LobbyGame> gameLobbies = new ArrayList<>();
             for (int i = 0;i < temp.size(); i++) {
-                games.add(new Serializer().deserializeGame(temp.get(i).toString()));
+                gameLobbies.add(new Serializer().deserializeGameLobby(temp.get(i).toString()));
             }
-            ModelRoot.getInstance().setGameList(games);
+            ModelRoot.getInstance().setGameLobbies(gameLobbies);
 
         }
     }
 
     private void FetchGameFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().setGame((Game) result.getData());
+            ModelRoot.getInstance().setGame((LobbyGame) result.getData());
         }
     }
 
     private void OnTickectsChoosen(Result result) {
-//        if (ModelFacade.getInstance().getTickets()!= null)
-//        System.out.println("ticket size is: " + ModelFacade.getInstance().getTickets().size());
         System.out.println(result.toString());
         if (result.isSuccess()) {
-//            System.out.println("make ticket added to the player");
-//            System.out.println("ticket size is: " + ModelFacade.getInstance().getTickets().size());
-//            System.out.println("number of tickets owned: " + ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTickets());
-            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTickets(ModelRoot.getInstance().getTicketsWanted());
+            ModelRoot.getInstance().getGame().getPlayerUser().setTickets(ModelRoot.getInstance().getTicketsWanted());
             ModelRoot.getInstance().setTicketsWanted(new ArrayList<Ticket>());
-//            System.out.println("number of tickets owned: " + ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTickets());
         }
         else {
             System.out.println("errow masssage is ");
@@ -156,7 +150,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             String userName = m.getUserName();
             if (result.getData() == null) {
                 ArrayList<Ticket> ticketsRecieved = (ArrayList<Ticket>)result.getData();
-                ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTickets(ticketsRecieved);
+                ModelRoot.getInstance().getGame().getPlayerUser().setTickets(ticketsRecieved);
             }
         }
     }
@@ -170,7 +164,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             for (Object o: objects) {
                 ticketsToChoose.add((Ticket) serializer.deserializeTicket(o.toString()));
             }
-            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(ticketsToChoose);
+            ModelRoot.getInstance().getGame().getPlayerUser().setTicketToChoose(ticketsToChoose);
         }
     }
 }

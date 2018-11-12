@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.obfuscation.ttr_phase1b.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import communication.Result;
 import model.ModelFacade;
@@ -38,6 +37,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     private static final String TAG = "GameCreationFrag";
 
     private String mUser;
+    //all game need to be swiched to gameClient
     private Game mGame;
 
     private Button mCancel;
@@ -50,7 +50,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     private OnGameCreationLister mListener;
 
     public GameCreationFragment() {
-        mUser = ModelFacade.getInstance().GetUserName();
+        mUser = ModelFacade.getInstance().getUserName();
         ArrayList<Player> l = new ArrayList<>();
         l.add(new Player(mUser));
         mGame = new Game("", mUser, l, 2);

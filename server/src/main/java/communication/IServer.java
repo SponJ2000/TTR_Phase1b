@@ -1,7 +1,5 @@
 package communication;
 
-import com.sun.org.apache.regexp.internal.RE;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +43,7 @@ public interface IServer {
     Result Register(String id, String password);
 
     /**
-     * Join the user to a game
+     * Join the user to a game lobby
      *
      * @pre     username of the user already exist
      *          gameID of the game is already exist, still has empty spots, havent start
@@ -58,7 +56,7 @@ public interface IServer {
      * @param authToken a String object with the username's authToken
      * @return          a Result object containing a boolean indicating success
      */
-    Result JoinGame(String id, String gameID, String authToken);
+    Result JoinGameLobby(String id, String gameID, String authToken);
 
     /**
      * let the player leave the game
@@ -77,6 +75,8 @@ public interface IServer {
      */
     Result LeaveGame(String id, String gameID, String authToken);
 
+    Result LeaveLobbyGame(String id, String gameID, String authToken);
+
     /**
      * get game properties as name and number of players allowed in the game, then create it
      *
@@ -85,11 +85,11 @@ public interface IServer {
      *          authToken which is still valid and exist
      * @post    game is created with all the sepcification of the parameter game.
      *
-     * @param game      the game object, containing the game name and max player count
+     * @param lobbyGame      the lobbyGame object, containing the game name and max player count
      * @param authToken a String object containing the users authToken
      * @return          a Result object containing a boolean indication success
      */
-    Result CreateLobby(GameLobby gameLobby, String authToken);
+    Result CreateLobby(LobbyGame lobbyGame, String authToken);
 
     /**
      * the game owner can start the game, which will notify all other players in the room

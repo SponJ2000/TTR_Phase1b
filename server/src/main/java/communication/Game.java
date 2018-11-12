@@ -22,6 +22,13 @@ public class Game {
         gameID = UUID.randomUUID().toString();
     }
 
+    public Game(String gameID){
+        this.gameID = gameID;
+        messages = new ArrayList<Message>();
+        faceUpTrainCarCards = new ArrayList<Card>();
+        mMap = new GameMap();
+    }
+
     public String getGameID() {
         return gameID;
     }
@@ -57,11 +64,9 @@ public class Game {
     public void claimRoute(Route route, Player player) {
         mMap.claimRoute(route, player);
     }
+
     public void insertMessage(Message m) {
         messages.add(m);
     }
-
-
-
 
 }

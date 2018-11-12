@@ -48,6 +48,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import static communication.GameColor.*;
+
 
 public class GameFragment extends Fragment implements IGameView, OnMapReadyCallback {
 
@@ -57,7 +59,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private int changeIndex;
 
-    private boolean mIsTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
     private List<Ticket> mTickets;
@@ -90,8 +91,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private LatLng selected;
 
+    private Map<GameColor, Integer> cardMap;
+    private Map<GameColor, Integer> colorMap;
+
     public GameFragment() {
-        mIsTurn = false;
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
@@ -108,6 +111,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                              @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
+
+        initCardMap();
+        initColorMap();
 
         selected = null;
 
@@ -136,10 +142,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTicketsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mIsTurn) {
-                    Log.d(TAG, "view tickets");
-                    mPresenter.showTickets();
-                }
+                mPresenter.selectTickets();
             }
         });
 
@@ -157,9 +160,35 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mPointsView = rootView.findViewById(R.id.txt_points);
         mTrainsView = rootView.findViewById(R.id.txt_trains);
 
-        mPointsView.setText("0");
-        mTrainsView.setText("40");
+        mPointsView.setText(mPlayer.getPoint());
+        mTrainsView.setText(mPlayer.getTrainNum());
 
+        initCardViews(rootView);
+
+
+        //Gets MapView from xml layout
+        mMapView = rootView.findViewById(R.id.mapView);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.getMapAsync(this);
+
+        mMapView.onResume();
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mMapView.getMapAsync(this);
+
+        mPresenter.update();
+
+        return rootView;
+
+    }
+
+    private void initCardViews(View rootView){
         mFaceCardViews = new ImageView[5];
         mFaceCardViews[0] = rootView.findViewById(R.id.card1);
         mFaceCardViews[0].setOnClickListener(new View.OnClickListener() {
@@ -222,30 +251,39 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mCardViews[6] = rootView.findViewById(R.id.txt_cards_yellow);
         mCardViews[7] = rootView.findViewById(R.id.txt_cards_blue);
         mCardViews[8] = rootView.findViewById(R.id.txt_cards_black);
+    }
 
+    private void initCardMap(){
+        cardMap = new HashMap<>();
+        cardMap.put(PURPLE, R.drawable.card_pur);
+        cardMap.put(BLUE, R.drawable.card_blu);
+        cardMap.put(ORANGE, R.drawable.card_ora);
+        cardMap.put(WHITE, R.drawable.card_whi);
+        cardMap.put(GREEN, R.drawable.card_gre);
+        cardMap.put(YELLOW, R.drawable.card_yel);
+        cardMap.put(BLACK, R.drawable.card_bla);
+        cardMap.put(RED, R.drawable.card_red);
+        cardMap.put(LOCOMOTIVE, R.drawable.card_loc);
+        cardMap.put(GREY, R.drawable.card_blank);
+    }
 
-        //Gets MapView from xml layout
-        mMapView = rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
+    private void initColorMap(){
+        colorMap = new HashMap<>();
+        colorMap.put(PURPLE,    getResources().getColor(R.color.trainPurple));
+        colorMap.put(BLUE,      getResources().getColor(R.color.trainBlue));
+        colorMap.put(ORANGE,    getResources().getColor(R.color.trainOrange));
+        colorMap.put(WHITE,     getResources().getColor(R.color.trainWhite));
+        colorMap.put(GREEN,     getResources().getColor(R.color.trainGreen));
+        colorMap.put(YELLOW,    getResources().getColor(R.color.trainYellow));
+        colorMap.put(BLACK,     getResources().getColor(R.color.trainBlack));
+        colorMap.put(RED,       getResources().getColor(R.color.trainRed));
+        colorMap.put(GREY,      getResources().getColor(R.color.trainGrey));
 
-        mMapView.getMapAsync(this);
-
-        mMapView.onResume();
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mMapView.getMapAsync(this);
-
-        mPresenter.update();
-
-        changeAccessibility();
-
-        return rootView;
-
+        colorMap.put(PLAYER_BLUE,   getResources().getColor(R.color.playerBlue));
+        colorMap.put(PLAYER_RED,    getResources().getColor(R.color.playerRed));
+        colorMap.put(PLAYER_PURPLE, getResources().getColor(R.color.playerPurple));
+        colorMap.put(PLAYER_YELLOW, getResources().getColor(R.color.playerYellow));
+        colorMap.put(PLAYER_BLACK,  getResources().getColor(R.color.playerBlack));
     }
 
     @Override
@@ -300,8 +338,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(5).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        //Add routes here
-
         
     }
 
@@ -342,53 +378,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             int color;
             claimed = false;
 
-            switch (r.getCardColor()) {
-                case RED:
-                    color = getResources().getColor(R.color.trainRed);
-                    break;
-                case PURPLE:
-                    color = getResources().getColor(R.color.trainPurple);
-                    break;
-                case BLUE:
-                    color = getResources().getColor(R.color.trainBlue);
-                    break;
-                case GREEN:
-                    color = getResources().getColor(R.color.trainGreen);
-                    break;
-                case YELLOW:
-                    color = getResources().getColor(R.color.trainYellow);
-                    break;
-                case ORANGE:
-                    color = getResources().getColor(R.color.trainOrange);
-                    break;
-                case BLACK:
-                    color = getResources().getColor(R.color.trainBlack);
-                    break;
-                case WHITE:
-                    color = getResources().getColor(R.color.trainWhite);
-                    break;
-                case PLAYER_RED:
-                    color = getResources().getColor(R.color.playerRed);
-                    claimed = true;
-                    break;
-                case PLAYER_PURPLE:
-                    color = getResources().getColor(R.color.playerPurple);
-                    claimed = true;
-                    break;
-                case PLAYER_BLUE:
-                    color = getResources().getColor(R.color.playerBlue);
-                    claimed = true;
-                    break;
-                case PLAYER_YELLOW:
-                    color = getResources().getColor(R.color.playerYellow);
-                    claimed = true;
-                    break;
-                case PLAYER_BLACK:
-                    color = getResources().getColor(R.color.playerBlack);
-                    claimed = true;
-                    break;
-                default:
-                    color = getResources().getColor(R.color.trainGrey);
+            try {
+                color = colorMap.get(r.getColor());
+            } catch(NullPointerException e) {
+                color = colorMap.get(GREY);
             }
 
             LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
@@ -423,28 +416,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void selectRoute(Route route) {
-        if (mIsTurn) {
-            mPresenter.selectRoute(route, mPlayer);
-        }
-        else Toast.makeText(getContext(), "Not your turn", Toast.LENGTH_SHORT);
+        mPresenter.claimRoute(route, mPlayer);
     }
 
     private void onChangeButton() {
 
-    }
-
-    private void changeAccessibility() {
-        if(mIsTurn) {
-            for(int i = 0; i < mFaceCardViews.length; i++) {
-                mFaceCardViews[i].setEnabled(true);
-            }
-            mDeck.setEnabled(true);
-        }else {
-            for(int i = 0; i < mFaceCardViews.length; i++) {
-                mFaceCardViews[i].setEnabled(false);
-            }
-            mDeck.setEnabled(false);
-        }
     }
 
     private void updateCards() {
@@ -488,40 +464,18 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private void updateFaceCards() {
         int i = 0;
         while (i < mFaceCards.size()) {
-            Card card = mFaceCards.get(i);
-            ImageView faceCardView = mFaceCardViews[i];
+            try {
+                Card card = mFaceCards.get(i);
+                ImageView faceCardView = mFaceCardViews[i];
 
-            switch (card.getColor()) {
-                case RED:
-                    faceCardView.setImageResource(R.drawable.card_red);
-                    break;
-                case ORANGE:
-                    faceCardView.setImageResource(R.drawable.card_ora);
-                    break;
-                case YELLOW:
-                    faceCardView.setImageResource(R.drawable.card_yel);
-                    break;
-                case GREEN:
-                    faceCardView.setImageResource(R.drawable.card_gre);
-                    break;
-                case BLUE:
-                    faceCardView.setImageResource(R.drawable.card_blu);
-                    break;
-                case PURPLE:
-                    faceCardView.setImageResource(R.drawable.card_pur);
-                    break;
-                case BLACK:
-                    faceCardView.setImageResource(R.drawable.card_bla);
-                    break;
-                case WHITE:
-                    faceCardView.setImageResource(R.drawable.card_whi);
-                    break;
-                case LOCOMOTIVE:
-                    faceCardView.setImageResource(R.drawable.card_loc);
-                    break;
-                default:
-                    faceCardView.setImageResource(R.drawable.card_blank);
+                faceCardView.setImageResource(cardMap.get(card.getColor()));
             }
+            catch (ArrayIndexOutOfBoundsException e) {
+                ImageView faceCardView = mFaceCardViews[i];
+
+                faceCardView.setImageResource(cardMap.get(GREY));
+            }
+
             i++;
         }
 
@@ -541,41 +495,30 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         GameColor color = mPlayer.getPlayerColor();
 
         ColorStateList stateList = null;
-        int colorid = 0;
-        int colorid2 = 0;
+        int colorID = colorMap.get(mPlayer.getPlayerColor());
         int board = 0;
 
         switch(color) {
             case PLAYER_RED:
-                colorid = R.color.playerRed;
-                colorid2 = R.color.playerRedLight;
                 board = R.drawable.board_r;
                 break;
             case PLAYER_YELLOW:
-                colorid = R.color.playerYellow;
-                colorid2 = R.color.playerYellowLight;
                 board = R.drawable.board_y;
                 break;
             case PLAYER_PURPLE:
-                colorid = R.color.playerPurple;
-                colorid2 = R.color.playerPurpleLight;
                 board = R.drawable.board_p;
                 break;
             case PLAYER_BLACK:
-                colorid = R.color.playerBlack;
-                colorid2 = R.color.playerBlackLight;
                 board = R.drawable.board_bla;
                 break;
             case PLAYER_BLUE:
-                colorid = R.color.playerBlue;
-                colorid2 = R.color.playerBlueLight;
                 board = R.drawable.board_blu;
                 break;
         }
 
-        mChatButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorid)));
-        mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorid)));
-        mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorid)));
+        mChatButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
+        mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
+        mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
 
         mBoard.setBackgroundResource(board);
     }
@@ -584,25 +527,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void updateRoute(Route route) {
         String name = route.getClaimedBy().getPlayerName();
-        int color = 0;
-
-        switch(route.getClaimedBy().getPlayerColor()) {
-            case PLAYER_RED:
-                color = getResources().getColor(R.color.playerRed);
-                break;
-            case PLAYER_BLUE:
-                color = getResources().getColor(R.color.playerBlue);
-                break;
-            case PLAYER_YELLOW:
-                color = getResources().getColor(R.color.playerYellow);
-                break;
-            case PLAYER_PURPLE:
-                color = getResources().getColor(R.color.playerPurple);
-                break;
-            case PLAYER_BLACK:
-                color = getResources().getColor(R.color.playerBlack);
-                break;
-        }
+        int color = colorMap.get(route.getClaimedBy().getPlayerColor());
 
         Polyline p = mRouteLines.get(route);
 
@@ -645,17 +570,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     @Override
-    public void setIsTurn(boolean isTurn) {
-        mIsTurn = isTurn;
-    }
-
-    @Override
     public void updateUI() {
         if(mPlayer != null) {
             Log.d(TAG, "updateUI: player: " + mPlayer);
             setColor();
             setPoints(mPlayer.getPoint());
-            setTrains(mPlayer.getTrainCarNum());
+            setTrains(mPlayer.getTrainNum());
         }if(mCards != null) {
             updateCards();
         }if(mFaceCards != null) {
@@ -683,6 +603,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void setDeckSize(int size) {
         mDeckSize.setText("" + size);
+    }
+
+    @Override
+    public void sendToast(String toast) {
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
     }
 
     @Override

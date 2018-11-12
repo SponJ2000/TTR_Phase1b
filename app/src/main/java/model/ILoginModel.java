@@ -35,7 +35,7 @@ public interface ILoginModel {
 
     public void chooseCard(int index);
 
-    public boolean UpdateState(State state);
+    public boolean UpdateState(DisplayState displayState);
 
     public ArrayList<Game> GetGameList();
 

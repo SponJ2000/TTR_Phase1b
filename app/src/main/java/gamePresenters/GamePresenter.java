@@ -53,7 +53,6 @@ public class GamePresenter implements IGamePresenter {
     public void updateInfo(Object result) {
         view.setPlayer(model.getPlayer());
         view.setDeckSize(model.getDeckSize());
-        view.setIsTurn(model.isMyTurn());
         view.setCards(model.getCards());
         view.setFaceCards(model.getFaceCards());
 //        view.setMap(model.getMap());
@@ -78,13 +77,13 @@ public class GamePresenter implements IGamePresenter {
     }
 
     @Override
-    public void selectRoute(Route route, Player player) {
+    public void claimRoute(Route route, Player player) {
 //        Result r = model.claimRoute(route, player);
 //        if(r.isSuccess()) {
 //            view.updateRoute(route);
 //        }
 
-        state.selectRoute(route);
+        state.claimRoute(route, player);
     }
 
     @Override
@@ -149,11 +148,11 @@ public class GamePresenter implements IGamePresenter {
                 if (model.isMyTurn()) {
                     Toast.makeText(activity, "Not your turn", Toast.LENGTH_SHORT).show();
                     model.setMyTurn(false);
-                    view.setIsTurn(false);
+                    state = new NotTurn(this);
                 } else {
                     Toast.makeText(activity, "Your turn!", Toast.LENGTH_SHORT).show();
                     model.setMyTurn(true);
-                    view.setIsTurn(true);
+                    state = new TurnNoSelection(this);
                 }
 
 
@@ -169,7 +168,7 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void chooseCard(int index) {
 //        model.chooseCard(index);
-        if (index == 0) {
+        if (index == -1) {
             state.selectDeck();
         }
         else {
@@ -186,8 +185,9 @@ public class GamePresenter implements IGamePresenter {
         this.listener.onShow(Shows.menu);
     }
 
-    public void showTickets() {
-        this.listener.onShow(Shows.tickets);
+    public void selectTickets() {
+        state.selectTicketsButton();
+        //this.listener.onShow(Shows.tickets);
     }
 
     public void showChat() {
@@ -205,9 +205,7 @@ class ITurnState {
     void selectTicket(Object ticket){}
     void deselectTicket(Object ticket){}
     void requestTickets(){}
-    void selectRoute(Route route){}
-    void deselectRoute(){}
-    void claimRoute(Route route){}
+    void claimRoute(Route route, Player player){}
 }
 
 class NotTurn extends ITurnState {
@@ -246,8 +244,13 @@ class TurnNoSelection extends ITurnState {
     }
 
     @Override
-    public void selectRoute(Route route) {
-        wrapper.setState(new TurnRouteSelected(wrapper));
+    public void claimRoute(Route route, Player player) {
+        //TODO: check if player has sufficient cards
+        //TODO: allow player to choose cards if grey
+        //TODO: send claim route
+        //TODO: if successful, set NotTurn; if not send error toast
+
+        wrapper.setState(new NotTurn(wrapper));
     }
 }
 
@@ -287,37 +290,6 @@ class TurnYesTickets extends ITurnState {
     @Override
     void requestTickets() {
         //TODO: send request for tickets, then update UI
-        wrapper.setState(new NotTurn(wrapper));
-    }
-}
-
-class TurnRouteSelected extends ITurnState {
-
-    private GamePresenter wrapper;
-
-    public TurnRouteSelected(GamePresenter wrapper) {
-        this.wrapper = wrapper;
-    }
-
-    @Override
-    public void deselectTicket(Object ticket) {
-        wrapper.setState(new TurnNoSelection(wrapper));
-    }
-
-    @Override
-    public void selectRoute(Route route) {
-
-    }
-
-    @Override
-    public void deselectRoute() {
-
-    }
-
-    @Override
-    public void claimRoute(Route route) {
-        //TODO: check if you have enough cards
-        //TODO: if so, send request to the server and update UI
         wrapper.setState(new NotTurn(wrapper));
     }
 }

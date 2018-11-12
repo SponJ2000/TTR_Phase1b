@@ -2,10 +2,9 @@ package com.obfuscation.ttr_phase1b.activity;
 
 import android.util.Log;
 
-import gamePresenters.GamePresenter;
 import gamePresenters.TicketPresenter;
 import model.ModelFacade;
-import model.State;
+import model.DisplayState;
 
 public class PresenterFacade {
 
@@ -32,11 +31,11 @@ public class PresenterFacade {
         Log.d(TAG, "setPresenter: setting");
         mPresenter = presenter;
         if(mPresenter.getClass() == GameListFragment.class) {
-            ModelFacade.getInstance().UpdateState(State.GAMELIST);
+            ModelFacade.getInstance().updateState(DisplayState.GAMELOBBYLIST);
         }else if(mPresenter.getClass() == LobbyFragment.class) {
-            ModelFacade.getInstance().UpdateState(State.LOBBY);
+            ModelFacade.getInstance().updateState(DisplayState.LOBBY);
         }else if(mPresenter.getClass() == TicketPresenter.class) {
-            ModelFacade.getInstance().UpdateState(State.GAME);
+            ModelFacade.getInstance().updateState(DisplayState.GAME);
         }
     }
 

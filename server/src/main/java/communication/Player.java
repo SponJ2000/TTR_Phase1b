@@ -6,11 +6,13 @@ import java.util.ArrayList;
  * Created by jalton on 10/1/18.
  */
 
-public class Player {
+public class Player implements IPlayer{
     private String playerName;
     private Integer point;
     private ArrayList<String> claimedRoutesID = new ArrayList<>();
     private GameColor playerColor;
+    private Integer trainNum;
+
 
 
     public void setPlayerName(String playerName) {
@@ -53,8 +55,16 @@ public class Player {
 
     public Player(String playerName) {
         this.playerName = playerName;
+        trainNum = 40;
     }
 
+    public int getTrainNum(){
+        return trainNum;
+    }
+
+    public void setTrainNum(int newNum){
+        trainNum = newNum;
+    }
 
     public GameColor getPlayerColor() {
         return playerColor;
@@ -62,6 +72,14 @@ public class Player {
 
     public void setPlayerColor(GameColor playerColor) {
         this.playerColor = playerColor;
+    }
+
+    public Integer getCardNum() {
+        return 0;
+    }
+
+    public Integer getTicketNum() {
+        return 0;
     }
 
 //    @Override
@@ -88,5 +106,9 @@ public class Player {
         this.playerColor = playerColor;
     }
 
+    @Override
+    public PlayerIdentity getIdentity() {
+        return PlayerIdentity.PLAYER;
+    }
 
 }

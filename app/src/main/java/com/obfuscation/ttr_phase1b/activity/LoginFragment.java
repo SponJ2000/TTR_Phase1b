@@ -1,8 +1,6 @@
 package com.obfuscation.ttr_phase1b.activity;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
@@ -103,7 +101,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             public void onClick(View view) {
                 Log.d(TAG, "Now logging in");
 //                Toast.makeText(getActivity(), "Attempting to log in", Toast.LENGTH_SHORT).show();
-                ModelFacade.getInstance().Login(mUser, mPass);
+                ModelFacade.getInstance().login(mUser, mPass);
             }
         });
 
@@ -112,7 +110,7 @@ public class LoginFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "Now registering");
-                ModelFacade.getInstance().Register(mUser, mPass);
+                ModelFacade.getInstance().register(mUser, mPass);
             }
         });
 
@@ -136,7 +134,7 @@ public class LoginFragment extends Fragment implements IPresenter {
     public void updateInfo(Object result) {
         if(result == null || result.getClass() != Result.class) {
             Log.d(TAG, "result is wrong type: " + result);
-            Toast.makeText(getActivity(), "Login failed: null result", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "login failed: null result", Toast.LENGTH_LONG).show();
         }else {
             Result data = (Result) result;
             if(data.isSuccess()) {
@@ -144,9 +142,9 @@ public class LoginFragment extends Fragment implements IPresenter {
             }else {
                 if(data.getErrorInfo() == null) {
                     Log.d(TAG, "null error msg: " + data);
-                    Toast.makeText(getActivity(), "Login failed: null error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "login failed: null error", Toast.LENGTH_LONG).show();
                 }else {
-                    String toastText = "Login failed: " + data.getErrorInfo();
+                    String toastText = "login failed: " + data.getErrorInfo();
                     Log.d(TAG, toastText);
                     Toast.makeText(getActivity(), toastText, Toast.LENGTH_LONG).show();
                 }
