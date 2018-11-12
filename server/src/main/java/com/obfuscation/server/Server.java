@@ -35,6 +35,7 @@ public class Server {
 
         //the server context is exec
         server.createContext("/exec", new ExecCommandHandler());
+        server.createContext("/", new DefaultHandler());
 
         server.start();
 
