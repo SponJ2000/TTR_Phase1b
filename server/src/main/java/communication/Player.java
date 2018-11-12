@@ -58,7 +58,7 @@ public class Player implements IPlayer{
         return carNum;
     }
 
-    public void setCarNume(int newNum){
+    public void setCarNum(int newNum){
         carNum = newNum;
     }
 
