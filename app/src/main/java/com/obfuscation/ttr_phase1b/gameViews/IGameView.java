@@ -57,16 +57,6 @@ public interface IGameView extends IView {
     void setTickets(List<Ticket> tickets);
 
     /**
-     * Sets whether or not it is the client's turn
-     *
-     * @pre client is initialized correctly and is told when it is not their turn
-     * @post client can't perform certain actions if it's not their turn
-     *
-     * @param isTurn True if it is their turn, False if otherwise
-     */
-    void setIsTurn(boolean isTurn);
-
-    /**
      * Sets the Player object the view draws info from
      *
      * @pre player is a properly initialized Player
