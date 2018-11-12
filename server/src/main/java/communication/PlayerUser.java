@@ -14,7 +14,7 @@ public class PlayerUser extends Player {
     private ArrayList<Card> cardToChoose = new ArrayList<Card>();
 
     public PlayerUser() {
-
+        super();
     }
 
     public PlayerUser(String playerName) {

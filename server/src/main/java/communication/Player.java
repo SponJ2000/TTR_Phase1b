@@ -13,6 +13,10 @@ public class Player {
     private GameColor playerColor;
 
 
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
     public ArrayList<String> getClaimedRoutes() {
         return claimedRoutesID;
     }

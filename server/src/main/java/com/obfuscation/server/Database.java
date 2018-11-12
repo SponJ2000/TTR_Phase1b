@@ -48,8 +48,8 @@ public class Database {
 
     private Map<String, String> loginInfo;
     //TODO : make gameid and gamelobbyid same
-    private List<GameLobby> gameLobbyList;
-    private List<GameServer> gameList;
+    private List<GameLobby> gameLobbyList = new ArrayList<>();
+    private List<GameServer> gameList = new ArrayList<>();
 
 
     private List<ActiveUser> activeUsers;
@@ -88,6 +88,13 @@ public class Database {
         activeUsers = new ArrayList<>();
         authTokenMap = new HashMap<>();
         authTokens = new ArrayList<>();
+//        setDummyGame();
+        loginInfo.put("Bob", "password");
+        loginInfo.put("Joe", "password");
+        login("Bob", "password");
+        login("Joe", "password");
+        authTokenMap.put("Bob", "authBob");
+        authTokenMap.put("Joe", "authJoe");
     }
 
     Result register(String id, String password){
@@ -107,6 +114,7 @@ public class Database {
     }
 
     Result login(String id, String password){
+        System.out.println(id + " " + password);
         if(loginInfo.containsKey(id)){
             if(loginInfo.get(id).equals(password)){
                 //Generate authToken
