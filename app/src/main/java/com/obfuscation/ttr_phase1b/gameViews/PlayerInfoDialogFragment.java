@@ -111,7 +111,7 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
             mPlayerNameView.setText("" + player.getPlayerName());
             mPlayerPointView.setText("" + player.getPoint());
             mPlayerCardsView.setText("" + player.getCardNum());
-            mPlayerTrainsView.setText("" + player.getTrainCarNum());
+            mPlayerTrainsView.setText("" + player.getTrainNum());
         }
 
     }

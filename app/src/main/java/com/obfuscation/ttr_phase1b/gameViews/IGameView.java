@@ -57,16 +57,6 @@ public interface IGameView extends IView {
     void setTickets(List<Ticket> tickets);
 
     /**
-     * Sets whether or not it is the client's turn
-     *
-     * @pre client is initialized correctly and is told when it is not their turn
-     * @post client can't perform certain actions if it's not their turn
-     *
-     * @param isTurn True if it is their turn, False if otherwise
-     */
-    void setIsTurn(boolean isTurn);
-
-    /**
      * Sets the Player object the view draws info from
      *
      * @pre player is a properly initialized Player
@@ -116,4 +106,9 @@ public interface IGameView extends IView {
      */
     void updateRoute(Route route);
 
+    /**
+     * Sends a message to the player in the form of a toast
+     * @param toast a String containing the toast to send
+     */
+    void sendToast(String toast);
 }

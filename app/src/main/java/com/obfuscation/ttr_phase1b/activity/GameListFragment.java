@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.obfuscation.ttr_phase1b.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import communication.LobbyGame;
 import communication.Result;
 import model.ModelFacade;
 import communication.Game;
@@ -35,7 +35,7 @@ public class GameListFragment extends Fragment implements IPresenter {
     private static final String TAG = "GameListFrag";
 
     private int mSelectedGame;
-    private ArrayList<Game> mGameList;
+    private ArrayList<LobbyGame> mGameList;
     private boolean ismJoingGame;
 
     private Button mJoin;
@@ -75,7 +75,7 @@ public class GameListFragment extends Fragment implements IPresenter {
             public void onClick(View view) {
                 Log.d(TAG, "Sending join command");
                 ismJoingGame = true;
-                ModelFacade.getInstance().JoinGame(mGameList.get(mSelectedGame));
+                ModelFacade.getInstance().joinLobbyGame(mGameList.get(mSelectedGame));
             }
         });
 
@@ -93,12 +93,12 @@ public class GameListFragment extends Fragment implements IPresenter {
 
         ismJoingGame = false;
         mSelectedGame = -1;
-        mGameList = ModelFacade.getInstance().GetGameList();
+        mGameList = ModelFacade.getInstance().getLobbyGameList();
         Log.d(TAG+"_constr", "gamelist: " + mGameList);
         if(mGameList == null) {
             mGameList = new ArrayList<>();
         }
-        ModelFacade.getInstance().UpdateGameList();
+        ModelFacade.getInstance().updateGameList();
         updateUI();
 
         mJoin.setEnabled(false);
@@ -120,7 +120,7 @@ public class GameListFragment extends Fragment implements IPresenter {
         Log.d(TAG, "getting updated");
         if(mGameRecycler != null) {
             Log.d(TAG+"_updateUI", "gamelist: " + mGameList);
-            ArrayList<Game> temp = mGameList;
+            ArrayList<LobbyGame> temp = mGameList;
             mGameAdapter = new GameAdapter(temp);
             mGameRecycler.setAdapter(mGameAdapter);
         }
@@ -135,7 +135,7 @@ public class GameListFragment extends Fragment implements IPresenter {
                 if(data.isSuccess()) {
                     Log.d(TAG+"_update", "Now joining");
                     onGameSelect("join");
-                    ModelFacade.getInstance().UpdateGame();
+                    ModelFacade.getInstance().updateGame();
                 }else {
                     Log.d(TAG+"_update", "Join failed: " + data.getErrorInfo());
                     Toast.makeText(getActivity(), "Join failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
@@ -145,7 +145,7 @@ public class GameListFragment extends Fragment implements IPresenter {
                 Toast.makeText(getActivity(), "Join failed: null result", Toast.LENGTH_LONG).show();
             }
         }
-        ArrayList<Game> temp = ModelFacade.getInstance().GetGameList();
+        ArrayList<LobbyGame> temp = ModelFacade.getInstance().getLobbyGameList();
         if(temp != null) {
             mGameList = temp;
         }
@@ -169,7 +169,7 @@ public class GameListFragment extends Fragment implements IPresenter {
 
     private class GameHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        Game mGame;
+        LobbyGame mGame;
         int mGameNumber;
 
         private TextView mGameIDView;
@@ -185,7 +185,7 @@ public class GameListFragment extends Fragment implements IPresenter {
             mPlayersView = view.findViewById(R.id.players_view);
         }
 
-        public void bindGame(Game game, int gameNumber) {
+        public void bindGame(LobbyGame game, int gameNumber) {
 //            Log.d(TAG+"_holder", "game: " + game.toString());
             mGame = game;
             mGameNumber = gameNumber;
@@ -204,9 +204,9 @@ public class GameListFragment extends Fragment implements IPresenter {
 
     private class GameAdapter extends RecyclerView.Adapter<GameHolder> {
 
-        private ArrayList<Game> mGames;
+        private ArrayList<LobbyGame> mGames;
 
-        public GameAdapter(ArrayList<Game> games) {
+        public GameAdapter(ArrayList<LobbyGame> games) {
             mGames = games;
         }
 

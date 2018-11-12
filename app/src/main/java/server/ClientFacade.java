@@ -8,15 +8,19 @@ import java.util.List;
 
 import communication.Card;
 import communication.Game;
+import communication.GameClient;
 import communication.IClient;
+import communication.IPlayer;
 import communication.Message;
 import communication.Player;
+import communication.PlayerOpponent;
+import communication.PlayerUser;
 import communication.Serializer;
 import communication.Ticket;
 import communication.GameColor;
 import model.ModelFacade;
 import model.ModelRoot;
-import model.State;
+import model.DisplayState;
 
 /**
  * Created by hao on 10/25/18.
@@ -49,7 +53,7 @@ public class ClientFacade implements IClient{
     }
 
     @Override
-    public void updateGameList(String gameID) {
+    public void updateGameLobbyList(String gameID) {
         //sever will never call this command
     }
 
@@ -59,36 +63,24 @@ public class ClientFacade implements IClient{
     }
 
     @Override
-    public void initializeGame(Game game) {
+    public void initializeGame(GameClient gameClient) {
         try {
-            ArrayList<Ticket> tickets = ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
-            ModelRoot.getInstance().setGame(game);
-            if (tickets != null) {
-                if (tickets.size() > 0) {
+            ArrayList<Ticket> ticketsToChoose = ModelRoot.getInstance().getGame().getPlayerUser().getTicketToChoose();
+            ModelRoot.getInstance().setGame(gameClient);
+            if (ticketsToChoose != null) {
+                if (ticketsToChoose.size() > 0) {
 
                     if (ModelRoot.getInstance().getGame() != null) {
-                        if (ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()) != null) {
-                            ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).setTicketToChoose(tickets);
+                        if (ModelRoot.getInstance().getGame().getPlayerUser() != null) {
+                            ModelRoot.getInstance().getGame().getPlayerUser().setTicketToChoose(ticketsToChoose);
                         }
                     }
                 }
             }
-            System.out.println("in printing game detail");
 
             Game g = ModelRoot.getInstance().getGame();
 
-            List<Player> players = g.getPlayers();
-
-            System.out.println("has player: " + players.size());
-            for (Player p : players) {
-                System.out.println("player get player color");
-                System.out.println("layer color is: " + p.getPlayerColor());
-                if (p.getPlayerColor() == null) {
-                    System.out.println("player color is null");
-                }
-            }
-
-            ModelRoot.getInstance().setState(State.GAME);
+            ModelRoot.getInstance().setDisplayState(DisplayState.GAME);
             ModelFacade.getInstance().getChoiceTickets();
         }catch (Exception e) {
             e.printStackTrace();
@@ -98,11 +90,11 @@ public class ClientFacade implements IClient{
     @Override
     //it is only access the current
     public void updatePlayerPoints(String gameID, String plyerID, Integer points) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getPlayerbyID(plyerID);
+            IPlayer p = g.getPlayerByUserName(plyerID);
             if (p != null) {
-                p.setPoint(points);
+                ((Player) p).setPoint(points);
             }
         }
     }
@@ -117,10 +109,10 @@ public class ClientFacade implements IClient{
             cardD.add(serializer.deserializeCard(O.toString()));
         }
         try {
-            Game g = ModelRoot.getInstance().getGame();
+            GameClient g = ModelRoot.getInstance().getGame();
 
             if (g != null) {
-                Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+                PlayerUser p = g.getPlayerUser();
                 if (p != null) {
                     p.setCards(cardD);
                 }
@@ -134,9 +126,9 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTickets(String gameID, List<Ticket> tickets) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+            PlayerUser p = g.getPlayerUser();
             if (p != null) {
                 p.setTicketToChoose((ArrayList<Ticket>) tickets);
             }
@@ -146,27 +138,27 @@ public class ClientFacade implements IClient{
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
         ModelRoot m = ModelRoot.getInstance();
-        m.getGame().getPlayerbyID(playerID).setCardNum(cardNum);
+        m.getGame().getPlayerUser();
     }
 
     @Override
     public void updateOpponentTrainCars(String gameID, String playerID, Integer carNum) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getPlayerbyID(playerID);
+            IPlayer p = g.getPlayerByUserName(playerID);
             if (p != null) {
-                p.setTrainCarNum(carNum);
+                ((PlayerOpponent) p).setTrainNum(carNum);
             }
         }
     }
 
     @Override
     public void updateOpponentTickets(String gameID, String playerID, Integer cardNum) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getPlayerbyID(playerID);
+            IPlayer p = g.getPlayerByUserName(playerID);
             if (p != null) {
-                p.setTicketNum(cardNum);
+                ((PlayerOpponent) p).setTicketNum(cardNum);
             }
         }
     }
@@ -198,18 +190,18 @@ public class ClientFacade implements IClient{
     //upate number of card in the deck
     @Override
     public void updateDestinationDeck(String gameID, Integer cardNum) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            ModelRoot.getInstance().getGame().setTicketsRemainNum(cardNum);
+            ModelRoot.getInstance().getGame().setTrainCardDeckSize(cardNum);
 
         }
     }
 
     @Override
     public void claimRoute(String gameID, String playerID, String routeID) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            g.getPlayerbyID(playerID).addRouteAsClaimed(routeID);
+            ((Player)g.getPlayerByUserName(playerID)).addRouteAsClaimed(routeID);
         }
     }
 

@@ -115,6 +115,6 @@ public class GameMap {
         Route r = routes.get(routes.indexOf(route));
 
         r.setClaimedBy(player);
-        r.setCardColor(player.getPlayerColor());
+        r.setColor(player.getPlayerColor());
     }
 }

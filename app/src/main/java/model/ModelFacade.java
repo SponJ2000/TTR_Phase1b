@@ -1,19 +1,19 @@
 package model;
 
 
-import android.view.Display;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import communication.Card;
+import communication.GameClient;
 import communication.GameColor;
 import communication.Game;
+import communication.LobbyGame;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerUser;
 import communication.Result;
 import communication.Route;
 import communication.Ticket;
@@ -101,46 +101,51 @@ public class ModelFacade implements IGameModel {
         return 30;
     }
 
-    public void Login(String userName, String password){
-        GenericTask genericTask = new GenericTask("Login");
+    public void login(String userName, String password){
+        GenericTask genericTask = new GenericTask("login");
         genericTask.execute(userName,password);
         ModelRoot.getInstance().setUserName(userName);
     }
 
-    public void Register(String userName, String password) {
-        GenericTask genericTask = new GenericTask("Register");
+    public void register(String userName, String password) {
+        GenericTask genericTask = new GenericTask("register");
         genericTask.execute(userName,password);
         ModelRoot.getInstance().setUserName(userName);
     }
 
-    public void JoinGame(Game game) {
-        GenericTask genericTask = new GenericTask("JoinGame");
+    public void joinLobbyGame(LobbyGame lobbyGame) {
+        GenericTask genericTask = new GenericTask("joinLobbyGame");
+        genericTask.execute(ModelRoot.getInstance().getUserName(), lobbyGame.getGameID(), ModelRoot.getInstance().getAuthToken());
+        ModelRoot.getInstance().setLobbyGame(lobbyGame);
+    }
+
+    public void createLobbyGame(LobbyGame lobbyGame) {
+        GenericTask genericTask = new GenericTask("CreateGameLobby");
+        genericTask.execute(lobbyGame, ModelRoot.getInstance().getAuthToken());
+        ModelRoot.getInstance().setLobbyGame(lobbyGame);
+    }
+
+    public void leaveLobbyGame(LobbyGame lobbyGame) {
+        GenericTask genericTask = new GenericTask("leaveLobbyGame");
+        genericTask.execute(ModelRoot.getInstance().getUserName(), lobbyGame.getGameID(), ModelRoot.getInstance().getAuthToken());
+    }
+
+    public void leaveGame(Game game) {
+        GenericTask genericTask = new GenericTask("leaveGame");
         genericTask.execute(ModelRoot.getInstance().getUserName(), game.getGameID(), ModelRoot.getInstance().getAuthToken());
-        ModelRoot.getInstance().setGame(game);
     }
 
-    public void CreateGame(Game game) {
-        GenericTask genericTask = new GenericTask("CreateGame");
-        genericTask.execute(game, ModelRoot.getInstance().getAuthToken());
-        ModelRoot.getInstance().setGame(game);
+    public void startGame(String gameId) {
+        GenericTask genericTask = new GenericTask("startGame");
+        genericTask.execute(gameId, ModelRoot.getInstance().getAuthToken());
     }
 
-    public void LeaveGame(Game game) {
-        GenericTask genericTask = new GenericTask("LeaveGame");
-        genericTask.execute(ModelRoot.getInstance().getUserName(), game.getGameID(), ModelRoot.getInstance().getAuthToken());
-    }
-
-    public void StartGame(Game game) {
-        GenericTask genericTask = new GenericTask("StartGame");
-        genericTask.execute(game.getGameID(), ModelRoot.getInstance().getAuthToken());
-    }
-
-    public void UpdateGameList() {
+    public void updateGameList() {
         GenericTask genericTask = new GenericTask("GetGameList");
         genericTask.execute(ModelRoot.getInstance().getAuthToken());
     }
 
-    public void UpdateGame() {
+    public void updateGame() {
         GenericTask genericTask = new GenericTask("GetGame");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken());
     }
@@ -161,10 +166,14 @@ public class ModelFacade implements IGameModel {
         genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), message);
     }
 
-
     @Override
     public List<Player> getPlayers() {
-        return ModelRoot.getInstance().getGame().getPlayers();
+        ModelRoot mr = ModelRoot.getInstance();
+        if(mr.getDisplayState() == DisplayState.LOBBY) {
+            return mr.getLobbyGame().getPlayers();
+        }
+        else
+            return null;
     }
 
     @Override
@@ -189,10 +198,10 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void updateOpponent() {
-        List<Player> players = ModelRoot.getInstance().getGame().getPlayers();
-        players.get(1).setTrainCarNum(12);
-        players.get(1).setCardNum(24);
-        players.get(1).setPoint(32);
+//        List<Player> players = ModelRoot.getInstance().getGame().getPlayers();
+//        players.get(1).setTrainCarNum(12);
+//        players.get(1).setCardNum(24);
+//        players.get(1).setPoint(32);
     }
 
     @Override
@@ -206,8 +215,8 @@ public class ModelFacade implements IGameModel {
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken(), tickets);
         ModelRoot.getInstance().setTicketsWanted((ArrayList<Ticket>) tickets);
 
-        //FIXME
-        getPlayer().setTickets((ArrayList<Ticket>)tickets);
+
+        getPlayer().addTickets((ArrayList<Ticket>)tickets);
     }
 
     @Override
@@ -232,14 +241,14 @@ public class ModelFacade implements IGameModel {
     @Override
     //whenever we choose a new cards
     public void updateFaceCards() {
-        ModelRoot.getInstance().getGame().takeCard(0);
+        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(0);
     }
 
     @Override
     public void chooseCard(int index) {
-        getPlayer().addCard(ModelRoot.getInstance().getGame().takeCard(index));
-//        GenericTask genericTask = new GenericTask("DrawTrainCard");
-//        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
+        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(index);
+        GenericTask genericTask = new GenericTask("DrawTrainCard");
+        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
     }
 
     @Override
@@ -248,21 +257,17 @@ public class ModelFacade implements IGameModel {
     }
 
     //Called by presenter
-    public boolean UpdateState(State state) {
-        ModelRoot.getInstance().setState(state);
+    public boolean updateState(DisplayState displayState) {
+        ModelRoot.getInstance().setDisplayState(displayState);
         return true;
     }
 
-    public ArrayList<Game> GetGameList() {
-        return ModelRoot.getInstance().getGameList();
+    public ArrayList<LobbyGame> getLobbyGameList() {
+        return ModelRoot.getInstance().getLobbyGames();
     }
 
-    public Game GetCurrentGame() {
+    public Game getCurrentGame() {
         return ModelRoot.getInstance().getGame();
-    }
-
-    public String GetUserName() {
-        return ModelRoot.getInstance().getUserName();
     }
 
     @Override
@@ -297,10 +302,10 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getGame().getFaceUpTrainCarCards();
     }
 
-    public Player getPlayer() {
-        Game g = ModelRoot.getInstance().getGame();
+    public PlayerUser getPlayer() {
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            Player p = g.getUserPlayer(ModelRoot.getInstance().getUserName());
+            PlayerUser p = g.getPlayerUser();
             return p;
         }
         return null;
@@ -314,8 +319,8 @@ public class ModelFacade implements IGameModel {
     @Override
     public List<Ticket> getChoiceTickets() {
         if (ModelRoot.getInstance().getGame() != null){
-            if (ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName())!= null) {
-                return ModelRoot.getInstance().getGame().getUserPlayer(ModelRoot.getInstance().getUserName()).getTicketToChoose();
+            if (ModelRoot.getInstance().getGame().getPlayerUser()!= null) {
+                return ModelRoot.getInstance().getGame().getPlayerUser().getTicketToChoose();
             }
         }
         return null;
@@ -323,11 +328,16 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public List<Message> getMessages() {
-        return GetCurrentGame().getMessages();
+        return getCurrentGame().getMessages();
     }
 
     public boolean isGameStarted() {
-        return ModelRoot.getInstance().getGame().isStarted();
+        return ModelRoot.getInstance().getLobbyGame().isStarted();
+    }
+
+
+    public LobbyGame getLobbyGame() {
+        return ModelRoot.getInstance().getLobbyGame();
     }
 
 }

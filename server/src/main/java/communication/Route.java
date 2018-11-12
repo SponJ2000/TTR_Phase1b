@@ -8,15 +8,15 @@ public class Route {
     private City city1;
     private City city2;
     private Integer length;
-    private GameColor cardColor;
+    private GameColor color;
     private Player claimedBy = null;
     private double[] midPoint;
 
-    public Route(City city1, City city2, int length, GameColor cardColor) {
+    public Route(City city1, City city2, int length, GameColor color) {
         this.city1 = city1;
         this.city2 = city2;
         this.length = length;
-        this.cardColor = cardColor;
+        this.color = color;
 
         midPoint = new double[] {0.0,0.0};
 
@@ -48,12 +48,12 @@ public class Route {
         this.length = length;
     }
 
-    public GameColor getCardColor() {
-        return cardColor;
+    public GameColor getColor() {
+        return color;
     }
 
-    public void setCardColor(GameColor cardColor) {
-        this.cardColor = cardColor;
+    public void setColor(GameColor color) {
+        this.color = color;
     }
 
     public Player getClaimedBy() {

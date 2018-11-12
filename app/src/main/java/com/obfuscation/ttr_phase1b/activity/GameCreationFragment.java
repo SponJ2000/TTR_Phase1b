@@ -18,11 +18,10 @@ import android.widget.Toast;
 import com.obfuscation.ttr_phase1b.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import communication.LobbyGame;
 import communication.Result;
 import model.ModelFacade;
-import communication.Game;
 import communication.Player;
 
 /**
@@ -38,7 +37,8 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     private static final String TAG = "GameCreationFrag";
 
     private String mUser;
-    private Game mGame;
+    //all game need to be swiched to gameClient
+    private LobbyGame mGame;
 
     private Button mCancel;
     private Button mCreate;
@@ -50,10 +50,10 @@ public class GameCreationFragment extends Fragment implements IPresenter {
     private OnGameCreationLister mListener;
 
     public GameCreationFragment() {
-        mUser = ModelFacade.getInstance().GetUserName();
+        mUser = ModelFacade.getInstance().getUserName();
         ArrayList<Player> l = new ArrayList<>();
         l.add(new Player(mUser));
-        mGame = new Game("", mUser, l, 2);
+        mGame = new LobbyGame("", mUser, l, 2);
     }
 
     /**
@@ -91,7 +91,7 @@ public class GameCreationFragment extends Fragment implements IPresenter {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now creating");
-                ModelFacade.getInstance().CreateGame(mGame);
+                ModelFacade.getInstance().createLobbyGame(mGame);
             }
         });
 
