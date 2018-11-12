@@ -146,6 +146,11 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result LeaveLobbyGame(String id, String gameID, String authToken) {
         try {
             if (!db.checkAuthToken(authToken, id)) {
                 return new Result(false, null, "Error: Invalid authorization");
@@ -170,11 +175,6 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result LeaveLobbyGame(String id, String gameID, String authToken) {
-        return null;
-    }
-
-    @Override
     public Result CreateLobby(LobbyGame lobbyGame, String authToken) {
         try {
             System.out.println(authToken + " EEE");
@@ -184,7 +184,7 @@ public class ServerFacade implements IServer {
                 for (ClientProxy clientProxy : clientproxies) {
                     clientProxy.updateGameLobbyList(lobbyGame.getGameID());
                 }
-                gameIDclientProxyMap.put(lobbyGame.getGameID(), new ArrayList<ClientProxy>());
+                gameIDclientProxyMap.put(lobbyGame.getGameID(), new ArrayList<>());
                 System.out.println("AUTH TOKEN " + authToken);
                 gameIDclientProxyMap.get(lobbyGame.getGameID()).add(getClientProxyByAuthToken(authToken));
             }
@@ -209,6 +209,10 @@ public class ServerFacade implements IServer {
 
                 //set colors and set orders
                 //TODO : need to figure out how to handle this part
+                db.setupGame(gameID);
+                ArrayList<Object> objects = new ArrayList<>();
+                game = db.findGameByID(gameID);
+                objects.add(game);
                 System.out.println("STARTING GAME : " + gameIDclientProxyMap.get(gameID).size());
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     System.out.println("UPDATING : " + clientProxy.getAuthToken());
@@ -217,8 +221,11 @@ public class ServerFacade implements IServer {
                     clientProxy.updateGame(gameID);
                     String username = db.findUsernameByAuthToken(clientProxy.getAuthToken());
 
-                    //initalize game
+                    //initalize game TODO : SET GAMECLIENTS
                     GameClient gameClient = new GameClient();
+                    gameClient.setGameID(gameID);
+                    gameClient.setTrainCardDeckSize(game.getTrainCards().size());
+
 
                     //initialize user player
                     PlayerUser playerUser = new PlayerUser(username);
@@ -230,13 +237,15 @@ public class ServerFacade implements IServer {
                             opponents.add(new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 0, 0));
                         }
                     }
+                    gameClient.setPlayerOpponents(opponents);
+
+                    objects.add(gameClient);
+                    clientProxy.initializeGame(gameClient);
+
 
                     //add command to initialize
-                    clientProxy.initializeGame(gameClient);
                 }
-
-                db.setupGame(gameID);
-                GameServer gameServer = db.findGameByID(gameID);
+                return new Result(true, objects.get(1), null);
 
 //            //update tickets (distribute 3 cards)
 //            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
@@ -246,23 +255,23 @@ public class ServerFacade implements IServer {
 //            }
 
                 //update destination card deck number
-                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                    clientProxy.updateDestinationDeck(gameID, game.getTickets().size());
-                }
-
-                //TODO : needed? Taken care of in the initalize game
-                //update train cards for each player (4 cards)
-                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                    String username = db.findUsernameByAuthToken(clientProxy.getAuthToken());
-                    System.out.println("UPDATING TRAIN CARDS");
-                    System.out.println(game.getPlayerbyUserName(username).getCards());
-                    clientProxy.updateTrainCards(gameID, game.getPlayerbyUserName(username).getCards());
-                }
-
-                //update train card deck
-                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                    clientProxy.updateTrainDeck(gameID, game.getFaceUpTrainCarCards(), game.getTrainCards().size());
-                }
+//                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+//                    clientProxy.updateDestinationDeck(gameID, game.getTickets().size());
+//                }
+//
+//                //TODO : needed? Taken care of in the initalize game
+//                //update train cards for each player (4 cards)
+//                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+//                    String username = db.findUsernameByAuthToken(clientProxy.getAuthToken());
+//                    System.out.println("UPDATING TRAIN CARDS");
+//                    System.out.println(game.getPlayerbyUserName(username).getCards());
+//                    clientProxy.updateTrainCards(gameID, game.getPlayerbyUserName(username).getCards());
+//                }
+//
+//                //update train card deck
+//                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+//                    clientProxy.updateTrainDeck(gameID, game.getFaceUpTrainCarCards(), game.getTrainCards().size());
+//                }
             }
             return result;
         }

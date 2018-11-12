@@ -20,6 +20,9 @@ public class Game {
 
     public Game() {
         gameID = UUID.randomUUID().toString();
+        messages = new ArrayList<Message>();
+        faceUpTrainCarCards = new ArrayList<Card>();
+        mMap = new GameMap();
     }
 
     public Game(String gameID){

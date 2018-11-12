@@ -92,7 +92,7 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result leaveLobbyGame(String id, String gameID, String authToken) {
+    public Result LeaveLobbyGame(String id, String gameID, String authToken) {
         return null;
     }
 

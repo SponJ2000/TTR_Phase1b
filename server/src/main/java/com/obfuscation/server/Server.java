@@ -10,6 +10,7 @@ import java.util.List;
 
 import communication.Game;
 import communication.Player;
+import communication.PlayerUser;
 
 
 /**
@@ -53,8 +54,8 @@ public class Server {
         String id = "id";
         String gameID = "gameID";
         String authToken = "authBob";
-        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"JoinLobby\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"id\",\"gameID\",\"authBob\"],\"commandID\":\"e21091e8-ef82-4859-a15d-1801c2d78eee\"}";
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinLobby", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
+        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"StartGame\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"gameID\",\"authBob\"]}";
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "StartGame", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
         System.out.println(new Gson().toJson(genericCommand));
 
         ServerFacade facade = ServerFacade.getInstance();

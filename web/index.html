@@ -127,47 +127,47 @@
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"Register\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"username\",\"password\"]}");
 	}
 
-	function clear()
-	{
-		window.scrollTo(0,document.body.scrollHeight);
-		document.getElementById("handleBox").value = "/clear/";
-		document.getElementById("requestBox").value = "";
-	}
-
-	function load()
-	{
-		window.scrollTo(0,document.body.scrollHeight);
-		document.getElementById("handleBox").value = "/load/";
-		document.getElementById("requestBox").value = formatJson("{\"users\":[],\"persons\":[],\"events\":[]}");
-	}
-
 	function createLobby()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/exec";
-		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"CreateLobby\",\"parameterType\":[\"communication.LobbyGame\",\"java.lang.String\"],\"parameterValue\":[{\"gameID\":\"gameID\",\"host\":\"Bob\",\"maxPlayers\":3,\"playerListVerisonNum\":0,\"players\":[],\"started\":false},\"masterKey\"]}");
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"CreateLobby\",\"parameterType\":[\"communication.LobbyGame\",\"java.lang.String\"],\"parameterValue\":[{\"gameID\":\"gameID\",\"host\":\"Bob\",\"maxPlayers\":3,\"playerListVerisonNum\":0,\"players\":[],\"started\":false},\"authBob\"]}");
 	}
 
 	function joinLobby()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
-		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"JoinLobby\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"id\",\"gameID\",\"authJoe\"]}");
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"JoinLobby\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"Joe\",\"gameID\",\"authJoe\"]}");
 		document.getElementById("handleBox").value = "/exec";
 	}
 
-	function getAllPersons()
+	function leaveLobby()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
-		document.getElementById("handleBox").value = "/person";
-		document.getElementById("requestBox").value = "";
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"LeaveLobbyGame\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"Joe\",\"gameID\",\"authJoe\"]}");
 	}
 
-	function getSinglePerson()
+	function startGame()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
-		document.getElementById("handleBox").value = "/person/[Replace_With_Person_ID]";
-		document.getElementById("requestBox").value = "";
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"StartGame\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"gameID\",\"authBob\"]}");
 	}
+
+		function clear()
+		{
+			window.scrollTo(0,document.body.scrollHeight);
+			document.getElementById("handleBox").value = "/clear/";
+			document.getElementById("requestBox").value = "";
+		}
+
+		function load()
+		{
+			window.scrollTo(0,document.body.scrollHeight);
+			document.getElementById("handleBox").value = "/load/";
+			document.getElementById("requestBox").value = formatJson("{\"users\":[],\"persons\":[],\"events\":[]}");
+		}
 
 	function fill(gen)
 	{
@@ -252,20 +252,15 @@
 						</li>
 						<li>
 							<a href="javascript:joinLobby()">JOIN LOBBY</a> Use this to join lobby</br>
-							<b>If successful</b> : DATA : LobbyGame list</br>
+							<b>If successful</b> : DATA : True</br>
 						</li>
 						<li>
-							<a href="javascript:getAllPersons()" >/person</a> This API will return ALL people
-							associated with the current user. The current user is determined from the provided a
-							uthorization token (which is required for this call). The returned JSON object contains
-							"data" which is an array of person objects.
-							Authorization token is required.
+							<a href="javascript:leaveLobby()" >LEAVE LOBBY</a> Use this to leave lobby</br>
+							<b>If successful</b> : DATA : True</br>
 						</li>
 						<li>
-							<a href="javascript:getSinglePerson()" >/person/[personID]</a> This API will return
-							the single person with the specified ID. The person must be related to the user associated
-							with the authorization token. The returned JSON contains the requested person object.
-							Authorization token is required.
+							<a href="javascript:startGame()" >START GAME</a> Use this to start game</br>
+							<b>If successful</b> : DATA : Game Object (for server test)</br>
 						</li>
 					</ul>
 				</div>

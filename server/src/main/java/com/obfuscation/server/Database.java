@@ -231,7 +231,8 @@ public class Database {
             trainCards.add(yellowCard);
         }
         for (int i = 0; i < 14; i++) {
-            Card LocomotiveCard = new Card(GameColor.LOCOMOTIVE);
+            Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
+            trainCards.add(locomotiveCard);
         }
 
 
@@ -292,6 +293,9 @@ public class Database {
         if(lobbyGame.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
         GameServer game = new GameServer();
 
+        if (findGameByID(gameID) != null) return new Result(false, null, "Error : already started");
+        game.setGameID(gameID);
+
         //set players
         ArrayList<PlayerUser> players = new ArrayList<>();
         for (Player p : lobbyGame.getPlayers()) {
@@ -312,6 +316,8 @@ public class Database {
         for (int i = 0; i < game.getPlayers().size(); i++) {
             game.getPlayers().get(i).setPlayerColor(colors.get(i));
         }
+
+        gameList.add(game);
         return new Result(true, game, null);
     }
 
