@@ -149,7 +149,7 @@ public class ServerFacadeTest {
 
         facade.CreateGame(game1, KEY);
         facade.CreateGame(game2, KEY);
-        List<Game> gameList = (ArrayList<Game>) facade.GetGameList(KEY).getData();
+        List<Game> gameList = (ArrayList<Game>) facade.GetLobbyList(KEY).getData();
         assertEquals(gameList.size(), 4);
         assertEquals(gameList.get(2).getGameID(), "1");
     }

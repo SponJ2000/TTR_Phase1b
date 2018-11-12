@@ -11,6 +11,15 @@ public class GameClient extends Game {
     private ArrayList<PlayerOpponent> playerOpponents;
     private PlayerUser playerUser;
     private int trainCardDeckSize;
+    private int ticketDeckSize;
+
+    public int getTicketDeckSize() {
+        return ticketDeckSize;
+    }
+
+    public void setTicketDeckSize(int ticketDeckSize) {
+        this.ticketDeckSize = ticketDeckSize;
+    }
 
     private int state;
 

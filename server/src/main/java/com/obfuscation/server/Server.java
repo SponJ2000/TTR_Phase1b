@@ -54,8 +54,10 @@ public class Server {
         String id = "id";
         String gameID = "gameID";
         String authToken = "authBob";
-        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"StartGame\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"gameID\",\"authBob\"]}";
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "StartGame", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
+
+        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetLobbyList\",\"parameterType\":[\"java.lang.String\"],\"parameterValue\":[\"authBob\"]}";
+
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetLobbyList", new String[]{STRING}, new Object[]{authToken});
         System.out.println(new Gson().toJson(genericCommand));
 
         ServerFacade facade = ServerFacade.getInstance();

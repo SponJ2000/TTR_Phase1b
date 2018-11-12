@@ -49,8 +49,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.CreateLobby((LobbyGame) params[0], (String) params[1]);
             case "startGame":
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
-            case "GetGameList":
-                return serverProxy.GetGameList((String) params[0]);
+            case "GetLobbyList":
+                return serverProxy.GetLobbyList((String) params[0]);
             case "GetGame":
                 return serverProxy.GetGame((String) params[0], (String) params[1]);
             case "CheckGameList":
@@ -85,7 +85,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 //need to update the authkey
                 OnSignIn(result);
                 break;
-            case "GetGameList":
+            case "GetLobbyList":
                 FetchGameListFrom(result);
                 break;
             case "GetGame":

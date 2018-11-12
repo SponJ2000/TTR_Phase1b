@@ -60,8 +60,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result GetGameList(String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetGameList", new String[]{STRING}, new Object[]{authToken});
+    public Result GetLobbyList(String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetLobbyList", new String[]{STRING}, new Object[]{authToken});
         return RunCommand(genericCommand);
     }
 

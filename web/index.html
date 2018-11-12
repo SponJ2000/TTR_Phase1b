@@ -155,12 +155,19 @@
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"StartGame\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"gameID\",\"authBob\"]}");
 	}
 
-		function clear()
-		{
-			window.scrollTo(0,document.body.scrollHeight);
-			document.getElementById("handleBox").value = "/clear/";
-			document.getElementById("requestBox").value = "";
-		}
+	function getTickets()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetTickets\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"gameID\",\"authBob\"]}");
+	}
+
+	function getLobbyList()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetLobbyList\",\"parameterType\":[\"java.lang.String\"],\"parameterValue\":[\"authBob\"]}");
+	}
 
 		function load()
 		{
@@ -199,7 +206,7 @@
 				<h1 style="padding-left:1cm; text-decoration: underline;">Database Commands</h1>
 				<ul>
 					<li>
-						<a href="javascript:clear()" >/clear</a> This API will clear ALL data from the database,
+						<a href="javascript:getLobbyList()" >GET LOBBY LIST</a> This API will clear ALL data from the database,
 						including users and all generated data. This API can be run from a browser by simply
 						typing it in the address bar or by clicking this link followed by pressing the Submit button below.
 						No authorization token is required.
@@ -261,6 +268,10 @@
 						<li>
 							<a href="javascript:startGame()" >START GAME</a> Use this to start game</br>
 							<b>If successful</b> : DATA : Game Object (for server test)</br>
+						</li>
+						<li>
+							<a href="javascript:getTickets()" >GET TICKETS</a> Use this to draw 3 tickets from the deck</br>
+							<b>If successful</b> : DATA : list of 3 tickets</br>
 						</li>
 					</ul>
 				</div>

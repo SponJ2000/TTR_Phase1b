@@ -207,7 +207,7 @@ public class ServerFacade implements IServer {
                     clientProxy.updateGameLobbyList(game.getGameID());
                 }
 
-                //set colors and set orders
+                //Initializes everything except the tickets
                 //TODO : need to figure out how to handle this part
                 db.setupGame(gameID);
                 ArrayList<Object> objects = new ArrayList<>();
@@ -224,8 +224,11 @@ public class ServerFacade implements IServer {
                     //initalize game TODO : SET GAMECLIENTS
                     GameClient gameClient = new GameClient();
                     gameClient.setGameID(gameID);
+                    gameClient.setPlayerUser(game.getPlayerbyUserName(username));
                     gameClient.setTrainCardDeckSize(game.getTrainCards().size());
-
+                    gameClient.setFaceUpTrainCarCards(game.getFaceUpTrainCarCards());
+                    gameClient.getPlayerUser().setTicketToChoose(game.getPlayerbyUserName(username).getTicketToChoose());
+                    gameClient.setTicketDeckSize(game.getTickets().size());
 
                     //initialize user player
                     PlayerUser playerUser = new PlayerUser(username);
@@ -234,7 +237,7 @@ public class ServerFacade implements IServer {
                     //initialize opponents
                     for (ClientProxy clientProxy1 : gameIDclientProxyMap.get(gameID)) {
                         if (!clientProxy.getAuthToken().equals(clientProxy1.getAuthToken())) {
-                            opponents.add(new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 0, 0));
+                            opponents.add(new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 40, 4));
                         }
                     }
                     gameClient.setPlayerOpponents(opponents);
@@ -245,7 +248,7 @@ public class ServerFacade implements IServer {
 
                     //add command to initialize
                 }
-                return new Result(true, objects.get(1), null);
+                return new Result(true, objects, null);
 
 //            //update tickets (distribute 3 cards)
 //            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
@@ -305,9 +308,9 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result GetGameList(String authToken) {
+    public Result GetLobbyList(String authToken) {
         try {
-            return new Result(true, db.getGameList(), null);
+            return new Result(true, db.getLobbyList(), null);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -450,4 +453,7 @@ public class ServerFacade implements IServer {
         }
         return null;
     }
+
+    //--------------------------------FOR TEST-------------------------------------------
+
 }

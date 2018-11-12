@@ -31,42 +31,28 @@ import communication.GameColor;
 
 public class Database {
 
-    /*
-    We will need:
-    Game list (game id, players, etc)
-    Login info database
-    operations to:
-    register user
-    login
-    new game
-    join game
-    leave game
-    started games
-    rejoin
-     */
-
-
     private Map<String, String> loginInfo;
     //TODO : make gameid and gamelobbyid same
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
     private List<GameServer> gameList = new ArrayList<>();
 
-
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
-    public GameServer dummyGame = new GameServer();
 
     public void setDummyGame() {
+        GameServer dummyGame = new GameServer();
         dummyGame.setGameID("GAME");
         gameList.add(dummyGame);
-
+        newGameLobby(new LobbyGame("Bob", "GAME", 3), "authBob");
+        joinGame("Joe", "GAME");
         setupGame("GAME");
+        startGame("GAME", "authBob");
     }
 
     private List<GameColor> colors = Arrays.asList(GameColor.PLAYER_BLACK, GameColor.PLAYER_BLUE, GameColor.PLAYER_PURPLE, GameColor.PLAYER_RED, GameColor.PLAYER_YELLOW);
 
-    public List<LobbyGame> getGameList() {
+    public List<LobbyGame> getLobbyList() {
         return lobbyGameList;
     }
 
@@ -281,6 +267,7 @@ public class Database {
 
         gameServer.setTrainCards(trainCards);
 
+
     }
     Result startGame(String gameID, String authToken) {
         LobbyGame lobbyGame = findGameLobbyByID(gameID);
@@ -406,6 +393,7 @@ public class Database {
         }
         return null;
     }
+
     public String findUsernameByAuthToken(String authToken) {
         for (Map.Entry<String, String> entry : authTokenMap.entrySet()) {
             if (authToken.equals(entry.getValue())) {

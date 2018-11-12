@@ -19,10 +19,10 @@ public class LobbyGame {
 
     private boolean started;
 
-    public LobbyGame(String host, int maxPlayers) {
+    public LobbyGame(String host, String gameID, int maxPlayers) {
         this.host = host;
         this.maxPlayers = maxPlayers;
-        this.gameID = UUID.randomUUID().toString();
+        this.gameID = gameID;
     }
 
     public LobbyGame(String gameid, String host, ArrayList<Player> players, int maxPlayers) {
