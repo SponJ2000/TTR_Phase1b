@@ -11,6 +11,7 @@ import java.util.List;
 import communication.Card;
 import communication.Game;
 import communication.GameColor;
+import communication.Message;
 import communication.Player;
 import communication.PlayerUser;
 import communication.Ticket;
@@ -66,10 +67,11 @@ public class Server {
         cards.add(new Card(GameColor.BLACK));
         cards.add(new Card(GameColor.RED));
 
-        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ClaimRoute\",\"parameterType\":[\"java.lang.String\",\"java.util.List\",\"java.lang.String\"],\"parameterValue\":[\"ROUTE\",[{\"color\":\"BLACK\"},{\"color\":\"RED\"}],\"authBob\"]}";
+        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ClaimRoute\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\",\"java.lang.String\"],\"parameterValue\":[\"GAME\",\"ROUTE\",[{\"color\":\"BLACK\"},{\"color\":\"RED\"}],\"authBob\"]}";
 
         String routeID = "ROUTE";
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, LIST, STRING}, new Object[]{routeID, cards, authToken});
+        Message message = new Message("Bob", "HELLO WORLD");
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, STRING, LIST, STRING}, new Object[]{gameID, routeID, cards, authToken});
         System.out.println(new Gson().toJson(genericCommand));
 
         ServerFacade facade = ServerFacade.getInstance();

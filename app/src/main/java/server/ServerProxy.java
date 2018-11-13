@@ -118,8 +118,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, LIST, STRING}, new Object[]{routeID, cards, authToken});
+    public Result ClaimRoute(String gameID, String routeID, ArrayList<Card> cards, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, STRING, LIST, STRING}, new Object[]{gameID, routeID, cards, authToken});
         return RunCommand(genericCommand);
     }
 

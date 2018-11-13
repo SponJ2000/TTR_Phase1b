@@ -20,9 +20,12 @@ import communication.Message;
 import communication.Player;
 import communication.PlayerUser;
 import communication.Result;
+import communication.Route;
 import communication.TickectMaker;
 import communication.Ticket;
 import communication.GameColor;
+
+import static communication.GameColor.GREY;
 
 /**
  * Created by jalton on 10/3/18.
@@ -565,5 +568,30 @@ public class Database {
             e.printStackTrace();
         }
         return new Result(false, null, "Error : player not found");
+    }
+
+    Result claimRoute(String gameID, String routeID, List<Card> cards, String authToken) {
+        String username = findUsernameByAuthToken(authToken);
+        if (username != null) {
+            GameServer gameServer = findGameByID(gameID);
+            if (gameServer != null) {
+                //TODO : make discard pile
+
+                for (PlayerUser p : gameServer.getPlayers()) {
+                    if (p.getPlayerName().equals(username)) {
+                        //set player claimed route
+
+                        p.getClaimedRoutes().add(routeID);
+                        //set route claimedby
+                        //TODO : just an example. Must be fixed later.
+                        gameServer.getmMap().claimRoute(gameServer.getmMap().getRoutes().get(0), p);
+
+                    }
+                }
+                return new Result(true, true, null);
+
+            }
+        }
+        return new Result(false, null, "Error happened while claiming route");
     }
 }

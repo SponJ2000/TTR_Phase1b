@@ -169,6 +169,20 @@
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ReturnTickets\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\"],\"parameterValue\":[\"GAME\",\"authBob\",[]]}");
 	}
 
+	function claimRoute()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ClaimRoute\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\",\"java.lang.String\"],\"parameterValue\":[\"GAME\",\"ROUTE\",[{\"color\":\"BLACK\"},{\"color\":\"RED\"}],\"authBob\"]}");
+	}
+
+	function sendMessage()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"SendMessage\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"communication.Message\"],\"parameterValue\":[\"authBob\",\"GAME\",{\"playerID\":\"Bob\",\"text\":\"HELLOWORLD\"}]}");
+	}
+
 	function getLobbyList()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
@@ -275,6 +289,14 @@
 						<li>
 							<a href="javascript:returnTickets()" >RETURN TICKETS</a> return tickets that they want to keep</br>
 							<b>If successful</b> : DATA : list of tickets</br>
+						</li>
+						<li>
+							<a href="javascript:claimRoute()" >CLAIM ROUTE</a> use this to claim route</br>
+							<b>If successful</b> : DATA : True</br>
+						</li>
+						<li>
+							<a href="javascript:sendMessage()" >SEND MESSAGE</a> use this to send a message (do not include space)</br>
+							<b>If successful</b> : DATA : Message object to be added</br>
 						</li>
 					</ul>
 				</div>

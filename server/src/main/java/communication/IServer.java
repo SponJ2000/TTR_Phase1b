@@ -137,7 +137,7 @@ public interface IServer {
      * @param authToken  a String object containing the user's authToken
      * @return           a Result object a boolean to indicate the success or failure
      */
-    Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken);
+    Result ClaimRoute(String gameID, String routeID, List<Card> cards, String authToken);
 
     /**
      * user draw Train Card from the face up deck or face down deck

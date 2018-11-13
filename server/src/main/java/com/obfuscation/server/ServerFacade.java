@@ -48,8 +48,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -87,8 +87,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -102,8 +102,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -128,8 +128,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -158,8 +158,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -181,8 +181,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -268,8 +268,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     /**
@@ -291,8 +291,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -302,8 +302,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -313,8 +313,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -333,8 +333,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -349,8 +349,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -372,19 +372,20 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
-    public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
+    public Result ClaimRoute(String gameID, String routeID, List<Card> cards, String authToken) {
         try {
-
+            Result result = db.claimRoute(gameID, routeID, cards, authToken);
+            return new Result(true, "D", null);
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     // -1 -> from the deck
@@ -411,8 +412,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     //
@@ -438,8 +439,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     //--------------------------------FOR TEST-------------------------------------------
