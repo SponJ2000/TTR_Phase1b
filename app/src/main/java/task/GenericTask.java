@@ -61,8 +61,6 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.SendMessage((String) params[0], (String) params[1], (Message) params[2]);
             case "GetTickets":
                 return serverProxy.GetTickets((String) params[0], (String) params[1]);
-            case "ChooseTicket":
-                return serverProxy.ChooseTicket((String) params[0], (String) params[1], (List<Ticket>) params[2]);
             case "ReturnTickets":
                 return serverProxy.ReturnTickets((String) params[0], (String) params[1], (List<Ticket>) params[2]);
             case "DrawTrainCard":

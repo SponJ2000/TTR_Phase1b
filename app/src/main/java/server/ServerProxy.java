@@ -78,14 +78,6 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
-        System.out.println("CHOOOSE TICKEEEEEEEEET");
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ChooseTicket", new String[]{STRING, STRING, LIST}, new Object[]{authToken, gameID, chosenTickets});
-        System.out.println("GGG");
-        return RunCommand(genericCommand);
-    }
-
-    @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "LeaveGame", new String[]{STRING, STRING, STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);

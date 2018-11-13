@@ -8,7 +8,9 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.Card;
 import communication.Game;
+import communication.GameColor;
 import communication.Player;
 import communication.PlayerUser;
 import communication.Ticket;
@@ -57,11 +59,17 @@ public class Server {
         String authToken = "authBob";
 
 
-        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ReturnTickets\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\"],\"parameterValue\":[\"GAME\",\"authBob\",[]]}";
+
 
         ArrayList<Ticket> tickets = new ArrayList<>();
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(GameColor.BLACK));
+        cards.add(new Card(GameColor.RED));
 
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{STRING,STRING,LIST}, new Object[]{gameID, authToken, tickets});
+        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ClaimRoute\",\"parameterType\":[\"java.lang.String\",\"java.util.List\",\"java.lang.String\"],\"parameterValue\":[\"ROUTE\",[{\"color\":\"BLACK\"},{\"color\":\"RED\"}],\"authBob\"]}";
+
+        String routeID = "ROUTE";
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, LIST, STRING}, new Object[]{routeID, cards, authToken});
         System.out.println(new Gson().toJson(genericCommand));
 
         ServerFacade facade = ServerFacade.getInstance();

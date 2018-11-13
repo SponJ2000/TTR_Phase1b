@@ -61,6 +61,7 @@ public class ClientProxy implements IClient {
                 , "initializeGame"
                 , new String[]{GAMECLIENT}
                 , new Object[] {game});
+        System.out.println("GET HERE");
         notSeenCommands.put(game.getGameID(), new ArrayList<GenericCommand>());
         notSeenCommands.get(game.getGameID()).add(command);
     }

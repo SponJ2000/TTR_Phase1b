@@ -234,6 +234,4 @@ public interface IServer {
     Result CheckGameLobby(String authToken, String gameID);
 
     Result SendMessage(String authToken, String gameID, Message message);
-
-    Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets);
 }

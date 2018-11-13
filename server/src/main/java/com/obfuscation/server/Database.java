@@ -53,8 +53,8 @@ public class Database {
             newGameLobby(new LobbyGame("Bob", "GAME", 3), "authBob");
             joinGame("Joe", "GAME");
             System.out.println("#####");
-            startGame("GAME", "authBob");
-            setupGame("GAME");
+           // startGame("GAME", "authBob");
+            //setupGame("GAME");
             System.out.println("####@");
         }
         catch (Exception e) {
@@ -495,7 +495,7 @@ public class Database {
             return tickets;
         }
         for (int i = 0; i < 3; i++) {
-            Ticket ticket = tickets.get(i);
+            Ticket ticket = tickets.get(0);
             playerTickets.add(ticket);
             tickets.remove(0);
         }
@@ -544,10 +544,14 @@ public class Database {
                 }
                 System.out.println("OVERLAP SIZE + " + overlap.size());
                 List<Ticket> ticketDeck = game.getTickets();
-                for (Integer i : overlap) {
-                    ticketDeck.add(tickets1.get(i));
+                for (int i = 0; i < tickets1.size(); i++) {
+                    if (!overlap.contains(i)) {
+                        game.getTickets().add(tickets1.get(i));
+                    }
                 }
                 for (PlayerUser player : game.getPlayers()) {
+                    System.out.println("PLAYER USERNAME " + playerID + " " + player.getPlayerName());
+
                     if (player.getPlayerName().equals(playerID)) {
                         player.setTickets((ArrayList<Ticket>) tickets);
                         player.setTicketToChoose(new ArrayList<>());

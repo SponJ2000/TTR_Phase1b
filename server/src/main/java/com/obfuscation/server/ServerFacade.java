@@ -57,25 +57,13 @@ public class ServerFacade implements IServer {
         return null;
     }
 
-    @Override
-    public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
-        try {
-            System.out.println("called choose tickets in server");
-            return new Result(true, db.getTickets(gameID, authToken), null);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
     private ServerFacade() {
         clientproxies.add(new ClientProxy("authBob"));
         clientproxies.add(new ClientProxy("authJoe"));
         gameIDclientProxyMap.put("GAME", new ArrayList<ClientProxy>());
         gameIDclientProxyMap.get("GAME").add(clientproxies.get(0));
         gameIDclientProxyMap.get("GAME").add(clientproxies.get(1));
+        StartGame("GAME", "authBob");
     }
 
     private ClientProxy getClientProxyByAuthToken(String authToken) {
@@ -446,7 +434,7 @@ public class ServerFacade implements IServer {
                     clientProxy.updateDestinationDeck(gameID, new Integer(db.findGameByID(gameID).getTickets().size()));
                 }
             }
-            return result;
+            return new Result(true, true, null);
         }
         catch (Exception e) {
             e.printStackTrace();
