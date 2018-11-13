@@ -11,6 +11,7 @@ import java.util.List;
 import communication.Game;
 import communication.Player;
 import communication.PlayerUser;
+import communication.Ticket;
 
 
 /**
@@ -21,7 +22,7 @@ import communication.PlayerUser;
 
 public class Server {
     //port number. Change it if you want
-    private static final int portNumber = 8080;
+    private static final int portNumber = 8000;
 
     //test
     private static final String SERVER_FACADE = "com.obfuscation.server.ServerFacade";
@@ -52,12 +53,15 @@ public class Server {
 
         //test
         String id = "id";
-        String gameID = "gameID";
+        String gameID = "GAME";
         String authToken = "authBob";
 
-        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetLobbyList\",\"parameterType\":[\"java.lang.String\"],\"parameterValue\":[\"authBob\"]}";
 
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetLobbyList", new String[]{STRING}, new Object[]{authToken});
+        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ReturnTickets\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\"],\"parameterValue\":[\"GAME\",\"authBob\",[]]}";
+
+        ArrayList<Ticket> tickets = new ArrayList<>();
+
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ReturnTickets", new String[]{STRING,STRING,LIST}, new Object[]{gameID, authToken, tickets});
         System.out.println(new Gson().toJson(genericCommand));
 
         ServerFacade facade = ServerFacade.getInstance();

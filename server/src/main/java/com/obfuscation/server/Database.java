@@ -36,18 +36,30 @@ public class Database {
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
     private List<GameServer> gameList = new ArrayList<>();
 
+    public List<GameServer> getGameList() {
+        return gameList;
+    }
+
+    public void setGameList(List<GameServer> gameList) {
+        this.gameList = gameList;
+    }
+
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
 
     public void setDummyGame() {
-        GameServer dummyGame = new GameServer();
-        dummyGame.setGameID("GAME");
-        gameList.add(dummyGame);
-        newGameLobby(new LobbyGame("Bob", "GAME", 3), "authBob");
-        joinGame("Joe", "GAME");
-        setupGame("GAME");
-        startGame("GAME", "authBob");
+        try {
+            newGameLobby(new LobbyGame("Bob", "GAME", 3), "authBob");
+            joinGame("Joe", "GAME");
+            System.out.println("#####");
+            startGame("GAME", "authBob");
+            setupGame("GAME");
+            System.out.println("####@");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private List<GameColor> colors = Arrays.asList(GameColor.PLAYER_BLACK, GameColor.PLAYER_BLUE, GameColor.PLAYER_PURPLE, GameColor.PLAYER_RED, GameColor.PLAYER_YELLOW);
@@ -198,7 +210,9 @@ public class Database {
 
         //initialize traincards
         ArrayList<Card> trainCards = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
+
+        //FIXME * should be 12, just reducing the number for debugging
+        for (int i = 0; i < 2; i++) {
             Card purpleCard = new Card(GameColor.PURPLE);
             Card blueCard = new Card(GameColor.BLUE);
             Card orangeCard = new Card(GameColor.ORANGE);
@@ -216,7 +230,8 @@ public class Database {
             trainCards.add(blackCard);
             trainCards.add(yellowCard);
         }
-        for (int i = 0; i < 14; i++) {
+        //FIXME should be 14
+        for (int i = 0; i < 1; i++) {
             Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
             trainCards.add(locomotiveCard);
         }
@@ -228,12 +243,10 @@ public class Database {
 
         ArrayList<Ticket> tickets = new ArrayList<>();
         //initialize destTickets
-        for (int i = 0; i < 30; i++) {
-            //FIXME**
-            Ticket ticket = new Ticket(new City("CITY1", 0,0), new City("city2", 0,0), 100);
-            tickets.add(ticket);
-        }
         tickets = new TickectMaker().MakeCards();
+
+        //FIXME just for debugging. Should be erased later.
+        tickets = new ArrayList<> (tickets.subList(0, 8));
 
         System.out.println("MAKER CARD SIZE " + tickets.size());
         Collections.shuffle(tickets);
@@ -283,6 +296,9 @@ public class Database {
         if (findGameByID(gameID) != null) return new Result(false, null, "Error : already started");
         game.setGameID(gameID);
 
+        //lobby game is started
+        findGameLobbyByID(gameID).setStarted(true);
+
         //set players
         ArrayList<PlayerUser> players = new ArrayList<>();
         for (Player p : lobbyGame.getPlayers()) {
@@ -297,6 +313,8 @@ public class Database {
 //
 //            user.getJoinedGames().add(gameID);
 //        }
+
+
 
         //Assign PlayerColors
         Collections.shuffle(colors);

@@ -455,5 +455,55 @@ public class ServerFacade implements IServer {
     }
 
     //--------------------------------FOR TEST-------------------------------------------
+    public Result GetLobbyList() {
+        try {
+            return new Result(true, db.getLobbyList(), null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Result GetLobby(String gameID) {
+        try {
+            if (db.findGameLobbyByID(gameID) == null) {
+                return new Result(false, null, "lobby doesn't exist");
+            }
+            else {
+                return new Result(true, db.findGameLobbyByID(gameID), null);
+            }
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Result GetGameList() {
+        try {
+            return new Result(true, db.getGameList(), null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Result GetGame(String gameID) {
+        try {
+            if (db.findGameLobbyByID(gameID) == null) {
+                return new Result(false, null, "game doesn't exist");
+            }
+            else {
+                return new Result(true, db.findGameByID(gameID), null);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

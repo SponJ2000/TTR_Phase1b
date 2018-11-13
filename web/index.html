@@ -159,23 +159,43 @@
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/exec";
-		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetTickets\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"gameID\",\"authBob\"]}");
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetTickets\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"GAME\",\"authBob\"]}");
+	}
+
+	function returnTickets()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ReturnTickets\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\"],\"parameterValue\":[\"GAME\",\"authBob\",[]]}");
 	}
 
 	function getLobbyList()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/exec";
-		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetLobbyList\",\"parameterType\":[\"java.lang.String\"],\"parameterValue\":[\"authBob\"]}");
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetLobbyList\",\"parameterType\":[],\"parameterValue\":[]}");
 	}
 
-		function load()
-		{
-			window.scrollTo(0,document.body.scrollHeight);
-			document.getElementById("handleBox").value = "/load/";
-			document.getElementById("requestBox").value = formatJson("{\"users\":[],\"persons\":[],\"events\":[]}");
-		}
+	function getLobby()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetLobby\",\"parameterType\":[\"java.lang.String\"],\"parameterValue\":[\"GAME\"]}");
+	}
 
+	function getGameList()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetGameList\",\"parameterType\":[],\"parameterValue\":[]}");
+	}
+
+	function getGame()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetGame\",\"parameterType\":[java.lang.String],\"parameterValue\":[\"GAME\"]}");
+	}
 	function fill(gen)
 	{
 		window.scrollTo(0,document.body.scrollHeight);
@@ -206,36 +226,15 @@
 				<h1 style="padding-left:1cm; text-decoration: underline;">Database Commands</h1>
 				<ul>
 					<li>
-						<a href="javascript:getLobbyList()" >GET LOBBY LIST</a> This API will clear ALL data from the database,
-						including users and all generated data. This API can be run from a browser by simply
-						typing it in the address bar or by clicking this link followed by pressing the Submit button below.
-						No authorization token is required.
+						<a href="javascript:getLobbyList()" >GET LOBBY LIST</a> Getting lobby list
 					</li>
 					<li>
-						<a href="javascript:load()">/load</a> This API will load the server&apos;s database with
-						data provided by json text in the response body. The json text must contain an array of users as
-						defined in the register details in addition to a personID, an array of persons, and an array of events.
-						WARNING: all data from the database is wiped when this is called. The json file will be specified in
-						the body of the request. A example.json file is provided to get you started with loading specific data.
-						No authorization token is required.
+						<a href="javascript:getLobby()">GET LOBBY</a> Getting gamelobby object by gameID
 					</li>
 					<li>
-						<a href="javascript:fill()" >/fill/[username]</a> This API will fill the server&apos;s
-						database with fake data for the specified user name. The "username" parameter is required
-						and must be a user already registered with the server. It can be any user name you choose.
-						If there is any data in the database associated with the given user name, it is erased.
-						This API can be run from a browser by simply typing it in the address bar (or by pressing
-						the link, filling in the details, and clicking submit). The base person generated should be a
-						person representing the user.
-						No authorization token is required.</li>
+						<a href="javascript:getGameList()" >GET GAME LIST</a> getting list of servergame objects</li>
 						<li>
-							<a href="javascript:fill(true)" >/fill/[username]/{generations}</a> This API will fill the
-							server&apos;s database with fake data for the specified user name. The "username" parameter
-							is required and must be a user already registered with the server. All the ancestor data
-							associated with this user is erased. This API can be run from a browser by simply
-							typing it in the address bar (or by pressing the link, filling in the details, and clicking submit).
-							The base person generated should be a person representing the user.
-							No authorization token is required.</li>
+							<a href="javascript:getGame()" >GET GAME</a> getting servergame object by gameID</li>
 						</li>
 					</ul>
 				</div>
@@ -272,6 +271,10 @@
 						<li>
 							<a href="javascript:getTickets()" >GET TICKETS</a> Use this to draw 3 tickets from the deck</br>
 							<b>If successful</b> : DATA : list of 3 tickets</br>
+						</li>
+						<li>
+							<a href="javascript:returnTickets()" >RETURN TICKETS</a> return tickets that they want to keep</br>
+							<b>If successful</b> : DATA : list of tickets</br>
 						</li>
 					</ul>
 				</div>
