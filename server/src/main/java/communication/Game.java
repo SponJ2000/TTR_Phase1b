@@ -18,6 +18,8 @@ public class Game {
     private ArrayList<Card> faceUpTrainCarCards;
     private GameMap mMap;
 
+    private ArrayList<GameHistory> gameHistories;
+
     public Game() {
         gameID = UUID.randomUUID().toString();
         messages = new ArrayList<Message>();
@@ -72,4 +74,11 @@ public class Game {
         messages.add(m);
     }
 
+    public ArrayList<GameHistory> getGameHistories() {
+        return gameHistories;
+    }
+
+    public void setGameHistories(ArrayList<GameHistory> gameHistories) {
+        this.gameHistories = gameHistories;
+    }
 }
