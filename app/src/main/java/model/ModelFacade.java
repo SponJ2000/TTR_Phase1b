@@ -220,7 +220,7 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    //ask for three new tickext to choose from server
+    //ask for three new tickets to choose from server
     public void updateChoiceTickets() {
 
 
@@ -242,6 +242,15 @@ public class ModelFacade implements IGameModel {
     //whenever we choose a new cards
     public void updateFaceCards() {
         ModelRoot.getInstance().getGame().UserTakeFaceUpCard(0);
+    }
+
+    @Override
+    public GameColor checkCard(int index) {
+        try {
+            return mFaceCards.get(index).getColor();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return GameColor.GREY;
+        }
     }
 
     @Override
@@ -295,6 +304,23 @@ public class ModelFacade implements IGameModel {
     @Override
     public List<Card> getCards() {
         return getPlayer().getCards();
+    }
+
+    @Override
+    public Boolean checkRouteCanClaim(GameColor color, int length) {
+        List<Card> cards = getCards();
+
+        if (color == GameColor.GREY) {
+            if (cards.size() > length) {
+                return true;
+            }
+            else return false;
+        }
+        else {
+
+        }
+
+        return null;
     }
 
     @Override
