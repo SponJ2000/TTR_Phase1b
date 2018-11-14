@@ -12,6 +12,9 @@ public class GameClient extends Game {
     private PlayerUser playerUser;
     private int trainCardDeckSize;
     private int ticketDeckSize;
+    private boolean gameEnded;
+    private ArrayList<PlayerStats> playerStatsList;
+    private String turnUser;
 
     public int getTicketDeckSize() {
         return ticketDeckSize;
@@ -34,6 +37,8 @@ public class GameClient extends Game {
         super(gameID);
         playerOpponents = new ArrayList<PlayerOpponent>();
         playerUser = new PlayerUser(userName);
+        gameEnded = false;
+        playerStatsList = new ArrayList<PlayerStats>();
     }
 
 
@@ -94,5 +99,37 @@ public class GameClient extends Game {
             this.getPlayerUser().addCard(faceUpCards.remove(index));
         }
         return card;
+    }
+
+    public boolean isGameEnded() {
+        return gameEnded;
+    }
+
+    public void setGameEnded(boolean gameEnded) {
+        this.gameEnded = gameEnded;
+    }
+
+    public ArrayList<PlayerStats> getPlayerStatsList() {
+        return playerStatsList;
+    }
+
+    public void setPlayerStatsList(ArrayList<PlayerStats> playerStatsList) {
+        this.playerStatsList = playerStatsList;
+    }
+
+    public void addPlayerStatsList(ArrayList<PlayerStats> playerStatsList) {
+        this.playerStatsList.addAll(playerStatsList);
+    }
+
+    public void addPlayerStats(PlayerStats stats) {
+        this.playerStatsList.add(stats);
+    }
+
+    public String getTurnUser() {
+        return turnUser;
+    }
+
+    public void setTurnUser(String turnUser) {
+        this.turnUser = turnUser;
     }
 }

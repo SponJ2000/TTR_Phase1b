@@ -20,12 +20,18 @@ public interface IGameModel {
 
     String getUserName();
 
-
     GameMap getMap();
 
     Player getPlayer();
 
-    Result claimRoute(Route route, Player player);
+    /**
+     * Sends a request to claim a route with the given cards
+     * @param route
+     * @param player
+     * @param cards
+     * @return
+     */
+    Result claimRoute(Route route, Player player, List<Card> cards);
 
     void updateTickets();
 
@@ -37,7 +43,6 @@ public interface IGameModel {
 
     void chooseTickets(List<Ticket> tickets);
 
-
     void updateCards();
 
     void updateFaceCards();
@@ -45,6 +50,23 @@ public interface IGameModel {
     List<Card> getCards();
 
     List<Card> getFaceCards();
+
+    /**
+     * Checks if the player has enough cards of color and enough trains left to claim a route of
+     * given length. Also checks to see if it is a dual route, and, if so, checks to be sure the
+     * player has not claimed its sibling.
+     * @param color
+     * @param length
+     * @return  A list of cards if the player can claim the route, an error message if not
+     */
+    Object checkRouteCanClaim(GameColor color, int length);
+
+    /**
+     * Returns the color of the selected face-up card
+     * @param index
+     * @return
+     */
+    GameColor checkCard(int index);
 
     void chooseCard(int index);
 
@@ -67,5 +89,7 @@ public interface IGameModel {
     void removeTicket(int index);
 
     void updateOpponent();
+
+    void endTurn();
 
 }

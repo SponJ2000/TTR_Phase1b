@@ -9,7 +9,7 @@ public class Route {
     private City city2;
     private Integer length;
     private GameColor color;
-    private Player claimedBy = null;
+    private Player claimedBy = null; //TODO : use username? or playeropponenet?
     private double[] midPoint;
     private String routeID;
 
@@ -23,7 +23,6 @@ public class Route {
 
         midPoint[0] = (city1.getLat()+city2.getLat())/2.0;
         midPoint[1] = (city1.getLng()+city2.getLng())/2.0;
-
         routeID = city1.getName() + "-" + city2.getName();
     }
 
@@ -69,6 +68,10 @@ public class Route {
 
     public double[] getMidPoint() {
         return midPoint;
+    }
+
+    public void setMidPoint(double[] midPoint) {
+        this.midPoint = midPoint;
     }
 
     public String getRouteID() {

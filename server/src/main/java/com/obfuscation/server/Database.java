@@ -513,6 +513,10 @@ public class Database {
     }
 
     Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
+        //checking if the ticket to keep is more than 2 tickets
+        if (tickets.size() > 2) {
+            return new Result(false, null, "Error : too many tickets");
+        }
         try {
             GameServer game = findGameByID(gameID);
             if (game != null) {
@@ -588,22 +592,24 @@ public class Database {
                             p.getCards().remove(card);
                         }
 
-                        //set route claimedby
-                        //TODO : check double-routes
-
                         Route claimedRoute = null;
                         for (Route route : gameServer.getmMap().getRoutes()) {
-                            System.out.println(routeID);
-                            System.out.println(route.getRouteID());
-                            if (routeID.equals(route.getRouteID())) {
+                            if (route.getRouteID().equals(routeID)) {
                                 claimedRoute = route;
                                 break;
                             }
                         }
+                        //set route claimedby
                         gameServer.getmMap().claimRoute(claimedRoute, p);
 
                         //deduct train car number
                         p.setTrainNum(p.getTrainNum() - cards.size());
+
+
+                        //TODO : give proper points
+                        //TODO : non-colored route allows you to choose which color to choose
+                        //TODO : take carde of double route
+                        p.addPoint(claimedRoute.getLength());
                     }
                 }
 
@@ -645,6 +651,22 @@ public class Database {
                             Card topCard = game.getTrainCards().get(0);
                             game.getTrainCards().remove(0);
                             game.getFaceUpTrainCarCards().set(index, topCard);
+
+                            //check if the face-up cards have 3 locomotive cards
+                            int counter = 0;
+                            for (Card faceupCard : game.getFaceUpTrainCarCards()) {
+                                if (faceupCard.getColor() == GameColor.LOCOMOTIVE) {
+                                    counter++;
+                                }
+                            }
+                            if (counter >= 3) {
+                                ArrayList<Card> newFaceupCards =new ArrayList<>();
+                                for (int i = 0; i < 5 && i < game.getTrainCards().size(); i++) {
+                                    newFaceupCards.add(game.getTrainCards().get(0));
+                                    game.getTrainCards().remove(0);
+                                }
+                                game.setFaceUpTrainCarCards(newFaceupCards);
+                            }
                             for (PlayerUser p : game.getPlayers()) {
                                 if (p.getPlayerName().equals(username)) {
                                     p.getCards().add(card);

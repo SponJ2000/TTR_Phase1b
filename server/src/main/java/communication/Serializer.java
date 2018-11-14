@@ -60,4 +60,11 @@ public class Serializer {
         return c;
     }
 
+    public GameHistory deserializeGameHistory(String json) {
+        return gson.fromJson(json, GameHistory.class);
+    }
+
+    public PlayerStats deserializePlayerStats(String json) {
+        return gson.fromJson(json, PlayerStats.class);
+    }
 }

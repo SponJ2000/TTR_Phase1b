@@ -85,7 +85,8 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result LeaveLobbyGame(String id, String gameID, String authToken) {
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "LeaveLobbyGame", new String[]{STRING, STRING, STRING}, new Object[]{id, gameID, authToken});
+        return RunCommand(genericCommand);
     }
 
     @Override
