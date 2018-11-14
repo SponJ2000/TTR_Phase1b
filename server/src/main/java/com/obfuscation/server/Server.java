@@ -25,7 +25,7 @@ import communication.Ticket;
 
 public class Server {
     //port number. Change it if you want
-    private static final int portNumber = 8000;
+    private static final int portNumber = 8080;
 
     //test
     private static final String SERVER_FACADE = "com.obfuscation.server.ServerFacade";

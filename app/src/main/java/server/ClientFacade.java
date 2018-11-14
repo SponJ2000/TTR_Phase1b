@@ -9,11 +9,13 @@ import java.util.List;
 import communication.Card;
 import communication.Game;
 import communication.GameClient;
+import communication.GameHistory;
 import communication.IClient;
 import communication.IPlayer;
 import communication.Message;
 import communication.Player;
 import communication.PlayerOpponent;
+import communication.PlayerStats;
 import communication.PlayerUser;
 import communication.Serializer;
 import communication.Ticket;
@@ -219,5 +221,25 @@ public class ClientFacade implements IClient{
             System.out.println("message has size of:  " + g.getMessages().size());
 
         }
+    }
+
+    @Override
+    public void updateGameHistory(String gameID, List<GameHistory> gh) {
+
+    }
+
+    @Override
+    public void lastRound(String gameID) {
+
+    }
+
+    @Override
+    public void endGame(String gameID, List<PlayerStats> stats) {
+
+    }
+
+    @Override
+    public void updateTurns(String gameID, String userName) {
+
     }
 }
