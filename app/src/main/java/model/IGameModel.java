@@ -24,7 +24,14 @@ public interface IGameModel {
 
     Player getPlayer();
 
-    Result claimRoute(Route route, Player player);
+    /**
+     * Sends a request to claim a route with the given cards
+     * @param route
+     * @param player
+     * @param cards
+     * @return
+     */
+    Result claimRoute(Route route, Player player, List<Card> cards);
 
     void updateTickets();
 
@@ -50,9 +57,9 @@ public interface IGameModel {
      * player has not claimed its sibling.
      * @param color
      * @param length
-     * @return
+     * @return  A list of cards if the player can claim the route, an error message if not
      */
-    Boolean checkRouteCanClaim(GameColor color, int length);
+    Object checkRouteCanClaim(GameColor color, int length);
 
     /**
      * Returns the color of the selected face-up card
@@ -82,5 +89,7 @@ public interface IGameModel {
     void removeTicket(int index);
 
     void updateOpponent();
+
+    void endTurn();
 
 }
