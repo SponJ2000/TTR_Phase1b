@@ -166,6 +166,11 @@ public class GamePresenter implements IGamePresenter {
     }
 
     @Override
+    public IGameModel getModel() {
+        return model;
+    }
+
+    @Override
     public void chooseCard(int index) {
 //        model.chooseCard(index);
         if (index == -1) {
@@ -194,6 +199,10 @@ public class GamePresenter implements IGamePresenter {
         this.listener.onShow(Shows.chat);
     }
 
+    @Override
+    public void sendToast(String toast) {
+        view.sendToast(toast);
+    }
 }
 
 
@@ -227,14 +236,19 @@ class TurnNoSelection extends ITurnState {
 
     @Override
     public void selectFaceUp(int index) {
-        //TODO: check if locomotive
-        //TODO: update hand and deck
-        wrapper.setState(new TurnOneCard(wrapper));
+        if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
+            wrapper.getModel().chooseCard(index);
+            wrapper.setState(new NotTurn(wrapper));
+        }
+        else {
+            wrapper.getModel().chooseCard(index);
+            wrapper.setState(new TurnOneCard(wrapper));
+        }
     }
 
     @Override
     public void selectDeck() {
-        //TODO: update hand and deck
+        wrapper.getModel().chooseCard(-1);
         wrapper.setState(new TurnOneCard(wrapper));
     }
 
@@ -246,6 +260,7 @@ class TurnNoSelection extends ITurnState {
     @Override
     public void claimRoute(Route route, Player player) {
         //TODO: check if player has sufficient cards
+
         //TODO: allow player to choose cards if grey
         //TODO: send claim route
         //TODO: if successful, set NotTurn; if not send error toast
@@ -304,14 +319,18 @@ class TurnOneCard extends ITurnState {
 
     @Override
     public void selectFaceUp(int index) {
-        //TODO: Check if locomotive
-        //TODO: If not, send request, update UI
-        wrapper.setState(new NotTurn(wrapper));
+        if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
+            wrapper.sendToast("You can't select a locomotive card as your second choice.");
+        }
+        else {
+            wrapper.getModel().chooseCard(index);
+            wrapper.setState(new TurnOneCard(wrapper));
+        }
     }
 
     @Override
     public void selectDeck() {
-        //TODO: send request to server, update UI
-        wrapper.setState(new NotTurn(wrapper));
+        wrapper.getModel().chooseCard(-1);
+        wrapper.setState(new TurnOneCard(wrapper));
     }
 }

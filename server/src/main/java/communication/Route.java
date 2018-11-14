@@ -67,4 +67,8 @@ public class Route {
     public double[] getMidPoint() {
         return midPoint;
     }
+
+    public void setMidPoint(double[] midPoint) {
+        this.midPoint = midPoint;
+    }
 }
