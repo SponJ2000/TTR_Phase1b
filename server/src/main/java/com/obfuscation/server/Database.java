@@ -1,5 +1,6 @@
 package com.obfuscation.server;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -215,6 +216,11 @@ public class Database {
         ArrayList<Card> trainCards = new ArrayList<>();
 
         //FIXME * should be 12, just reducing the number for debugging
+        //FIXME should be 14
+        for (int i = 0; i < 1; i++) {
+            Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
+            trainCards.add(locomotiveCard);
+        }
         for (int i = 0; i < 2; i++) {
             Card purpleCard = new Card(GameColor.PURPLE);
             Card blueCard = new Card(GameColor.BLUE);
@@ -233,11 +239,7 @@ public class Database {
             trainCards.add(blackCard);
             trainCards.add(yellowCard);
         }
-        //FIXME should be 14
-        for (int i = 0; i < 1; i++) {
-            Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
-            trainCards.add(locomotiveCard);
-        }
+
 
 
         System.out.println("TRAIN CARD SIZE " + trainCards.size());
@@ -271,11 +273,36 @@ public class Database {
         }
 
         //set faceuptrain cards
-        ArrayList<Card> faceUpTrainCards = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Card card = trainCards.get(0);
-            faceUpTrainCards.add(card);
-            trainCards.remove(0);
+
+        //If 3 are locomotives, then shuffle again
+        ArrayList<Card> faceUpTrainCards = null;
+        while (true) {
+            System.out.println("GEH TE");
+            faceUpTrainCards = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                Card card = trainCards.get(0);
+                faceUpTrainCards.add(card);
+                trainCards.remove(0);
+            }
+
+            int counter = 0;
+            System.out.println("COLOR ");
+            for (int i = 0; i < 5; i++) {
+                System.out.println(faceUpTrainCards.get(i).getColor());
+                if (faceUpTrainCards.get(i).getColor() == GameColor.LOCOMOTIVE) {
+                    System.out.println("COUNTING");
+                    counter++;
+                }
+            }
+            System.out.println("E "  + counter);
+            if (counter >= 3) {
+                //if locomotive is more than 3, discard them and shuffle again
+                gameServer.getDiscardDeck().addAll(faceUpTrainCards);
+                faceUpTrainCards.clear();
+            }
+            else {
+                break;
+            }
         }
 
         // set faceup cards
@@ -624,7 +651,6 @@ public class Database {
     Result drawCard(String gameID, int index, String authToken) {
         String username = findUsernameByAuthToken(authToken);
         if (username != null) {
-            //TODO : draw cards
             GameServer game = findGameByID(gameID);
             if (game != null) {
                 if (index == -1) {
@@ -651,6 +677,34 @@ public class Database {
                             Card topCard = game.getTrainCards().get(0);
                             game.getTrainCards().remove(0);
                             game.getFaceUpTrainCarCards().set(index, topCard);
+
+                            while (true) {
+                                int counter = 0;
+                                for (int i = 0; i < 5; i++) {
+                                    System.out.println(game.getFaceUpTrainCarCards().get(i).getColor());
+                                    if (game.getFaceUpTrainCarCards().get(i).getColor() == GameColor.LOCOMOTIVE) {
+                                        System.out.println("COUNTING");
+                                        counter++;
+                                    }
+                                }
+
+                                if (counter >= 3) {
+                                    //if locomotive is more than 3, discard them and shuffle again
+                                    ArrayList<Card> faceUpTrainCards = new ArrayList<>();
+                                    for (int i = 0; i < 5; i++) {
+                                        //TODO : if deck is empty, shuffle
+                                        Card newCard = game.getTrainCards().get(0);
+                                        faceUpTrainCards.add(card);
+                                        game.getTrainCards().remove(0);
+                                    }
+                                    game.getDiscardDeck().addAll(faceUpTrainCards);
+                                    faceUpTrainCards.clear();
+                                }
+                                else {
+                                    break;
+                                }
+                                System.out.println("GEH TE");
+                            }
 
                             //check if the face-up cards have 3 locomotive cards
                             int counter = 0;
@@ -679,5 +733,9 @@ public class Database {
             }
         }
         return new Result(false, null, "Error while drawing Train Card");
+    }
+
+    void putDiscardToCardDeck(GameServer gameServer) {
+        //TODO : work on this
     }
 }

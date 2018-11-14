@@ -10,6 +10,7 @@ import java.util.UUID;
 public class GameServer extends Game {
 
     private ArrayList<Card> trainCards = new ArrayList<>();
+    private ArrayList<Card> discardDeck = new ArrayList<>();
     private ArrayList<Ticket> tickets = new ArrayList<>();
     private int currentPlayerIndex = 0;
     private ArrayList<PlayerUser> players = new ArrayList<>();
@@ -97,5 +98,11 @@ public class GameServer extends Game {
         return null;
     }
 
-    //todo: set a random gameID
+    public ArrayList<Card> getDiscardDeck() {
+        return discardDeck;
+    }
+
+    public void setDiscardDeck(ArrayList<Card> discardDeck) {
+        this.discardDeck = discardDeck;
+    }
 }
