@@ -589,9 +589,18 @@ public class Database {
                         }
 
                         //set route claimedby
-                        //TODO : just an example. Must be fixed later.
                         //TODO : check double-routes
-                        gameServer.getmMap().claimRoute(gameServer.getmMap().getRoutes().get(0), p);
+
+                        Route claimedRoute = null;
+                        for (Route route : gameServer.getmMap().getRoutes()) {
+                            System.out.println(routeID);
+                            System.out.println(route.getRouteID());
+                            if (routeID.equals(route.getRouteID())) {
+                                claimedRoute = route;
+                                break;
+                            }
+                        }
+                        gameServer.getmMap().claimRoute(claimedRoute, p);
 
                         //deduct train car number
                         p.setTrainNum(p.getTrainNum() - cards.size());
