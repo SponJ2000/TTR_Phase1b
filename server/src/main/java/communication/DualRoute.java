@@ -26,4 +26,8 @@ public class DualRoute extends Route {
             setMidPoint(mid);
         }
     }
+
+    public void setSibling(DualRoute sibling) {
+        this.sibling = sibling;
+    }
 }
