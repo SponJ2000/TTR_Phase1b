@@ -18,6 +18,7 @@ public class Game {
     private ArrayList<Card> faceUpTrainCarCards;
     private GameMap mMap;
 
+    boolean lastRound;
     private ArrayList<GameHistory> gameHistories;
 
     public Game() {
@@ -80,5 +81,21 @@ public class Game {
 
     public void setGameHistories(ArrayList<GameHistory> gameHistories) {
         this.gameHistories = gameHistories;
+    }
+
+    public void addHistory(ArrayList<GameHistory> gameHistories) {
+        this.gameHistories.addAll(gameHistories);
+    }
+
+    public void addHistory(GameHistory gh) {
+        this.gameHistories.add(gh);
+    }
+
+    public boolean isLastRound() {
+        return lastRound;
+    }
+
+    public void setLastRound(boolean lastRound) {
+        this.lastRound = lastRound;
     }
 }
