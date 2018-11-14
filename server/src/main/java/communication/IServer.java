@@ -56,7 +56,7 @@ public interface IServer {
      * @param authToken a String object with the username's authToken
      * @return          a Result object containing a boolean indicating success
      */
-    Result JoinGameLobby(String id, String gameID, String authToken);
+    Result JoinLobby(String id, String gameID, String authToken);
 
     /**
      * let the player leave the game
@@ -137,7 +137,7 @@ public interface IServer {
      * @param authToken  a String object containing the user's authToken
      * @return           a Result object a boolean to indicate the success or failure
      */
-    Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken);
+    Result ClaimRoute(String gameID, String routeID, List<Card> cards, String authToken);
 
     /**
      * user draw Train Card from the face up deck or face down deck
@@ -153,7 +153,7 @@ public interface IServer {
      * @param authToken a String object containing the user's authToken
      * @return          a Result object contain a card.
      */
-    Result DrawTrainCard(Integer index, String authToken);
+    Result DrawTrainCard(String gameID, Integer index, String authToken);
 
     /**
      * user recieve three destination tickets blindly from the deck to choose from
@@ -200,7 +200,7 @@ public interface IServer {
      * @param authToken a String object containing the authToken of the user
      * @return          a Result object containing the game list
      */
-    Result GetGameList(String authToken);
+    Result GetLobbyList(String authToken);
 
     /**
      *
@@ -235,5 +235,5 @@ public interface IServer {
 
     Result SendMessage(String authToken, String gameID, Message message);
 
-    Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets);
+    Result NotifyLastRound(String authToken, String gameID);
 }

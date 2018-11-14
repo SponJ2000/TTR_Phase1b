@@ -40,7 +40,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "register":
                 return serverProxy.Register((String) params[0], (String) params[1]);
             case "joinLobbyGame":
-                return serverProxy.JoinGameLobby((String) params[0], (String) params[1], (String) params[2]);
+                return serverProxy.JoinLobby((String) params[0], (String) params[1], (String) params[2]);
             case "leaveGame":
                 return serverProxy.LeaveGame((String) params[0], (String) params[1], (String) params[2]);
             case "leaveLobbyGame":
@@ -49,8 +49,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.CreateLobby((LobbyGame) params[0], (String) params[1]);
             case "startGame":
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
-            case "GetGameList":
-                return serverProxy.GetGameList((String) params[0]);
+            case "GetLobbyList":
+                return serverProxy.GetLobbyList((String) params[0]);
             case "GetGame":
                 return serverProxy.GetGame((String) params[0], (String) params[1]);
             case "CheckGameList":
@@ -61,8 +61,6 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.SendMessage((String) params[0], (String) params[1], (Message) params[2]);
             case "GetTickets":
                 return serverProxy.GetTickets((String) params[0], (String) params[1]);
-            case "ChooseTicket":
-                return serverProxy.ChooseTicket((String) params[0], (String) params[1], (List<Ticket>) params[2]);
             case "ReturnTickets":
                 return serverProxy.ReturnTickets((String) params[0], (String) params[1], (List<Ticket>) params[2]);
             case "DrawTrainCard":
@@ -85,7 +83,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 //need to update the authkey
                 OnSignIn(result);
                 break;
-            case "GetGameList":
+            case "GetLobbyList":
                 FetchGameListFrom(result);
                 break;
             case "GetGame":

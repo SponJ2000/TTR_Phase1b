@@ -1,13 +1,20 @@
 package com.obfuscation.server;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.List;
 
+import communication.Card;
 import communication.Game;
+import communication.GameColor;
+import communication.Message;
 import communication.Player;
+import communication.PlayerUser;
+import communication.Ticket;
 
 
 /**
@@ -19,6 +26,14 @@ import communication.Player;
 public class Server {
     //port number. Change it if you want
     private static final int portNumber = 8080;
+
+    //test
+    private static final String SERVER_FACADE = "com.obfuscation.server.ServerFacade";
+    private static final String STRING = "java.lang.String";
+    private static final String INTEGER = "java.lang.Integer";
+    //    TODO: helps to find the typeName
+    private static final String ARRAYLISTCARD = "??";
+    private static final String LIST = List.class.getName();
 
     /**
      * the main function that runs the server
@@ -35,9 +50,31 @@ public class Server {
 
         //the server context is exec
         server.createContext("/exec", new ExecCommandHandler());
+        server.createContext("/", new DefaultHandler());
 
         server.start();
 
+        //test
+        String id = "id";
+        String gameID = "GAME";
+        String authToken = "authBob";
+
+
+
+
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        ArrayList<Card> cards = new ArrayList<>();
+        cards.add(new Card(GameColor.BLACK));
+        cards.add(new Card(GameColor.RED));
+
+        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetUpdates\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.Integer\"],\"parameterValue\":[\"authBob\",\"GAME\",0]}";
+
+        String routeID = "ROUTE";
+        Message message = new Message("Bob", "HELLO WORLD");
+        int index = 1;
+        int state = 0;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetUpdates", new String[]{STRING, STRING, INTEGER}, new Object[]{authToken, gameID, state});
+        System.out.println(new Gson().toJson(genericCommand));
 
         ServerFacade facade = ServerFacade.getInstance();
 //        facade.Register("Jerry", "jerry");

@@ -20,9 +20,12 @@ import communication.Message;
 import communication.Player;
 import communication.PlayerUser;
 import communication.Result;
+import communication.Route;
 import communication.TickectMaker;
 import communication.Ticket;
 import communication.GameColor;
+
+import static communication.GameColor.GREY;
 
 /**
  * Created by jalton on 10/3/18.
@@ -31,44 +34,40 @@ import communication.GameColor;
 
 public class Database {
 
-    /*
-    We will need:
-    Game list (game id, players, etc)
-    Login info database
-    operations to:
-    register user
-    login
-    new game
-    join game
-    leave game
-    started games
-    rejoin
-     */
-
-
     private Map<String, String> loginInfo;
     //TODO : make gameid and gamelobbyid same
-    private List<LobbyGame> lobbyGameList;
-    private List<GameServer> gameList;
+    private List<LobbyGame> lobbyGameList = new ArrayList<>();
+    private List<GameServer> gameList = new ArrayList<>();
 
+    public List<GameServer> getGameList() {
+        return gameList;
+    }
+
+    public void setGameList(List<GameServer> gameList) {
+        this.gameList = gameList;
+    }
 
     private List<ActiveUser> activeUsers;
     private List<String> authTokens;
     private HashMap<String, String> authTokenMap;
-    public GameServer dummyGame = new GameServer();
 
     public void setDummyGame() {
-        dummyGame.setGameID("GAME");
-        authTokenMap.put("Bob", "authBob");
-        authTokenMap.put("Joe", "authJoe");
-        loginInfo.put("Bob", "password");
-        loginInfo.put("Joe", "password");
-        setupGame("GAME");
+        try {
+            newGameLobby(new LobbyGame("Bob", "GAME", 3), "authBob");
+            joinGame("Joe", "GAME");
+            System.out.println("#####");
+           // startGame("GAME", "authBob");
+            //setupGame("GAME");
+            System.out.println("####@");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private List<GameColor> colors = Arrays.asList(GameColor.PLAYER_BLACK, GameColor.PLAYER_BLUE, GameColor.PLAYER_PURPLE, GameColor.PLAYER_RED, GameColor.PLAYER_YELLOW);
 
-    public List<LobbyGame> getGameList() {
+    public List<LobbyGame> getLobbyList() {
         return lobbyGameList;
     }
 
@@ -88,6 +87,13 @@ public class Database {
         activeUsers = new ArrayList<>();
         authTokenMap = new HashMap<>();
         authTokens = new ArrayList<>();
+        authTokenMap.put("Bob", "authBob");
+        authTokenMap.put("Joe", "authJoe");
+        loginInfo.put("Bob", "password");
+        loginInfo.put("Joe", "password");
+        login("Bob", "password");
+        login("Joe", "password");
+        setDummyGame();
     }
 
     Result register(String id, String password){
@@ -111,8 +117,9 @@ public class Database {
             if(loginInfo.get(id).equals(password)){
                 //Generate authToken
                 String authToken = generateAuthToken();
-                authTokenMap.put(id, authToken);
-
+                if (!id.equals("Bob") && !id.equals("Joe")) {
+                    authTokenMap.put(id, authToken);
+                }
                 //Add Player to Active Users
                 if(findUserByID(id) != null) {
                     ActiveUser user = findUserByID(id);
@@ -145,7 +152,7 @@ public class Database {
         else if(lobbyGame.getGameID() == null || lobbyGame.getGameID().equals("")) {
             errorInfo = "Error: Invalid game name (cannot be blank)";
         }
-        else if(findGameByID(lobbyGame.getGameID()) != null) {
+        else if(findGameLobbyByID(lobbyGame.getGameID()) != null) {
             errorInfo = "Error: Game name must be unique";
         }
         else if (lobbyGame.getHost() == null || lobbyGame.getHost().equals("")) {
@@ -161,6 +168,9 @@ public class Database {
         if(!valid) return new Result(valid, null, errorInfo);
         //check the userID
         String userID = lobbyGame.getHost();
+        System.out.println(authToken);
+        System.out.println(userID);
+
         if(!checkAuthToken(authToken, userID)) return new Result(false, null, "Error: Invalid Token");
 
         ActiveUser user = findUserByID(userID);
@@ -203,7 +213,9 @@ public class Database {
 
         //initialize traincards
         ArrayList<Card> trainCards = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
+
+        //FIXME * should be 12, just reducing the number for debugging
+        for (int i = 0; i < 2; i++) {
             Card purpleCard = new Card(GameColor.PURPLE);
             Card blueCard = new Card(GameColor.BLUE);
             Card orangeCard = new Card(GameColor.ORANGE);
@@ -221,8 +233,10 @@ public class Database {
             trainCards.add(blackCard);
             trainCards.add(yellowCard);
         }
-        for (int i = 0; i < 14; i++) {
-            Card LocomotiveCard = new Card(GameColor.LOCOMOTIVE);
+        //FIXME should be 14
+        for (int i = 0; i < 1; i++) {
+            Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
+            trainCards.add(locomotiveCard);
         }
 
 
@@ -232,12 +246,10 @@ public class Database {
 
         ArrayList<Ticket> tickets = new ArrayList<>();
         //initialize destTickets
-        for (int i = 0; i < 30; i++) {
-            //FIXME**
-            Ticket ticket = new Ticket(new City("CITY1", 0,0), new City("city2", 0,0), 100);
-            tickets.add(ticket);
-        }
         tickets = new TickectMaker().MakeCards();
+
+        //FIXME just for debugging. Should be erased later.
+        tickets = new ArrayList<> (tickets.subList(0, 8));
 
         System.out.println("MAKER CARD SIZE " + tickets.size());
         Collections.shuffle(tickets);
@@ -271,6 +283,7 @@ public class Database {
 
         gameServer.setTrainCards(trainCards);
 
+
     }
     Result startGame(String gameID, String authToken) {
         LobbyGame lobbyGame = findGameLobbyByID(gameID);
@@ -282,6 +295,12 @@ public class Database {
 
         if(lobbyGame.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
         GameServer game = new GameServer();
+
+        if (findGameByID(gameID) != null) return new Result(false, null, "Error : already started");
+        game.setGameID(gameID);
+
+        //lobby game is started
+        findGameLobbyByID(gameID).setStarted(true);
 
         //set players
         ArrayList<PlayerUser> players = new ArrayList<>();
@@ -298,11 +317,15 @@ public class Database {
 //            user.getJoinedGames().add(gameID);
 //        }
 
+
+
         //Assign PlayerColors
         Collections.shuffle(colors);
         for (int i = 0; i < game.getPlayers().size(); i++) {
             game.getPlayers().get(i).setPlayerColor(colors.get(i));
         }
+
+        gameList.add(game);
         return new Result(true, game, null);
     }
 
@@ -391,6 +414,7 @@ public class Database {
         }
         return null;
     }
+
     public String findUsernameByAuthToken(String authToken) {
         for (Map.Entry<String, String> entry : authTokenMap.entrySet()) {
             if (authToken.equals(entry.getValue())) {
@@ -474,7 +498,7 @@ public class Database {
             return tickets;
         }
         for (int i = 0; i < 3; i++) {
-            Ticket ticket = tickets.get(i);
+            Ticket ticket = tickets.get(0);
             playerTickets.add(ticket);
             tickets.remove(0);
         }
@@ -489,6 +513,10 @@ public class Database {
     }
 
     Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
+        //checking if the ticket to keep is more than 2 tickets
+        if (tickets.size() > 2) {
+            return new Result(false, null, "Error : too many tickets");
+        }
         try {
             GameServer game = findGameByID(gameID);
             if (game != null) {
@@ -523,10 +551,14 @@ public class Database {
                 }
                 System.out.println("OVERLAP SIZE + " + overlap.size());
                 List<Ticket> ticketDeck = game.getTickets();
-                for (Integer i : overlap) {
-                    ticketDeck.add(tickets1.get(i));
+                for (int i = 0; i < tickets1.size(); i++) {
+                    if (!overlap.contains(i)) {
+                        game.getTickets().add(tickets1.get(i));
+                    }
                 }
                 for (PlayerUser player : game.getPlayers()) {
+                    System.out.println("PLAYER USERNAME " + playerID + " " + player.getPlayerName());
+
                     if (player.getPlayerName().equals(playerID)) {
                         player.setTickets((ArrayList<Ticket>) tickets);
                         player.setTicketToChoose(new ArrayList<>());
@@ -540,5 +572,112 @@ public class Database {
             e.printStackTrace();
         }
         return new Result(false, null, "Error : player not found");
+    }
+
+    Result claimRoute(String gameID, String routeID, List<Card> cards, String authToken) {
+        String username = findUsernameByAuthToken(authToken);
+        if (username != null) {
+            GameServer gameServer = findGameByID(gameID);
+            if (gameServer != null) {
+                //TODO : make discard pile
+
+                for (PlayerUser p : gameServer.getPlayers()) {
+                    if (p.getPlayerName().equals(username)) {
+                        //set player claimed route
+
+                        p.getClaimedRoutes().add(routeID);
+
+                        //remove cards
+                        for (Card card : cards) {
+                            p.getCards().remove(card);
+                        }
+
+                        Route claimedRoute = null;
+                        for (Route route : gameServer.getmMap().getRoutes()) {
+                            if (route.getRouteID().equals(routeID)) {
+                                claimedRoute = route;
+                                break;
+                            }
+                        }
+                        //set route claimedby
+                        gameServer.getmMap().claimRoute(claimedRoute, p);
+
+                        //deduct train car number
+                        p.setTrainNum(p.getTrainNum() - cards.size());
+
+
+                        //TODO : give proper points
+                        //TODO : non-colored route allows you to choose which color to choose
+                        //TODO : take carde of double route
+                        p.addPoint(claimedRoute.getLength());
+                    }
+                }
+
+                //TODO : update points, carnums, trainnums
+                return new Result(true, true, null);
+
+            }
+        }
+        return new Result(false, null, "Error happened while claiming route");
+    }
+
+    Result drawCard(String gameID, int index, String authToken) {
+        String username = findUsernameByAuthToken(authToken);
+        if (username != null) {
+            //TODO : draw cards
+            GameServer game = findGameByID(gameID);
+            if (game != null) {
+                if (index == -1) {
+                    //draw from deck
+                    if (game.getDeckSize() <= 0) {
+                        return new Result(false, null, "Error : deck is empty");
+                    }
+                    else {
+                        Card card = game.getTrainCards().get(0);
+                        game.getTrainCards().remove(0);
+                        return new Result(true, card, null);
+                    }
+                }
+                else if (index >= 0 && index <= 4) {
+                    if (game.getFaceUpTrainCarCards().size() > index) {
+                        //get card from the face up cards
+                        Card card = game.getFaceUpTrainCarCards().get(index);
+                        if (game.getDeckSize() <= 0) {
+                            return new Result(false, null, "Error : deck is empty");
+                        }
+                        else {
+
+                            //draw card from the deck and set it to face up cards
+                            Card topCard = game.getTrainCards().get(0);
+                            game.getTrainCards().remove(0);
+                            game.getFaceUpTrainCarCards().set(index, topCard);
+
+                            //check if the face-up cards have 3 locomotive cards
+                            int counter = 0;
+                            for (Card faceupCard : game.getFaceUpTrainCarCards()) {
+                                if (faceupCard.getColor() == GameColor.LOCOMOTIVE) {
+                                    counter++;
+                                }
+                            }
+                            if (counter >= 3) {
+                                ArrayList<Card> newFaceupCards =new ArrayList<>();
+                                for (int i = 0; i < 5 && i < game.getTrainCards().size(); i++) {
+                                    newFaceupCards.add(game.getTrainCards().get(0));
+                                    game.getTrainCards().remove(0);
+                                }
+                                game.setFaceUpTrainCarCards(newFaceupCards);
+                            }
+                            for (PlayerUser p : game.getPlayers()) {
+                                if (p.getPlayerName().equals(username)) {
+                                    p.getCards().add(card);
+                                }
+                            }
+                            return new Result(true, card, null);
+                        }
+                    }
+                }
+            }
+        }
+        return new Result(false, null, "Error while drawing Train Card");
     }
 }

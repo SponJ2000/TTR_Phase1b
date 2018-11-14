@@ -9,11 +9,13 @@ import java.util.List;
 import communication.Card;
 import communication.Game;
 import communication.GameClient;
+import communication.GameHistory;
 import communication.IClient;
 import communication.IPlayer;
 import communication.Message;
 import communication.Player;
 import communication.PlayerOpponent;
+import communication.PlayerStats;
 import communication.PlayerUser;
 import communication.Serializer;
 import communication.Ticket;
@@ -165,7 +167,7 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.setFaceUpTrainCarCards(faceCards);
         }
@@ -173,7 +175,7 @@ public class ClientFacade implements IClient{
 
 
     public void updateTrainDeck(String gameID, List<Card> faceCards, Integer downCardNum) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         Serializer serializer =  new Serializer();
         ArrayList<Card> cardD = new ArrayList<Card>();
         for(Object O: faceCards) {
@@ -208,7 +210,7 @@ public class ClientFacade implements IClient{
     @Override
     public void updateChat(String gameID, Message m) {
         System.out.println("trying to insert"+ m.getText());
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.insertMessage(m);
             System.out.println("inserted a new chat"+ m.getText());
@@ -219,5 +221,31 @@ public class ClientFacade implements IClient{
             System.out.println("message has size of:  " + g.getMessages().size());
 
         }
+    }
+
+    @Override
+    public void updateGameHistory(String gameID, List<GameHistory> gh) {
+        GameClient g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            Serializer serializer = new Serializer();
+            for(Object O: gh) {
+                g.addHistory(serializer.deserializeGameHistory(O.toString()));
+            }
+        }
+    }
+
+    @Override
+    public void lastRound(String gameID) {
+
+    }
+
+    @Override
+    public void endGame(String gameID, List<PlayerStats> stats) {
+
+    }
+
+    @Override
+    public void updateTurns(String gameID, String userName) {
+
     }
 }

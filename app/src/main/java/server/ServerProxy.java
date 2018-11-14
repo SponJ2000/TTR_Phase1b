@@ -42,8 +42,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result JoinGameLobby(String id, String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinGameLobby", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
+    public Result JoinLobby(String id, String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "JoinLobby", new String[]{STRING,STRING,STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
     }
 
@@ -60,8 +60,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result GetGameList(String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetGameList", new String[]{STRING}, new Object[]{authToken});
+    public Result GetLobbyList(String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetLobbyList", new String[]{STRING}, new Object[]{authToken});
         return RunCommand(genericCommand);
     }
 
@@ -78,21 +78,13 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
-        System.out.println("CHOOOSE TICKEEEEEEEEET");
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ChooseTicket", new String[]{STRING, STRING, LIST}, new Object[]{authToken, gameID, chosenTickets});
-        System.out.println("GGG");
-        return RunCommand(genericCommand);
-    }
-
-    @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "LeaveGame", new String[]{STRING, STRING, STRING}, new Object[]{id, gameID, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
-    public Result leaveLobbyGame(String id, String gameID, String authToken) {
+    public Result LeaveLobbyGame(String id, String gameID, String authToken) {
         return null;
     }
 
@@ -126,14 +118,14 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, LIST, STRING}, new Object[]{routeID, cards, authToken});
+    public Result ClaimRoute(String gameID, String routeID, List<Card> cards, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "ClaimRoute", new String[]{STRING, STRING, LIST, STRING}, new Object[]{gameID, routeID, cards, authToken});
         return RunCommand(genericCommand);
     }
 
     @Override
-    public Result DrawTrainCard(Integer index, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "DrawTrainCard", new String[]{INTEGER, STRING}, new Object[]{index, authToken});
+    public Result DrawTrainCard(String gameID, Integer index, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "DrawTrainCard", new String[]{STRING, INTEGER, STRING}, new Object[]{gameID, index, authToken});
         return RunCommand(genericCommand);
     }
 
@@ -159,5 +151,11 @@ public class ServerProxy implements communication.IServer {
     public Result CheckGameLobby(String authToken, String gameID) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGameLobby", new String[]{STRING,STRING}, new Object[]{authToken, gameID});
         return RunCommand(genericCommand);
+    }
+
+    @Override
+    public Result NotifyLastRound(String authToken, String gameID) {
+        //TODO
+        return null;
     }
 }

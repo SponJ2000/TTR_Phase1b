@@ -8,9 +8,11 @@ import java.util.Map;
 import communication.Card;
 import communication.Game;
 import communication.GameClient;
+import communication.GameHistory;
 import communication.IClient;
 import communication.ICommand;
 import communication.Message;
+import communication.PlayerStats;
 import communication.Result;
 import communication.Ticket;
 
@@ -61,6 +63,7 @@ public class ClientProxy implements IClient {
                 , "initializeGame"
                 , new String[]{GAMECLIENT}
                 , new Object[] {game});
+        System.out.println("GET HERE");
         notSeenCommands.put(game.getGameID(), new ArrayList<GenericCommand>());
         notSeenCommands.get(game.getGameID()).add(command);
     }
@@ -149,7 +152,7 @@ public class ClientProxy implements IClient {
     public void claimRoute(String gameID, String playerID, String routeID) {
         GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
-                , "updateDestinationDeck"
+                , "claimRoute"
                 , new String[]{STRING, STRING, STRING}
                 , new Object[] {gameID, playerID, routeID});
         notSeenCommands.get(gameID).add(command);
@@ -164,6 +167,26 @@ public class ClientProxy implements IClient {
                 , new Object[] {gameID, m});
         notSeenCommands.get(gameID).add(command);
         System.out.println("UPDATING CHAT : " + notSeenCommands.get(gameID).size());
+    }
+
+    @Override
+    public void updateGameHistory(String gameID, List<GameHistory> gh) {
+
+    }
+
+    @Override
+    public void lastRound(String gameID) {
+
+    }
+
+    @Override
+    public void endGame(String gameID, List<PlayerStats> stats) {
+
+    }
+
+    @Override
+    public void updateTurns(String gameID, String userName) {
+
     }
 
     private int version;

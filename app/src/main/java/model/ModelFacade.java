@@ -80,7 +80,7 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    public Result claimRoute(Route route, Player player) {
+    public Result claimRoute(Route route, Player player, List<Card> cards) {
         return null;
     }
 
@@ -141,7 +141,7 @@ public class ModelFacade implements IGameModel {
     }
 
     public void updateGameList() {
-        GenericTask genericTask = new GenericTask("GetGameList");
+        GenericTask genericTask = new GenericTask("GetLobbyList");
         genericTask.execute(ModelRoot.getInstance().getAuthToken());
     }
 
@@ -220,7 +220,7 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    //ask for three new tickext to choose from server
+    //ask for three new tickets to choose from server
     public void updateChoiceTickets() {
 
 
@@ -242,6 +242,15 @@ public class ModelFacade implements IGameModel {
     //whenever we choose a new cards
     public void updateFaceCards() {
         ModelRoot.getInstance().getGame().UserTakeFaceUpCard(0);
+    }
+
+    @Override
+    public GameColor checkCard(int index) {
+        try {
+            return mFaceCards.get(index).getColor();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return GameColor.GREY;
+        }
     }
 
     @Override
@@ -298,6 +307,40 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public Object checkRouteCanClaim(GameColor color, int length) {
+        List<Card> cards = getCards();
+
+        if (color == GameColor.GREY) {
+            if (cards.size() >= length) return true;
+            else return "Not enough cards";
+        }
+        else {
+            int cardNum = 0;
+            List<Card> cardColor = new ArrayList<>();
+
+            for (int i = 0; i < cards.size(); i++) {
+                Card card = cards.get(i);
+                if (card.getColor() == color) {
+                    cardNum++;
+                    cardColor.add(new Card(color));
+                }
+                else if (card.getColor() == GameColor.LOCOMOTIVE) {
+                    cardNum++;
+                }
+            }
+            if (cardNum >= length) {
+                if (cardColor.size() < length) {
+                    while (cardColor.size() < length) {
+                        cardColor.add(new Card(GameColor.LOCOMOTIVE));
+                    }
+                }
+                return new ArrayList<>(cardColor.subList(0, length));
+            }
+            else return "Not enough cards";
+        }
+    }
+
+    @Override
     public List<Card> getFaceCards() {
         return ModelRoot.getInstance().getGame().getFaceUpTrainCarCards();
     }
@@ -340,4 +383,8 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getLobbyGame();
     }
 
+    @Override
+    public void endTurn() {
+
+    }
 }

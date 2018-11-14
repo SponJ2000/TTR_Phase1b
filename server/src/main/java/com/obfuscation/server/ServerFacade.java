@@ -11,6 +11,7 @@ import communication.LobbyGame;
 import communication.GameServer;
 import communication.IServer;
 import communication.Message;
+import communication.Player;
 import communication.PlayerOpponent;
 import communication.PlayerUser;
 import communication.Result;
@@ -48,34 +49,39 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
-    public Result DrawTrainCard(Integer index, String authToken) {
-        return null;
-    }
-
-    @Override
-    public Result ChooseTicket(String authToken, String gameID, List<Ticket> chosenTickets) {
+    public Result DrawTrainCard(String gameID, Integer index, String authToken) {
         try {
-            System.out.println("called choose tickets in server");
-            return new Result(true, db.getTickets(gameID, authToken), null);
+            Result result = db.drawCard(gameID, index, authToken);
+            if (result.isSuccess()) {
+                GameServer gameServer = db.findGameByID(gameID);
+                String username = db.findUsernameByAuthToken(authToken);
+                PlayerUser currentPlayer = gameServer.getPlayerbyUserName(username);
+                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                    clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
+                    clientProxy.updateTrainDeck(gameID, gameServer.getFaceUpTrainCarCards(), gameServer.getTrainCards().size());
+                }
+            }
+            return result;
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
-
     private ServerFacade() {
+        //setting dummy game
         clientproxies.add(new ClientProxy("authBob"));
         clientproxies.add(new ClientProxy("authJoe"));
         gameIDclientProxyMap.put("GAME", new ArrayList<ClientProxy>());
         gameIDclientProxyMap.get("GAME").add(clientproxies.get(0));
         gameIDclientProxyMap.get("GAME").add(clientproxies.get(1));
+        StartGame("GAME", "authBob");
     }
 
     private ClientProxy getClientProxyByAuthToken(String authToken) {
@@ -99,8 +105,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -114,12 +120,12 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
-    public Result JoinGameLobby(String id, String gameID, String authToken) {
+    public Result JoinLobby(String id, String gameID, String authToken) {
         try {
             if (!db.checkAuthToken(authToken, id)) {
                 return new Result(false, null, "Error: Invalid authorization");
@@ -140,12 +146,17 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
     public Result LeaveGame(String id, String gameID, String authToken) {
+        return null;
+    }
+
+    @Override
+    public Result LeaveLobbyGame(String id, String gameID, String authToken) {
         try {
             if (!db.checkAuthToken(authToken, id)) {
                 return new Result(false, null, "Error: Invalid authorization");
@@ -165,25 +176,22 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
-    }
-
-    @Override
-    public Result LeaveLobbyGame(String id, String gameID, String authToken) {
-        return null;
     }
 
     @Override
     public Result CreateLobby(LobbyGame lobbyGame, String authToken) {
         try {
+            System.out.println(authToken + " EEE");
             Result result = db.newGameLobby(lobbyGame, authToken);
             System.out.println("WHAT IS " + result.toString());
             if (result.isSuccess()) {
                 for (ClientProxy clientProxy : clientproxies) {
                     clientProxy.updateGameLobbyList(lobbyGame.getGameID());
                 }
-                gameIDclientProxyMap.put(lobbyGame.getGameID(), new ArrayList<ClientProxy>());
+                gameIDclientProxyMap.put(lobbyGame.getGameID(), new ArrayList<>());
+                System.out.println("AUTH TOKEN " + authToken);
                 gameIDclientProxyMap.get(lobbyGame.getGameID()).add(getClientProxyByAuthToken(authToken));
             }
             System.out.println("CREATE " + result.toString());
@@ -191,8 +199,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -205,8 +213,11 @@ public class ServerFacade implements IServer {
                     clientProxy.updateGameLobbyList(game.getGameID());
                 }
 
-                //set colors and set orders
-                //TODO : need to figure out how to handle this part
+                //setup game
+                db.setupGame(gameID);
+                ArrayList<Object> objects = new ArrayList<>();
+                game = db.findGameByID(gameID);
+                objects.add(game);
                 System.out.println("STARTING GAME : " + gameIDclientProxyMap.get(gameID).size());
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     System.out.println("UPDATING : " + clientProxy.getAuthToken());
@@ -215,8 +226,14 @@ public class ServerFacade implements IServer {
                     clientProxy.updateGame(gameID);
                     String username = db.findUsernameByAuthToken(clientProxy.getAuthToken());
 
-                    //initalize game
+                    //initalize game TODO : SET GAMECLIENTS
                     GameClient gameClient = new GameClient();
+                    gameClient.setGameID(gameID);
+                    gameClient.setPlayerUser(game.getPlayerbyUserName(username));
+                    gameClient.setTrainCardDeckSize(game.getTrainCards().size());
+                    gameClient.setFaceUpTrainCarCards(game.getFaceUpTrainCarCards());
+                    gameClient.getPlayerUser().setTicketToChoose(game.getPlayerbyUserName(username).getTicketToChoose());
+                    gameClient.setTicketDeckSize(game.getTickets().size());
 
                     //initialize user player
                     PlayerUser playerUser = new PlayerUser(username);
@@ -225,49 +242,25 @@ public class ServerFacade implements IServer {
                     //initialize opponents
                     for (ClientProxy clientProxy1 : gameIDclientProxyMap.get(gameID)) {
                         if (!clientProxy.getAuthToken().equals(clientProxy1.getAuthToken())) {
-                            opponents.add(new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 0, 0));
+                            opponents.add(new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 40, 4));
                         }
                     }
+                    gameClient.setPlayerOpponents(opponents);
+
+                    objects.add(gameClient);
+                    clientProxy.initializeGame(gameClient);
+
 
                     //add command to initialize
-                    clientProxy.initializeGame(gameClient);
                 }
-
-                db.setupGame(gameID);
-                GameServer gameServer = db.findGameByID(gameID);
-
-//            //update tickets (distribute 3 cards)
-//            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-//                String playerID = db.findUsernameByAuthToken(clientProxy.getAuthToken());
-//                clientProxy.updateTickets(gameID, game.getPlayerbyUserName(playerID).getTickets());
-//                Result result1 = GetTickets(gameID, clientProxy.getAuthToken());
-//            }
-
-                //update destination card deck number
-                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                    clientProxy.updateDestinationDeck(gameID, game.getTickets().size());
-                }
-
-                //TODO : needed? Taken care of in the initalize game
-                //update train cards for each player (4 cards)
-                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                    String username = db.findUsernameByAuthToken(clientProxy.getAuthToken());
-                    System.out.println("UPDATING TRAIN CARDS");
-                    System.out.println(game.getPlayerbyUserName(username).getCards());
-                    clientProxy.updateTrainCards(gameID, game.getPlayerbyUserName(username).getCards());
-                }
-
-                //update train card deck
-                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                    clientProxy.updateTrainDeck(gameID, game.getFaceUpTrainCarCards(), game.getTrainCards().size());
-                }
+                return new Result(true, objects, null);
             }
             return result;
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     /**
@@ -289,19 +282,19 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
-    public Result GetGameList(String authToken) {
+    public Result GetLobbyList(String authToken) {
         try {
-            return new Result(true, db.getGameList(), null);
+            return new Result(true, db.getLobbyList(), null);
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -311,8 +304,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -331,8 +324,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -347,8 +340,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
@@ -370,36 +363,43 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     @Override
-    public Result ClaimRoute(String routeID, ArrayList<Card> cards, String authToken) {
-        try {
+    public Result ClaimRoute(String gameID, String routeID, List<Card> cards, String authToken) {
+        ArrayList<Card> realCards = new ArrayList<>();
+        Serializer serializer = new Serializer();
 
+        for(Object o : cards) {
+            realCards.add(serializer.deserializeCard(o.toString()));
+        }
+
+        try {
+            Result result = db.claimRoute(gameID, routeID, realCards, authToken);
+            if (result.isSuccess()) {
+                String username = db.findUsernameByAuthToken(authToken);
+                GameServer gameServer = db.findGameByID(gameID);
+                PlayerUser currentPlayer = gameServer.getPlayerbyUserName(username);
+                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+
+                    //update opponents points
+                    //TODO : ROUTE ID??
+                    clientProxy.claimRoute(gameID, username, "ROUTEID");
+                    clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
+                    clientProxy.updateOpponentTrainCars(gameID, username, currentPlayer.getTrainNum());
+                    clientProxy.updatePlayerPoints(gameID, username, currentPlayer.getPoint());
+                }
+            }
+            return result;
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
-    // -1 -> from the deck
-    // index -> faceup
-    // returns result with the card
-//   card @Override
-//    public Result DrawTrainCard(Integer index, String gameID, String authToken) { //TODO : need gameID
-////        Result result = db.drawTrainCard(gameID, );
-////        //update tickets (distribute 3 cards)
-////        for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-////            String playerID = db.findUsernameByAuthToken(clientProxy.getAuthToken());
-////            clientProxy.updateTickets(gameID, game.getPlayerbyUserName(playerID).getTickets());
-////        }
-//        return null;
-//    }
-
-    //
     @Override
     public Result GetTickets(String gameID, String authToken) { //TODO : need gameID
         try {
@@ -409,8 +409,8 @@ public class ServerFacade implements IServer {
         }
         catch (Exception e) {
             e.printStackTrace();
+            return new Result(false, null, e.getMessage());
         }
-        return null;
     }
 
     //
@@ -432,11 +432,70 @@ public class ServerFacade implements IServer {
                     clientProxy.updateDestinationDeck(gameID, new Integer(db.findGameByID(gameID).getTickets().size()));
                 }
             }
-            return result;
+            return new Result(true, true, null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, null, e.getMessage());
+        }
+    }
+
+    @Override
+    public Result NotifyLastRound(String authToken, String gameID) {
+        //TODO
+        return null;
+    }
+
+    //--------------------------------FOR TEST-------------------------------------------
+    public Result GetLobbyList() {
+        try {
+            return new Result(true, db.getLobbyList(), null);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    public Result GetLobby(String gameID) {
+        try {
+            if (db.findGameLobbyByID(gameID) == null) {
+                return new Result(false, null, "lobby doesn't exist");
+            }
+            else {
+                return new Result(true, db.findGameLobbyByID(gameID), null);
+            }
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Result GetGameList() {
+        try {
+            return new Result(true, db.getGameList(), null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Result GetGame(String gameID) {
+        try {
+            if (db.findGameLobbyByID(gameID) == null) {
+                return new Result(false, null, "game doesn't exist");
+            }
+            else {
+                return new Result(true, db.findGameByID(gameID), null);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

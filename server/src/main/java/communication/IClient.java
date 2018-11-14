@@ -47,4 +47,12 @@ public interface IClient {
     void claimRoute(String gameID, String playerID, String routeID);
 
     void updateChat(String gameID, Message m);
+
+    void updateGameHistory(String gameID, List<GameHistory> gh);
+
+    void lastRound(String gameID);
+
+    void endGame(String gameID, List<PlayerStats> stats);
+
+    void updateTurns(String gameID, String userName);
 }

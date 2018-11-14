@@ -19,18 +19,12 @@ public class GenericCommand implements ICommand {
     public String methodName;
     public String[] parameterType;
     public Object[] parameterValue;
-    private String commandID;
-
-    public String getCommandID() {
-        return commandID;
-    }
 
     public GenericCommand(String className, String methodName, String[] parameterType, Object[] parameterValue) {
         this.className = className;
         this.methodName = methodName;
         this.parameterType = parameterType;
         this.parameterValue = parameterValue;
-        this.commandID = UUID.randomUUID().toString();
     }
 
     @Override
