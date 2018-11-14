@@ -257,7 +257,7 @@ public class ModelFacade implements IGameModel {
     public void chooseCard(int index) {
         ModelRoot.getInstance().getGame().UserTakeFaceUpCard(index);
         GenericTask genericTask = new GenericTask("DrawTrainCard");
-        genericTask.execute(index, ModelRoot.getInstance().getAuthToken());
+        genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), index, ModelRoot.getInstance().getAuthToken());
     }
 
     @Override

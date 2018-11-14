@@ -64,4 +64,7 @@ public class Serializer {
         return gson.fromJson(json, GameHistory.class);
     }
 
+    public PlayerStats deserializePlayerStats(String json) {
+        return gson.fromJson(json, PlayerStats.class);
+    }
 }

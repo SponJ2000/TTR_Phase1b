@@ -236,16 +236,28 @@ public class ClientFacade implements IClient{
 
     @Override
     public void lastRound(String gameID) {
-
+        GameClient g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+           g.setLastRound(true);
+        }
     }
 
     @Override
     public void endGame(String gameID, List<PlayerStats> stats) {
-
+        GameClient g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            Serializer serializer = new Serializer();
+            for(Object O: stats) {
+                g.addPlayerStats(serializer.deserializePlayerStats(O.toString()));
+            }
+        }
     }
 
     @Override
     public void updateTurns(String gameID, String userName) {
-
+        GameClient g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            g.setTurnUser(userName);
+        }
     }
 }
