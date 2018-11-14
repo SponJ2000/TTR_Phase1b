@@ -167,7 +167,7 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.setFaceUpTrainCarCards(faceCards);
         }
@@ -175,7 +175,7 @@ public class ClientFacade implements IClient{
 
 
     public void updateTrainDeck(String gameID, List<Card> faceCards, Integer downCardNum) {
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         Serializer serializer =  new Serializer();
         ArrayList<Card> cardD = new ArrayList<Card>();
         for(Object O: faceCards) {
@@ -210,7 +210,7 @@ public class ClientFacade implements IClient{
     @Override
     public void updateChat(String gameID, Message m) {
         System.out.println("trying to insert"+ m.getText());
-        Game g = ModelRoot.getInstance().getGame();
+        GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.insertMessage(m);
             System.out.println("inserted a new chat"+ m.getText());
@@ -225,7 +225,13 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateGameHistory(String gameID, List<GameHistory> gh) {
-
+        GameClient g = ModelRoot.getInstance().getGame();
+        if (g != null) {
+            Serializer serializer = new Serializer();
+            for(Object O: gh) {
+                g.addHistory(serializer.deserializeGameHistory(O.toString()));
+            }
+        }
     }
 
     @Override
