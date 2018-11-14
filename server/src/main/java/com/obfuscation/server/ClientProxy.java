@@ -150,7 +150,7 @@ public class ClientProxy implements IClient {
     public void claimRoute(String gameID, String playerID, String routeID) {
         GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
-                , "updateDestinationDeck"
+                , "claimRoute"
                 , new String[]{STRING, STRING, STRING}
                 , new Object[] {gameID, playerID, routeID});
         notSeenCommands.get(gameID).add(command);

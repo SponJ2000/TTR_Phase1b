@@ -9,7 +9,7 @@ public class Route {
     private City city2;
     private Integer length;
     private GameColor color;
-    private Player claimedBy = null;
+    private Player claimedBy = null; //TODO : use username? or playeropponenet?
     private double[] midPoint;
 
     public Route(City city1, City city2, int length, GameColor color) {

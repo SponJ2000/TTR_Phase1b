@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="css/main.css">
 
 	<script type="text/javascript">
-
+    
 	function submit()
 	{
 		var handle = document.getElementById("handleBox").value;
@@ -175,12 +175,26 @@
 		document.getElementById("handleBox").value = "/exec";
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ClaimRoute\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\",\"java.lang.String\"],\"parameterValue\":[\"GAME\",\"ROUTE\",[{\"color\":\"BLACK\"},{\"color\":\"RED\"}],\"authBob\"]}");
 	}
+        
+    function drawCard()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"DrawTrainCard\",\"parameterType\":[\"java.lang.String\",\"java.lang.Integer\",\"java.lang.String\"],\"parameterValue\":[\"GAME\",1,\"authBob\"]}");
+	}
 
 	function sendMessage()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
 		document.getElementById("handleBox").value = "/exec";
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"SendMessage\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"communication.Message\"],\"parameterValue\":[\"authBob\",\"GAME\",{\"playerID\":\"Bob\",\"text\":\"HELLOWORLD\"}]}");
+	}
+        
+    function getUpdates()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetUpdates\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.Integer\"],\"parameterValue\":[\"authJoe\",\"GAME\",0]}");
 	}
 
 	function getLobbyList()
@@ -246,10 +260,14 @@
 						<a href="javascript:getLobby()">GET LOBBY</a> Getting gamelobby object by gameID
 					</li>
 					<li>
-						<a href="javascript:getGameList()" >GET GAME LIST</a> getting list of servergame objects</li>
-						<li>
-							<a href="javascript:getGame()" >GET GAME</a> getting servergame object by gameID</li>
-						</li>
+						<a href="javascript:getGameList()" >GET GAME LIST</a> getting list of servergame objects
+                    </li>
+				    <li>
+				        <a href="javascript:getGame()" >GET GAME</a> getting servergame object by gameID
+                    </li>
+                    <li>
+				        <a href="javascript:getUpdates()" >GET UPDATES</a> getting list of commands to be executed by client in a specific game
+                    </li>
 					</ul>
 				</div>
 
@@ -258,6 +276,12 @@
 				<div style="border: 2px solid black; margin:5px;">
 					<h1 style="padding-left:1cm; text-decoration: underline;">User Commands</h1>
 					<ul>
+                        <ul>For testing game, use dummygame that has been started.<br>
+                            gameID : "GAME"
+                            Player usernames : "Bob", "Joe"
+                            Authtokens : "authBob", authJoe"<br><br>
+                            
+                        </ul>
 						<li>
 							<a href="javascript:login()" >LOGIN</a> Use this to log in a user.</br>
 							<b>If successful</b> : DATA : authorization token</br>
@@ -288,7 +312,7 @@
 						</li>
 						<li>
 							<a href="javascript:returnTickets()" >RETURN TICKETS</a> return tickets that they want to keep</br>
-							<b>If successful</b> : DATA : list of tickets</br>
+							<b>If successful</b> : DATA : true</br>
 						</li>
 						<li>
 							<a href="javascript:claimRoute()" >CLAIM ROUTE</a> use this to claim route</br>
@@ -297,6 +321,10 @@
 						<li>
 							<a href="javascript:sendMessage()" >SEND MESSAGE</a> use this to send a message (do not include space)</br>
 							<b>If successful</b> : DATA : Message object to be added</br>
+						</li>
+                        <li>
+							<a href="javascript:drawCard()" >DRAW CARD</a> Use this to draw a train card. index -1 : from the deck. Else, from the face-up cards</br>
+							<b>If successful</b> : DATA : the one train card that has been drawn</br>
 						</li>
 					</ul>
 				</div>

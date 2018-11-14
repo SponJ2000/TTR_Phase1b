@@ -582,16 +582,71 @@ public class Database {
                         //set player claimed route
 
                         p.getClaimedRoutes().add(routeID);
+
+                        //remove cards
+                        for (Card card : cards) {
+                            p.getCards().remove(card);
+                        }
+
                         //set route claimedby
                         //TODO : just an example. Must be fixed later.
+                        //TODO : check double-routes
                         gameServer.getmMap().claimRoute(gameServer.getmMap().getRoutes().get(0), p);
 
+                        //deduct train car number
+                        p.setTrainNum(p.getTrainNum() - cards.size());
                     }
                 }
+
+                //TODO : update points, carnums, trainnums
                 return new Result(true, true, null);
 
             }
         }
         return new Result(false, null, "Error happened while claiming route");
+    }
+
+    Result drawCard(String gameID, int index, String authToken) {
+        String username = findUsernameByAuthToken(authToken);
+        if (username != null) {
+            //TODO : draw cards
+            GameServer game = findGameByID(gameID);
+            if (game != null) {
+                if (index == -1) {
+                    //draw from deck
+                    if (game.getDeckSize() <= 0) {
+                        return new Result(false, null, "Error : deck is empty");
+                    }
+                    else {
+                        Card card = game.getTrainCards().get(0);
+                        game.getTrainCards().remove(0);
+                        return new Result(true, card, null);
+                    }
+                }
+                else if (index >= 0 && index <= 4) {
+                    if (game.getFaceUpTrainCarCards().size() > index) {
+                        //get card from the face up cards
+                        Card card = game.getFaceUpTrainCarCards().get(index);
+                        if (game.getDeckSize() <= 0) {
+                            return new Result(false, null, "Error : deck is empty");
+                        }
+                        else {
+
+                            //draw card from the deck and set it to face up cards
+                            Card topCard = game.getTrainCards().get(0);
+                            game.getTrainCards().remove(0);
+                            game.getFaceUpTrainCarCards().set(index, topCard);
+                            for (PlayerUser p : game.getPlayers()) {
+                                if (p.getPlayerName().equals(username)) {
+                                    p.getCards().add(card);
+                                }
+                            }
+                            return new Result(true, card, null);
+                        }
+                    }
+                }
+            }
+        }
+        return new Result(false, null, "Error while drawing Train Card");
     }
 }

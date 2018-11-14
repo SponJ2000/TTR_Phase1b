@@ -153,7 +153,7 @@ public interface IServer {
      * @param authToken a String object containing the user's authToken
      * @return          a Result object contain a card.
      */
-    Result DrawTrainCard(Integer index, String authToken);
+    Result DrawTrainCard(String gameID, Integer index, String authToken);
 
     /**
      * user recieve three destination tickets blindly from the deck to choose from
@@ -234,4 +234,6 @@ public interface IServer {
     Result CheckGameLobby(String authToken, String gameID);
 
     Result SendMessage(String authToken, String gameID, Message message);
+
+    Result NotifyLastRound(String authToken, String gameID);
 }
