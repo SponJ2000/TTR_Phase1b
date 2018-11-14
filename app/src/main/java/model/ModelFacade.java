@@ -80,7 +80,7 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    public Result claimRoute(Route route, Player player) {
+    public Result claimRoute(Route route, Player player, List<Card> cards) {
         return null;
     }
 
@@ -307,20 +307,37 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    public Boolean checkRouteCanClaim(GameColor color, int length) {
+    public Object checkRouteCanClaim(GameColor color, int length) {
         List<Card> cards = getCards();
 
         if (color == GameColor.GREY) {
-            if (cards.size() > length) {
-                return true;
-            }
-            else return false;
+            if (cards.size() >= length) return true;
+            else return "Not enough cards";
         }
         else {
+            int cardNum = 0;
+            List<Card> cardColor = new ArrayList<>();
 
+            for (int i = 0; i < cards.size(); i++) {
+                Card card = cards.get(i);
+                if (card.getColor() == color) {
+                    cardNum++;
+                    cardColor.add(new Card(color));
+                }
+                else if (card.getColor() == GameColor.LOCOMOTIVE) {
+                    cardNum++;
+                }
+            }
+            if (cardNum >= length) {
+                if (cardColor.size() < length) {
+                    while (cardColor.size() < length) {
+                        cardColor.add(new Card(GameColor.LOCOMOTIVE));
+                    }
+                }
+                return new ArrayList<>(cardColor.subList(0, length));
+            }
+            else return "Not enough cards";
         }
-
-        return null;
     }
 
     @Override
@@ -366,4 +383,8 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getLobbyGame();
     }
 
+    @Override
+    public void endTurn() {
+
+    }
 }

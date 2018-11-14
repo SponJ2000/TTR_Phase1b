@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
+import communication.Card;
 import communication.GameColor;
 import communication.GameMap;
 import java.util.ArrayList;
@@ -140,7 +141,7 @@ public class GamePresenter implements IGamePresenter {
                 Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
 
                 Player player = model.getPlayers().get(ThreadLocalRandom.current().nextInt(0, model.getPlayers().size()));
-                if( model.claimRoute(r, player).isSuccess()) {
+                if( model.claimRoute(r, player, null).isSuccess()) {
                     view.updateRoute(r);
                 }
                 break;
@@ -203,6 +204,11 @@ public class GamePresenter implements IGamePresenter {
     public void sendToast(String toast) {
         view.sendToast(toast);
     }
+
+    @Override
+    public List<Card> playerChooseCards(int length) {
+        return null;
+    }
 }
 
 
@@ -238,6 +244,7 @@ class TurnNoSelection extends ITurnState {
     public void selectFaceUp(int index) {
         if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
             wrapper.getModel().chooseCard(index);
+            wrapper.getModel().endTurn();
             wrapper.setState(new NotTurn(wrapper));
         }
         else {
@@ -259,13 +266,34 @@ class TurnNoSelection extends ITurnState {
 
     @Override
     public void claimRoute(Route route, Player player) {
-        //TODO: check if player has sufficient cards
+        //Check if a player has sufficient cards
 
-        //TODO: allow player to choose cards if grey
-        //TODO: send claim route
-        //TODO: if successful, set NotTurn; if not send error toast
+        Object list = wrapper.getModel().checkRouteCanClaim(route.getColor(), route.getLength());
 
-        wrapper.setState(new NotTurn(wrapper));
+        if (list instanceof String) {
+
+            wrapper.sendToast((String) list);
+        }
+        else {
+            ArrayList<Card> cardsToUse;
+            if (route.getColor() == GameColor.GREY) {
+                cardsToUse = (ArrayList<Card>) wrapper.playerChooseCards(route.getLength());
+            }
+            else {
+                cardsToUse = (ArrayList<Card>) list;
+            }
+
+            Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
+
+            //TODO: if successful, set NotTurn; if not send error toast
+
+            wrapper.getModel().endTurn();
+            wrapper.setState(new NotTurn(wrapper));
+        }
+
+
+
+
     }
 }
 
@@ -305,6 +333,7 @@ class TurnYesTickets extends ITurnState {
     @Override
     void requestTickets() {
         //TODO: send request for tickets, then update UI
+        wrapper.getModel().endTurn();
         wrapper.setState(new NotTurn(wrapper));
     }
 }
