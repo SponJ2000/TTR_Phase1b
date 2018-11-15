@@ -98,4 +98,13 @@ public class Game {
     public void setLastRound(boolean lastRound) {
         this.lastRound = lastRound;
     }
+
+    public Route getRouteByID(String routeID) {
+        for (Route route : mMap.getRoutes()) {
+            if (route.getRouteID().equals(routeID)) {
+                return route;
+            }
+        }
+        return null;
+    }
 }

@@ -13,6 +13,7 @@ public class GameServer extends Game {
     private ArrayList<Card> discardDeck = new ArrayList<>();
     private ArrayList<Ticket> tickets = new ArrayList<>();
     private int currentPlayerIndex = 0;
+    private String currentPlayer;
     private ArrayList<PlayerUser> players = new ArrayList<>();
 
     public ArrayList<Card> getTrainCards() {
@@ -59,11 +60,10 @@ public class GameServer extends Game {
         return players.size();
     }
 
-
-
     public void moveToNextTurn() {
         currentPlayerIndex++;
         currentPlayerIndex %= getPlayers().size();
+        currentPlayer = players.get(currentPlayerIndex).getPlayerName();
     }
 
     public void setCurrentPlayerIndex(int currentPlayerIndex) {
@@ -86,7 +86,7 @@ public class GameServer extends Game {
     private ArrayList<Player> mAbsentPlayers;
 
     public int getDeckSize() {
-        return 1;
+        return trainCards.size();
     }
 
     public PlayerUser getPlayerbyUserName(String username) {

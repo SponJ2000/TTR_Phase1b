@@ -36,4 +36,8 @@ public class GameHistory {
     public void setAction(String action) {
         this.action = action;
     }
+
+    public String toString() {
+        return playerName + " has perfomed " + action + " action";
+    }
 }

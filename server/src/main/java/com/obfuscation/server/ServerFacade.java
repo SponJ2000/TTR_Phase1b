@@ -385,13 +385,19 @@ public class ServerFacade implements IServer {
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
 
                     //update opponents points
-                    //TODO : ROUTE ID??
-                    clientProxy.claimRoute(gameID, username, "ROUTEID");
+                    clientProxy.claimRoute(gameID, username, routeID);
                     clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
                     clientProxy.updateOpponentTrainCars(gameID, username, currentPlayer.getTrainNum());
                     clientProxy.updatePlayerPoints(gameID, username, currentPlayer.getPoint());
+
+                    //TODO : work on updating turns for all moves
+                    //update last round if necessary
+                    if (gameServer.isLastRound()) {
+                        clientProxy.lastRound(gameID);
+                    }
                 }
             }
+            //TODO : what to return?
             return result;
         }
         catch (Exception e) {
@@ -442,7 +448,6 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result NotifyLastRound(String authToken, String gameID) {
-        //TODO
         return null;
     }
 

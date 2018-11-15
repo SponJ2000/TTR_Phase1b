@@ -11,6 +11,10 @@ public class DualRoute extends Route {
 
     private DualRoute sibling = null;
 
+    public DualRoute getSibling() {
+        return sibling;
+    }
+
     public DualRoute(City city1, City city2, int length, GameColor color, boolean first) {
         super(city1, city2, length, color);
         if (first) {
@@ -25,6 +29,7 @@ public class DualRoute extends Route {
             mid[1] -= 1;
             setMidPoint(mid);
         }
+
     }
 
     public void setSibling(DualRoute sibling) {

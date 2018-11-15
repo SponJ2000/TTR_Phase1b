@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="css/main.css">
 
 	<script type="text/javascript">
-    
+
 	function submit()
 	{
 		var handle = document.getElementById("handleBox").value;
@@ -175,7 +175,7 @@
 		document.getElementById("handleBox").value = "/exec";
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"ClaimRoute\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.util.List\",\"java.lang.String\"],\"parameterValue\":[\"GAME\",\"ROUTE\",[{\"color\":\"BLACK\"},{\"color\":\"RED\"}],\"authBob\"]}");
 	}
-        
+
     function drawCard()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
@@ -189,7 +189,7 @@
 		document.getElementById("handleBox").value = "/exec";
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"SendMessage\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"communication.Message\"],\"parameterValue\":[\"authBob\",\"GAME\",{\"playerID\":\"Bob\",\"text\":\"HELLOWORLD\"}]}");
 	}
-        
+
     function getUpdates()
 	{
 		window.scrollTo(0,document.body.scrollHeight);
@@ -280,7 +280,7 @@
                             gameID : "GAME"
                             Player usernames : "Bob", "Joe"
                             Authtokens : "authBob", authJoe"<br><br>
-                            
+
                         </ul>
 						<li>
 							<a href="javascript:login()" >LOGIN</a> Use this to log in a user.</br>
@@ -316,7 +316,7 @@
 						</li>
 						<li>
 							<a href="javascript:claimRoute()" >CLAIM ROUTE</a> use this to claim route</br>
-							<b>If successful</b> : DATA : True</br>
+							<b>If successful</b> : DATA : ?????</br>
 						</li>
 						<li>
 							<a href="javascript:sendMessage()" >SEND MESSAGE</a> use this to send a message (do not include space)</br>

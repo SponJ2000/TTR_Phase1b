@@ -14,6 +14,7 @@ import java.util.UUID;
 import communication.ActiveUser;
 import communication.Card;
 import communication.City;
+import communication.DualRoute;
 import communication.Game;
 import communication.LobbyGame;
 import communication.GameServer;
@@ -39,6 +40,7 @@ public class Database {
     //TODO : make gameid and gamelobbyid same
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
     private List<GameServer> gameList = new ArrayList<>();
+    private HashMap<Integer, Integer> routeScores = new HashMap<>();
 
     public List<GameServer> getGameList() {
         return gameList;
@@ -94,6 +96,14 @@ public class Database {
         loginInfo.put("Joe", "password");
         login("Bob", "password");
         login("Joe", "password");
+
+        //setting route scores
+        routeScores.put(1, 1);
+        routeScores.put(2, 2);
+        routeScores.put(3, 4);
+        routeScores.put(4, 7);
+        routeScores.put(5, 10);
+        routeScores.put(6, 15);
         setDummyGame();
     }
 
@@ -601,47 +611,59 @@ public class Database {
         return new Result(false, null, "Error : player not found");
     }
 
+    //TODO : non-colored route allows you to choose which color to choose
     Result claimRoute(String gameID, String routeID, List<Card> cards, String authToken) {
         String username = findUsernameByAuthToken(authToken);
         if (username != null) {
             GameServer gameServer = findGameByID(gameID);
             if (gameServer != null) {
-                //TODO : make discard pile
+                PlayerUser p = gameServer.getPlayerbyUserName(username);
 
-                for (PlayerUser p : gameServer.getPlayers()) {
-                    if (p.getPlayerName().equals(username)) {
-                        //set player claimed route
-
-                        p.getClaimedRoutes().add(routeID);
-
-                        //remove cards
-                        for (Card card : cards) {
-                            p.getCards().remove(card);
-                        }
-
-                        Route claimedRoute = null;
-                        for (Route route : gameServer.getmMap().getRoutes()) {
-                            if (route.getRouteID().equals(routeID)) {
-                                claimedRoute = route;
-                                break;
-                            }
-                        }
-                        //set route claimedby
-                        gameServer.getmMap().claimRoute(claimedRoute, p);
-
-                        //deduct train car number
-                        p.setTrainNum(p.getTrainNum() - cards.size());
-
-
-                        //TODO : give proper points
-                        //TODO : non-colored route allows you to choose which color to choose
-                        //TODO : take carde of double route
-                        p.addPoint(claimedRoute.getLength());
-                    }
+                //check if player has all the cards
+                if (!p.getCards().containsAll(cards)) {
+                    return new Result(false, null, "Error : invalid cards");
                 }
 
-                //TODO : update points, carnums, trainnums
-                return new Result(true, true, null);
+                //check if player has right cards and cars
+                if (p != null && p.getTrainNum() - cards.size() >= 0) {
+                    Route claimedRoute = gameServer.getRouteByID(routeID);
+
+                    //check if already claimed
+                    if (claimedRoute.getClaimedBy() != null) {
+                        return new Result(false, null, "Error : Already Claimed!");
+                    }
+
+                    //double route rules
+                    if (claimedRoute instanceof DualRoute && ((DualRoute) claimedRoute).getSibling() != null) {
+                        if (gameServer.getPlayers().size() < 4
+                                || ((DualRoute) claimedRoute).getSibling().getClaimedBy().getPlayerName().equals(username)) {
+                            return new Result(false, null, "Error : violation of double route rules");
+                        }
+                    }
+
+                    //set player claimed route
+                    p.getClaimedRoutes().add(routeID);
+
+                    //remove cards
+                    for (Card card : cards) {
+                        p.getCards().remove(card);
+                    }
+
+                    //set route claimedby
+                    gameServer.getmMap().claimRoute(claimedRoute, p);
+
+                    //deduct train car number
+                    p.setTrainNum(p.getTrainNum() - cards.size());
+
+                    //if the tran car number is less than 3, last round
+                    if (p.getTrainNum() < 3) {
+                        gameServer.setLastRound(true);
+                    }
+
+                    //give proper points
+                    p.addPoint(routeScores.get(claimedRoute.getLength()));
+                    return new Result(true, true, null);
+                }
 
             }
         }
@@ -656,78 +678,62 @@ public class Database {
                 if (index == -1) {
                     //draw from deck
                     if (game.getDeckSize() <= 0) {
-                        return new Result(false, null, "Error : deck is empty");
+                        putDiscardToCardDeck(game);
                     }
-                    else {
-                        Card card = game.getTrainCards().get(0);
-                        game.getTrainCards().remove(0);
-                        return new Result(true, card, null);
-                    }
+                    Card card = game.getTrainCards().get(0);
+                    game.getTrainCards().remove(0);
+
+                    //add card to player cards
+                    game.getPlayerbyUserName(username).getCards().add(card);
+                    return new Result(true, card, null);
                 }
                 else if (index >= 0 && index <= 4) {
                     if (game.getFaceUpTrainCarCards().size() > index) {
                         //get card from the face up cards
                         Card card = game.getFaceUpTrainCarCards().get(index);
                         if (game.getDeckSize() <= 0) {
-                            return new Result(false, null, "Error : deck is empty");
+                            putDiscardToCardDeck(game);
                         }
-                        else {
 
-                            //draw card from the deck and set it to face up cards
-                            Card topCard = game.getTrainCards().get(0);
-                            game.getTrainCards().remove(0);
-                            game.getFaceUpTrainCarCards().set(index, topCard);
+                        //draw card from the deck and set it to face up cards
+                        Card topCard = game.getTrainCards().get(0);
+                        game.getTrainCards().remove(0);
+                        game.getFaceUpTrainCarCards().set(index, topCard);
 
-                            while (true) {
-                                int counter = 0;
-                                for (int i = 0; i < 5; i++) {
-                                    System.out.println(game.getFaceUpTrainCarCards().get(i).getColor());
-                                    if (game.getFaceUpTrainCarCards().get(i).getColor() == GameColor.LOCOMOTIVE) {
-                                        System.out.println("COUNTING");
-                                        counter++;
-                                    }
-                                }
-
-                                if (counter >= 3) {
-                                    //if locomotive is more than 3, discard them and shuffle again
-                                    ArrayList<Card> faceUpTrainCards = new ArrayList<>();
-                                    for (int i = 0; i < 5; i++) {
-                                        //TODO : if deck is empty, shuffle
-                                        Card newCard = game.getTrainCards().get(0);
-                                        faceUpTrainCards.add(card);
-                                        game.getTrainCards().remove(0);
-                                    }
-                                    game.getDiscardDeck().addAll(faceUpTrainCards);
-                                    faceUpTrainCards.clear();
-                                }
-                                else {
-                                    break;
-                                }
-                                System.out.println("GEH TE");
-                            }
-
-                            //check if the face-up cards have 3 locomotive cards
+                        while (true) {
                             int counter = 0;
-                            for (Card faceupCard : game.getFaceUpTrainCarCards()) {
-                                if (faceupCard.getColor() == GameColor.LOCOMOTIVE) {
+
+                            //counting locomotive cards
+                            for (int i = 0; i < 5; i++) {
+                                System.out.println(game.getFaceUpTrainCarCards().get(i).getColor());
+                                if (game.getFaceUpTrainCarCards().get(i).getColor() == GameColor.LOCOMOTIVE) {
+                                    System.out.println("COUNTING");
                                     counter++;
                                 }
                             }
+
                             if (counter >= 3) {
-                                ArrayList<Card> newFaceupCards =new ArrayList<>();
-                                for (int i = 0; i < 5 && i < game.getTrainCards().size(); i++) {
-                                    newFaceupCards.add(game.getTrainCards().get(0));
+                                //if locomotive is more than 3, discard them and shuffle again
+                                ArrayList<Card> faceUpTrainCards = new ArrayList<>();
+                                for (int i = 0; i < 5; i++) {
+                                    //if deck is empty, shuffle
+                                    if (game.getTrainCards().size() <= 0) {
+                                        putDiscardToCardDeck(game);
+                                    }
+                                    Card newCard = game.getTrainCards().get(0);
+                                    faceUpTrainCards.add(card);
                                     game.getTrainCards().remove(0);
                                 }
-                                game.setFaceUpTrainCarCards(newFaceupCards);
+                                game.getDiscardDeck().addAll(faceUpTrainCards);
+                                faceUpTrainCards.clear();
                             }
-                            for (PlayerUser p : game.getPlayers()) {
-                                if (p.getPlayerName().equals(username)) {
-                                    p.getCards().add(card);
-                                }
+                            else {
+                                break;
                             }
-                            return new Result(true, card, null);
+                            System.out.println("GEH TE");
                         }
+                        game.getPlayerbyUserName(username).getCards().add(card);
+                        return new Result(true, card, null);
                     }
                 }
             }
@@ -735,7 +741,16 @@ public class Database {
         return new Result(false, null, "Error while drawing Train Card");
     }
 
-    void putDiscardToCardDeck(GameServer gameServer) {
-        //TODO : work on this
+    private void putDiscardToCardDeck(GameServer gameServer) {
+        ArrayList<Card> disCards = gameServer.getDiscardDeck();
+        Collections.shuffle(disCards);
+        gameServer.setTrainCards(disCards);
+        gameServer.getDiscardDeck().clear();
+    }
+
+    private String nextTurn(GameServer gameServer) {
+        gameServer.moveToNextTurn();
+        int index = gameServer.getCurrentPlayerIndex();
+        return gameServer.getPlayers().get(index).getPlayerName();
     }
 }
