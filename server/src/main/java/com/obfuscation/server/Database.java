@@ -4,11 +4,13 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import communication.ActiveUser;
@@ -16,10 +18,12 @@ import communication.Card;
 import communication.City;
 import communication.DualRoute;
 import communication.Game;
+import communication.GameHistory;
 import communication.LobbyGame;
 import communication.GameServer;
 import communication.Message;
 import communication.Player;
+import communication.PlayerStats;
 import communication.PlayerUser;
 import communication.Result;
 import communication.Route;
@@ -231,23 +235,23 @@ public class Database {
             Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
             trainCards.add(locomotiveCard);
         }
-        for (int i = 0; i < 2; i++) {
-            Card purpleCard = new Card(GameColor.PURPLE);
+        for (int i = 0; i < 20; i++) {
+           // Card purpleCard = new Card(GameColor.PURPLE);
             Card blueCard = new Card(GameColor.BLUE);
-            Card orangeCard = new Card(GameColor.ORANGE);
-            Card whiteCard = new Card(GameColor.WHITE);
-            Card greenCard = new Card(GameColor.GREEN);
-            Card redCard = new Card(GameColor.RED);
-            Card blackCard = new Card(GameColor.BLACK);
-            Card yellowCard = new Card(GameColor.YELLOW);
-            trainCards.add(purpleCard);
+//            Card orangeCard = new Card(GameColor.ORANGE);
+//            Card whiteCard = new Card(GameColor.WHITE);
+//            Card greenCard = new Card(GameColor.GREEN);
+//            Card redCard = new Card(GameColor.RED);
+//            Card blackCard = new Card(GameColor.BLACK);
+//            Card yellowCard = new Card(GameColor.YELLOW);
+           // trainCards.add(purpleCard);
             trainCards.add(blueCard);
-            trainCards.add(orangeCard);
-            trainCards.add(whiteCard);
-            trainCards.add(greenCard);
-            trainCards.add(redCard);
-            trainCards.add(blackCard);
-            trainCards.add(yellowCard);
+//            trainCards.add(orangeCard);
+//            trainCards.add(whiteCard);
+//            trainCards.add(greenCard);
+//            trainCards.add(redCard);
+//            trainCards.add(blackCard);
+//            trainCards.add(yellowCard);
         }
 
 
@@ -261,7 +265,7 @@ public class Database {
         tickets = new TickectMaker().MakeCards();
 
         //FIXME just for debugging. Should be erased later.
-        tickets = new ArrayList<> (tickets.subList(0, 8));
+        tickets = new ArrayList<> (tickets.subList(0, 20));
 
         System.out.println("MAKER CARD SIZE " + tickets.size());
         Collections.shuffle(tickets);
@@ -345,6 +349,7 @@ public class Database {
             players.add(new PlayerUser(p.getPlayerName()));
         }
         game.setPlayers(players);
+        game.setCurrentPlayer(players.get(0).getPlayerName());
 
         //TODO : NEED THIS?
 //        for (Player player : players) {
@@ -570,16 +575,6 @@ public class Database {
                 Set<Integer> overlap = new HashSet<>();
                 for (int i = 0; i < tickets.size(); i++) {
                     for (int j = 0; j < tickets1.size(); j++) {
-                        System.out.println("EEE");
-                        try {
-                            System.out.println(tickets.get(i).getCity1() + "#");
-
-                            //FIXME** why is this not printing?
-                            System.out.println(tickets.get(i).toString());
-                            System.out.println(tickets1.get(j).toString());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         if (tickets.get(i).equals(tickets1.get(j))) {
                             System.out.println("))))");
                             overlap.add(j);
@@ -594,13 +589,14 @@ public class Database {
                     }
                 }
                 for (PlayerUser player : game.getPlayers()) {
-                    System.out.println("PLAYER USERNAME " + playerID + " " + player.getPlayerName());
-
                     if (player.getPlayerName().equals(playerID)) {
-                        player.setTickets((ArrayList<Ticket>) tickets);
+                        player.getTickets().addAll((ArrayList<Ticket>) tickets);
                         player.setTicketToChoose(new ArrayList<>());
                     }
                 }
+
+                //update gameHistory
+                game.getGameHistories().add(new GameHistory(gameID, playerID, "drew " + tickets.size() + " tickets"));
                 return new Result(true, tickets, null);
             }
 //                //TODO : if the deck size is less then 3?
@@ -611,20 +607,19 @@ public class Database {
         return new Result(false, null, "Error : player not found");
     }
 
-    //TODO : non-colored route allows you to choose which color to choose
     Result claimRoute(String gameID, String routeID, List<Card> cards, String authToken) {
         String username = findUsernameByAuthToken(authToken);
         if (username != null) {
             GameServer gameServer = findGameByID(gameID);
             if (gameServer != null) {
                 PlayerUser p = gameServer.getPlayerbyUserName(username);
-
+                //TODO : if client doesn't check for right cards, should check here
                 //check if player has all the cards
                 if (!p.getCards().containsAll(cards)) {
                     return new Result(false, null, "Error : invalid cards");
                 }
 
-                //check if player has right cards and cars
+                //check if player has right cars
                 if (p != null && p.getTrainNum() - cards.size() >= 0) {
                     Route claimedRoute = gameServer.getRouteByID(routeID);
 
@@ -649,19 +644,20 @@ public class Database {
                         p.getCards().remove(card);
                     }
 
+                    //these cards go to discard piles
+                    gameServer.getDiscardDeck().addAll(cards);
+
                     //set route claimedby
                     gameServer.getmMap().claimRoute(claimedRoute, p);
 
                     //deduct train car number
                     p.setTrainNum(p.getTrainNum() - cards.size());
 
-                    //if the tran car number is less than 3, last round
-                    if (p.getTrainNum() < 3) {
-                        gameServer.setLastRound(true);
-                    }
-
                     //give proper points
                     p.addPoint(routeScores.get(claimedRoute.getLength()));
+
+                    //update game history
+                    gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed " + routeID + " routes"));
                     return new Result(true, true, null);
                 }
 
@@ -724,8 +720,8 @@ public class Database {
                                     faceUpTrainCards.add(card);
                                     game.getTrainCards().remove(0);
                                 }
-                                game.getDiscardDeck().addAll(faceUpTrainCards);
-                                faceUpTrainCards.clear();
+                                game.getDiscardDeck().addAll(game.getFaceUpTrainCarCards());
+                                game.setFaceUpTrainCarCards(faceUpTrainCards);
                             }
                             else {
                                 break;
@@ -733,6 +729,7 @@ public class Database {
                             System.out.println("GEH TE");
                         }
                         game.getPlayerbyUserName(username).getCards().add(card);
+                        game.getGameHistories().add(new GameHistory(gameID, username, "drew train card"));
                         return new Result(true, card, null);
                     }
                 }
@@ -741,6 +738,96 @@ public class Database {
         return new Result(false, null, "Error while drawing Train Card");
     }
 
+    ArrayList<PlayerStats> getGameResult(String gameID) {
+        GameServer gameServer = findGameByID(gameID);
+        ArrayList<PlayerStats> playerStats = new ArrayList<>();
+
+        HashMap<String, Integer> winnedPoint = new HashMap<>();
+        HashMap<String, Integer> lostPoint = new HashMap<>();
+        HashMap<String, Integer> claimedRoutesNum = new HashMap<>();
+
+        for (PlayerUser p : gameServer.getPlayers()) {
+            winnedPoint.put(p.getPlayerName(), 0);
+            lostPoint.put(p.getPlayerName(), 0);
+            claimedRoutesNum.put(p.getPlayerName(), 0);
+        }
+
+        for (Route route : gameServer.getmMap().getRoutes()) {
+            if (route.getClaimedBy() != null) {
+                int point = claimedRoutesNum.get(route.getClaimedBy().getPlayerName()) + 1;
+                claimedRoutesNum.put(route.getClaimedBy().getPlayerName(), point);
+            }
+        }
+        for (PlayerUser p : gameServer.getPlayers()) {
+            for (Ticket ticket : p.getTickets()) {
+                for (Route route : gameServer.getmMap().getRoutes()) {
+                    String routeID = ticket.getCity1() + "-" + ticket.getCity2();
+                    //TODO : what if swapped
+                    if (route.getRouteID().equals(routeID)) {
+                        //if succeeded
+                        if (route.getClaimedBy() != null && route.getClaimedBy().getPlayerName().equals(p.getPlayerName())) {
+                            int point = winnedPoint.get(p.getPlayerName()) + ticket.getValue();
+                            winnedPoint.put(p.getPlayerName(), point);
+                        }
+
+                        //if failed
+                        else {
+                            int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
+                            lostPoint.put(p.getPlayerName(), point);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        //TODO : compute longest path
+        TreeSet<Integer> routeNums = new TreeSet<>();
+        for (PlayerUser p : gameServer.getPlayers()) {
+            routeNums.add(claimedRoutesNum.get(p.getPlayerName()));
+        }
+
+        int maxRouteNum = routeNums.last();
+
+        //calculate scores
+        for (PlayerUser p : gameServer.getPlayers()) {
+            String username = p.getPlayerName();
+            int winnedPoints = winnedPoint.get(username);
+            int lostPoints = lostPoint.get(username);
+            int pathNum = claimedRoutesNum.get(username);
+            int totalPoints = p.getPoint() + winnedPoints - lostPoints;
+            if (pathNum == maxRouteNum) {
+                totalPoints += 10;
+            }
+            PlayerStats playerStats1 = new PlayerStats(username, totalPoints, winnedPoints, lostPoints, pathNum);
+            if (pathNum == maxRouteNum) {
+                playerStats1.setHasLongestPath(true);
+            }
+            playerStats.add(playerStats1);
+        }
+
+        playerStats.sort(new Comparator<PlayerStats>() {
+            @Override
+            public int compare(PlayerStats stats, PlayerStats t1) {
+                if (stats.getTotalPoint() > t1.getTotalPoint()) {
+                    return -1;
+                }
+                else {
+                    return 1;
+                }
+            }
+        });
+
+        for (int i = 0; i < playerStats.size(); i++) {
+            playerStats.get(i).setRank(i + 1);
+        }
+        //TODO : get rid of game?
+        gameList.remove(gameServer);
+        LobbyGame lobbyGame = findGameLobbyByID(gameID);
+        lobbyGameList.remove(lobbyGame);
+
+        return playerStats;
+    }
     private void putDiscardToCardDeck(GameServer gameServer) {
         ArrayList<Card> disCards = gameServer.getDiscardDeck();
         Collections.shuffle(disCards);

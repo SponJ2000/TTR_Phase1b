@@ -91,15 +91,25 @@ public class GameMap {
         cities.add(Winnipeg);
 
         routes = new ArrayList<>();
-
-        routes.add(new Route(Atlanta, Charleston, 2, GREY));
+        routes.add(new Route(Atlanta, Charleston, 2, BLUE));
         routes.add(new Route(Atlanta, Miami, 5, BLUE));
-        routes.add(new Route(Atlanta, Nashville, 1, GREY));
-        routes.add(new Route(Atlanta, New_Orleans, 2, ORANGE));
+        routes.add(new Route(Atlanta, Nashville, 1, BLUE));
 
-        routes.add(new Route(Pittsburgh, Washington, 2, GREY));
-        routes.add(new Route(Pittsburgh, Raleigh, 2, GREY));
+        routes.add(new Route(Atlanta, New_Orleans, 2, BLUE));
+
+        routes.add(new Route(Pittsburgh, Washington, 2, BLUE));
+        routes.add(new Route(Pittsburgh, Raleigh, 3, BLUE));
         routes.add(new Route(Pittsburgh, Toronto, 2, GREY));
+
+//        routes.add(new Route(Atlanta, Charleston, 2, GREY));
+//        routes.add(new Route(Atlanta, Miami, 5, BLUE));
+//        routes.add(new Route(Atlanta, Nashville, 1, GREY));
+//
+//        routes.add(new Route(Atlanta, New_Orleans, 2, ORANGE));
+//
+//        routes.add(new Route(Pittsburgh, Washington, 2, GREY));
+//        routes.add(new Route(Pittsburgh, Raleigh, 2, GREY));
+//        routes.add(new Route(Pittsburgh, Toronto, 2, GREY));
 
     }
 

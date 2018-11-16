@@ -159,4 +159,10 @@ public class ServerProxy implements communication.IServer {
         //TODO
         return null;
     }
+
+    @Override
+    public Result EndTurn(String gameID, String authToken) {
+        //TODO
+        return null;
+    }
 }

@@ -14,6 +14,7 @@ public class GameServer extends Game {
     private ArrayList<Ticket> tickets = new ArrayList<>();
     private int currentPlayerIndex = 0;
     private String currentPlayer;
+    private String lastRoundTriggeredBy;
     private ArrayList<PlayerUser> players = new ArrayList<>();
 
     public ArrayList<Card> getTrainCards() {
@@ -104,5 +105,21 @@ public class GameServer extends Game {
 
     public void setDiscardDeck(ArrayList<Card> discardDeck) {
         this.discardDeck = discardDeck;
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public String getLastRoundTriggeredBy() {
+        return lastRoundTriggeredBy;
+    }
+
+    public void setLastRoundTriggeredBy(String lastRoundTriggeredBy) {
+        this.lastRoundTriggeredBy = lastRoundTriggeredBy;
     }
 }

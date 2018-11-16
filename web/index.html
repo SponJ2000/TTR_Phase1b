@@ -189,6 +189,13 @@
 		document.getElementById("handleBox").value = "/exec";
 		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"SendMessage\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"communication.Message\"],\"parameterValue\":[\"authBob\",\"GAME\",{\"playerID\":\"Bob\",\"text\":\"HELLOWORLD\"}]}");
 	}
+        
+    function endTurn()
+	{
+		window.scrollTo(0,document.body.scrollHeight);
+		document.getElementById("handleBox").value = "/exec";
+		document.getElementById("requestBox").value = formatJson("{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"EndTurn\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\"],\"parameterValue\":[\"GAME\",\"authBob\"]}");
+	}
 
     function getUpdates()
 	{
@@ -324,6 +331,10 @@
 						</li>
                         <li>
 							<a href="javascript:drawCard()" >DRAW CARD</a> Use this to draw a train card. index -1 : from the deck. Else, from the face-up cards</br>
+							<b>If successful</b> : DATA : the one train card that has been drawn</br>
+						</li>
+                        <li>
+							<a href="javascript:endTurn()" >END TURN</a> Use this end turn. If it is the last player of the last round, then game ends and sens clients the histories.</br>
 							<b>If successful</b> : DATA : the one train card that has been drawn</br>
 						</li>
 					</ul>

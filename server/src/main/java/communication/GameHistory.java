@@ -12,6 +12,11 @@ public class GameHistory {
 
     String action;
 
+    public GameHistory(String gameID, String playerName, String action) {
+        this.gameID = gameID;
+        this.playerName = playerName;
+        this.action = action;
+    }
 
     public String getGameID() {
         return gameID;
@@ -38,6 +43,6 @@ public class GameHistory {
     }
 
     public String toString() {
-        return playerName + " has perfomed " + action + " action";
+        return playerName + " " + action;
     }
 }

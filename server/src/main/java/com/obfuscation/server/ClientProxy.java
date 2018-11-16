@@ -171,22 +171,42 @@ public class ClientProxy implements IClient {
 
     @Override
     public void updateGameHistory(String gameID, List<GameHistory> gh) {
-
+        GenericCommand command = new GenericCommand(
+                CLIENT_FACADE
+                , "updateGameHistory"
+                , new String[]{STRING, LIST}
+                , new Object[] {gameID, gh});
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
     public void lastRound(String gameID) {
-
+        GenericCommand command = new GenericCommand(
+                CLIENT_FACADE
+                , "lastRound"
+                , new String[]{STRING}
+                , new Object[] {gameID});
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
     public void endGame(String gameID, List<PlayerStats> stats) {
-
+        GenericCommand command = new GenericCommand(
+                CLIENT_FACADE
+                , "endGame"
+                , new String[]{STRING, LIST}
+                , new Object[] {gameID, stats});
+        notSeenCommands.get(gameID).add(command);
     }
 
     @Override
     public void updateTurns(String gameID, String userName) {
-
+        GenericCommand command = new GenericCommand(
+                CLIENT_FACADE
+                , "updateTurns"
+                , new String[]{STRING, STRING}
+                , new Object[] {gameID, userName});
+        notSeenCommands.get(gameID).add(command);
     }
 
     private int version;

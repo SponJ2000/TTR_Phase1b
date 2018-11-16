@@ -14,6 +14,14 @@ public class PlayerStats {
     int pathNum;
     boolean hasLongestPath;
 
+    public PlayerStats(String name, int totalPoint, int winnedPoint, int lostPoint, int pathNum) {
+        this.name = name;
+        this.totalPoint = totalPoint;
+        this.winnedPoint = winnedPoint;
+        this.lostPoint = lostPoint;
+        this.pathNum = pathNum;
+        this.hasLongestPath = false;
+    }
 
     public int getRank() {
         return rank;

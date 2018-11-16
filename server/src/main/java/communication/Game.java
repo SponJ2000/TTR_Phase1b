@@ -19,7 +19,7 @@ public class Game {
     private GameMap mMap;
 
     boolean lastRound;
-    private ArrayList<GameHistory> gameHistories;
+    private ArrayList<GameHistory> gameHistories = new ArrayList<>();
 
     public Game() {
         gameID = UUID.randomUUID().toString();

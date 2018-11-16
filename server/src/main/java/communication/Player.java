@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 public class Player implements IPlayer{
     private String playerName;
-    private Integer point;
+    private Integer point = Integer.valueOf(0);
     private ArrayList<String> claimedRoutesID = new ArrayList<>();
     private GameColor playerColor;
-    private Integer trainNum;
+    private Integer trainNum = Integer.valueOf(0);
 
 
 
@@ -51,7 +51,7 @@ public class Player implements IPlayer{
 
     public Player(String playerName) {
         this.playerName = playerName;
-        trainNum = 40;
+        trainNum = 3;
     }
 
     public int getTrainNum(){

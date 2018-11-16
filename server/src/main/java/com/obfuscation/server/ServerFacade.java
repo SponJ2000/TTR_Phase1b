@@ -13,6 +13,7 @@ import communication.IServer;
 import communication.Message;
 import communication.Player;
 import communication.PlayerOpponent;
+import communication.PlayerStats;
 import communication.PlayerUser;
 import communication.Result;
 import communication.Serializer;
@@ -312,6 +313,7 @@ public class ServerFacade implements IServer {
     public Result CheckGameList(String authToken){
         try {
             System.out.println("User Checking gamelist");
+            System.out.println(authToken);
             Result result = null;
             for (ClientProxy clientProxy : clientproxies) {
                 if (clientProxy.getAuthToken().equals(authToken)) {
@@ -390,7 +392,6 @@ public class ServerFacade implements IServer {
                     clientProxy.updateOpponentTrainCars(gameID, username, currentPlayer.getTrainNum());
                     clientProxy.updatePlayerPoints(gameID, username, currentPlayer.getPoint());
 
-                    //TODO : work on updating turns for all moves
                     //update last round if necessary
                     if (gameServer.isLastRound()) {
                         clientProxy.lastRound(gameID);
@@ -449,6 +450,44 @@ public class ServerFacade implements IServer {
     @Override
     public Result NotifyLastRound(String authToken, String gameID) {
         return null;
+    }
+
+    @Override
+    public Result EndTurn(String gameID, String authToken) {
+        // Ending turn
+        try {
+            //if last player of last round ended, end the game
+            GameServer gameServer = db.findGameByID(gameID);
+            String username = db.findUsernameByAuthToken(authToken);
+
+            //if final move, end game
+            if (gameServer.isLastRound() && gameServer.getLastRoundTriggeredBy() != null && gameServer.getLastRoundTriggeredBy().equals(username)) {
+                ArrayList<PlayerStats> finalScores = db.getGameResult(gameID);
+                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                    clientProxy.endGame(gameID, finalScores);
+                }
+                return new Result(true, true, null);
+            }
+
+            //if the tran car number is less than 3, last round
+            if (gameServer.getPlayerbyUserName(username).getTrainNum() < 3) {
+                gameServer.setLastRound(true);
+                gameServer.setLastRoundTriggeredBy(username);
+            }
+
+            gameServer.moveToNextTurn();
+            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                clientProxy.updateTurns(gameID, gameServer.getCurrentPlayer());
+
+                //update game history here
+                clientProxy.updateGameHistory(gameID, gameServer.getGameHistories());
+            }
+            return new Result(true, gameServer.getCurrentPlayer(), null);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, null, e.getMessage());
+        }
     }
 
     //--------------------------------FOR TEST-------------------------------------------
