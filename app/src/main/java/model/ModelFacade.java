@@ -136,6 +136,9 @@ public class ModelFacade implements IGameModel {
     }
 
     public void startGame(String gameId) {
+        String lobbyID = ModelRoot.getInstance().getLobbyGame().getGameID();
+        String userName = ModelRoot.getInstance().getUserName();
+        ModelRoot.getInstance().setGame(new GameClient(lobbyID, userName));
         GenericTask genericTask = new GenericTask("startGame");
         genericTask.execute(gameId, ModelRoot.getInstance().getAuthToken());
     }
@@ -228,12 +231,9 @@ public class ModelFacade implements IGameModel {
     @Override
     //ask for three new tickets to choose from server
     public void updateChoiceTickets() {
-
-
         GenericTask genericTask = new GenericTask("GetTickets");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
         System.out.println("called it onece once once");
-
     }
 
 
