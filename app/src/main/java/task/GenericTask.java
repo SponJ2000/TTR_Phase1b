@@ -51,8 +51,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.StartGame((String) params[0], (String) params[1]);
             case "GetLobbyList":
                 return serverProxy.GetLobbyList((String) params[0]);
-            case "GetGame":
-                return serverProxy.GetGame((String) params[0], (String) params[1]);
+            case "GetLobby":
+                return serverProxy.GetLobby((String) params[0], (String) params[1]);
             case "CheckGameList":
                 return serverProxy.CheckGameList((String) params[0]);
             case "CheckGame":
@@ -88,8 +88,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "GetLobbyList":
                 FetchGameListFrom(result);
                 break;
-            case "GetGame":
-                FetchGameFrom(result);
+            case "GetLobby":
+                FetchLobbyGameFrom(result);
                 break;
             case "GetTickets":
                 FetchTicketsOption(result);
@@ -126,9 +126,9 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         }
     }
 
-    private void FetchGameFrom(Result result) {
+    private void FetchLobbyGameFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().setGame((LobbyGame) result.getData());
+            ModelRoot.getInstance().setLobbyGame((LobbyGame) result.getData());
         }
     }
 
