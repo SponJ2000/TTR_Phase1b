@@ -319,6 +319,20 @@ public class Database {
             }
         }
 
+        //set tickets
+        tickets = gameServer.getTickets();
+        for (PlayerUser p : gameServer.getPlayers()) {
+            ArrayList<Ticket> playerTickets = new ArrayList<>();
+            if (tickets.size() < 3) {
+                playerTickets =  tickets;
+            }
+            for (int i = 0; i < 3; i++) {
+                Ticket ticket = tickets.get(0);
+                playerTickets.add(ticket);
+                tickets.remove(0);
+            }
+            p.setTicketToChoose(playerTickets);
+        }
         // set faceup cards
         gameServer.setFaceUpTrainCarCards(faceUpTrainCards);
 
