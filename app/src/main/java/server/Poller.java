@@ -8,6 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import communication.LobbyGame;
 import communication.Result;
 import communication.Serializer;
 import model.ModelFacade;
@@ -20,7 +21,6 @@ import model.ModelRoot;
 public class Poller {
 
     private static Integer gameListVersion = 0;
-    public static Integer gameVersion = 0;
     private static boolean running = false;
     private static ScheduledExecutorService scheduledExecutorService;
     private static ScheduledFuture scheduledFuture;
@@ -36,6 +36,7 @@ public class Poller {
                         CheckandUpdateGameList();
                         break;
                     case LOBBY:
+                        System.out.println("about to check lobby");
                         CheckandUpdateGameLobby();
                         break;
                     case GAME:
@@ -75,13 +76,16 @@ public class Poller {
 //    Note: this is just a copy of last phase
     private static void CheckandUpdateGameLobby() {
         ServerProxy serverProxy = new ServerProxy();
-        Result result = serverProxy.CheckGameLobby(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID());
+        Result result = serverProxy.CheckGameLobby(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getLobbyGame().getGameID());
+        System.out.println("In Check and update game lobby");
+        System.out.println(result.toString());
         if (result.isSuccess()) {
             Integer versionNum = (Integer) result.getData();
-            System.out.println(versionNum + " : " + gameVersion);
-            if (!versionNum.equals(gameVersion)) {
-                ModelFacade.getInstance().updateGame();
-                gameVersion = versionNum;
+            LobbyGame lobbyGame = ModelRoot.getInstance().getLobbyGame();
+            System.out.println(versionNum + " : " + lobbyGame.getVersionNum());
+            if (!versionNum.equals(lobbyGame.getVersionNum())) {
+                ModelFacade.getInstance().UpdateLobby();
+                lobbyGame.setVersionNum(versionNum);
             }
         }
         else {

@@ -299,9 +299,9 @@ public class ServerFacade implements IServer {
     }
 
     @Override
-    public Result GetGame(String gameID, String authToken) {
+    public Result GetLobby(String gameID, String authToken) {
         try {
-            return new Result(true, db.findGameByID(gameID), null);
+            return new Result(true, db.findGameLobbyByID(gameID), null);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -445,11 +445,6 @@ public class ServerFacade implements IServer {
             e.printStackTrace();
             return new Result(false, null, e.getMessage());
         }
-    }
-
-    @Override
-    public Result NotifyLastRound(String authToken, String gameID) {
-        return null;
     }
 
     @Override

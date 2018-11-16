@@ -18,6 +18,7 @@ public class LobbyGame {
     private ArrayList<Player> players = new ArrayList<>();
 
     private boolean started;
+    private int versionNum;
 
     public LobbyGame(String host, String gameID, int maxPlayers) {
         this.host = host;
@@ -86,5 +87,13 @@ public class LobbyGame {
 
     public void setStarted(boolean started) {
         this.started = started;
+    }
+
+    public int getVersionNum() {
+        return versionNum;
+    }
+
+    public void setVersionNum(int versionNum) {
+        this.versionNum = versionNum;
     }
 }

@@ -66,8 +66,8 @@ public class ServerProxy implements communication.IServer {
     }
 
     @Override
-    public Result GetGame(String gameID, String authToken) {
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetGame", new String[]{STRING, STRING}, new Object[]{gameID, authToken});
+    public Result GetLobby(String gameID, String authToken) {
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetLobby", new String[]{STRING, STRING}, new Object[]{gameID, authToken});
         return RunCommand(genericCommand);
     }
 
@@ -99,6 +99,7 @@ public class ServerProxy implements communication.IServer {
     private Result RunCommand(GenericCommand genericCommand){
         try {
             System.out.println("RUNNING COMMAND " + genericCommand.methodName);
+            System.out.println("before post");
             String resultJson = clientCommunicator.post(genericCommand);
             System.out.println(resultJson);
             Serializer serializer = new Serializer();
@@ -150,19 +151,21 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result CheckGameLobby(String authToken, String gameID) {
+        System.out.println("About to send command to server");
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGameLobby", new String[]{STRING,STRING}, new Object[]{authToken, gameID});
+
         return RunCommand(genericCommand);
     }
 
-    @Override
-    public Result NotifyLastRound(String authToken, String gameID) {
-        //TODO
-        return null;
-    }
+//    @Override
+//    public Result NotifyLastRound(String authToken, String gameID) {
+//        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "NotifyLastRound", new String[]{STRING,STRING}, new Object[]{authToken, gameID});
+//        return RunCommand(genericCommand);
+//    }
 
     @Override
     public Result EndTurn(String gameID, String authToken) {
-        //TODO
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "EndTurn", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
+        return RunCommand(genericCommand);
     }
 }

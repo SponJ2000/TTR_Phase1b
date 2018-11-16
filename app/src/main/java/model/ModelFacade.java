@@ -120,7 +120,7 @@ public class ModelFacade implements IGameModel {
     }
 
     public void createLobbyGame(LobbyGame lobbyGame) {
-        GenericTask genericTask = new GenericTask("CreateGameLobby");
+        GenericTask genericTask = new GenericTask("CreateLobby");
         genericTask.execute(lobbyGame, ModelRoot.getInstance().getAuthToken());
         ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
@@ -136,6 +136,9 @@ public class ModelFacade implements IGameModel {
     }
 
     public void startGame(String gameId) {
+        String lobbyID = ModelRoot.getInstance().getLobbyGame().getGameID();
+        String userName = ModelRoot.getInstance().getUserName();
+        ModelRoot.getInstance().setGame(new GameClient(lobbyID, userName));
         GenericTask genericTask = new GenericTask("startGame");
         genericTask.execute(gameId, ModelRoot.getInstance().getAuthToken());
     }
@@ -145,9 +148,9 @@ public class ModelFacade implements IGameModel {
         genericTask.execute(ModelRoot.getInstance().getAuthToken());
     }
 
-    public void updateGame() {
-        GenericTask genericTask = new GenericTask("GetGame");
-        genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken());
+    public void UpdateLobby() {
+        GenericTask genericTask = new GenericTask("GetLobby");
+        genericTask.execute(ModelRoot.getInstance().getLobbyGame().getGameID(), ModelRoot.getInstance().getAuthToken());
     }
 
     public void CheckGameList() {
@@ -155,15 +158,21 @@ public class ModelFacade implements IGameModel {
         genericTask.execute(ModelRoot.getInstance().getAuthToken());
     }
 
-    public void CheckGame() {
-        GenericTask genericTask = new GenericTask("CheckGame");
-        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
-    }
+//    public void CheckGame() {
+//        GenericTask genericTask = new GenericTask("CheckGame");
+//        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
+//    }
 
     @Override
     public void sendMessage(Message message) {
         GenericTask genericTask = new GenericTask("SendMessage");
         genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), message);
+    }
+
+    @Override
+    public void endTurn() {
+        GenericTask genericTask = new GenericTask("EndTurn");
+        genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
     }
 
     @Override
@@ -222,12 +231,9 @@ public class ModelFacade implements IGameModel {
     @Override
     //ask for three new tickets to choose from server
     public void updateChoiceTickets() {
-
-
         GenericTask genericTask = new GenericTask("GetTickets");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
         System.out.println("called it onece once once");
-
     }
 
 
@@ -378,13 +384,9 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getLobbyGame().isStarted();
     }
 
-
     public LobbyGame getLobbyGame() {
         return ModelRoot.getInstance().getLobbyGame();
     }
 
-    @Override
-    public void endTurn() {
 
-    }
 }
