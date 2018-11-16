@@ -51,7 +51,7 @@ public class Player implements IPlayer{
 
     public Player(String playerName) {
         this.playerName = playerName;
-        trainNum = 3;
+        trainNum = 40;
     }
 
     public int getTrainNum(){
