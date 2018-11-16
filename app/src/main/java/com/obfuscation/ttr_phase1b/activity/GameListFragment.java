@@ -135,7 +135,7 @@ public class GameListFragment extends Fragment implements IPresenter {
                 if(data.isSuccess()) {
                     Log.d(TAG+"_update", "Now joining");
                     onGameSelect("join");
-                    ModelFacade.getInstance().updateGame();
+                    ModelFacade.getInstance().UpdateLobby();
                 }else {
                     Log.d(TAG+"_update", "Join failed: " + data.getErrorInfo());
                     Toast.makeText(getActivity(), "Join failed: " + data.getErrorInfo(), Toast.LENGTH_LONG).show();
