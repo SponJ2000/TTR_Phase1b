@@ -36,6 +36,7 @@ public class Poller {
                         CheckandUpdateGameList();
                         break;
                     case LOBBY:
+                        System.out.println("about to check lobby");
                         CheckandUpdateGameLobby();
                         break;
                     case GAME:
@@ -75,7 +76,9 @@ public class Poller {
 //    Note: this is just a copy of last phase
     private static void CheckandUpdateGameLobby() {
         ServerProxy serverProxy = new ServerProxy();
-        Result result = serverProxy.CheckGameLobby(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID());
+        Result result = serverProxy.CheckGameLobby(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getLobbyGame().getGameID());
+        System.out.println("In Check and update game lobby");
+        System.out.println(result.toString());
         if (result.isSuccess()) {
             Integer versionNum = (Integer) result.getData();
             LobbyGame lobbyGame = ModelRoot.getInstance().getLobbyGame();

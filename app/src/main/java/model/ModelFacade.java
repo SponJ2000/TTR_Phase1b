@@ -155,10 +155,10 @@ public class ModelFacade implements IGameModel {
         genericTask.execute(ModelRoot.getInstance().getAuthToken());
     }
 
-    public void CheckGame() {
-        GenericTask genericTask = new GenericTask("CheckGame");
-        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
-    }
+//    public void CheckGame() {
+//        GenericTask genericTask = new GenericTask("CheckGame");
+//        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
+//    }
 
     @Override
     public void sendMessage(Message message) {
