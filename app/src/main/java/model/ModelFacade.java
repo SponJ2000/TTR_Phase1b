@@ -120,7 +120,7 @@ public class ModelFacade implements IGameModel {
     }
 
     public void createLobbyGame(LobbyGame lobbyGame) {
-        GenericTask genericTask = new GenericTask("CreateGameLobby");
+        GenericTask genericTask = new GenericTask("CreateLobby");
         genericTask.execute(lobbyGame, ModelRoot.getInstance().getAuthToken());
         ModelRoot.getInstance().setLobbyGame(lobbyGame);
     }
@@ -164,6 +164,12 @@ public class ModelFacade implements IGameModel {
     public void sendMessage(Message message) {
         GenericTask genericTask = new GenericTask("SendMessage");
         genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), message);
+    }
+
+    @Override
+    public void endTurn() {
+        GenericTask genericTask = new GenericTask("EndTurn");
+        genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
     }
 
     @Override
@@ -378,13 +384,9 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getLobbyGame().isStarted();
     }
 
-
     public LobbyGame getLobbyGame() {
         return ModelRoot.getInstance().getLobbyGame();
     }
 
-    @Override
-    public void endTurn() {
 
-    }
 }

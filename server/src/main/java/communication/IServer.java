@@ -235,7 +235,7 @@ public interface IServer {
 
     Result SendMessage(String authToken, String gameID, Message message);
 
-    Result NotifyLastRound(String authToken, String gameID);
+//    Result NotifyLastRound(String authToken, String gameID);
 
     Result EndTurn(String gameID, String authToken);
 }

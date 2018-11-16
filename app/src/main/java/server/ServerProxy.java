@@ -154,15 +154,15 @@ public class ServerProxy implements communication.IServer {
         return RunCommand(genericCommand);
     }
 
-    @Override
-    public Result NotifyLastRound(String authToken, String gameID) {
-        //TODO
-        return null;
-    }
+//    @Override
+//    public Result NotifyLastRound(String authToken, String gameID) {
+//        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "NotifyLastRound", new String[]{STRING,STRING}, new Object[]{authToken, gameID});
+//        return RunCommand(genericCommand);
+//    }
 
     @Override
     public Result EndTurn(String gameID, String authToken) {
-        //TODO
-        return null;
+        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "EndTurn", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
+        return RunCommand(genericCommand);
     }
 }
