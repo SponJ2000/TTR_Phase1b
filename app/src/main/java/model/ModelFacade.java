@@ -136,9 +136,12 @@ public class ModelFacade implements IGameModel {
     }
 
     public void startGame(String gameId) {
-        String lobbyID = ModelRoot.getInstance().getLobbyGame().getGameID();
-        String userName = ModelRoot.getInstance().getUserName();
-        ModelRoot.getInstance().setGame(new GameClient(lobbyID, userName));
+        if(ModelRoot.getInstance().getGame() == null){
+            String lobbyID = ModelRoot.getInstance().getLobbyGame().getGameID();
+            String userName = ModelRoot.getInstance().getUserName();
+            ModelRoot.getInstance().setGame(new GameClient(lobbyID, userName));
+        }
+
         GenericTask genericTask = new GenericTask("startGame");
         genericTask.execute(gameId, ModelRoot.getInstance().getAuthToken());
     }
@@ -281,7 +284,7 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getLobbyGames();
     }
 
-    public Game getCurrentGame() {
+    public GameClient getCurrentGame() {
         return ModelRoot.getInstance().getGame();
     }
 
@@ -357,6 +360,7 @@ public class ModelFacade implements IGameModel {
             PlayerUser p = g.getPlayerUser();
             return p;
         }
+        System.out.println("game client is still null");
         return null;
     }
 

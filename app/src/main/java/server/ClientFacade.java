@@ -69,6 +69,10 @@ public class ClientFacade implements IClient{
         try {
             ArrayList<Ticket> ticketsToChoose = ModelRoot.getInstance().getGame().getPlayerUser().getTicketToChoose();
             ModelRoot.getInstance().setGame(gameClient);
+            GameClient gameClient1= ModelRoot.getInstance().getGame();
+            if (ModelRoot.getInstance().getGame().getPlayerOpponents() == null) {
+                System.out.println(ModelRoot.getInstance().getGame().getPlayerOpponents().toString());
+            }
             if (ticketsToChoose != null) {
                 if (ticketsToChoose.size() > 0) {
 

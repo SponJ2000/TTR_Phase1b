@@ -53,6 +53,16 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void updateInfo(Object result) {
         view.setPlayer(model.getPlayer());
+        if (model.getPlayer() == null) {
+            System.out.println("user is null");
+
+        }
+        else {
+            System.out.println("user is not null");
+            if (model.getPlayer().getPoint() ==null) {
+                System.out.println("point is null");
+            }
+        }
         view.setDeckSize(model.getDeckSize());
         view.setCards(model.getCards());
         view.setFaceCards(model.getFaceCards());

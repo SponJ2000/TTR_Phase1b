@@ -32,6 +32,9 @@ public class Player implements IPlayer{
     }
 
     public Integer getPoint() {
+        if (point == null) {
+            point = new Integer(0);
+        }
         return point;
     }
 
@@ -52,6 +55,8 @@ public class Player implements IPlayer{
     public Player(String playerName) {
         this.playerName = playerName;
         trainNum = 40;
+        point = new Integer(0);
+        trainNum = new Integer(0);
     }
 
     public int getTrainNum(){

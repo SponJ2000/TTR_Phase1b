@@ -31,12 +31,14 @@ import java.util.Map;
 
 import communication.Card;
 import communication.City;
+import communication.GameClient;
 import communication.GameColor;
 import communication.GameMap;
 import communication.Player;
 import communication.Route;
 import communication.Ticket;
 import gamePresenters.IGamePresenter;
+import model.ModelFacade;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -109,7 +111,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
         initCardMap();
@@ -159,6 +160,16 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTicketsView = rootView.findViewById(R.id.txt_tickets);
         mPointsView = rootView.findViewById(R.id.txt_points);
         mTrainsView = rootView.findViewById(R.id.txt_trains);
+
+//        GameClient gameClient = ModelFacade.getInstance().getCurrentGame();
+//        if (gameClient.getPlayerUser() == null) {
+//            System.out.println("player user is null");
+//
+//        }
+//        else {
+//            System.out.println("player user is not null");
+//            System.out.println(gameClient.getPlayerUser().toString());
+//        }
 
         mPointsView.setText(mPlayer.getPoint());
         mTrainsView.setText(mPlayer.getTrainNum());

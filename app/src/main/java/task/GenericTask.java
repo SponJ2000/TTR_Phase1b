@@ -7,6 +7,7 @@ import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.GameClient;
 import communication.LobbyGame;
 import communication.Message;
 import communication.Result;
@@ -128,7 +129,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     private void FetchLobbyGameFrom(Result result) {
         if (result.isSuccess()) {
-            ModelRoot.getInstance().setLobbyGame((LobbyGame) result.getData());
+            ModelRoot modelRoot = ModelRoot.getInstance();
+            modelRoot.setLobbyGame((LobbyGame) result.getData());
+            GameClient gameClient = new GameClient(modelRoot.getLobbyGame().getGameID(), modelRoot.getUserName());
+            modelRoot.setGame(gameClient);
         }
     }
 
