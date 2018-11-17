@@ -43,7 +43,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
             PresenterFacade.getInstance().setPresenter(new TicketPresenter((ITicketView) fragment, this));
 
             fm.beginTransaction().add(R.id.container, fragment).commit();
-            Log.d(TAG, "Loaded the game fragment");
+            Log.d(TAG, "Loaded the ticket fragment");
         }
     }
 

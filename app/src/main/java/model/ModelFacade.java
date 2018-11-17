@@ -218,10 +218,10 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void chooseTickets(List<Ticket> tickets) {
-        System.out.println("called choose ticket");
-        System.out.println(tickets.size());
+//        System.out.println("called choose ticket");
+//        System.out.println(tickets.size());
         if (getTickets() != null)
-        System.out.println("ticket size is: " + getTickets().size());
+            System.out.println("ticket size is: " + getTickets().size());
         GenericTask genericTask = new GenericTask("ReturnTickets");
 
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(),ModelRoot.getInstance().getAuthToken(), tickets);
@@ -236,7 +236,7 @@ public class ModelFacade implements IGameModel {
     public void updateChoiceTickets() {
         GenericTask genericTask = new GenericTask("GetTickets");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
-        System.out.println("called it onece once once");
+//        System.out.println("called it onece once once");
     }
 
 
@@ -360,7 +360,7 @@ public class ModelFacade implements IGameModel {
             PlayerUser p = g.getPlayerUser();
             return p;
         }
-        System.out.println("game client is still null");
+//        System.out.println("game client is still null");
         return null;
     }
 

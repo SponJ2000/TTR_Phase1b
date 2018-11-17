@@ -171,9 +171,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 //            System.out.println(gameClient.getPlayerUser().toString());
 //        }
 
-        mPointsView.setText(mPlayer.getPoint());
-        mTrainsView.setText(mPlayer.getTrainNum());
-
         initCardViews(rootView);
 
 
@@ -199,7 +196,141 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     }
 
-    private void initCardViews(View rootView){
+    @Override
+    public void updateUI() {
+        if(mPlayer != null) {
+            Log.d(TAG, "updateUI: player: " + mPlayer);
+            setColor();
+            setPoints(mPlayer.getPoint());
+            setTrains(mPlayer.getTrainNum());
+        }if(mCards != null) {
+            updateCards();
+        }if(mFaceCards != null) {
+            updateFaceCards();
+        }if(mTickets != null) {
+            updateTickets();
+        }
+    }
+
+    private void selectRoute(Route route) {
+        mPresenter.claimRoute(route, mPlayer);
+    }
+
+    private void updateCards() {
+        int[] cardCnts = new int[mCardViews.length];
+        for(int i = 0; i < mCards.size(); i++) {
+            switch (mCards.get(i).getColor()) {
+                case ORANGE:
+                    cardCnts[0]++;
+                    break;
+                case GREEN:
+                    cardCnts[1]++;
+                    break;
+                case PURPLE:
+                    cardCnts[2]++;
+                    break;
+                case WHITE:
+                    cardCnts[3]++;
+                    break;
+                case LOCOMOTIVE:
+                    cardCnts[4]++;
+                    break;
+                case RED:
+                    cardCnts[5]++;
+                    break;
+                case YELLOW:
+                    cardCnts[6]++;
+                    break;
+                case BLUE:
+                    cardCnts[7]++;
+                    break;
+                case BLACK:
+                    cardCnts[8]++;
+                    break;
+            }
+        }
+        for(int i = 0; i < mCardViews.length; i++) {
+            mCardViews[i].setText("" + cardCnts[i]);
+        }
+    }
+
+    private void updateFaceCards() {
+        int i = 0;
+        while (i < mFaceCards.size()) {
+            try {
+                Card card = mFaceCards.get(i);
+                ImageView faceCardView = mFaceCardViews[i];
+
+                faceCardView.setImageResource(cardMap.get(card.getColor()));
+            }
+            catch (ArrayIndexOutOfBoundsException e) {
+                ImageView faceCardView = mFaceCardViews[i];
+
+                faceCardView.setImageResource(cardMap.get(GREY));
+            }
+
+            i++;
+        }
+
+        while (i < 5) {
+            ImageView faceCardView = mFaceCardViews[i];
+            faceCardView.setImageResource(R.drawable.card_blank);
+
+            ++i;
+        }
+    }
+
+    private void updateTickets() {
+        mTicketsView.setText("" + mTickets.size());
+    }
+
+    private void setColor() {
+        GameColor color = mPlayer.getPlayerColor();
+
+        ColorStateList stateList = null;
+        int colorID = colorMap.get(mPlayer.getPlayerColor());
+        int board = 0;
+
+        switch(color) {
+            case PLAYER_RED:
+                board = R.drawable.board_r;
+                break;
+            case PLAYER_YELLOW:
+                board = R.drawable.board_y;
+                break;
+            case PLAYER_PURPLE:
+                board = R.drawable.board_p;
+                break;
+            case PLAYER_BLACK:
+                board = R.drawable.board_bla;
+                break;
+            case PLAYER_BLUE:
+                board = R.drawable.board_blu;
+                break;
+        }
+
+        mChatButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
+        mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
+        mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
+
+        mBoard.setBackgroundResource(board);
+    }
+
+
+    @Override
+    public void updateRoute(Route route) {
+        String name = route.getClaimedBy().getPlayerName();
+        int color = colorMap.get(route.getClaimedBy().getPlayerColor());
+
+        Polyline p = mRouteLines.get(route);
+
+        p.setColor(color);
+        Marker m = mRoutes2.get(route);
+        m.setTitle(name);
+        m.setSnippet(new StringBuilder(route.getLength() + " points").toString());
+    }
+
+    private void initCardViews(View rootView) {
         mFaceCardViews = new ImageView[5];
         mFaceCardViews[0] = rootView.findViewById(R.id.card1);
         mFaceCardViews[0].setOnClickListener(new View.OnClickListener() {
@@ -264,7 +395,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mCardViews[8] = rootView.findViewById(R.id.txt_cards_black);
     }
 
-    private void initCardMap(){
+    private void initCardMap() {
         cardMap = new HashMap<>();
         cardMap.put(PURPLE, R.drawable.card_pur);
         cardMap.put(BLUE, R.drawable.card_blu);
@@ -278,7 +409,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         cardMap.put(GREY, R.drawable.card_blank);
     }
 
-    private void initColorMap(){
+    private void initColorMap() {
         colorMap = new HashMap<>();
         colorMap.put(PURPLE,    getResources().getColor(R.color.trainPurple));
         colorMap.put(BLUE,      getResources().getColor(R.color.trainBlue));
@@ -426,135 +557,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         }
     }
 
-    private void selectRoute(Route route) {
-        mPresenter.claimRoute(route, mPlayer);
-    }
-
-    private void onChangeButton() {
-
-    }
-
-    private void updateCards() {
-        int[] cardCnts = new int[mCardViews.length];
-        for(int i = 0; i < mCards.size(); i++) {
-            switch (mCards.get(i).getColor()) {
-                case ORANGE:
-                    cardCnts[0]++;
-                    break;
-                case GREEN:
-                    cardCnts[1]++;
-                    break;
-                case PURPLE:
-                    cardCnts[2]++;
-                    break;
-                case WHITE:
-                    cardCnts[3]++;
-                    break;
-                case LOCOMOTIVE:
-                    cardCnts[4]++;
-                    break;
-                case RED:
-                    cardCnts[5]++;
-                    break;
-                case YELLOW:
-                    cardCnts[6]++;
-                    break;
-                case BLUE:
-                    cardCnts[7]++;
-                    break;
-                case BLACK:
-                    cardCnts[8]++;
-                    break;
-            }
-        }
-        for(int i = 0; i < mCardViews.length; i++) {
-            mCardViews[i].setText("" + cardCnts[i]);
-        }
-    }
-
-    private void updateFaceCards() {
-        int i = 0;
-        while (i < mFaceCards.size()) {
-            try {
-                Card card = mFaceCards.get(i);
-                ImageView faceCardView = mFaceCardViews[i];
-
-                faceCardView.setImageResource(cardMap.get(card.getColor()));
-            }
-            catch (ArrayIndexOutOfBoundsException e) {
-                ImageView faceCardView = mFaceCardViews[i];
-
-                faceCardView.setImageResource(cardMap.get(GREY));
-            }
-
-            i++;
-        }
-
-        while (i < 5) {
-            ImageView faceCardView = mFaceCardViews[i];
-            faceCardView.setImageResource(R.drawable.card_blank);
-
-            ++i;
-        }
-    }
-
-    private void updateTickets() {
-        mTicketsView.setText("" + mTickets.size());
-    }
-
-    private void setColor() {
-        GameColor color = mPlayer.getPlayerColor();
-
-        ColorStateList stateList = null;
-        int colorID = colorMap.get(mPlayer.getPlayerColor());
-        int board = 0;
-
-        switch(color) {
-            case PLAYER_RED:
-                board = R.drawable.board_r;
-                break;
-            case PLAYER_YELLOW:
-                board = R.drawable.board_y;
-                break;
-            case PLAYER_PURPLE:
-                board = R.drawable.board_p;
-                break;
-            case PLAYER_BLACK:
-                board = R.drawable.board_bla;
-                break;
-            case PLAYER_BLUE:
-                board = R.drawable.board_blu;
-                break;
-        }
-
-        mChatButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
-        mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
-        mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(colorID)));
-
-        mBoard.setBackgroundResource(board);
-    }
-
-
-    @Override
-    public void updateRoute(Route route) {
-        String name = route.getClaimedBy().getPlayerName();
-        int color = colorMap.get(route.getClaimedBy().getPlayerColor());
-
-        Polyline p = mRouteLines.get(route);
-
-        p.setColor(color);
-        Marker m = mRoutes2.get(route);
-        m.setTitle(name);
-        m.setSnippet(new StringBuilder(route.getLength() + " points").toString());
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
-    }
-
     @Override
     public void setMap(GameMap map) {
         mMap = map;
@@ -581,22 +583,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     @Override
-    public void updateUI() {
-        if(mPlayer != null) {
-            Log.d(TAG, "updateUI: player: " + mPlayer);
-            setColor();
-            setPoints(mPlayer.getPoint());
-            setTrains(mPlayer.getTrainNum());
-        }if(mCards != null) {
-            updateCards();
-        }if(mFaceCards != null) {
-            updateFaceCards();
-        }if(mTickets != null) {
-            updateTickets();
-        }
-    }
-
-    @Override
     public void setPresenter(IPresenter presenter) {
         mPresenter = (IGamePresenter) presenter;
     }
@@ -619,6 +605,13 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void sendToast(String toast) {
         Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
     }
 
     @Override

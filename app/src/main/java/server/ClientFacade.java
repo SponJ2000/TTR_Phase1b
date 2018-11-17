@@ -71,7 +71,7 @@ public class ClientFacade implements IClient{
             ModelRoot.getInstance().setGame(gameClient);
             GameClient gameClient1= ModelRoot.getInstance().getGame();
             if (ModelRoot.getInstance().getGame().getPlayerOpponents() == null) {
-                System.out.println(ModelRoot.getInstance().getGame().getPlayerOpponents().toString());
+//                System.out.println(ModelRoot.getInstance().getGame().getPlayerOpponents().toString());
             }
             if (ticketsToChoose != null) {
                 if (ticketsToChoose.size() > 0) {
@@ -107,8 +107,8 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateTrainCards(String gameID, List<Card> trainCards) {
-        System.out.println("UPDATE TRAIN CARD GETTING CALLED");
-        System.out.println(trainCards.size());
+//        System.out.println("UPDATE TRAIN CARD GETTING CALLED");
+//        System.out.println(trainCards.size());
         Serializer serializer = new Serializer();
         ArrayList<Card> cardD = new ArrayList<Card>();
         for(Object O: trainCards) {
@@ -213,16 +213,16 @@ public class ClientFacade implements IClient{
 
     @Override
     public void updateChat(String gameID, Message m) {
-        System.out.println("trying to insert"+ m.getText());
+//        System.out.println("trying to insert"+ m.getText());
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.insertMessage(m);
-            System.out.println("inserted a new chat"+ m.getText());
+//            System.out.println("inserted a new chat"+ m.getText());
         }
 
         g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            System.out.println("message has size of:  " + g.getMessages().size());
+//            System.out.println("message has size of:  " + g.getMessages().size());
 
         }
     }

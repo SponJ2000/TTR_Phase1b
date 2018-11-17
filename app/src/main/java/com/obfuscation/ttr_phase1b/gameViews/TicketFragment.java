@@ -73,7 +73,7 @@ public class TicketFragment extends Fragment implements ITicketView {
         mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Now chosing tickets");
+                Log.d(TAG, "Now choosing tickets");
                 onDone();
             }
         });

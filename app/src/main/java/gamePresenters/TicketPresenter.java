@@ -1,5 +1,7 @@
 package gamePresenters;
 
+import android.util.Log;
+
 import com.obfuscation.ttr_phase1b.gameViews.ITicketView;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import model.IGameModel;
 import model.ModelFacade;
 
 public class TicketPresenter implements ITicketPresenter {
+
+    private static String TAG = "tickPres";
 
     private ITicketView view;
     private OnBackListener listener;
@@ -31,6 +35,7 @@ public class TicketPresenter implements ITicketPresenter {
 
     @Override
     public void updateInfo(Object result) {
+        Log.d(TAG, "updating info: " + model.getChoiceTickets());
         view.setTickets(model.getChoiceTickets());
         view.setIsTurn(model.isMyTurn());
         view.updateUI();
