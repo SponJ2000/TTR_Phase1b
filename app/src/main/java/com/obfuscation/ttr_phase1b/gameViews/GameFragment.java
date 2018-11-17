@@ -201,6 +201,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             updateFaceCards();
         }if(mTickets != null) {
             updateTickets();
+        }if(mMap != null) {
+            mMapView.getMapAsync(this);
         }
     }
 
@@ -308,7 +310,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mBoard.setBackgroundResource(board);
     }
-
 
     @Override
     public void updateRoute(Route route) {
@@ -420,12 +421,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         colorMap.put(PLAYER_YELLOW, getResources().getColor(R.color.playerYellow));
         colorMap.put(PLAYER_BLACK,  getResources().getColor(R.color.playerBlack));
 
-        Log.d(TAG, "trainPurple: " + R.color.trainPurple);
-        Log.d(TAG, "black: " + getResources().getColor(R.color.trainPurple));
-        Log.d(TAG, "trainPurple: " + ContextCompat.getColor(getContext(), R.color.trainPurple));
-        Log.d(TAG, "black: " + R.color.playerBlack);
-        Log.d(TAG, "black: " + getResources().getColor(R.color.playerBlack));
-        Log.d(TAG, "black: " + ContextCompat.getColor(getContext(), R.color.playerBlack));
+//        Log.d(TAG, "trainPurple: " + R.color.trainPurple);
+//        Log.d(TAG, "black: " + getResources().getColor(R.color.trainPurple));
+//        Log.d(TAG, "trainPurple: " + ContextCompat.getColor(getContext(), R.color.trainPurple));
+//        Log.d(TAG, "black: " + R.color.playerBlack);
+//        Log.d(TAG, "black: " + getResources().getColor(R.color.playerBlack));
+//        Log.d(TAG, "black: " + ContextCompat.getColor(getContext(), R.color.playerBlack));
     }
 
     @Override
@@ -479,28 +480,27 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         LatLng ny = new LatLng(40, -73);
         CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(5).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-        
     }
 
     private void initCities(GoogleMap googleMap) {
-        mMap = mPresenter.getMap();
 
-        List<City> cities = mMap.getCities();
-        LatLng latLng = null;
+        if(mMap != null) {
+            List<City> cities = mMap.getCities();
+            LatLng latLng = null;
 
-        BitmapDrawable bmdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.location);
-        Bitmap smallMarker = Bitmap.createScaledBitmap(bmdraw.getBitmap(), 100, 100, false);
+            BitmapDrawable bmdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.location);
+            Bitmap smallMarker = Bitmap.createScaledBitmap(bmdraw.getBitmap(), 100, 100, false);
 
-        for(int i = 0; i < cities.size(); i++) {
-            City city = cities.get(i);
+            for(int i = 0; i < cities.size(); i++) {
+                City city = cities.get(i);
 
-            latLng = new LatLng(city.getLat(), city.getLng());
-            googleMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .title(city.getName())
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_city2)));
+                latLng = new LatLng(city.getLat(), city.getLng());
+                googleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(city.getName())
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_city2)));
 
+            }
         }
 
 //        LatLng ny = new LatLng(41, -74);
