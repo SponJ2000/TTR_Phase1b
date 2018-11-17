@@ -9,10 +9,20 @@ package communication;
 
 public class DualRoute extends Route {
 
-    private DualRoute sibling = null;
+    private String sibling = null;
 
-    public DualRoute getSibling() {
+    public String getSibling() {
         return sibling;
+    }
+
+    private String dualRouteID = null;
+
+    public String getDualRouteID() {
+        return dualRouteID;
+    }
+
+    public void setDualRouteID(String dualRouteID) {
+        this.dualRouteID = dualRouteID;
     }
 
     public DualRoute(City city1, City city2, int length, GameColor color, boolean first) {
@@ -29,10 +39,16 @@ public class DualRoute extends Route {
             mid[1] -= 1;
             setMidPoint(mid);
         }
+        if (first) {
+            dualRouteID = city1.getName() + "-" + city2.getName();
+        }
+        else {
+            dualRouteID = city1.getName() + "-" + city2.getName() + "2";
+        }
 
     }
 
-    public void setSibling(DualRoute sibling) {
+    public void setSibling(String sibling) {
         this.sibling = sibling;
     }
 }

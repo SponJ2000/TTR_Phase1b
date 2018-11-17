@@ -643,12 +643,13 @@ public class Database {
                     }
 
                     //double route rules
-                    if (claimedRoute instanceof DualRoute && ((DualRoute) claimedRoute).getSibling() != null) {
-                        if (gameServer.getPlayers().size() < 4
-                                || ((DualRoute) claimedRoute).getSibling().getClaimedBy().getPlayerName().equals(username)) {
-                            return new Result(false, null, "Error : violation of double route rules");
-                        }
-                    }
+                    //FIXME** must be fixed later
+//                    if (claimedRoute instanceof DualRoute && ((DualRoute) claimedRoute).getSibling() != null) {
+//                        if (gameServer.getPlayers().size() < 4
+//                                || ((DualRoute) claimedRoute).getSibling().getClaimedBy().getPlayerName().equals(username)) {
+//                            return new Result(false, null, "Error : violation of double route rules");
+//                        }
+//                    }
 
                     //set player claimed route
                     p.getClaimedRoutes().add(routeID);
