@@ -112,7 +112,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        this.mPresenter.update();
+
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
         initCardMap();
@@ -182,7 +182,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mMapView.getMapAsync(this);
 
-        mPresenter.update();
+        mPresenter.updateInfo(true);
 
         return rootView;
 
