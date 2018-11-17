@@ -1,5 +1,7 @@
 package gamePresenters;
 
+import android.util.Log;
+
 import com.obfuscation.ttr_phase1b.gameViews.IChatView;
 
 import communication.Message;
@@ -8,6 +10,8 @@ import model.IGameModel;
 import model.ModelFacade;
 
 public class ChatPresenter implements IChatPresenter {
+
+    private static String TAG = "tickPres";
 
     private IChatView view;
     private IChatPresenter.OnBackListener listener;
@@ -25,6 +29,7 @@ public class ChatPresenter implements IChatPresenter {
 
     @Override
     public void updateInfo(Object result) {
+        Log.d(TAG, "updating info");
         view.setMessages(model.getMessages());
         view.setUsername(model.getUserName());
         view.updateUI();

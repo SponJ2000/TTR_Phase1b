@@ -220,157 +220,160 @@ public class GamePresenter implements IGamePresenter {
     public List<Card> playerChooseCards(int length) {
         return null;
     }
-}
 
 
-class ITurnState {
+    class ITurnState {
 
-    void selectFaceUp(int index){}
-    void selectDeck(){}
-    void selectTicketsButton(){}
-    void selectTicket(Object ticket){}
-    void deselectTicket(Object ticket){}
-    void requestTickets(){}
-    void claimRoute(Route route, Player player){}
-}
-
-class NotTurn extends ITurnState {
-
-    private GamePresenter wrapper;
-
-    public NotTurn(GamePresenter wrapper) {
-        this.wrapper = wrapper;
-    }
-}
-
-class TurnNoSelection extends ITurnState {
-
-    private GamePresenter wrapper;
-
-    public TurnNoSelection(GamePresenter wrapper) {
-        this.wrapper = wrapper;
+        void selectFaceUp(int index){}
+        void selectDeck(){}
+        void selectTicketsButton(){}
+        void selectTicket(Object ticket){}
+        void deselectTicket(Object ticket){}
+        void requestTickets(){}
+        void claimRoute(Route route, Player player){}
     }
 
-    @Override
-    public void selectFaceUp(int index) {
-        if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
-            wrapper.getModel().chooseCard(index);
-            wrapper.getModel().endTurn();
-            wrapper.setState(new NotTurn(wrapper));
-        }
-        else {
-            wrapper.getModel().chooseCard(index);
-            wrapper.setState(new TurnOneCard(wrapper));
+    class NotTurn extends ITurnState {
+
+        private GamePresenter wrapper;
+
+        public NotTurn(GamePresenter wrapper) {
+            this.wrapper = wrapper;
         }
     }
 
-    @Override
-    public void selectDeck() {
-        wrapper.getModel().chooseCard(-1);
-        wrapper.setState(new TurnOneCard(wrapper));
-    }
+    class TurnNoSelection extends ITurnState {
 
-    @Override
-    public void selectTicketsButton() {
-        wrapper.setState(new TurnNoTickets(wrapper));
-    }
+        private GamePresenter wrapper;
 
-    @Override
-    public void claimRoute(Route route, Player player) {
-        //Check if a player has sufficient cards
-
-        Object list = wrapper.getModel().checkRouteCanClaim(route.getColor(), route.getLength());
-
-        if (list instanceof String) {
-
-            wrapper.sendToast((String) list);
+        public TurnNoSelection(GamePresenter wrapper) {
+            this.wrapper = wrapper;
         }
-        else {
-            ArrayList<Card> cardsToUse;
-            if (route.getColor() == GameColor.GREY) {
-                cardsToUse = (ArrayList<Card>) wrapper.playerChooseCards(route.getLength());
+
+        @Override
+        public void selectFaceUp(int index) {
+            if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
+                wrapper.getModel().chooseCard(index);
+                wrapper.getModel().endTurn();
+                wrapper.setState(new NotTurn(wrapper));
             }
             else {
-                cardsToUse = (ArrayList<Card>) list;
+                wrapper.getModel().chooseCard(index);
+                wrapper.setState(new TurnOneCard(wrapper));
+            }
+        }
+
+        @Override
+        public void selectDeck() {
+            wrapper.getModel().chooseCard(-1);
+            wrapper.setState(new TurnOneCard(wrapper));
+        }
+
+        @Override
+        public void selectTicketsButton() {
+            listener.onShow(Shows.tickets);
+            wrapper.setState(new NotTurn(wrapper));
+//            wrapper.setState(new TurnNoTickets(wrapper));
+        }
+
+        @Override
+        public void claimRoute(Route route, Player player) {
+            //Check if a player has sufficient cards
+
+            Object list = wrapper.getModel().checkRouteCanClaim(route.getColor(), route.getLength());
+
+            if (list instanceof String) {
+
+                wrapper.sendToast((String) list);
+            }
+            else {
+                ArrayList<Card> cardsToUse;
+                if (route.getColor() == GameColor.GREY) {
+                    cardsToUse = (ArrayList<Card>) wrapper.playerChooseCards(route.getLength());
+                }
+                else {
+                    cardsToUse = (ArrayList<Card>) list;
+                }
+
+                Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
+
+                //TODO: if successful, set NotTurn; if not send error toast
+
+                wrapper.getModel().endTurn();
+                wrapper.setState(new NotTurn(wrapper));
             }
 
-            Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
 
-            //TODO: if successful, set NotTurn; if not send error toast
 
+
+        }
+    }
+
+    class TurnNoTickets extends ITurnState {
+
+        private GamePresenter wrapper;
+
+        public TurnNoTickets(GamePresenter wrapper) {
+            this.wrapper = wrapper;
+        }
+
+        @Override
+        public void selectTicket(Object ticket) {
+            wrapper.setState(new TurnYesTickets(wrapper));
+        }
+    }
+
+    class TurnYesTickets extends ITurnState {
+
+        private GamePresenter wrapper;
+
+        public TurnYesTickets(GamePresenter wrapper) {
+            this.wrapper = wrapper;
+        }
+
+        @Override
+        public void selectTicket(Object ticket) {
+            //TODO: add ticket to selected tickets
+        }
+
+        @Override
+        public void deselectTicket(Object ticket) {
+            //TODO: check if you've got any tickets left
+            wrapper.setState(new TurnNoTickets(wrapper));
+        }
+
+        @Override
+        void requestTickets() {
+            //TODO: send request for tickets, then update UI
             wrapper.getModel().endTurn();
             wrapper.setState(new NotTurn(wrapper));
         }
-
-
-
-
-    }
-}
-
-class TurnNoTickets extends ITurnState {
-
-    private GamePresenter wrapper;
-
-    public TurnNoTickets(GamePresenter wrapper) {
-        this.wrapper = wrapper;
     }
 
-    @Override
-    public void selectTicket(Object ticket) {
-        wrapper.setState(new TurnYesTickets(wrapper));
-    }
-}
+    class TurnOneCard extends ITurnState {
 
-class TurnYesTickets extends ITurnState {
+        private GamePresenter wrapper;
 
-    private GamePresenter wrapper;
-
-    public TurnYesTickets(GamePresenter wrapper) {
-        this.wrapper = wrapper;
-    }
-
-    @Override
-    public void selectTicket(Object ticket) {
-        //TODO: add ticket to selected tickets
-    }
-
-    @Override
-    public void deselectTicket(Object ticket) {
-        //TODO: check if you've got any tickets left
-        wrapper.setState(new TurnNoTickets(wrapper));
-    }
-
-    @Override
-    void requestTickets() {
-        //TODO: send request for tickets, then update UI
-        wrapper.getModel().endTurn();
-        wrapper.setState(new NotTurn(wrapper));
-    }
-}
-
-class TurnOneCard extends ITurnState {
-
-    private GamePresenter wrapper;
-
-    public TurnOneCard(GamePresenter wrapper) {
-        this.wrapper = wrapper;
-    }
-
-    @Override
-    public void selectFaceUp(int index) {
-        if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
-            wrapper.sendToast("You can't select a locomotive card as your second choice.");
+        public TurnOneCard(GamePresenter wrapper) {
+            this.wrapper = wrapper;
         }
-        else {
-            wrapper.getModel().chooseCard(index);
+
+        @Override
+        public void selectFaceUp(int index) {
+            if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
+                wrapper.sendToast("You can't select a locomotive card as your second choice.");
+            }
+            else {
+                wrapper.getModel().chooseCard(index);
+                wrapper.setState(new TurnOneCard(wrapper));
+            }
+        }
+
+        @Override
+        public void selectDeck() {
+            wrapper.getModel().chooseCard(-1);
             wrapper.setState(new TurnOneCard(wrapper));
         }
     }
 
-    @Override
-    public void selectDeck() {
-        wrapper.getModel().chooseCard(-1);
-        wrapper.setState(new TurnOneCard(wrapper));
-    }
 }

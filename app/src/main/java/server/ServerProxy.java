@@ -92,16 +92,16 @@ public class ServerProxy implements communication.IServer {
     @Override
     public Result CheckGame(String authToken, String gameID, Integer state) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGame", new String[]{STRING, STRING, INTEGER}, new Object[]{authToken, gameID, state});
-        System.out.println("from poller checking the game");
+//        System.out.println("from poller checking the game");
         return RunCommand(genericCommand);
     }
 
     private Result RunCommand(GenericCommand genericCommand){
         try {
-            System.out.println("RUNNING COMMAND " + genericCommand.methodName);
-            System.out.println("before post");
+//            System.out.println("RUNNING COMMAND " + genericCommand.methodName);
+//            System.out.println("before post");
             String resultJson = clientCommunicator.post(genericCommand);
-            System.out.println(resultJson);
+//            System.out.println(resultJson);
             Serializer serializer = new Serializer();
             Result result = serializer.deserializeResult(resultJson);
             return result;
@@ -151,7 +151,7 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result CheckGameLobby(String authToken, String gameID) {
-        System.out.println("About to send command to server");
+//        System.out.println("About to send command to server");
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "CheckGameLobby", new String[]{STRING,STRING}, new Object[]{authToken, gameID});
 
         return RunCommand(genericCommand);

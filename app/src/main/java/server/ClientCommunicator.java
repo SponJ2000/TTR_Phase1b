@@ -28,8 +28,8 @@ public class ClientCommunicator {
 
     public String post(GenericCommand genericCommand) throws Exception{
 
-        System.out.println("CLIENT: POST: " + url);
-        System.out.println();
+//        System.out.println("CLIENT: POST: " + url);
+//        System.out.println();
 
         Serializer serializer = new Serializer();
         String request = serializer.serializeCommand(genericCommand);
@@ -37,7 +37,7 @@ public class ClientCommunicator {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         URL mUrl = new URL(url);
 
-        System.out.println(mUrl.toString());
+//        System.out.println(mUrl.toString());
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         connection.connect();
@@ -57,23 +57,23 @@ public class ClientCommunicator {
         out.print(request);
         out.close();
 
-        System.out.println("request body:");
-        System.out.println(request);
-        System.out.println();
+//        System.out.println("request body:");
+//        System.out.println(request);
+//        System.out.println();
 
     }
 
     void getResponseHeaders(HttpURLConnection connection) throws Exception {
 
-        System.out.println("response:");
+//        System.out.println("response:");
 
         int status = connection.getResponseCode();
-        System.out.println("status: " + status);
+//        System.out.println("status: " + status);
 
         String message = connection.getResponseMessage();
-        System.out.println("message: " + message);
+//        System.out.println("message: " + message);
 
-        System.out.println();
+//        System.out.println();
 
     }
 
@@ -81,7 +81,7 @@ public class ClientCommunicator {
 
         String response = "";
 
-        System.out.println("response body:");
+//        System.out.println("response body:");
 
         int status = connection.getResponseCode();
         if (status == HTTP_OK) {
@@ -102,7 +102,7 @@ public class ClientCommunicator {
             in.close();
         }
 
-        System.out.println();
+//        System.out.println();
 
         return response;
 
