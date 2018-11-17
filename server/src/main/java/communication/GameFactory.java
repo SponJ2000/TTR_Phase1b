@@ -1,11 +1,8 @@
 package communication;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class GameFactory {
 
@@ -13,6 +10,13 @@ public class GameFactory {
     private static HashMap<String, City> cityMap;
     private static ArrayList<Ticket> allTickets;
     private static ArrayList<Route> allRoutes;
+
+    public static GameFactory getInstance() {
+        if(SINGLETON == null) {
+            SINGLETON = new GameFactory();
+        }
+        return SINGLETON;
+    }
 
     private GameFactory() {
         cityMap = new HashMap<>();
@@ -290,15 +294,12 @@ public class GameFactory {
         allRoutes.add(dr2);
     }
 
-    public GameFactory getInstance() {
-        if(SINGLETON == null) {
-            SINGLETON = new GameFactory();
+    public ArrayList<City> getCities() {
+        ArrayList<City> cities = new ArrayList<>();
+        for(City ci : cityMap.values()) {
+            cities.add(ci);
         }
-        return SINGLETON;
-    }
-
-    public HashMap<String, City> getCities() {
-        return cityMap;
+        return cities;
     }
 
     public Map<GameColor, Integer> getCards() {
