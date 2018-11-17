@@ -251,9 +251,9 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    //whenever we choose a new cards
+    //it is just a get method
     public void updateFaceCards() {
-        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(0);
+//        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(0);
     }
 
     @Override

@@ -97,6 +97,7 @@ public class GameClient extends Game {
         if (faceUpCards != null) {
             card = faceUpCards.remove(index);
             System.out.println("index is: " + index);
+            System.out.println(faceUpCards.size());
             this.getPlayerUser().addCard(faceUpCards.remove(index));
         }
         return card;
