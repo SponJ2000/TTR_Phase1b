@@ -305,7 +305,10 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public boolean isMyTurn() {
-        return false;
+        if (getCurrentGame().getTurnUser() == null) {
+            return false;
+        }
+        return getCurrentGame().getTurnUser().equals(getUserName());
     }
 
     @Override
