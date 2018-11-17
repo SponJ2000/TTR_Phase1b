@@ -302,9 +302,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                 break;
         }
 
-        mChatButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), colorID)));
-        mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), colorID)));
-        mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), colorID)));
+        mChatButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
+        mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
+        mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
 
         mBoard.setBackgroundResource(board);
     }
@@ -404,21 +404,28 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private void initColorMap() {
         colorMap = new HashMap<>();
-        colorMap.put(PURPLE,    ContextCompat.getColor(getContext(), R.color.trainPurple));
-        colorMap.put(BLUE,      ContextCompat.getColor(getContext(), R.color.trainBlue));
-        colorMap.put(ORANGE,    ContextCompat.getColor(getContext(), R.color.trainOrange));
-        colorMap.put(WHITE,     ContextCompat.getColor(getContext(), R.color.trainWhite));
-        colorMap.put(GREEN,     ContextCompat.getColor(getContext(), R.color.trainGreen));
-        colorMap.put(YELLOW,    ContextCompat.getColor(getContext(), R.color.trainYellow));
-        colorMap.put(BLACK,     ContextCompat.getColor(getContext(), R.color.trainBlack));
-        colorMap.put(RED,       ContextCompat.getColor(getContext(), R.color.trainRed));
-        colorMap.put(GREY,      ContextCompat.getColor(getContext(), R.color.trainGrey));
+        colorMap.put(PURPLE,    getResources().getColor(R.color.trainPurple));
+        colorMap.put(BLUE,      getResources().getColor(R.color.trainBlue));
+        colorMap.put(ORANGE,    getResources().getColor(R.color.trainOrange));
+        colorMap.put(WHITE,     getResources().getColor(R.color.trainWhite));
+        colorMap.put(GREEN,     getResources().getColor(R.color.trainGreen));
+        colorMap.put(YELLOW,    getResources().getColor(R.color.trainYellow));
+        colorMap.put(BLACK,     getResources().getColor(R.color.trainBlack));
+        colorMap.put(RED,       getResources().getColor(R.color.trainRed));
+        colorMap.put(GREY,      getResources().getColor(R.color.trainGrey));
 
-        colorMap.put(PLAYER_BLUE,   ContextCompat.getColor(getContext(), R.color.playerBlue));
-        colorMap.put(PLAYER_RED,    ContextCompat.getColor(getContext(), R.color.playerRed));
-        colorMap.put(PLAYER_PURPLE, ContextCompat.getColor(getContext(), R.color.playerPurple));
-        colorMap.put(PLAYER_YELLOW, ContextCompat.getColor(getContext(), R.color.playerYellow));
-        colorMap.put(PLAYER_BLACK,  ContextCompat.getColor(getContext(), R.color.playerBlack));
+        colorMap.put(PLAYER_BLUE,   getResources().getColor(R.color.playerBlue));
+        colorMap.put(PLAYER_RED,    getResources().getColor(R.color.playerRed));
+        colorMap.put(PLAYER_PURPLE, getResources().getColor(R.color.playerPurple));
+        colorMap.put(PLAYER_YELLOW, getResources().getColor(R.color.playerYellow));
+        colorMap.put(PLAYER_BLACK,  getResources().getColor(R.color.playerBlack));
+
+        Log.d(TAG, "trainPurple: " + R.color.trainPurple);
+        Log.d(TAG, "black: " + getResources().getColor(R.color.trainPurple));
+        Log.d(TAG, "trainPurple: " + ContextCompat.getColor(getContext(), R.color.trainPurple));
+        Log.d(TAG, "black: " + R.color.playerBlack);
+        Log.d(TAG, "black: " + getResources().getColor(R.color.playerBlack));
+        Log.d(TAG, "black: " + ContextCompat.getColor(getContext(), R.color.playerBlack));
     }
 
     @Override

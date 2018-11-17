@@ -96,6 +96,7 @@ public class GameClient extends Game {
         ArrayList<Card> faceUpCards = this.getFaceUpTrainCarCards();
         if (faceUpCards != null) {
             card = faceUpCards.remove(index);
+            System.out.println("index is: " + index);
             this.getPlayerUser().addCard(faceUpCards.remove(index));
         }
         return card;
