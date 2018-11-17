@@ -410,7 +410,6 @@ public class ServerFacade implements IServer {
     @Override
     public Result GetTickets(String gameID, String authToken) { //TODO : need gameID
         try {
-
             //return the tickets to the clients
             return new Result(true, db.getTickets(gameID, authToken), null);
         }

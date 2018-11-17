@@ -6,4 +6,6 @@ public interface IPresenter {
 
     void update();
 
+    void showToast(String toast);
+
 }

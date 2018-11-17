@@ -37,4 +37,9 @@ public class MenuPresenter implements IMenuPresenter {
     public void update() {
 
     }
+
+    @Override
+    public void showToast(String toast) {
+        view.sendToast(toast);
+    }
 }

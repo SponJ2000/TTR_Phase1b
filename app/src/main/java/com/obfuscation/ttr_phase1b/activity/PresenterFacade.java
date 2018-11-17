@@ -2,6 +2,7 @@ package com.obfuscation.ttr_phase1b.activity;
 
 import android.util.Log;
 
+import communication.Result;
 import gamePresenters.TicketPresenter;
 import model.ModelFacade;
 import model.DisplayState;
@@ -40,6 +41,12 @@ public class PresenterFacade {
     }
 
     public void updatePresenter(Object data) {
+        if(data != null && data.getClass().equals(Result.class)) {
+            Result r = (Result) data;
+            if(!r.isSuccess()) {
+                mPresenter.showToast(r.getErrorInfo());
+            }
+        }
         this.mPresenter.updateInfo(data);
     }
 

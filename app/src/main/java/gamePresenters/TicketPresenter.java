@@ -46,4 +46,9 @@ public class TicketPresenter implements ITicketPresenter {
         model.updateChoiceTickets();
     }
 
+    @Override
+    public void showToast(String toast) {
+        view.sendToast(toast);
+    }
+
 }

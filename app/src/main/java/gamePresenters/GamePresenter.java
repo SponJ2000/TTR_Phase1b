@@ -81,6 +81,11 @@ public class GamePresenter implements IGamePresenter {
     }
 
     @Override
+    public void showToast(String toast) {
+        view.sendToast(toast);
+    }
+
+    @Override
     public GameMap getMap() {
         return model.getMap();
     }

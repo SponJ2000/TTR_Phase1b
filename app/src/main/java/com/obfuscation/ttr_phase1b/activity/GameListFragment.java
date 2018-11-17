@@ -157,6 +157,11 @@ public class GameListFragment extends Fragment implements IPresenter {
 
     }
 
+    @Override
+    public void showToast(String toast) {
+        Toast.makeText(getActivity(), toast, Toast.LENGTH_LONG).show();
+    }
+
 
     //  tells the activity to change fragments to either the create game frag if selection == "create"
 //  or the lobby frag if selection == "join"

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
@@ -61,6 +62,11 @@ public class PlayerInfoFragment extends DialogFragment implements IPlayerInfoVie
             mPlayerAdapter = new PlayerAdapter(mPlayers);
             mPlayerRecycler.setAdapter(mPlayerAdapter);
         }
+    }
+
+    @Override
+    public void sendToast(String toast) {
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
     }
 
     @Override

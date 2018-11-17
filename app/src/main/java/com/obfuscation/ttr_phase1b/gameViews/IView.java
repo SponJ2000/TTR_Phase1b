@@ -8,4 +8,6 @@ public interface IView {
 
     void setPresenter(IPresenter presenter);
 
+    void sendToast(String toast);
+
 }

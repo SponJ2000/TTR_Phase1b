@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
@@ -146,6 +147,11 @@ public class ChatFragment extends Fragment implements IChatView {
             mMessageAdapter = new MessageAdapter(mMessages);
             mMessageRecycler.setAdapter(mMessageAdapter);
         }
+    }
+
+    @Override
+    public void sendToast(String toast) {
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
     }
 
     @Override

@@ -50,4 +50,9 @@ public class ChatPresenter implements IChatPresenter {
         model.sendMessage(message);
     }
 
+    @Override
+    public void showToast(String toast) {
+        view.sendToast(toast);
+    }
+
 }
