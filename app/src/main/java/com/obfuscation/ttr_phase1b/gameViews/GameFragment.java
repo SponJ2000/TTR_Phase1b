@@ -111,6 +111,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        this.mPresenter.update();
         View rootView = inflater.inflate(R.layout.game_fragment, container, false);
 
         initCardMap();
@@ -160,19 +161,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTicketsView = rootView.findViewById(R.id.txt_tickets);
         mPointsView = rootView.findViewById(R.id.txt_points);
         mTrainsView = rootView.findViewById(R.id.txt_trains);
-
-//        GameClient gameClient = ModelFacade.getInstance().getCurrentGame();
-//        if (gameClient.getPlayerUser() == null) {
-//            System.out.println("player user is null");
-//
-//        }
-//        else {
-//            System.out.println("player user is not null");
-//            System.out.println(gameClient.getPlayerUser().toString());
-//        }
-
-        mPointsView.setText(mPlayer.getPoint());
-        mTrainsView.setText(mPlayer.getTrainNum());
 
         initCardViews(rootView);
 

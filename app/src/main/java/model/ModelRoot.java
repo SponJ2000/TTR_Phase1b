@@ -51,6 +51,15 @@ public class ModelRoot {
     }
 
     public void setGame(GameClient game) {
+        System.out.println("game object is changeing");
+        if(this.game == null) {
+            System.out.println("previous is null");
+        }
+        else {
+            System.out.println(this.game.toString());
+        }
+        System.out.println("new game is: ");
+        System.out.println(game.toString());
         this.game = game;
     }
 

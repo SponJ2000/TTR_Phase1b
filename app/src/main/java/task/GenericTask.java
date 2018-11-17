@@ -14,6 +14,7 @@ import communication.Result;
 import communication.Serializer;
 import communication.Ticket;
 import model.ModelRoot;
+import server.CommandTask;
 import server.Poller;
 import server.ServerProxy;
 

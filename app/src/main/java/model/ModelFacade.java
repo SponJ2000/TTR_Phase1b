@@ -17,6 +17,7 @@ import communication.PlayerUser;
 import communication.Result;
 import communication.Route;
 import communication.Ticket;
+import server.CommandTask;
 import server.Poller;
 import task.GenericTask;
 
@@ -140,6 +141,8 @@ public class ModelFacade implements IGameModel {
             String lobbyID = ModelRoot.getInstance().getLobbyGame().getGameID();
             String userName = ModelRoot.getInstance().getUserName();
             ModelRoot.getInstance().setGame(new GameClient(lobbyID, userName));
+            CommandTask commandTask = new CommandTask();
+            commandTask.execute();
         }
 
         GenericTask genericTask = new GenericTask("startGame");

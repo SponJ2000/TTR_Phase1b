@@ -128,10 +128,7 @@ public class Poller {
                     CommandTask commandTask = new CommandTask();
                     commandTask.execute();
                     ModelRoot.getInstance().getGame().stateIncreament();
-                    System.out.print("New game state after : ");
-                    System.out.print(ModelRoot.getInstance().getGame().getState());
-                    System.out.print("\n");
-                    System.out.println("number of train card: ");
+
                 }catch (Exception e) {
                     e.printStackTrace();
                 }

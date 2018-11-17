@@ -52,6 +52,7 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
+        System.out.println("in game presenter update");
         view.setPlayer(model.getPlayer());
         if (model.getPlayer() == null) {
             System.out.println("user is null");
