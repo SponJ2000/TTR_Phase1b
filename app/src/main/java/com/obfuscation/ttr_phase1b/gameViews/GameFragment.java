@@ -56,11 +56,9 @@ import static communication.GameColor.*;
 
 public class GameFragment extends Fragment implements IGameView, OnMapReadyCallback {
 
-    private static final String TAG = "ChatFrag";
+    private static final String TAG = "GameFrag";
 
     private IGamePresenter mPresenter;
-
-    private int changeIndex;
 
     private boolean mIsTurn;
     private List<Card> mCards;
@@ -76,8 +74,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private FloatingActionButton mPlayersButton;
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
-
-    private FloatingActionButton mChangeButton;
 
     private LinearLayout mBoard;
     private TextView mTicketsView;
@@ -104,7 +100,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
-        changeIndex = 0;
     }
 
     public static GameFragment newInstance() {
@@ -122,15 +117,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         initColorMap();
 
         selected = null;
-
-        mChangeButton = rootView.findViewById(R.id.change_button);
-        mChangeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "make changes");
-                mPresenter.onChange(getActivity());
-            }
-        });
 
         mPlayersButton = rootView.findViewById(R.id.players_button);
         mPlayersButton.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +175,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mPresenter.updateInfo(true);
 
         return rootView;
-
     }
 
     @Override
@@ -202,6 +187,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         }if(mCards != null) {
             updateCards();
         }if(mFaceCards != null) {
+            Log.d(TAG, "updateUI: update cards");
             updateFaceCards();
         }if(mTickets != null) {
             updateTickets();
@@ -288,10 +274,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private void setColor() {
         GameColor color = mPlayer.getPlayerColor();
-        Log.d(TAG, "setColor: " + color);
         ColorStateList stateList = null;
         int colorID = colorMap.get(mPlayer.getPlayerColor());
-        Log.d(TAG, "colorID: " + colorID);
         int board = 0;
 
         switch(color) {
@@ -333,6 +317,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void initCardViews(View rootView) {
+        Log.d(TAG, "initCardViews");
         mFaceCardViews = new ImageView[5];
         mFaceCardViews[0] = rootView.findViewById(R.id.card1);
         mFaceCardViews[0].setOnClickListener(new View.OnClickListener() {

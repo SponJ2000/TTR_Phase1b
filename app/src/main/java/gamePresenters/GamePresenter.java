@@ -191,6 +191,7 @@ public class GamePresenter implements IGamePresenter {
     public void chooseCard(int index) {
 //        model.chooseCard(index);
         if (index == -1) {
+
             state.selectDeck();
         }
         else {
@@ -228,20 +229,14 @@ public class GamePresenter implements IGamePresenter {
 
 
     class ITurnState {
-
         void selectFaceUp(int index){}
         void selectDeck(){}
         void selectTicketsButton(){}
-        void selectTicket(Object ticket){}
-        void deselectTicket(Object ticket){}
-        void requestTickets(){}
         void claimRoute(Route route, Player player){}
     }
 
     class NotTurn extends ITurnState {
-
         private GamePresenter wrapper;
-
         public NotTurn(GamePresenter wrapper) {
             this.wrapper = wrapper;
         }
@@ -311,47 +306,6 @@ public class GamePresenter implements IGamePresenter {
 
 
 
-        }
-    }
-
-    class TurnNoTickets extends ITurnState {
-
-        private GamePresenter wrapper;
-
-        public TurnNoTickets(GamePresenter wrapper) {
-            this.wrapper = wrapper;
-        }
-
-        @Override
-        public void selectTicket(Object ticket) {
-            wrapper.setState(new TurnYesTickets(wrapper));
-        }
-    }
-
-    class TurnYesTickets extends ITurnState {
-
-        private GamePresenter wrapper;
-
-        public TurnYesTickets(GamePresenter wrapper) {
-            this.wrapper = wrapper;
-        }
-
-        @Override
-        public void selectTicket(Object ticket) {
-            //TODO: add ticket to selected tickets
-        }
-
-        @Override
-        public void deselectTicket(Object ticket) {
-            //TODO: check if you've got any tickets left
-            wrapper.setState(new TurnNoTickets(wrapper));
-        }
-
-        @Override
-        void requestTickets() {
-            //TODO: send request for tickets, then update UI
-            wrapper.getModel().endTurn();
-            wrapper.setState(new NotTurn(wrapper));
         }
     }
 

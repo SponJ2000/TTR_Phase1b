@@ -117,18 +117,6 @@
             tools:layout_editor_absoluteY="135dp">
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/change_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="266dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/tickets_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
