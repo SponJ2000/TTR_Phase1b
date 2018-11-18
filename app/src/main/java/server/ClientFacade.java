@@ -88,6 +88,8 @@ public class ClientFacade implements IClient{
 
             ModelRoot.getInstance().setDisplayState(DisplayState.GAME);
             ModelFacade.getInstance().getChoiceTickets();
+
+//            System.out.println("current turn is " + ModelRoot.getInstance().getGame().getTurnUser());
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -262,6 +264,7 @@ public class ClientFacade implements IClient{
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.setTurnUser(userName);
+            System.out.println("set game turn");
         }
     }
 }
