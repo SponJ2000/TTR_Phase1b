@@ -147,7 +147,8 @@ public class Database {
                     activeUsers.add(user);
                 }
                 //Create and return result object
-                return new Result(true, authToken, null);
+                System.out.println("LOGGED IN " + authTokenMap.get(id));
+                return new Result(true, authTokenMap.get(id), null);
             }
             else{
                 return new Result(false, null, "Error: Invalid password");

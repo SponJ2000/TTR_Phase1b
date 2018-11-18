@@ -99,7 +99,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public int getDeckSize() {
-        return 30;
+        return ModelRoot.getInstance().getGame().getTrainCardDeckSize();
     }
 
     public void login(String userName, String password){
