@@ -62,10 +62,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private int changeIndex;
 
+    private boolean mIsTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
     private List<Ticket> mTickets;
 
+    private TextView mTurnText;
     private ImageView[] mFaceCardViews;
     private ImageView mDeck;
     private TextView mDeckSize;
@@ -98,6 +100,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private Map<GameColor, Integer> colorMap;
 
     public GameFragment() {
+        mIsTurn = false;
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
@@ -162,6 +165,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTicketsView = rootView.findViewById(R.id.txt_tickets);
         mPointsView = rootView.findViewById(R.id.txt_points);
         mTrainsView = rootView.findViewById(R.id.txt_trains);
+        mTurnText = rootView.findViewById(R.id.turn_text);
 
         initCardViews(rootView);
 
@@ -203,6 +207,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             updateTickets();
         }if(mMap != null) {
             mMapView.getMapAsync(this);
+        }if(mIsTurn) {
+            mTurnText.setText("Your Turn");
+        }else {
+            mTurnText.setText("");
         }
     }
 
@@ -600,6 +608,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void setDeckSize(int size) {
         mDeckSize.setText("" + size);
+    }
+
+    @Override
+    public void setTurn(boolean turn) {
+        mIsTurn = turn;
     }
 
     @Override

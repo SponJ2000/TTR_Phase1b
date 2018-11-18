@@ -60,7 +60,10 @@ public class GamePresenter implements IGamePresenter {
             if (model.getPlayer().getPoint() ==null) {
                 Log.d(TAG, "point is null");
             }
+        }if(model.isMyTurn()) {
+            setState(new TurnNoSelection(this));
         }
+        view.setTurn(model.isMyTurn());
         view.setDeckSize(model.getDeckSize());
         view.setCards(model.getCards());
         view.setFaceCards(model.getFaceCards());
@@ -301,7 +304,7 @@ public class GamePresenter implements IGamePresenter {
 
                 //TODO: if successful, set NotTurn; if not send error toast
 
-                wrapper.getModel().endTurn();
+                model.endTurn();
                 wrapper.setState(new NotTurn(wrapper));
             }
 
