@@ -147,16 +147,18 @@ public class ClientFacade implements IClient{
     @Override
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
         ModelRoot m = ModelRoot.getInstance();
-        m.getGame().getPlayerUser();
+        PlayerOpponent p = m.getGame().getPlayerOpponentByUsername(playerID);
+        p.setCardNum(cardNum);
+
     }
 
     @Override
     public void updateOpponentTrainCars(String gameID, String playerID, Integer carNum) {
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            IPlayer p = g.getPlayerByUserName(playerID);
+            PlayerOpponent p = ModelRoot.getInstance().getGame().getPlayerOpponentByUsername(playerID);
             if (p != null) {
-                ((PlayerOpponent) p).setTrainNum(carNum);
+                p.setTrainNum(carNum);
             }
         }
     }
@@ -165,9 +167,9 @@ public class ClientFacade implements IClient{
     public void updateOpponentTickets(String gameID, String playerID, Integer cardNum) {
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            IPlayer p = g.getPlayerByUserName(playerID);
+            PlayerOpponent p = ModelRoot.getInstance().getGame().getPlayerOpponentByUsername(playerID);
             if (p != null) {
-                ((PlayerOpponent) p).setTicketNum(cardNum);
+                p.setTicketNum(cardNum);
             }
         }
     }

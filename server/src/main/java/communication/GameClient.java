@@ -50,6 +50,15 @@ public class GameClient extends Game {
         this.playerOpponents = playerOpponents;
     }
 
+    public PlayerOpponent getPlayerOpponentByUsername(String userName) {
+        for(PlayerOpponent p : playerOpponents) {
+            if (p.getPlayerName().equals(userName)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
     public PlayerUser getPlayerUser() {
         return playerUser;
     }
