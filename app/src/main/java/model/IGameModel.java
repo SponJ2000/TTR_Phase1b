@@ -31,7 +31,7 @@ public interface IGameModel {
      * @param cards
      * @return
      */
-    Result claimRoute(Route route, Player player, List<Card> cards);
+    void claimRoute(Route route, Player player, List<Card> cards);
 
     void updateTickets();
 

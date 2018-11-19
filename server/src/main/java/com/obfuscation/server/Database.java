@@ -736,7 +736,7 @@ public class Database {
                                         putDiscardToCardDeck(game);
                                     }
                                     Card newCard = game.getTrainCards().get(0);
-                                    faceUpTrainCards.add(card);
+                                    faceUpTrainCards.add(newCard);
                                     game.getTrainCards().remove(0);
                                 }
                                 game.getDiscardDeck().addAll(game.getFaceUpTrainCarCards());
