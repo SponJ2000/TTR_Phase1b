@@ -80,10 +80,7 @@ public class ModelFacade implements IGameModel {
 //        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
     }
 
-    @Override
-    public Result claimRoute(Route route, Player player, List<Card> cards) {
-        return null;
-    }
+
 
     public static ModelFacade getInstance() {
         if (modelFacade == null) {
@@ -168,6 +165,19 @@ public class ModelFacade implements IGameModel {
 //        GenericTask genericTask = new GenericTask("CheckGame");
 //        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
 //    }
+
+    @Override
+    public void claimRoute(Route route, Player player, List<Card> cards) {
+        GenericTask genericTask = new GenericTask("ClaimRoute");
+        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
+        PlayerUser p = (PlayerUser) player;
+        for(Card card : cards ) {
+            p.useCards(card.getColor(), 1);
+        }
+
+        p.addRouteAsClaimed(route.getRouteID());
+
+    }
 
     @Override
     public void sendMessage(Message message) {

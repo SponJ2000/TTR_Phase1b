@@ -26,7 +26,7 @@ import server.ServerProxy;
 public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     String action;
-
+//    Object holder;
     public GenericTask (String action) {
         this.action = action;
     }
@@ -58,6 +58,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 return serverProxy.GetLobby((String) params[0], (String) params[1]);
             case "CheckGameList":
                 return serverProxy.CheckGameList((String) params[0]);
+            case "ClaimRoute":
+                return serverProxy.ClaimRoute((String) params[0],(String) params[1],(List<Card>)params[2], (String) params[3]);
             case "CheckGame":
                 return serverProxy.CheckGame((String) params[0], (String) params[1], (Integer)params[2]);
             case "SendMessage":
@@ -102,6 +104,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 break;
             case "DrawTrainCard":
                 OnTrainCardDrawn(result);
+                break;
+            case "ClaimRoute":
+                OnClaimRoute(result);
+                break;
             default:
                 break;
         }
@@ -171,6 +177,12 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 ticketsToChoose.add((Ticket) serializer.deserializeTicket(o.toString()));
             }
             ModelRoot.getInstance().getGame().getPlayerUser().setTicketToChoose(ticketsToChoose);
+        }
+    }
+
+    private void OnClaimRoute(Result result) {
+        if (result.isSuccess()) {
+
         }
     }
 }
