@@ -8,16 +8,24 @@ import java.util.ArrayList;
 
 public class PlayerUser extends Player implements IPlayer{
 
-    private ArrayList<Ticket> tickets = new ArrayList<Ticket>();
-    private ArrayList<Card> cards = new ArrayList<Card>();
-    private ArrayList<Ticket> ticketToChoose = new ArrayList<Ticket>();
-    private ArrayList<Card> cardToChoose = new ArrayList<Card>();
+    private ArrayList<Ticket> tickets;
+    private ArrayList<Card> cards;
+    private ArrayList<Ticket> ticketToChoose;
+    private ArrayList<Card> cardToChoose;
 
     public PlayerUser() {
+        tickets = new ArrayList<>();
+        cards = new ArrayList<>();
+        ticketToChoose = new ArrayList<>();
+        cardToChoose = new ArrayList<>();
     }
 
     public PlayerUser(String playerName) {
         super(playerName);
+        tickets = new ArrayList<>();
+        cards = new ArrayList<>();
+        ticketToChoose = new ArrayList<>();
+        cardToChoose = new ArrayList<>();
     }
 
     public ArrayList<Ticket> getTickets() {
@@ -33,17 +41,13 @@ public class PlayerUser extends Player implements IPlayer{
     }
 
     public void addTickets(ArrayList<Ticket> moreTickets) {
-        if(tickets == null) {
-            tickets = new ArrayList<>();
-        }
         tickets.addAll(moreTickets);
-        System.out.println("Tickets number changed : " + tickets.size());
+//        System.out.println("Tickets number changed : " + tickets.size());
     }
 
     public void setTickets(ArrayList<Ticket> tickets) {
-
         this.tickets = tickets;
-        System.out.println("Tickets number changed : " + tickets.size());
+//        System.out.println("Tickets number changed : " + tickets.size());
     }
 
     public ArrayList<Card> getCards() {
@@ -59,9 +63,6 @@ public class PlayerUser extends Player implements IPlayer{
     }
 
     public void addCards(ArrayList<Card> moreCards) {
-        if(cards == null) {
-            cards = new ArrayList<>();
-        }
         cards.addAll(moreCards);
     }
 
@@ -70,35 +71,36 @@ public class PlayerUser extends Player implements IPlayer{
     }
 
     public boolean useCards(GameColor color, int number) {
-        int i = 0;
-        while(i < cards.size() && number > 0) {
+        int i, j = 0;
+        for(i = 0; i < cards.size(); i++) {
             if(cards.get(i).getColor().equals(color)) {
-                cards.remove(i);
-                --number;
-            }else {
-                ++i;
+                ++j;
             }
         }
-        if(number > 0) {
+        if(j >= number) {
+            i = 0;
+            while(i < cards.size() && number > 0) {
+                if(cards.get(i).getColor().equals(color)) {
+                    cards.remove(i);
+                    --number;
+                }else {
+                    ++i;
+                }
+            }
+            return true;
+        }else {
             return false;
         }
-        return true;
     }
 
     @Override
-    public Integer getCardNum() {
-        if(cards != null) {
-            return cards.size();
-        }
-        return 0;
+    public int getCardNum() {
+        return cards.size();
     }
 
     @Override
-    public Integer getTicketNum() {
-        if(tickets != null) {
-            return tickets.size();
-        }
-        return 0;
+    public int getTicketNum() {
+        return tickets.size();
     }
 
     public ArrayList<Ticket> getTicketToChoose() {

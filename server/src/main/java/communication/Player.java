@@ -7,13 +7,36 @@ import java.util.ArrayList;
  */
 
 public class Player implements IPlayer{
+
     private String playerName;
-    private Integer point = Integer.valueOf(0);
-    private ArrayList<String> claimedRoutesID = new ArrayList<>();
+    private int trainNum;
+    private int point;
     private GameColor playerColor;
-    private Integer trainNum = Integer.valueOf(0);
+    private ArrayList<String> claimedRoutesID;
 
+    public Player() {
+        playerName = "";
+        trainNum = 40;
+        point = 0;
+        playerColor = GameColor.PLAYER_BLACK;
+        claimedRoutesID = new ArrayList<>();
+    }
 
+    public Player(String playerName) {
+        this.playerName = playerName;
+        trainNum = 40;
+        point = 0;
+        playerColor = GameColor.PLAYER_BLACK;
+        claimedRoutesID = new ArrayList<>();
+    }
+
+    public Player(String playerName, int point, GameColor playerColor) {
+        this.playerName = playerName;
+        trainNum = 40;
+        this.point = point;
+        this.playerColor = playerColor;
+        claimedRoutesID = new ArrayList<>();
+    }
 
     public ArrayList<String> getClaimedRoutes() {
         return claimedRoutesID;
@@ -31,10 +54,7 @@ public class Player implements IPlayer{
         return true;
     }
 
-    public Integer getPoint() {
-        if (point == null) {
-            point = new Integer(0);
-        }
+    public int getPoint() {
         return point;
     }
 
@@ -48,15 +68,6 @@ public class Player implements IPlayer{
 
     public String getPlayerName() {
         return playerName;
-    }
-
-    public Player() {}
-
-    public Player(String playerName) {
-        this.playerName = playerName;
-        trainNum = 40;
-        point = new Integer(0);
-        trainNum = new Integer(0);
     }
 
     public int getTrainNum(){
@@ -75,41 +86,28 @@ public class Player implements IPlayer{
         this.playerColor = playerColor;
     }
 
-    public Integer getCardNum() {
+    public int getCardNum() {
         return 0;
     }
 
-    public Integer getTicketNum() {
+    public int getTicketNum() {
         return 0;
-    }
-
-//    @Override
-//    public String toString() {
-//        return "Player{" +
-//                "playerName='" + playerName + '\'' +
-//                ", point=" + point +
-//                ", tickets=" + tickets +
-//                ", cards=" + cards +
-//                ", claimedRoutesID=" + claimedRoutesID +
-//                ", ticketToChoose=" + ticketToChoose +
-//                ", cardToChoose=" + cardToChoose +
-//                ", ticketNum=" + ticketNum +
-//                ", trainCarNum=" + trainCarNum +
-//                ", cardNum=" + cardNum +
-//                ", playerColor=" + playerColor +
-//                '}';
-//    }
-
-
-    public Player(String playerName, Integer point, GameColor playerColor) {
-        this.playerName = playerName;
-        this.point = point;
-        this.playerColor = playerColor;
     }
 
     @Override
     public PlayerIdentity getIdentity() {
         return PlayerIdentity.PLAYER;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "playerName='" + playerName + '\'' +
+                ", trainNum=" + trainNum +
+                ", point=" + point +
+                ", playerColor=" + playerColor +
+                ", claimedRoutesID=" + claimedRoutesID +
+                '}';
     }
 
 }
