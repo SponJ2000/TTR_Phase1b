@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +41,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
     private TextView mHeader;
 
-    private ImageView[] cardViews;
-    private TextView[] cardText;
+    private Button[] cardButtons;
 
     public static CardSelectFragment newInstance() {
         CardSelectFragment fragment = new CardSelectFragment();
@@ -55,23 +57,23 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
         mPresenter.update();
 
-        cardsToSelect = 0;
+        cardsToSelect = getArguments().getInt("cardsToSelect");
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ticket, container, false);
+        View view = inflater.inflate(R.layout.fragment_card_select, container, false);
 
-        mHeader = view.findViewById(R.id.ticket_header);
+        mHeader = view.findViewById(R.id.card_header);
 
-        cardViews = new ImageView[9];
-        cardText = new TextView[9];
+        cardButtons = new Button[9];
 
         int i = 0;
 
-        cardViews[i] = view.findViewById(R.id.card_orange);
-        cardText[i] = view.findViewById(R.id.orange_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_orange);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(0);
@@ -80,20 +82,19 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_red);
-        cardText[i] = view.findViewById(R.id.red_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_red);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sendToast("This is toast");
                 onSelect(1);
             }
         });
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_green);
-        cardText[i] = view.findViewById(R.id.green_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_green);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(2);
@@ -102,9 +103,8 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_yellow);
-        cardText[i] = view.findViewById(R.id.yellow_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_yellow);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(3);
@@ -113,9 +113,8 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_purple);
-        cardText[i] = view.findViewById(R.id.purple_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_purple);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(4);
@@ -124,9 +123,8 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_blue);
-        cardText[i] = view.findViewById(R.id.blue_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_blue);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(5);
@@ -135,9 +133,8 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_white);
-        cardText[i] = view.findViewById(R.id.white_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_white);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(6);
@@ -146,9 +143,8 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_black);
-        cardText[i] = view.findViewById(R.id.black_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_black);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(7);
@@ -157,9 +153,8 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         i++;
 
-        cardViews[i] = view.findViewById(R.id.card_loc);
-        cardText[i] = view.findViewById(R.id.loco_cards);
-        cardViews[i].setOnClickListener(new View.OnClickListener() {
+        cardButtons[i] = view.findViewById(R.id.card_loco);
+        cardButtons[i].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSelect(8);
@@ -170,6 +165,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
         return view;
     }
+
 
 
     @Override
@@ -191,7 +187,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
     @Override
     public void setHand(int[] hand) {
         for(int i = 0; i < 9; i++) {
-            cardText[i].setText(Integer.toString(hand[i]));
+            cardButtons[i].setText(Integer.toString(hand[i]));
         }
     }
 
@@ -199,6 +195,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
      * Sets the number of cards to choose
      * @param cardsToSelect
      */
+    @Override
     public void setCardsToSelect(int cardsToSelect) {
         this.cardsToSelect = cardsToSelect;
     }
@@ -212,11 +209,25 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
             return;
         }
 
+        String toast = "selected cards " + i;
+
+        sendToast(toast);
+
+        // toUse holds 2 ints
+        // index 0 holds the number of color cards
+        // index 1 holds the number of locmotives
         ArrayList<Integer> toUse = new ArrayList<>();
 
         //Special case for locomotive
         if(i == 8) {
-            int remain = cardsToSelect - Integer.getInteger(cardText[i].toString());
+            if (cardButtons[i] == null) {
+                System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+            }
+            if (cardButtons[i] == null) {
+                System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+            }
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@");
+            int remain = cardsToSelect - Integer.parseInt(cardButtons[i].getText().toString());
             if (remain > 0) {
                 sendToast("Not enough cards: need " + remain + " more");
             }
@@ -226,9 +237,9 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
             }
         }
         else {
-            int colorCards = Integer.getInteger(cardText[i].toString());
+            int colorCards = Integer.parseInt(cardButtons[i].getText().toString());
             int remain = cardsToSelect - colorCards;
-            remain -= Integer.getInteger(cardText[8].toString());
+            remain -= Integer.parseInt(cardButtons[8].getText().toString());
 
             if (remain > 0) {
                 sendToast("Not enough cards: need " + remain + " more");

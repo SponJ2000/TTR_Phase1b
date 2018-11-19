@@ -129,7 +129,7 @@ public class ClientProxy implements IClient {
     }
 
     @Override
-    public void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum) {
+    public void updateTrainDeck(String gameID, List<Card> faceCards, Integer downCardNum) {
         GenericCommand command = new GenericCommand(
                 CLIENT_FACADE
                 , "updateTrainDeck"

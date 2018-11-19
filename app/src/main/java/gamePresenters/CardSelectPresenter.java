@@ -27,6 +27,7 @@ public class CardSelectPresenter implements ICardSelectPresenter {
 
     public CardSelectPresenter(ICardSelectView view, OnBackListener listener, Bundle args) {
         this.view = view;
+        //this.view.setCardsToSelect(args.getInt("cardsToSelect"));
         view.setPresenter(this);
         this.listener = listener;
         model = ModelFacade.getInstance();

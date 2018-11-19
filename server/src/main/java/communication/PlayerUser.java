@@ -58,6 +58,10 @@ public class PlayerUser extends Player implements IPlayer{
         cards.remove(i);
     }
 
+    public void removeFaceUpCardByIndex(int index) {
+        cardToChoose.remove(index);
+    }
+
     public void addCard(Card card) {
         cards.add(card);
     }

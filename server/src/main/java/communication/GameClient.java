@@ -39,6 +39,7 @@ public class GameClient extends Game {
         playerUser = new PlayerUser(userName);
         gameEnded = false;
         playerStatsList = new ArrayList<PlayerStats>();
+        trainCardDeckSize = 0;
     }
 
 
@@ -48,6 +49,15 @@ public class GameClient extends Game {
 
     public void setPlayerOpponents(ArrayList<PlayerOpponent> playerOpponents) {
         this.playerOpponents = playerOpponents;
+    }
+
+    public PlayerOpponent getPlayerOpponentByUsername(String userName) {
+        for(PlayerOpponent p : playerOpponents) {
+            if (p.getPlayerName().equals(userName)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     public PlayerUser getPlayerUser() {

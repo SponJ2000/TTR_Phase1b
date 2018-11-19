@@ -41,237 +41,120 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_orange"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/card_ora" />
-
-                        <TextView
-                            android:id="@+id/orange_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_red"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            app:srcCompat="@drawable/card_red" />
-
-                        <TextView
-                            android:id="@+id/red_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_green"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/card_gre" />
-
-                        <TextView
-                            android:id="@+id/green_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_yellow"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/card_yel" />
-
-                        <TextView
-                            android:id="@+id/yellow_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_purple"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/card_pur" />
-
-                        <TextView
-                            android:id="@+id/purple_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_blue"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/card_blu" />
-
-                        <TextView
-                            android:id="@+id/blue_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="64dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_white"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/card_whi" />
-
-                        <TextView
-                            android:id="@+id/white_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
-
-                        <ImageView
-                            android:id="@+id/card_black"
-                            android:layout_width="match_parent"
-                            android:layout_height="72dp"
-                            android:layout_centerInParent="true"
-                            app:srcCompat="@drawable/card_bla" />
-
-                        <TextView
-                            android:id="@+id/black_cards"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="0"
-                            android:textColor="@color/playerWhiteLight"
-                            android:textSize="25sp" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-
-                <RelativeLayout
-                    android:layout_width="72dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:id="@+id/card_loc"
-                        android:layout_width="64dp"
+                    <Button
+                        android:id="@+id/card_orange"
+                        android:layout_width="53dp"
                         android:layout_height="72dp"
-                        android:layout_centerInParent="true"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/card_loc" />
-
-                    <TextView
-                        android:id="@+id/loco_cards"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_ora"
                         android:text="0"
                         android:textColor="@color/playerWhiteLight"
-                        android:textSize="25dp" />
+                        android:textSize="25sp"/>
 
-                </RelativeLayout>
+                    <Button
+                        android:id="@+id/card_red"
+                        android:layout_width="53dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_red"
+                        android:text="0"
+                        android:textColor="@color/playerWhiteLight"
+                        android:textSize="25sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/card_green"
+                        android:layout_width="53dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_gre"
+                        android:text="0"
+                        android:textColor="@color/playerWhiteLight"
+                        android:textSize="25sp"/>
+
+                    <Button
+                        android:id="@+id/card_yellow"
+                        android:layout_width="53dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_yel"
+                        android:text="0"
+                        android:textColor="@color/playerWhiteLight"
+                        android:textSize="25sp"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/card_purple"
+                        android:layout_width="53dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_pur"
+                        android:text="0"
+                        android:textColor="@color/playerWhiteLight"
+                        android:textSize="25sp"/>
+
+                    <Button
+                        android:id="@+id/card_blue"
+                        android:layout_width="53dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_blu"
+                        android:text="0"
+                        android:textColor="@color/playerWhiteLight"
+                        android:textSize="25sp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/card_white"
+                        android:layout_width="53dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_whi"
+                        android:text="0"
+                        android:textColor="@color/playerWhiteLight"
+                        android:textSize="25sp"/>
+
+                    <Button
+                        android:id="@+id/card_black"
+                        android:layout_width="53dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="3dp"
+                        android:background="@drawable/card_bla"
+                        android:text="0"
+                        android:textColor="@color/playerWhiteLight"
+                        android:textSize="25sp"/>
+
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/card_loco"
+                    android:layout_width="53dp"
+                    android:layout_height="72dp"
+                    android:layout_margin="3dp"
+                    android:background="@drawable/card_loc"
+                    android:text="0"
+                    android:textColor="@color/playerWhiteLight"
+                    android:textSize="25sp"/>
 
             </LinearLayout>
 

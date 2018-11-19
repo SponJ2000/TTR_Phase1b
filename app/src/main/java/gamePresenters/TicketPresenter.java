@@ -35,6 +35,7 @@ public class TicketPresenter implements ITicketPresenter {
             Log.d(TAG, "finish turn");
             model.endTurn();
         }
+//        model.endTurn();
         listener.onBack();
     }
 
