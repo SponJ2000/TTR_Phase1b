@@ -56,7 +56,7 @@ public class GamePresenter implements IGamePresenter {
         view.setPlayer(model.getPlayer());
         if(model.getPlayer() == null) {
             Log.d(TAG, "user is null");
-        }if(model.isMyTurn()) {
+        }if(model.isMyTurn() && !state.getClass().equals(TurnNoSelection.class)) {
             setState(new TurnNoSelection(this));
         }
         if(playerInfoView == null) {
@@ -272,9 +272,11 @@ public class GamePresenter implements IGamePresenter {
         @Override
         void finish(Result result) {
             if(result.isSuccess()) {
-                Log.d(TAG, "finish turn");
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
+                if(actionSelected) {
+                    Log.d(TAG, "finish turn");
+                    model.endTurn();
+                    wrapper.setState(new NotTurn(wrapper));
+                }
             }else {
                 wrapper.sendToast(result.getErrorInfo());
             }
