@@ -223,9 +223,11 @@ public class GamePresenter implements IGamePresenter {
         void finish(Result result) {
             if(result.isSuccess()) {
                 if(isSelectOne) {
+                    Log.d(TAG, "to turnOneCard");
                     wrapper.setState(new TurnOneCard(wrapper));
                     isSelectOne = false;
                 }else {
+                    Log.d(TAG, "finish turn");
                     model.endTurn();
                     wrapper.setState(new NotTurn(wrapper));
                 }
@@ -261,6 +263,7 @@ public class GamePresenter implements IGamePresenter {
         @Override
         void finish(Result result) {
             if(result.isSuccess()) {
+                Log.d(TAG, "finish turn");
                 model.endTurn();
                 wrapper.setState(new NotTurn(wrapper));
             }else {
