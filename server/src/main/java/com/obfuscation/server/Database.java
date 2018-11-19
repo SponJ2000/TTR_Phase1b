@@ -516,6 +516,9 @@ public class Database {
             String playerID = findUsernameByAuthToken(authToken);
             if (playerID != null) {
                 Message messageObject = new Message(playerID, message);
+                if (game.getMessages() == null) {
+                    game.setMessages(new ArrayList<>());
+                }
                 game.getMessages().add(messageObject);
                 return new Result(true, messageObject, null);
             }
@@ -611,7 +614,7 @@ public class Database {
                 }
 
                 //update gameHistory
-                game.getGameHistories().add(new GameHistory(gameID, playerID, "drew " + tickets.size() + " tickets"));
+                game.getGameHistories().add(new GameHistory(gameID, playerID, "drew_" + tickets.size() + "_tickets"));
                 return new Result(true, tickets, null);
             }
 //                //TODO : if the deck size is less then 3?
@@ -745,7 +748,7 @@ public class Database {
                             System.out.println("GEH TE");
                         }
                         game.getPlayerbyUserName(username).getCards().add(card);
-                        game.getGameHistories().add(new GameHistory(gameID, username, "drew train card"));
+                        game.getGameHistories().add(new GameHistory(gameID, username, "drew_train_card"));
                         return new Result(true, card, null);
                     }
                 }
