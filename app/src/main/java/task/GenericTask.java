@@ -7,6 +7,7 @@ import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import communication.Card;
 import communication.GameClient;
 import communication.LobbyGame;
 import communication.Message;
@@ -154,8 +155,8 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             ModelRoot m = ModelRoot.getInstance();
             String userName = m.getUserName();
             if (result.getData() == null) {
-                ArrayList<Ticket> ticketsRecieved = (ArrayList<Ticket>)result.getData();
-                ModelRoot.getInstance().getGame().getPlayerUser().setTickets(ticketsRecieved);
+                Card ticketsRecieved = (Card) result.getData();
+                ModelRoot.getInstance().getGame().getPlayerUser().addCard(ticketsRecieved);
             }
         }
     }
