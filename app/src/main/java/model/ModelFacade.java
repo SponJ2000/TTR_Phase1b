@@ -82,8 +82,8 @@ public class ModelFacade implements IGameModel {
 
 
 
-    public Result claimRoute(Route route, List<Card> cards) {
-        return claimRoute(route, getPlayer(), cards);
+    public void claimRoute(Route route, List<Card> cards) {
+        claimRoute(route, getPlayer(), cards);
     }
 
     public static ModelFacade getInstance() {

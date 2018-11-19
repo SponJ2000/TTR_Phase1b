@@ -105,7 +105,7 @@ public class GamePresenter implements IGamePresenter {
         }
     }
 
-    @Override
+
     public void onChange(Activity activity) {
         switch (changeIndex) {
             case 0:
@@ -146,9 +146,8 @@ public class GamePresenter implements IGamePresenter {
                 Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
 
                 Player player = model.getPlayers().get(ThreadLocalRandom.current().nextInt(0, model.getPlayers().size()));
-                if( model.claimRoute(r, player, null).isSuccess()) {
-                    view.updateRoute(r);
-                }
+                model.claimRoute(r, player, null);
+                view.updateRoute(r);
                 break;
             case 8:
                 if (model.isMyTurn()) {
@@ -288,16 +287,20 @@ public class GamePresenter implements IGamePresenter {
                     cardsToUse = (ArrayList<Card>) list;
                 }
 
-                Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
+                //Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
+                wrapper.getModel().claimRoute(route, player, cardsToUse);
                 actionSelected = true;
 
-                if(result.isSuccess()) {
-                    model.endTurn();
-                    wrapper.setState(new NotTurn(wrapper));
-                }
-                else {
-                    wrapper.sendToast(result.getErrorInfo());
-                }
+                model.endTurn();
+                wrapper.setState(new NotTurn(wrapper));
+
+//                if(result.isSuccess()) {
+//                    model.endTurn();
+//                    wrapper.setState(new NotTurn(wrapper));
+//                }
+//                else {
+//                    wrapper.sendToast(result.getErrorInfo());
+//                }
             }
         }
 
