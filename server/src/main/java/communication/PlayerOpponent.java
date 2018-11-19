@@ -6,11 +6,11 @@ package communication;
 
 public class PlayerOpponent extends Player implements IPlayer{
 
-    private Integer ticketNum;
-    private Integer cardNum;
+    private int ticketNum;
+    private int cardNum;
 
 
-    public PlayerOpponent(String playerName, Integer ticketNum, Integer trainCarNum, Integer cardNum) {
+    public PlayerOpponent(String playerName, int ticketNum, int trainNum, int cardNum) {
         super(playerName);
         this.ticketNum = ticketNum;
         this.cardNum = cardNum;
@@ -26,12 +26,12 @@ public class PlayerOpponent extends Player implements IPlayer{
     }
 
     @Override
-    public Integer getTicketNum() {
+    public int getTicketNum() {
         return ticketNum;
     }
 
     @Override
-    public Integer getCardNum() {
+    public int getCardNum() {
         return cardNum;
     }
 
@@ -39,4 +39,5 @@ public class PlayerOpponent extends Player implements IPlayer{
     public PlayerIdentity getIdentity() {
         return PlayerIdentity.OPPONENT;
     }
+
 }

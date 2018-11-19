@@ -32,10 +32,11 @@ import gamePresenters.ITicketPresenter;
 public class TicketFragment extends Fragment implements ITicketView {
 
     private static final String TAG = "TicketFrag";
+    private static final String ARG_PARAM1 = "param1";
 
     private ITicketPresenter mPresenter;
 
-    private boolean mIsTurn;
+    private boolean mIsGameSetup;
     private List<Ticket> mTickets;
     private boolean[] mChosenTickets;
 
@@ -49,14 +50,24 @@ public class TicketFragment extends Fragment implements ITicketView {
     }
 
 
-    public static TicketFragment newInstance() {
+    public static TicketFragment newInstance(String isGameSetup) {
         TicketFragment fragment = new TicketFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, isGameSetup);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mIsGameSetup = false;
+        if (getArguments() != null) {
+            String arg1 = getArguments().getString(ARG_PARAM1);
+            if(arg1.equals("t")) {
+                mIsGameSetup = true;
+            }
+        }
     }
 
     @Override
@@ -69,6 +80,9 @@ public class TicketFragment extends Fragment implements ITicketView {
         View view = inflater.inflate(R.layout.fragment_ticket, container, false);
 
         mHeader = (TextView) view.findViewById(R.id.ticket_header);
+        if(mIsGameSetup) {
+            mHeader.setText("Choose at Least 2");
+        }
 
         mDoneButton = (Button) view.findViewById(R.id.ticket_done_button);
         mDoneButton.setOnClickListener(new View.OnClickListener() {
@@ -108,9 +122,9 @@ public class TicketFragment extends Fragment implements ITicketView {
                 ++chosen;
             }
         }
-        if(!mIsTurn && chosen >= 2) {
+        if(mIsGameSetup && chosen >= 2) {
             mDoneButton.setEnabled(true);
-        }else if(mIsTurn && chosen >= 1) {
+        }else if(!mIsGameSetup && chosen >= 1) {
             mDoneButton.setEnabled(true);
         }else {
             mDoneButton.setEnabled(false);
@@ -123,8 +137,8 @@ public class TicketFragment extends Fragment implements ITicketView {
     }
 
     @Override
-    public void setIsTurn(boolean isTurn) {
-        mIsTurn = isTurn;
+    public boolean isGameSetup() {
+        return mIsGameSetup;
     }
 
     @Override
@@ -134,12 +148,6 @@ public class TicketFragment extends Fragment implements ITicketView {
             Log.d(TAG+"_updateUI", "ticketlist: " + mTickets);
             mTicketAdapter = new TicketAdapter(mTickets);
             mTicketRecycler.setAdapter(mTicketAdapter);
-        }
-        if(mIsTurn) {
-            if (mHeader != null) {
-                mHeader.setText("Choose at least 1");
-                changeAccessibility();
-            }
         }
     }
 

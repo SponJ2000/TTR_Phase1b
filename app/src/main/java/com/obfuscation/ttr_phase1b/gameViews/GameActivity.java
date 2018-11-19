@@ -2,10 +2,10 @@ package com.obfuscation.ttr_phase1b.gameViews;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.R;
@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         Fragment fragment = fm.findFragmentById(R.id.container);
 
         if (fragment == null) {
-            fragment = TicketFragment.newInstance();
+            fragment = TicketFragment.newInstance("t");
             PresenterFacade.getInstance().setPresenter(new TicketPresenter((ITicketView) fragment, this));
 
             fm.beginTransaction().add(R.id.container, fragment).commit();
@@ -60,7 +60,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
             case tickets:
-                fragment = TicketFragment.newInstance();
+                fragment = TicketFragment.newInstance("f");
                 PresenterFacade.getInstance().setPresenter( new TicketPresenter((ITicketView) fragment, this) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;

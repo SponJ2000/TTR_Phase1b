@@ -29,7 +29,12 @@ public class TicketPresenter implements ITicketPresenter {
 
     @Override
     public void onFinish(List<Ticket> tickets) {
+        Log.d(TAG, "onFinish: " + tickets);
         model.chooseTickets(tickets);
+        if(!view.isGameSetup()) {
+            Log.d(TAG, "ending turn");
+            model.endTurn();
+        }
         listener.onBack();
     }
 
@@ -37,7 +42,6 @@ public class TicketPresenter implements ITicketPresenter {
     public void updateInfo(Object result) {
         Log.d(TAG, "updating info: " + model.getChoiceTickets());
         view.setTickets(model.getChoiceTickets());
-        view.setIsTurn(model.isMyTurn());
         view.updateUI();
     }
 

@@ -80,10 +80,7 @@ public class ModelFacade implements IGameModel {
 //        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
     }
 
-    @Override
-    public Result claimRoute(Route route, Player player, List<Card> cards) {
-        return null;
-    }
+
 
     public Result claimRoute(Route route, List<Card> cards) {
         return claimRoute(route, getPlayer(), cards);
@@ -174,6 +171,26 @@ public class ModelFacade implements IGameModel {
 //    }
 
     @Override
+    public void claimRoute(Route route, Player player, List<Card> cards) {
+        System.out.println("come to claim route");
+        GenericTask genericTask = new GenericTask("ClaimRoute");
+        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
+        PlayerUser p = (PlayerUser) player;
+        System.out.println("there is cards amount: ");
+        System.out.println(cards.size());
+        for(Card card : cards ) {
+            p.useCards(card.getColor(), 1);
+        }
+
+        p.addRouteAsClaimed(route.getRouteID());
+        route.setClaimedBy(player);
+        Player pa = route.getClaimedBy();
+        if (pa.getPlayerName().equals( player.getPlayerName())) {
+            System.out.println("route claimed by this user");
+        }
+    }
+
+    @Override
     public void sendMessage(Message message) {
         GenericTask genericTask = new GenericTask("SendMessage");
         genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), message);
@@ -181,6 +198,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void endTurn() {
+        System.out.println("end turn called");
         GenericTask genericTask = new GenericTask("EndTurn");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
 
@@ -273,7 +291,6 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void chooseCard(int index) {
-
 //        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(index);
         GenericTask genericTask = new GenericTask("DrawTrainCard");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), index, ModelRoot.getInstance().getAuthToken());
@@ -315,6 +332,9 @@ public class ModelFacade implements IGameModel {
         if (getCurrentGame().getTurnUser() == null) {
             return false;
         }
+
+        System.out.println("it is " + getCurrentGame().getTurnUser() +  " turn");
+
         return getCurrentGame().getTurnUser().equals(getUserName());
     }
 

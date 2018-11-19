@@ -12,6 +12,6 @@ public interface ITicketView extends IView {
 
     void setTickets(List<Ticket> tickets);
 
-    void setIsTurn(boolean isTurn);
+    boolean isGameSetup();
 
 }

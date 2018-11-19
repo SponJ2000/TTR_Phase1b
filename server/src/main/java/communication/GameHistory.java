@@ -43,6 +43,6 @@ public class GameHistory {
     }
 
     public String toString() {
-        return playerName + " " + action;
+        return playerName + "_" + action;
     }
 }

@@ -165,6 +165,7 @@ public class ServerProxy implements communication.IServer {
 
     @Override
     public Result EndTurn(String gameID, String authToken) {
+        System.out.println("call server to end turn");
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "EndTurn", new String[]{STRING,STRING}, new Object[]{gameID, authToken});
         return RunCommand(genericCommand);
     }

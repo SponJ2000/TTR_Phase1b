@@ -516,6 +516,9 @@ public class Database {
             String playerID = findUsernameByAuthToken(authToken);
             if (playerID != null) {
                 Message messageObject = new Message(playerID, message);
+                if (game.getMessages() == null) {
+                    game.setMessages(new ArrayList<>());
+                }
                 game.getMessages().add(messageObject);
                 return new Result(true, messageObject, null);
             }
@@ -611,7 +614,7 @@ public class Database {
                 }
 
                 //update gameHistory
-                game.getGameHistories().add(new GameHistory(gameID, playerID, "drew " + tickets.size() + " tickets"));
+                game.getGameHistories().add(new GameHistory(gameID, playerID, "drew_" + tickets.size() + "_tickets"));
                 return new Result(true, tickets, null);
             }
 //                //TODO : if the deck size is less then 3?
@@ -673,7 +676,7 @@ public class Database {
                     p.addPoint(routeScores.get(claimedRoute.getLength()));
 
                     //update game history
-                    gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed " + routeID + " routes"));
+                    gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed_" + routeID + "_routes"));
                     return new Result(true, true, null);
                 }
 
@@ -733,7 +736,7 @@ public class Database {
                                         putDiscardToCardDeck(game);
                                     }
                                     Card newCard = game.getTrainCards().get(0);
-                                    faceUpTrainCards.add(card);
+                                    faceUpTrainCards.add(newCard);
                                     game.getTrainCards().remove(0);
                                 }
                                 game.getDiscardDeck().addAll(game.getFaceUpTrainCarCards());
@@ -745,7 +748,7 @@ public class Database {
                             System.out.println("GEH TE");
                         }
                         game.getPlayerbyUserName(username).getCards().add(card);
-                        game.getGameHistories().add(new GameHistory(gameID, username, "drew train card"));
+                        game.getGameHistories().add(new GameHistory(gameID, username, "drew_train_card"));
                         return new Result(true, card, null);
                     }
                 }

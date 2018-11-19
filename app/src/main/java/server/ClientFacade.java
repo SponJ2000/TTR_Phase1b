@@ -17,6 +17,7 @@ import communication.Player;
 import communication.PlayerOpponent;
 import communication.PlayerStats;
 import communication.PlayerUser;
+import communication.Route;
 import communication.Serializer;
 import communication.Ticket;
 import communication.GameColor;
@@ -207,9 +208,14 @@ public class ClientFacade implements IClient{
 
     @Override
     public void claimRoute(String gameID, String playerID, String routeID) {
+        System.out.println("claimed route with id" + routeID);
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             ((Player)g.getPlayerByUserName(playerID)).addRouteAsClaimed(routeID);
+            Route r = g.getmMap().getRouteByRouteId(routeID);
+            if (r != null) {
+                r.setClaimedBy(((Player)g.getPlayerByUserName(playerID)));
+            }
         }
     }
 
@@ -264,7 +270,16 @@ public class ClientFacade implements IClient{
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.setTurnUser(userName);
-            System.out.println("set game turn");
+
+            System.out.println("set game turn to " + userName);
+
+            if (userName.equals(ModelRoot.getInstance().getUserName())) {
+                System.out.println("set to the turn of user");
+
+            }
+            else {
+                System.out.println("set to other user turn");
+            }
         }
     }
 }

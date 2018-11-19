@@ -52,25 +52,24 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
-        view.setPlayer(model.getPlayer());
-        if (model.getPlayer() == null) {
-            Log.d(TAG, "user is null");
+        if(result != null && result.getClass().equals(Result.class)) {
+            state.finish((Result) result);
         }
-        else {
-            if (model.getPlayer().getPoint() ==null) {
-                Log.d(TAG, "point is null");
-            }
-        }if(model.isMyTurn()) {
+        view.setPlayer(model.getPlayer());
+        if(model.getPlayer() == null) {
+            Log.d(TAG, "user is null");
+        }if(model.isMyTurn() && !state.getClass().equals(TurnNoSelection.class)) {
             setState(new TurnNoSelection(this));
         }
-        view.setTurn(model.isMyTurn());
-        view.setDeckSize(model.getDeckSize());
-        view.setCards(model.getCards());
-        view.setFaceCards(model.getFaceCards());
-        view.setMap(model.getMap());
-        view.setTickets(model.getTickets());
-        view.updateUI();
-        if(playerInfoView != null) {
+        if(playerInfoView == null) {
+            view.setTurn(model.isMyTurn());
+            view.setDeckSize(model.getDeckSize());
+            view.setCards(model.getCards());
+            view.setFaceCards(model.getFaceCards());
+            view.setMap(model.getMap());
+            view.setTickets(model.getTickets());
+            view.updateUI();
+        }else {
             playerInfoView.setPlayers(model.getPlayers());
             playerInfoView.updateUI();
         }
@@ -89,17 +88,7 @@ public class GamePresenter implements IGamePresenter {
     }
 
     @Override
-    public GameMap getMap() {
-        return model.getMap();
-    }
-
-    @Override
     public void claimRoute(Route route, Player player) {
-//        Result r = model.claimRoute(mRoute, mPlayer);
-//        if(r.isSuccess()) {
-//            view.updateRoute(mRoute);
-//        }
-
         state.claimRoute(route, player);
     }
 
@@ -191,7 +180,6 @@ public class GamePresenter implements IGamePresenter {
     public void chooseCard(int index) {
 //        model.chooseCard(index);
         if (index == -1) {
-
             state.selectDeck();
         }
         else {
@@ -210,7 +198,6 @@ public class GamePresenter implements IGamePresenter {
 
     public void selectTickets() {
         state.selectTicketsButton();
-        //this.listener.onShow(Shows.tickets);
     }
 
     public void showChat() {
@@ -223,16 +210,18 @@ public class GamePresenter implements IGamePresenter {
     }
 
 
+
     class ITurnState {
         void selectFaceUp(int index){}
         void selectDeck(){}
         void selectTicketsButton(){}
         void claimRoute(Route route, Player player){}
+        void finish(Result result){}
     }
 
     class NotTurn extends ITurnState {
         private GamePresenter wrapper;
-        public NotTurn(GamePresenter wrapper) {
+        NotTurn(GamePresenter wrapper) {
             this.wrapper = wrapper;
         }
     }
@@ -240,45 +229,50 @@ public class GamePresenter implements IGamePresenter {
     class TurnNoSelection extends ITurnState {
 
         private GamePresenter wrapper;
+        private boolean isSelectOne;
+        private boolean actionSelected;
 
-        public TurnNoSelection(GamePresenter wrapper) {
+        TurnNoSelection(GamePresenter wrapper) {
             this.wrapper = wrapper;
+            isSelectOne = false;
+            actionSelected = false;
         }
 
         @Override
-        public void selectFaceUp(int index) {
+        void selectFaceUp(int index) {
             if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
+                Log.d(TAG, "selectFaceUp locomotive");
                 wrapper.getModel().chooseCard(index);
-                wrapper.getModel().endTurn();
-                wrapper.setState(new NotTurn(wrapper));
+                actionSelected = true;
             }
             else {
+                Log.d(TAG, "selectFaceUp " + model.checkCard(index));
                 wrapper.getModel().chooseCard(index);
-                wrapper.setState(new TurnOneCard(wrapper));
+                isSelectOne = true;
             }
         }
 
         @Override
-        public void selectDeck() {
+        void selectDeck() {
             wrapper.getModel().chooseCard(-1);
-            wrapper.setState(new TurnOneCard(wrapper));
+            isSelectOne = true;
         }
 
         @Override
         public void selectTicketsButton() {
             listener.onShow(Shows.tickets, null);
             wrapper.setState(new NotTurn(wrapper));
+            actionSelected = true;
 //            wrapper.setState(new TurnNoTickets(wrapper));
         }
 
         @Override
         public void claimRoute(Route route, Player player) {
-            //Check if a mPlayer has sufficient cards
+            //Check if a player has sufficient cards
 
             Object list = wrapper.getModel().checkRouteCanClaim(route.getColor(), route.getLength());
 
             if (list instanceof String) {
-
                 wrapper.sendToast((String) list);
             }
             else {
@@ -295,6 +289,7 @@ public class GamePresenter implements IGamePresenter {
                 }
 
                 Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
+                actionSelected = true;
 
                 if(result.isSuccess()) {
                     model.endTurn();
@@ -305,14 +300,33 @@ public class GamePresenter implements IGamePresenter {
                 }
             }
         }
+
+        @Override
+        void finish(Result result) {
+            if(result.isSuccess()) {
+                if(isSelectOne) {
+                    Log.d(TAG, "to turnOneCard");
+                    wrapper.setState(new TurnOneCard(wrapper));
+                    isSelectOne = false;
+                }else if(actionSelected) {
+                    Log.d(TAG, "finish turn");
+                    model.endTurn();
+                    wrapper.setState(new NotTurn(wrapper));
+                }
+            }else {
+                wrapper.sendToast(result.getErrorInfo());
+            }
+        }
     }
 
     class TurnOneCard extends ITurnState {
 
         private GamePresenter wrapper;
+        private boolean actionSelected;
 
         public TurnOneCard(GamePresenter wrapper) {
             this.wrapper = wrapper;
+            actionSelected = false;
         }
 
         @Override
@@ -322,14 +336,27 @@ public class GamePresenter implements IGamePresenter {
             }
             else {
                 wrapper.getModel().chooseCard(index);
-                wrapper.setState(new TurnOneCard(wrapper));
+                actionSelected = true;
             }
         }
 
         @Override
         public void selectDeck() {
             wrapper.getModel().chooseCard(-1);
-            wrapper.setState(new TurnOneCard(wrapper));
+            actionSelected = true;
+        }
+
+        @Override
+        void finish(Result result) {
+            if(result.isSuccess()) {
+                if(actionSelected) {
+                    Log.d(TAG, "finish turn");
+                    model.endTurn();
+                    wrapper.setState(new NotTurn(wrapper));
+                }
+            }else {
+                wrapper.sendToast(result.getErrorInfo());
+            }
         }
     }
 
