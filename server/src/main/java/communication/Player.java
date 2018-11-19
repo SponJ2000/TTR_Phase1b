@@ -54,9 +54,8 @@ public class Player implements IPlayer{
 
     public Player(String playerName) {
         this.playerName = playerName;
-        trainNum = 40;
         point = new Integer(0);
-        trainNum = new Integer(0);
+        trainNum = new Integer(40);
     }
 
     public int getTrainNum(){
