@@ -56,7 +56,7 @@ public class GamePresenter implements IGamePresenter {
         view.setPlayer(model.getPlayer());
         if(model.getPlayer() == null) {
             Log.d(TAG, "user is null");
-        }if(model.isMyTurn() && !state.getClass().equals(TurnNoSelection.class)) {
+        }if(model.isMyTurn() && state.getClass().equals(NotTurn.class)) {
             setState(new TurnNoSelection(this));
         }
         if(playerInfoView == null) {
@@ -175,13 +175,13 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         void selectFaceUp(int index) {
-            if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
+            Log.d(TAG, "selectFaceUp: " + wrapper.getModel().checkCard(index));
+            if (wrapper.getModel().checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 Log.d(TAG, "selectFaceUp locomotive");
                 wrapper.getModel().chooseCard(index);
                 actionSelected = true;
             }
             else {
-                Log.d(TAG, "selectFaceUp " + model.checkCard(index));
                 wrapper.getModel().chooseCard(index);
                 isSelectOne = true;
             }
@@ -254,7 +254,8 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectFaceUp(int index) {
-            if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
+            Log.d(TAG, "selectFaceUp: " + wrapper.getModel().checkCard(index));
+            if (wrapper.getModel().checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 wrapper.sendToast("You can't select a locomotive card as your second choice.");
             }
             else {

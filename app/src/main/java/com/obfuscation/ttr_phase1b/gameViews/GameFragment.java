@@ -175,6 +175,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mPresenter.updateInfo(true);
 
+        Log.d(TAG, "onCreateView: done setup");
+        
         return rootView;
     }
 
@@ -324,6 +326,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mFaceCardViews[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: " + mFaceCards.get(0).getColor());
                 mPresenter.chooseCard(0);
             }
         });
@@ -332,6 +335,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mFaceCardViews[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: " + mFaceCards.get(1).getColor());
                 mPresenter.chooseCard(1);
             }
         });
@@ -340,6 +344,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mFaceCardViews[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: " + mFaceCards.get(2).getColor());
                 mPresenter.chooseCard(2);
             }
         });
@@ -348,6 +353,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mFaceCardViews[3].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: " + mFaceCards.get(3).getColor());
                 mPresenter.chooseCard(3);
             }
         });
@@ -356,6 +362,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mFaceCardViews[4].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: " + mFaceCards.get(4).getColor());
                 mPresenter.chooseCard(4);
             }
         });
