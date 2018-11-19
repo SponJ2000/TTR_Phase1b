@@ -1,6 +1,8 @@
 package model;
 
 
+import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -100,6 +102,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public int getDeckSize() {
+        System.out.println("the decksize is: " + ModelRoot.getInstance().getGame().getTrainCardDeckSize() );
         return ModelRoot.getInstance().getGame().getTrainCardDeckSize();
     }
 
@@ -173,21 +176,21 @@ public class ModelFacade implements IGameModel {
     @Override
     public void claimRoute(Route route, Player player, List<Card> cards) {
         System.out.println("come to claim route");
-        GenericTask genericTask = new GenericTask("ClaimRoute");
-        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
         PlayerUser p = (PlayerUser) player;
         System.out.println("there is cards amount: ");
         System.out.println(cards.size());
         for(Card card : cards ) {
             p.useCards(card.getColor(), 1);
         }
-
         p.addRouteAsClaimed(route.getRouteID());
         route.setClaimedBy(player);
         Player pa = route.getClaimedBy();
         if (pa.getPlayerName().equals( player.getPlayerName())) {
             System.out.println("route claimed by this user");
         }
+        GenericTask genericTask = new GenericTask("ClaimRoute");
+        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
+
     }
 
     @Override
@@ -293,6 +296,10 @@ public class ModelFacade implements IGameModel {
     @Override
     public void chooseCard(int index) {
 //        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(index);
+        if(index >= 0) {
+            getCurrentGame().removeFaceUpTrainCarCardsByIndex(index);
+            PresenterFacade.getInstance().updatePresenter(new Result(true, null, null));
+        }
         GenericTask genericTask = new GenericTask("DrawTrainCard");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), index, ModelRoot.getInstance().getAuthToken());
     }

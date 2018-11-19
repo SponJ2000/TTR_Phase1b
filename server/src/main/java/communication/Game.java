@@ -59,6 +59,9 @@ public class Game {
         this.faceUpTrainCarCards = faceUpTrainCarCards;
     }
 
+    public void removeFaceUpTrainCarCardsByIndex(int index) {
+        faceUpTrainCarCards.remove(index);
+    }
     public GameMap getmMap() {
         return mMap;
     }

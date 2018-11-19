@@ -14,4 +14,6 @@ public interface ICardSelectView extends IView {
      */
     void setHand(int[] hand);
 
+    void setCardsToSelect(int cardsToSelect);
+
 }
