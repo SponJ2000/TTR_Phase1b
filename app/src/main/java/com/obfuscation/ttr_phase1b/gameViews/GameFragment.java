@@ -134,6 +134,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mTicketsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "selecting tickets");
                 mPresenter.selectTickets();
             }
         });
@@ -608,8 +609,6 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
     }
 
     @Override

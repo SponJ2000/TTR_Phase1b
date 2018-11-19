@@ -165,10 +165,12 @@ public class GamePresenter implements IGamePresenter {
 
         private GamePresenter wrapper;
         private boolean isSelectOne;
+        private boolean actionSelected;
 
         TurnNoSelection(GamePresenter wrapper) {
             this.wrapper = wrapper;
             isSelectOne = false;
+            actionSelected = false;
         }
 
         @Override
@@ -176,6 +178,7 @@ public class GamePresenter implements IGamePresenter {
             if (wrapper.getModel().checkCard(index) == GameColor.LOCOMOTIVE) {
                 Log.d(TAG, "selectFaceUp locomotive");
                 wrapper.getModel().chooseCard(index);
+                actionSelected = true;
             }
             else {
                 Log.d(TAG, "selectFaceUp " + model.checkCard(index));
@@ -194,6 +197,7 @@ public class GamePresenter implements IGamePresenter {
         void selectTicketsButton() {
             listener.onShow(Shows.tickets);
             wrapper.setState(new NotTurn(wrapper));
+            actionSelected = true;
 //            wrapper.setState(new TurnNoTickets(wrapper));
         }
 
@@ -216,6 +220,7 @@ public class GamePresenter implements IGamePresenter {
                 }
 
                 wrapper.getModel().claimRoute(route, player, cardsToUse);
+                actionSelected = true;
             }
         }
 
@@ -226,7 +231,7 @@ public class GamePresenter implements IGamePresenter {
                     Log.d(TAG, "to turnOneCard");
                     wrapper.setState(new TurnOneCard(wrapper));
                     isSelectOne = false;
-                }else {
+                }else if(actionSelected) {
                     Log.d(TAG, "finish turn");
                     model.endTurn();
                     wrapper.setState(new NotTurn(wrapper));
@@ -240,9 +245,11 @@ public class GamePresenter implements IGamePresenter {
     class TurnOneCard extends ITurnState {
 
         private GamePresenter wrapper;
+        private boolean actionSelected;
 
         public TurnOneCard(GamePresenter wrapper) {
             this.wrapper = wrapper;
+            actionSelected = false;
         }
 
         @Override
@@ -252,12 +259,14 @@ public class GamePresenter implements IGamePresenter {
             }
             else {
                 wrapper.getModel().chooseCard(index);
+                actionSelected = true;
             }
         }
 
         @Override
         public void selectDeck() {
             wrapper.getModel().chooseCard(-1);
+            actionSelected = true;
         }
 
         @Override
