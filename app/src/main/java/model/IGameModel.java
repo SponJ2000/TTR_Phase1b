@@ -33,6 +33,8 @@ public interface IGameModel {
      */
     Result claimRoute(Route route, Player player, List<Card> cards);
 
+    Result claimRoute(Route route, List<Card> cards);
+
     void updateTickets();
 
     void updateChoiceTickets();

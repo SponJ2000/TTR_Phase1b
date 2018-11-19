@@ -11,18 +11,20 @@ import android.util.Log;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
+import gamePresenters.CardSelectPresenter;
 import gamePresenters.ChatPresenter;
 import gamePresenters.GamePresenter;
+import gamePresenters.ICardSelectPresenter;
 import gamePresenters.IChatPresenter;
 import gamePresenters.IGamePresenter;
 import gamePresenters.IMenuPresenter;
 import gamePresenters.ITicketPresenter;
-import gamePresenters.MenuPresenter;
 import gamePresenters.Shows;
 import gamePresenters.TicketPresenter;
 
 public class GameActivity extends AppCompatActivity implements IGamePresenter.OnShowListener,
-        IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener, IMenuPresenter.MenuListener {
+        IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener,
+        ICardSelectPresenter.OnBackListener, IMenuPresenter.MenuListener {
 
     private static final String TAG = "GameActivity";
 
@@ -48,7 +50,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
     }
 
     @Override
-    public void onShow(Shows show) {
+    public void onShow(Shows show, Bundle args) {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment;
         switch (show) {
@@ -70,6 +72,11 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
             case map:
                 fragment = GameFragment.newInstance();
                 PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
+            case cardSelect:
+                fragment = CardSelectFragment.newInstance();
+                PresenterFacade.getInstance().setPresenter( new CardSelectPresenter((ICardSelectView) fragment, this, args) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
         }

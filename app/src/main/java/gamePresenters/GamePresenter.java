@@ -1,6 +1,7 @@
 package gamePresenters;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,7 +20,6 @@ import communication.Player;
 import communication.Result;
 import communication.Route;
 import communication.Ticket;
-import model.FakeModel;
 import model.IGameModel;
 import model.ModelFacade;
 
@@ -95,9 +95,9 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void claimRoute(Route route, Player player) {
-//        Result r = model.claimRoute(route, player);
+//        Result r = model.claimRoute(mRoute, mPlayer);
 //        if(r.isSuccess()) {
-//            view.updateRoute(route);
+//            view.updateRoute(mRoute);
 //        }
 
         state.claimRoute(route, player);
@@ -106,7 +106,7 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void showPlayerInfo(IPlayerInfoView view) {
         if(view == null) {
-            this.listener.onShow(Shows.playerInfo);
+            this.listener.onShow(Shows.playerInfo, null);
         }else {
             Log.d(TAG, "showPlayerInfo: " + model.getPlayers());
             playerInfoView = view;
@@ -120,7 +120,7 @@ public class GamePresenter implements IGamePresenter {
     public void onChange(Activity activity) {
         switch (changeIndex) {
             case 0:
-                Toast.makeText(activity, "update player points", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "update mPlayer points", Toast.LENGTH_SHORT).show();
                 model.addPoints(8);
                 break;
             case 1:
@@ -152,7 +152,7 @@ public class GamePresenter implements IGamePresenter {
                 model.updateFaceCards();
                 break;
             case 7:
-                Toast.makeText(activity, "add claimed route", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, "add claimed mRoute", Toast.LENGTH_SHORT).show();
                 List<Route> routes = model.getMap().getRoutes();
                 Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
 
@@ -201,11 +201,11 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void onBack() {
-        this.listener.onShow(Shows.map);
+        this.listener.onShow(Shows.map, null);
     }
 
     public void showMenu() {
-        this.listener.onShow(Shows.menu);
+        this.listener.onShow(Shows.menu, null);
     }
 
     public void selectTickets() {
@@ -214,17 +214,12 @@ public class GamePresenter implements IGamePresenter {
     }
 
     public void showChat() {
-        this.listener.onShow(Shows.chat);
+        this.listener.onShow(Shows.chat, null);
     }
 
     @Override
     public void sendToast(String toast) {
         view.sendToast(toast);
-    }
-
-    @Override
-    public List<Card> playerChooseCards(int length) {
-        return null;
     }
 
 
@@ -271,14 +266,14 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectTicketsButton() {
-            listener.onShow(Shows.tickets);
+            listener.onShow(Shows.tickets, null);
             wrapper.setState(new NotTurn(wrapper));
 //            wrapper.setState(new TurnNoTickets(wrapper));
         }
 
         @Override
         public void claimRoute(Route route, Player player) {
-            //Check if a player has sufficient cards
+            //Check if a mPlayer has sufficient cards
 
             Object list = wrapper.getModel().checkRouteCanClaim(route.getColor(), route.getLength());
 
@@ -289,7 +284,11 @@ public class GamePresenter implements IGamePresenter {
             else {
                 ArrayList<Card> cardsToUse;
                 if (route.getColor() == GameColor.GREY) {
-                    cardsToUse = (ArrayList<Card>) wrapper.playerChooseCards(route.getLength());
+                    Bundle args = new Bundle();
+                    args.putSerializable("route", route);
+                    listener.onShow(Shows.cardSelect, args);
+                    wrapper.setState(new NotTurn(wrapper));
+                    return;
                 }
                 else {
                     cardsToUse = (ArrayList<Card>) list;
@@ -297,15 +296,14 @@ public class GamePresenter implements IGamePresenter {
 
                 Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
 
-                //TODO: if successful, set NotTurn; if not send error toast
-
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
+                if(result.isSuccess()) {
+                    model.endTurn();
+                    wrapper.setState(new NotTurn(wrapper));
+                }
+                else {
+                    wrapper.sendToast(result.getErrorInfo());
+                }
             }
-
-
-
-
         }
     }
 

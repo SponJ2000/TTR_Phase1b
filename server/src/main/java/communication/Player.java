@@ -1,12 +1,13 @@
 package communication;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by jalton on 10/1/18.
  */
 
-public class Player implements IPlayer{
+public class Player implements IPlayer, Serializable{
     private String playerName;
     private Integer point = Integer.valueOf(0);
     private ArrayList<String> claimedRoutesID = new ArrayList<>();

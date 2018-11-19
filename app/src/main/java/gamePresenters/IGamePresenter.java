@@ -1,14 +1,11 @@
 package gamePresenters;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
-import java.util.List;
-
-import communication.Card;
-import communication.GameColor;
 import communication.GameMap;
 import communication.Player;
 import communication.Route;
@@ -43,15 +40,7 @@ public interface IGamePresenter extends IPresenter{
      * activity.
      */
     interface OnShowListener {
-        void onShow(Shows show);
+        void onShow(Shows show, Bundle args);
     }
-
-    /**
-     * Sends a request to the view to let the player choose a number of cards equal to length in
-     * order to claim a grey route.
-     * @param length
-     * @return
-     */
-    List<Card> playerChooseCards(int length);
 
 }
