@@ -448,6 +448,7 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result EndTurn(String gameID, String authToken) {
+        System.out.println("get end turn command");
         // Ending turn
         try {
             //if last player of last round ended, end the game
@@ -471,8 +472,9 @@ public class ServerFacade implements IServer {
 
             gameServer.moveToNextTurn();
             for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                System.out.println("CURRENT PLAYER " + gameServer.getCurrentPlayer());
                 clientProxy.updateTurns(gameID, gameServer.getCurrentPlayer());
-
+                String temp = gameServer.getCurrentPlayer();
                 //update game history here
                 clientProxy.updateGameHistory(gameID, gameServer.getGameHistories());
             }

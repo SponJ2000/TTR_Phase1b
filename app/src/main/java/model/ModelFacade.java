@@ -168,15 +168,22 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void claimRoute(Route route, Player player, List<Card> cards) {
+        System.out.println("come to claim route");
         GenericTask genericTask = new GenericTask("ClaimRoute");
         genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
         PlayerUser p = (PlayerUser) player;
+        System.out.println("there is cards amount: ");
+        System.out.println(cards.size());
         for(Card card : cards ) {
             p.useCards(card.getColor(), 1);
         }
 
         p.addRouteAsClaimed(route.getRouteID());
-
+        route.setClaimedBy(player);
+        Player pa = route.getClaimedBy();
+        if (pa.getPlayerName().equals( player.getPlayerName())) {
+            System.out.println("route claimed by this user");
+        }
     }
 
     @Override
@@ -187,6 +194,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void endTurn() {
+        System.out.println("end turn called");
         GenericTask genericTask = new GenericTask("EndTurn");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
     }
@@ -318,6 +326,9 @@ public class ModelFacade implements IGameModel {
         if (getCurrentGame().getTurnUser() == null) {
             return false;
         }
+
+        System.out.println("it is " + getCurrentGame().getTurnUser() +  " turn");
+
         return getCurrentGame().getTurnUser().equals(getUserName());
     }
 

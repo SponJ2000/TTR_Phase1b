@@ -32,4 +32,13 @@ public class GameMap {
         r.setClaimedBy(player);
         r.setColor(player.getPlayerColor());
     }
+
+    public Route getRouteByRouteId(String routeID) {
+        for(Route r: routes) {
+            if (r.getRouteID().equals(routeID)) {
+                return r;
+            }
+        }
+        return null;
+    }
 }

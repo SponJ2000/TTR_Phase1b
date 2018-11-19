@@ -676,7 +676,7 @@ public class Database {
                     p.addPoint(routeScores.get(claimedRoute.getLength()));
 
                     //update game history
-                    gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed " + routeID + " routes"));
+                    gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed_" + routeID + "_routes"));
                     return new Result(true, true, null);
                 }
 

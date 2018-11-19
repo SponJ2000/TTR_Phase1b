@@ -108,6 +108,9 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
             case "ClaimRoute":
                 OnClaimRoute(result);
                 break;
+            case "EndTurn":
+                OnTurnEnd(result);
+                break;
             default:
                 break;
         }
@@ -160,9 +163,10 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         if (result.isSuccess()) {
             ModelRoot m = ModelRoot.getInstance();
             String userName = m.getUserName();
-            if (result.getData() == null) {
+            if (result.getData() != null) {
                 Card ticketsRecieved = (Card) result.getData();
                 ModelRoot.getInstance().getGame().getPlayerUser().addCard(ticketsRecieved);
+                System.out.println("added card to user");
             }
         }
     }
@@ -183,6 +187,15 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     private void OnClaimRoute(Result result) {
         if (result.isSuccess()) {
 
+        }
+    }
+
+    private void OnTurnEnd(Result result) {
+        if (result.isSuccess()) {
+            System.out.println("ended user turn");
+        }
+        else {
+            System.out.println("user turn ending failed");
         }
     }
 }
