@@ -31,7 +31,10 @@ public class TicketPresenter implements ITicketPresenter {
     public void onFinish(List<Ticket> tickets) {
         Log.d(TAG, "onFinish: " + tickets);
         model.chooseTickets(tickets);
-        model.endTurn();
+        if(!view.isGameSetup()) {
+            Log.d(TAG, "ending turn");
+            model.endTurn();
+        }
         listener.onBack();
     }
 

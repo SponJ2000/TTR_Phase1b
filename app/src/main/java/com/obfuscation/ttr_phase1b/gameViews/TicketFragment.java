@@ -137,6 +137,11 @@ public class TicketFragment extends Fragment implements ITicketView {
     }
 
     @Override
+    public boolean isGameSetup() {
+        return mIsGameSetup;
+    }
+
+    @Override
     public void updateUI() {
         Log.d(TAG, "getting updated");
         if(mTicketRecycler != null && mTickets != null) {
