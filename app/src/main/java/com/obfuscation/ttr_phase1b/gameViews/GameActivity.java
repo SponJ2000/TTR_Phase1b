@@ -76,6 +76,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 break;
             case cardSelect:
                 fragment = CardSelectFragment.newInstance();
+                fragment.setArguments(args);
                 PresenterFacade.getInstance().setPresenter( new CardSelectPresenter((ICardSelectView) fragment, this, args) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;

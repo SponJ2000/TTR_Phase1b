@@ -173,14 +173,6 @@ public class ClientFacade implements IClient{
     }
 
     @Override
-    public void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum) {
-        GameClient g = ModelRoot.getInstance().getGame();
-        if (g != null) {
-            g.setFaceUpTrainCarCards(faceCards);
-        }
-    }
-
-
     public void updateTrainDeck(String gameID, List<Card> faceCards, Integer downCardNum) {
         GameClient g = ModelRoot.getInstance().getGame();
         Serializer serializer =  new Serializer();
@@ -191,7 +183,7 @@ public class ClientFacade implements IClient{
 
         if (g != null) {
             g.setFaceUpTrainCarCards(cardD);
-
+            g.setTrainCardDeckSize(downCardNum);
         }
     }
 
@@ -201,7 +193,7 @@ public class ClientFacade implements IClient{
     public void updateDestinationDeck(String gameID, Integer cardNum) {
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            ModelRoot.getInstance().getGame().setTrainCardDeckSize(cardNum);
+            ModelRoot.getInstance().getGame().setTicketDeckSize(cardNum);
 
         }
     }

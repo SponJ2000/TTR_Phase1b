@@ -40,7 +40,7 @@ public interface IClient {
 
     void updateOpponentTickets(String gameID, String playerID, Integer cardNum);
 
-    void updateTrainDeck(String gameID, ArrayList<Card> faceCards, Integer downCardNum);
+    void updateTrainDeck(String gameID, List<Card> faceCards, Integer downCardNum);
 
     void updateDestinationDeck(String gameID, Integer cardNum);
 

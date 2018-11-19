@@ -242,19 +242,24 @@ public class GamePresenter implements IGamePresenter {
             Log.d(TAG, "selectFaceUp: " + model.checkCard(index));
             if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 Log.d(TAG, "selectFaceUp locomotive");
-                wrapper.getModel().chooseCard(index);
+                model.chooseCard(index);
                 actionSelected = true;
+                model.endTurn();
+                wrapper.setState(new NotTurn(wrapper));
             }
             else {
                 wrapper.getModel().chooseCard(index);
                 isSelectOne = true;
+                wrapper.setState(new TurnOneCard(wrapper));
             }
         }
 
         @Override
         void selectDeck() {
-            wrapper.getModel().chooseCard(-1);
+            model.chooseCard(-1);
             isSelectOne = true;
+            wrapper.setState(new TurnOneCard(wrapper));
+
         }
 
         @Override
@@ -269,7 +274,7 @@ public class GamePresenter implements IGamePresenter {
         public void claimRoute(Route route, Player player) {
             //Check if a player has sufficient cards
 
-            Object list = wrapper.getModel().checkRouteCanClaim(route.getColor(), route.getLength());
+            Object list = model.checkRouteCanClaim(route.getColor(), route.getLength());
 
             if (list instanceof String) {
                 wrapper.sendToast((String) list);
@@ -279,6 +284,7 @@ public class GamePresenter implements IGamePresenter {
                 if (route.getColor() == GameColor.GREY) {
                     Bundle args = new Bundle();
                     args.putSerializable("route", route);
+                    args.putInt("cardsToSelect", route.getLength());
                     listener.onShow(Shows.cardSelect, args);
                     wrapper.setState(new NotTurn(wrapper));
                     return;
@@ -288,7 +294,7 @@ public class GamePresenter implements IGamePresenter {
                 }
 
                 //Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
-                wrapper.getModel().claimRoute(route, player, cardsToUse);
+                model.claimRoute(route, player, cardsToUse);
                 actionSelected = true;
 
                 model.endTurn();
@@ -335,11 +341,13 @@ public class GamePresenter implements IGamePresenter {
         @Override
         public void selectFaceUp(int index) {
             Log.d(TAG, "selectFaceUp: " + wrapper.getModel().checkCard(index));
-            if (wrapper.getModel().checkCard(index).equals(GameColor.LOCOMOTIVE)) {
+            if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 wrapper.sendToast("You can't select a locomotive card as your second choice.");
             }
             else {
-                wrapper.getModel().chooseCard(index);
+                model.chooseCard(index);
+                model.endTurn();
+                wrapper.setState(new NotTurn(wrapper));
                 actionSelected = true;
             }
         }
@@ -347,6 +355,8 @@ public class GamePresenter implements IGamePresenter {
         @Override
         public void selectDeck() {
             wrapper.getModel().chooseCard(-1);
+            model.endTurn();
+            wrapper.setState(new NotTurn(wrapper));
             actionSelected = true;
         }
 

@@ -39,6 +39,7 @@ public class GameClient extends Game {
         playerUser = new PlayerUser(userName);
         gameEnded = false;
         playerStatsList = new ArrayList<PlayerStats>();
+        trainCardDeckSize = 0;
     }
 
 
