@@ -175,8 +175,8 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         void selectFaceUp(int index) {
-            Log.d(TAG, "selectFaceUp: " + wrapper.getModel().checkCard(index));
-            if (wrapper.getModel().checkCard(index).equals(GameColor.LOCOMOTIVE)) {
+            Log.d(TAG, "selectFaceUp: " + model.checkCard(index));
+            if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 Log.d(TAG, "selectFaceUp locomotive");
                 wrapper.getModel().chooseCard(index);
                 actionSelected = true;

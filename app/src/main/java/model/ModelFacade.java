@@ -277,6 +277,7 @@ public class ModelFacade implements IGameModel {
     @Override
     public GameColor checkCard(int index) {
         try {
+            mFaceCards = ModelRoot.getInstance().getGame().getFaceUpTrainCarCards();
             return mFaceCards.get(index).getColor();
         } catch (ArrayIndexOutOfBoundsException e) {
             return GameColor.GREY;
