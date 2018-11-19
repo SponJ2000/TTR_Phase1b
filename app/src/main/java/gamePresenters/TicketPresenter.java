@@ -32,7 +32,7 @@ public class TicketPresenter implements ITicketPresenter {
         Log.d(TAG, "onFinish: " + tickets);
         model.chooseTickets(tickets);
         if(!view.isGameSetup()) {
-            Log.d(TAG, "ending turn");
+            Log.d(TAG, "finish turn");
             model.endTurn();
         }
 //        model.endTurn();
