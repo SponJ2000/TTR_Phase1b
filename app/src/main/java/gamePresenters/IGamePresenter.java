@@ -20,7 +20,6 @@ public interface IGamePresenter extends IPresenter{
     void showPlayerInfo(IPlayerInfoView view);
     void selectTickets();
     void showChat();
-    void showMap();
 
     IGameModel getModel();
     void sendToast(String toast);
@@ -30,11 +29,8 @@ public interface IGamePresenter extends IPresenter{
      * @param index -1 for the deck, 0-4 for the face-up cards
      */
     void chooseCard(int index);
-    GameMap getMap();
     void claimRoute(Route route, Player player);
     void onBack();
-
-    void onChange(Activity activity);
 
     /**
      * This interface must be implemented by activities that contain this
