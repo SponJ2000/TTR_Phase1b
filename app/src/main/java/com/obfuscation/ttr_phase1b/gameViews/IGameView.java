@@ -3,6 +3,7 @@ package com.obfuscation.ttr_phase1b.gameViews;
 import java.util.List;
 
 import communication.Card;
+import communication.GameColor;
 import communication.GameMap;
 import communication.Player;
 import communication.Route;
@@ -117,4 +118,11 @@ public interface IGameView extends IView {
      * @param toast a String containing the toast to send
      */
     void sendToast(String toast);
+
+    /**
+     * Chooses cards to use when claiming a grey route
+     * @param number the number of cards to select
+     * @return a list of card objects to use
+     */
+    List<Card> chooseCards(int number);
 }

@@ -82,6 +82,10 @@ public class ModelFacade implements IGameModel {
 
 
 
+    public void claimRoute(Route route, List<Card> cards) {
+        claimRoute(route, getPlayer(), cards);
+    }
+
     public static ModelFacade getInstance() {
         if (modelFacade == null) {
             modelFacade = new ModelFacade();
@@ -197,6 +201,8 @@ public class ModelFacade implements IGameModel {
         System.out.println("end turn called");
         GenericTask genericTask = new GenericTask("EndTurn");
         genericTask.execute(ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getAuthToken());
+
+        setMyTurn(false);
     }
 
     @Override
@@ -375,6 +381,8 @@ public class ModelFacade implements IGameModel {
             }
             else return "Not enough cards";
         }
+
+        //TODO: check for dual routes
     }
 
     @Override

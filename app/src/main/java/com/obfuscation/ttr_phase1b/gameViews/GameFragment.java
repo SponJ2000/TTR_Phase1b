@@ -559,6 +559,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     @Override
+    public List<Card> chooseCards(int number) {
+        return null;
+    }
+
+    @Override
     public void setMap(GameMap map) {
         mMap = map;
     }

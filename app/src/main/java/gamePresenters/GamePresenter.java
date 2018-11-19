@@ -1,6 +1,7 @@
 package gamePresenters;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -19,13 +20,14 @@ import communication.Player;
 import communication.Result;
 import communication.Route;
 import communication.Ticket;
-import model.FakeModel;
 import model.IGameModel;
 import model.ModelFacade;
 
 public class GamePresenter implements IGamePresenter {
 
     private static String TAG = "gamePres";
+
+    private static int changeIndex = 0;
 
     private IPlayerInfoView playerInfoView;
     private IGameView view;
@@ -93,7 +95,7 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void showPlayerInfo(IPlayerInfoView view) {
         if(view == null) {
-            this.listener.onShow(Shows.playerInfo);
+            this.listener.onShow(Shows.playerInfo, null);
         }else {
             Log.d(TAG, "showPlayerInfo: " + model.getPlayers());
             playerInfoView = view;
@@ -101,6 +103,71 @@ public class GamePresenter implements IGamePresenter {
             playerInfoView.setPlayers(model.getPlayers());
             playerInfoView.updateUI();
         }
+    }
+
+
+    public void onChange(Activity activity) {
+        switch (changeIndex) {
+            case 0:
+                Toast.makeText(activity, "update mPlayer points", Toast.LENGTH_SHORT).show();
+                model.addPoints(8);
+                break;
+            case 1:
+                Toast.makeText(activity, "add train cards", Toast.LENGTH_SHORT).show();
+                model.chooseCard(2);
+                break;
+            case 2:
+                Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
+                model.useCards(GameColor.GREEN, 1);
+                break;
+            case 3:
+                Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
+                ArrayList<Ticket> tickets = new ArrayList<>();
+                tickets.add(new Ticket(new City("berlin",0,0), new City("helsinki",0,0), 8));
+                tickets.add(new Ticket(new City("berlin",0,0), new City("london",0,0), 12));
+                model.addTickets(tickets);
+                break;
+            case 4:
+                Toast.makeText(activity, "remove tickets", Toast.LENGTH_SHORT).show();
+                model.removeTicket(1);
+                model.removeTicket(1);
+                break;
+            case 5:
+                Toast.makeText(activity, "update opponent cards and tickets", Toast.LENGTH_SHORT).show();
+                model.updateOpponent();
+                break;
+            case 6:
+                Toast.makeText(activity, "update face cards and deck", Toast.LENGTH_SHORT).show();
+                model.updateFaceCards();
+                break;
+            case 7:
+                Toast.makeText(activity, "add claimed mRoute", Toast.LENGTH_SHORT).show();
+                List<Route> routes = model.getMap().getRoutes();
+                Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
+
+                Player player = model.getPlayers().get(ThreadLocalRandom.current().nextInt(0, model.getPlayers().size()));
+                model.claimRoute(r, player, null);
+                view.updateRoute(r);
+                break;
+            case 8:
+                if (model.isMyTurn()) {
+                    Toast.makeText(activity, "Not your turn", Toast.LENGTH_SHORT).show();
+                    model.setMyTurn(false);
+                    state = new NotTurn(this);
+                } else {
+                    Toast.makeText(activity, "Your turn!", Toast.LENGTH_SHORT).show();
+                    model.setMyTurn(true);
+                    state = new TurnNoSelection(this);
+                }
+
+
+        }
+        ++changeIndex;
+        changeIndex %= 9;
+        updateInfo(true);
+    }
+
+    public void showMap() {
     }
 
     @Override
@@ -121,11 +188,11 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void onBack() {
-        this.listener.onShow(Shows.map);
+        this.listener.onShow(Shows.map, null);
     }
 
     public void showMenu() {
-        this.listener.onShow(Shows.menu);
+        this.listener.onShow(Shows.menu, null);
     }
 
     public void selectTickets() {
@@ -133,7 +200,7 @@ public class GamePresenter implements IGamePresenter {
     }
 
     public void showChat() {
-        this.listener.onShow(Shows.chat);
+        this.listener.onShow(Shows.chat, null);
     }
 
     @Override
@@ -141,10 +208,7 @@ public class GamePresenter implements IGamePresenter {
         view.sendToast(toast);
     }
 
-    @Override
-    public List<Card> playerChooseCards(int length) {
-        return null;
-    }
+
 
     class ITurnState {
         void selectFaceUp(int index){}
@@ -194,15 +258,15 @@ public class GamePresenter implements IGamePresenter {
         }
 
         @Override
-        void selectTicketsButton() {
-            listener.onShow(Shows.tickets);
+        public void selectTicketsButton() {
+            listener.onShow(Shows.tickets, null);
             wrapper.setState(new NotTurn(wrapper));
             actionSelected = true;
 //            wrapper.setState(new TurnNoTickets(wrapper));
         }
 
         @Override
-        void claimRoute(Route route, Player player) {
+        public void claimRoute(Route route, Player player) {
             //Check if a player has sufficient cards
 
             Object list = wrapper.getModel().checkRouteCanClaim(route.getColor(), route.getLength());
@@ -213,14 +277,30 @@ public class GamePresenter implements IGamePresenter {
             else {
                 ArrayList<Card> cardsToUse;
                 if (route.getColor() == GameColor.GREY) {
-                    cardsToUse = (ArrayList<Card>) wrapper.playerChooseCards(route.getLength());
+                    Bundle args = new Bundle();
+                    args.putSerializable("route", route);
+                    listener.onShow(Shows.cardSelect, args);
+                    wrapper.setState(new NotTurn(wrapper));
+                    return;
                 }
                 else {
                     cardsToUse = (ArrayList<Card>) list;
                 }
 
+                //Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
                 wrapper.getModel().claimRoute(route, player, cardsToUse);
                 actionSelected = true;
+
+                model.endTurn();
+                wrapper.setState(new NotTurn(wrapper));
+
+//                if(result.isSuccess()) {
+//                    model.endTurn();
+//                    wrapper.setState(new NotTurn(wrapper));
+//                }
+//                else {
+//                    wrapper.sendToast(result.getErrorInfo());
+//                }
             }
         }
 

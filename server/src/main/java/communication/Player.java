@@ -1,18 +1,18 @@
 package communication;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by jalton on 10/1/18.
  */
 
-public class Player implements IPlayer{
-
+public class Player implements IPlayer, Serializable{
     private String playerName;
-    private int trainNum;
-    private int point;
-    private GameColor playerColor;
+    private Integer point;
     private ArrayList<String> claimedRoutesID;
+    private GameColor playerColor;
+    private Integer trainNum;
 
     public Player() {
         playerName = "";

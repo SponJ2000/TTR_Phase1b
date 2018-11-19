@@ -114,7 +114,7 @@ public class TicketFragment extends Fragment implements ITicketView {
     }
 
     private void changeAccessibility() {
-//      Check to see if it is out turn; if it is then we need to select 2 tickets
+//      Check to see if it is our turn; if it is then we need to select 2 tickets
 //      else we select 1
         int chosen = 0;
         for(int i = 0; i < mChosenTickets.length; i++) {

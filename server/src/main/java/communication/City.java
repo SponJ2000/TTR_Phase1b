@@ -1,10 +1,12 @@
 package communication;
 
+import java.io.Serializable;
+
 /**
  * Created by jalton on 10/24/18.
  */
 
-public class City {
+public class City implements Serializable {
     private String name;
     private int lat;
     private int lng;
