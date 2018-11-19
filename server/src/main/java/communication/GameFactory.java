@@ -56,7 +56,32 @@ public class GameFactory {
         cityMap.put("Vancouver", new City("Vancouver", 49, -123));
         cityMap.put("Washington", new City("Washington", 38, -77));
         cityMap.put("Winnipeg", new City("Winnipeg", 49, -97));
+    }
 
+    public ArrayList<City> getCities() {
+        ArrayList<City> cities = new ArrayList<>();
+        for(City ci : cityMap.values()) {
+            cities.add(ci);
+        }
+        return cities;
+    }
+
+    public Map<GameColor, Integer> getCards() {
+        Map<GameColor, Integer> map = new HashMap<>();
+
+        for(GameColor color:GameColor.values()) {
+            map.put(color, 12);
+        }
+        map.put(GameColor.LOCOMOTIVE, 14);
+
+        return map;
+    }
+
+    public ArrayList<Ticket> getTickets() {
+        return allTickets;
+    }
+
+    public ArrayList<Route> getRoutes() {
         allTickets = new ArrayList<>();
 //        Denver to El Paso (4)
         allTickets.add(new Ticket(cityMap.get("Denver"), cityMap.get("El_Paso"), 4));
@@ -292,32 +317,6 @@ public class GameFactory {
         dr.setSibling(dr2.getDualRouteID());
         allRoutes.add(dr);
         allRoutes.add(dr2);
-    }
-
-    public ArrayList<City> getCities() {
-        ArrayList<City> cities = new ArrayList<>();
-        for(City ci : cityMap.values()) {
-            cities.add(ci);
-        }
-        return cities;
-    }
-
-    public Map<GameColor, Integer> getCards() {
-        Map<GameColor, Integer> map = new HashMap<>();
-
-        for(GameColor color:GameColor.values()) {
-            map.put(color, 12);
-        }
-        map.put(GameColor.LOCOMOTIVE, 14);
-
-        return map;
-    }
-
-    public ArrayList<Ticket> getTickets() {
-        return allTickets;
-    }
-
-    public ArrayList<Route> getRoutes() {
         return allRoutes;
     }
 
