@@ -227,7 +227,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
                 System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
             }
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@");
-            int remain = cardsToSelect - Integer.getInteger(cardButtons[i].getText().toString());
+            int remain = cardsToSelect - Integer.parseInt(cardButtons[i].getText().toString());
             if (remain > 0) {
                 sendToast("Not enough cards: need " + remain + " more");
             }
@@ -237,9 +237,9 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
             }
         }
         else {
-            int colorCards = Integer.getInteger(cardButtons[i].getText().toString());
+            int colorCards = Integer.parseInt(cardButtons[i].getText().toString());
             int remain = cardsToSelect - colorCards;
-            remain -= Integer.getInteger(cardButtons[8].getText().toString());
+            remain -= Integer.parseInt(cardButtons[8].getText().toString());
 
             if (remain > 0) {
                 sendToast("Not enough cards: need " + remain + " more");

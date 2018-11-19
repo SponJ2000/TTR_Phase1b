@@ -121,8 +121,7 @@ public class CardDialog extends DialogFragment {
         try{
             mListener = (CardDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement CardDialogListener");
+            throw new ClassCastException("must implement CardDialogListener");
 
         }
     }

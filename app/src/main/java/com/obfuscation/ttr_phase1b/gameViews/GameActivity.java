@@ -3,14 +3,18 @@ package com.obfuscation.ttr_phase1b.gameViews;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.R;
+import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
+import com.obfuscation.ttr_phase1b.gameViews.dummy.CardDialog;
 
+import communication.IPlayer;
 import gamePresenters.CardSelectPresenter;
 import gamePresenters.ChatPresenter;
 import gamePresenters.GamePresenter;
@@ -24,7 +28,8 @@ import gamePresenters.TicketPresenter;
 
 public class GameActivity extends AppCompatActivity implements IGamePresenter.OnShowListener,
         IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener,
-        ICardSelectPresenter.OnBackListener, IMenuPresenter.MenuListener {
+        ICardSelectPresenter.OnBackListener, CardDialog.CardDialogListener,
+        IMenuPresenter.MenuListener {
 
     private static final String TAG = "GameActivity";
 
@@ -104,4 +109,25 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
 
     }
 
+    @Override
+    public void onConfirmCards(CardDialog dialog) {
+        try{
+            ICardSelectView fragment = (ICardSelectView) getSupportFragmentManager().findFragmentById(R.id.container);
+            fragment.onConfirmCards(dialog);
+
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onRejectCards(DialogFragment dialog) {
+        try{
+            ICardSelectView fragment = (ICardSelectView) getSupportFragmentManager().findFragmentById(R.id.container);
+            fragment.onRejectCards(dialog);
+
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+    }
 }
