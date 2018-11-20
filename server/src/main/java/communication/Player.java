@@ -16,7 +16,7 @@ public class Player implements IPlayer, Serializable{
 
     public Player() {
         playerName = "";
-        trainNum = 5;
+        trainNum = 40;
         point = 0;
         playerColor = GameColor.PLAYER_BLACK;
         claimedRoutesID = new ArrayList<>();
@@ -24,7 +24,7 @@ public class Player implements IPlayer, Serializable{
 
     public Player(String playerName) {
         this.playerName = playerName;
-        trainNum = 5;
+        trainNum = 40;
         point = 0;
         playerColor = GameColor.PLAYER_BLACK;
         claimedRoutesID = new ArrayList<>();
@@ -32,7 +32,7 @@ public class Player implements IPlayer, Serializable{
 
     public Player(String playerName, int point, GameColor playerColor) {
         this.playerName = playerName;
-        trainNum = 5;
+        trainNum = 40;
         this.point = point;
         this.playerColor = playerColor;
         claimedRoutesID = new ArrayList<>();
