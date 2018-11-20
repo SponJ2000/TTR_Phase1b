@@ -361,9 +361,14 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public Object checkRouteCanClaim(Route route) {
+        //First, check if the route is claimed
+        if(route.getClaimedBy() != null) {
+            return "You cannot claim a route claimed by another player";
+        }
+
         //First, check to see if it's a dual route
         if(route.getClass().equals(DualRoute.class)) {
-            if(getPlayers().size() <= 2) {
+            if(getPlayers().size() < 4) {
                 return "Only one dual route can be claimed in a two-player game";
             }
 
