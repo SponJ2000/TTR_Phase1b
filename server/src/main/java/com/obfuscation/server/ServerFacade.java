@@ -245,7 +245,15 @@ public class ServerFacade implements IServer {
                     //initialize opponents
                     for (ClientProxy clientProxy1 : gameIDclientProxyMap.get(gameID)) {
                         if (!clientProxy.getAuthToken().equals(clientProxy1.getAuthToken())) {
-                            opponents.add(new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 40, 4));
+                            PlayerOpponent playerOpponent = new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 40, 4);
+
+                            String opponent = db.findUsernameByAuthToken(clientProxy1.getAuthToken());
+                            for (PlayerUser p : game.getPlayers()) {
+                                if (p.getPlayerName().equals(opponent)) {
+                                    playerOpponent.setPlayerColor(p.getPlayerColor());
+                                }
+                            }
+                            opponents.add(playerOpponent);
                         }
                     }
                     gameClient.setPlayerOpponents(opponents);

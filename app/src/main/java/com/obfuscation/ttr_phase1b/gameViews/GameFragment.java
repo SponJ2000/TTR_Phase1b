@@ -351,9 +351,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         Marker m = mRoutes2.get(r);
         m.remove();
         mRoutes2.remove(r);
-        for (Route route : mRoutes2.keySet()) {
-            mRoutes2.get(route).remove();
-        }
+//        for (Route route : mRoutes2.keySet()) {
+//            mRoutes2.get(route).remove();
+//        }
         if(claimed) {
             mRoutes2.put(r,
                     googleMap.addMarker(new MarkerOptions()
@@ -572,32 +572,33 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             List<Route> routes = mMap.getRoutes();
             Route r = null;
 
-            boolean claimed = false;
+            boolean claimed;
 
             for (int i = 0; i < routes.size(); i++) {
                 r = routes.get(i);
 
                 int color;
-                claimed = false;
-
-                try {
-                    color = colorMap.get(r.getColor());
-                } catch (NullPointerException e) {
-                    color = colorMap.get(GREY);
-                }
-
-                LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
-
-                PolylineOptions p = new PolylineOptions()
-                        .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
-                                mid,
-                                new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
-                        .color(color)
-                        .clickable(true);
-
-                mRouteLines.put(r, googleMap.addPolyline(p));
+                claimed = (r.getClaimedBy() != null);
+                LatLng mid;
 
                 if (claimed) {
+                    Log.d(TAG, "initRoutes: claimer: " + r.getClaimedBy() + ", color: " + r.getClaimedBy().getPlayerColor());
+                    try {
+                        color = colorMap.get(r.getClaimedBy().getPlayerColor());
+                    } catch (NullPointerException e) {
+                        color = colorMap.get(GREY);
+                    }
+
+                    mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+
+                    PolylineOptions p = new PolylineOptions()
+                            .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
+                                    mid,
+                                    new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                            .color(color)
+                            .clickable(true);
+
+                    mRouteLines.put(r, googleMap.addPolyline(p));
                     mRoutes2.put(r,
                             googleMap.addMarker(new MarkerOptions()
                                     .position(mid)
@@ -605,6 +606,22 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                                     .snippet(new StringBuilder(r.getLength() + " points").toString())
                             ));
                 } else {
+                    try {
+                        color = colorMap.get(r.getColor());
+                    } catch (NullPointerException e) {
+                        color = colorMap.get(GREY);
+                    }
+
+                    mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+
+                    PolylineOptions p = new PolylineOptions()
+                            .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
+                                    mid,
+                                    new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                            .color(color)
+                            .clickable(true);
+
+                    mRouteLines.put(r, googleMap.addPolyline(p));
                     mRoutes2.put(r,
                             googleMap.addMarker(new MarkerOptions()
                                     .position(mid)
