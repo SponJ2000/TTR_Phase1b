@@ -24,6 +24,7 @@ import communication.GameColor;
 import model.ModelFacade;
 import model.ModelRoot;
 import model.DisplayState;
+import task.PresenterUpdateTask;
 
 /**
  * Created by hao on 10/25/18.
@@ -55,6 +56,11 @@ public class ClientFacade implements IClient{
 
     }
 
+    private void updatePresenter(Object o) {
+        PresenterUpdateTask p = new PresenterUpdateTask();
+        p.execute(o);
+    }
+
     @Override
     public void updateGameLobbyList(String gameID) {
         //sever will never call this command
@@ -67,10 +73,11 @@ public class ClientFacade implements IClient{
 
     @Override
     public void initializeGame(GameClient gameClient) {
+
         try {
             ArrayList<Ticket> ticketsToChoose = ModelRoot.getInstance().getGame().getPlayerUser().getTicketToChoose();
             ModelRoot.getInstance().setGame(gameClient);
-
+            updatePresenter(gameClient);
             if (ModelRoot.getInstance().getGame().getPlayerOpponents() == null) {
 
 //                System.out.println(ModelRoot.getInstance().getGame().getPlayerOpponents().toString());
@@ -88,6 +95,7 @@ public class ClientFacade implements IClient{
             }
 
             ModelRoot.getInstance().setDisplayState(DisplayState.GAME);
+            updatePresenter(DisplayState.GAME);
             ModelFacade.getInstance().getChoiceTickets();
 
 //            System.out.println("current turn is " + ModelRoot.getInstance().getGame().getTurnUser());
@@ -104,6 +112,7 @@ public class ClientFacade implements IClient{
             IPlayer p = g.getPlayerByUserName(plyerID);
             if (p != null) {
                 ((Player) p).setPoint(points);
+                updatePresenter((Player) p);
             }
         }
     }
@@ -124,6 +133,7 @@ public class ClientFacade implements IClient{
                 PlayerUser p = g.getPlayerUser();
                 if (p != null) {
                     p.setCards(cardD);
+                    updatePresenter(p);
                 }
             }
         }
@@ -140,6 +150,7 @@ public class ClientFacade implements IClient{
             PlayerUser p = g.getPlayerUser();
             if (p != null) {
                 p.setTicketToChoose((ArrayList<Ticket>) tickets);
+                updatePresenter(p);
             }
         }
     }
@@ -153,18 +164,19 @@ public class ClientFacade implements IClient{
 
         ArrayList<PlayerOpponent> pos = m.getGame().getPlayerOpponents();
 
-        for(PlayerOpponent po: pos) {
-            System.out.println("Player: " + po.getPlayerName());
-        }
+//        for(PlayerOpponent po: pos) {
+//            System.out.println("Player: " + po.getPlayerName());
+//        }
 
-        if (p == null) {
-            System.out.println("player not found");
-        }
-
-        if (m.getUserName().equals(playerID)) {
-            System.out.println("it is the current user");
-        }
+//        if (p == null) {
+//            System.out.println("player not found");
+//        }
+//
+//        if (m.getUserName().equals(playerID)) {
+//            System.out.println("it is the current user");
+//        }
         p.setCardNum(cardNum);
+        updatePresenter(p);
     }
 
     @Override
@@ -174,6 +186,7 @@ public class ClientFacade implements IClient{
             PlayerOpponent p = ModelRoot.getInstance().getGame().getPlayerOpponentByUsername(playerID);
             if (p != null) {
                 p.setTrainNum(carNum);
+                updatePresenter(p);
             }
         }
     }
@@ -185,6 +198,7 @@ public class ClientFacade implements IClient{
             PlayerOpponent p = ModelRoot.getInstance().getGame().getPlayerOpponentByUsername(playerID);
             if (p != null) {
                 p.setTicketNum(cardNum);
+                updatePresenter(p);
             }
         }
     }
@@ -200,6 +214,7 @@ public class ClientFacade implements IClient{
 
         if (g != null) {
             g.setFaceUpTrainCarCards(cardD);
+            updatePresenter(cardD);
             g.setTrainCardDeckSize(downCardNum);
         }
     }
@@ -210,6 +225,7 @@ public class ClientFacade implements IClient{
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             ModelRoot.getInstance().getGame().setTicketDeckSize(cardNum);
+            updatePresenter(g);
         }
     }
 
@@ -221,8 +237,10 @@ public class ClientFacade implements IClient{
             Route r = g.getmMap().getRouteByRouteId(routeID);
             if (r != null) {
                 r.setClaimedBy(((Player)g.getPlayerByUserName(playerID)));
+                updatePresenter(r);
             }
             ((Player)g.getPlayerByUserName(playerID)).addRouteAsClaimed(routeID);
+            updatePresenter(((Player)g.getPlayerByUserName(playerID)));
         }
     }
 
@@ -232,6 +250,7 @@ public class ClientFacade implements IClient{
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             g.insertMessage(m);
+            updatePresenter(g.getMessages());
 //            System.out.println("inserted a new chat"+ m.getText());
         }
 
@@ -249,6 +268,7 @@ public class ClientFacade implements IClient{
             Serializer serializer = new Serializer();
             for(Object O: gh) {
                 g.addHistory(serializer.deserializeGameHistory(O.toString()));
+                updatePresenter(g.getGameHistories());
             }
         }
     }
@@ -258,6 +278,7 @@ public class ClientFacade implements IClient{
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
            g.setLastRound(true);
+           updatePresenter(g);
         }
     }
 
@@ -269,6 +290,7 @@ public class ClientFacade implements IClient{
             for(Object O: stats) {
                 g.addPlayerStats(serializer.deserializePlayerStats(O.toString()));
             }
+            updatePresenter(g);
         }
     }
 
@@ -287,6 +309,8 @@ public class ClientFacade implements IClient{
             else {
                 System.out.println("set to other user turn");
             }
+            updatePresenter(g);
         }
+
     }
 }
