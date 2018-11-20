@@ -26,7 +26,7 @@ import gamePresenters.IScorePresenter;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ScoreFragment.OnFragmentInteractionListener} interface
+ * {@link ScoreFragment} interface
  * to handle interaction events.
  * Use the {@link ScoreFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -68,7 +68,7 @@ public class ScoreFragment extends Fragment implements IScoreView {
         View view =  inflater.inflate(R.layout.fragment_score, container, false);
 
         mScoreRecycler = (RecyclerView) view.findViewById(R.id.score_recycler_view);
-        mScoreRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mScoreRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         Log.d(TAG, "onCreateView: " + mScoreRecycler);
 
         if(mPresenter != null) {
@@ -113,6 +113,7 @@ public class ScoreFragment extends Fragment implements IScoreView {
         private TextView mTotScore;
         private TextView mTickScore;
         private TextView mTickLoss;
+        private TextView mLongest;
 
         public ScoreHolder(View view) {
             super(view);
@@ -122,6 +123,7 @@ public class ScoreFragment extends Fragment implements IScoreView {
             mTotScore = view.findViewById(R.id.score_totalscore);
             mTickScore = view.findViewById(R.id.score_ticketscore);
             mTickLoss = view.findViewById(R.id.score_ticketloss);
+            mLongest = view.findViewById(R.id.score_longest);
         }
 
         public void bind(PlayerStats stats, int index) {
@@ -134,6 +136,11 @@ public class ScoreFragment extends Fragment implements IScoreView {
             mTotScore.setText("" + stats.getTotalPoint());
             mTickScore.setText("" + stats.getWinnedPoint());
             mTickLoss.setText("" + stats.getLostPoint());
+            if(stats.isHasLongestPath()) {
+                mLongest.setText("ye boi");
+            }else {
+                mLongest.setText("loser");
+            }
         }
 
     }
