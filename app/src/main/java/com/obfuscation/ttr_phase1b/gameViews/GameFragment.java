@@ -93,6 +93,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private Map<GameColor, Integer> cardMap;
     private Map<GameColor, Integer> colorMap;
 
+    private Marker currentMarker;
+    private boolean first = true;
+
     public GameFragment() {
         mIsTurn = false;
         mCards = null;
@@ -160,9 +163,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
-        mMapView.getMapAsync(this);
-
-        mMapView.onResume();
+//        mMapView.getMapAsync(this);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -171,6 +172,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         }
 
         mMapView.getMapAsync(this);
+
+        mMapView.onResume();
 
         mIsSetup = true;
 
@@ -199,7 +202,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         }if(mTickets != null) {
             updateTickets();
         }if(mMap != null) {
-            mMapView.getMapAsync(this);
+//            mMapView.getMapAsync(this);
         }if(mIsTurn) {
             mTurnText.setText("Your Turn");
         }else {
@@ -315,10 +318,11 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void updateRoute(Route r) {
+       // googleMap.clear();
         String name = r.getClaimedBy().getPlayerName();
         int color = colorMap.get(r.getClaimedBy().getPlayerColor());
-        boolean claimed = (r.getClaimedBy() != null);
-
+//        boolean claimed = (r.getClaimedBy() != null);
+        boolean claimed = true;
         Polyline poly = mRouteLines.get(r);
 
         poly.remove();
@@ -337,8 +341,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         Marker m = mRoutes2.get(r);
         m.remove();
-        mRoutes2.remove(m);
-
+        mRoutes2.remove(r);
+        for (Route route : mRoutes2.keySet()) {
+            mRoutes2.get(route).remove();
+        }
         if(claimed) {
             mRoutes2.put(r,
                     googleMap.addMarker(new MarkerOptions()
@@ -346,7 +352,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                             .title(r.getClaimedBy().getPlayerName())
                             .snippet(new StringBuilder(r.getLength() + " points").toString())
                     ));
-        } else {
+        }
+        else {
             mRoutes2.put(r,
                     googleMap.addMarker(new MarkerOptions()
                             .position(mid)
@@ -472,55 +479,58 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //googleMap = mMap;
+        if (true) {
+            first = false;
+            this.googleMap = googleMap;
 
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            boolean success = googleMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            getActivity(), R.raw.map_style));
+            try {
+                // Customise the styling of the base map using a JSON object defined
+                // in a raw resource file.
+                boolean success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                getActivity(), R.raw.map_style));
 
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
-        }
-
-
-        // Drop markers on all the cities
-
-        mRouteLines = new HashMap<>();
-        mRoutes = new HashMap<>();
-        mRoutes2 = new HashMap<>();
-
-        initCities(googleMap);
-
-        initRoutes(googleMap);
-
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                if (mRoutes.containsKey(marker.getPosition())) {
-                    if (marker.getPosition().equals(selected)) {
-                        selectRoute(mRoutes.get(marker.getPosition()));
-
-                    }
+                if (!success) {
+                    Log.e(TAG, "Style parsing failed.");
                 }
-
-                selected = marker.getPosition();
-
-                return false;
+            } catch (Resources.NotFoundException e) {
+                Log.e(TAG, "Can't find style. Error: ", e);
             }
-        });
 
 
-        // For zooming automatically to the location of the marker
-        LatLng ny = new LatLng(40, -73);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(5).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            // Drop markers on all the cities
+
+            mRouteLines = new HashMap<>();
+            mRoutes = new HashMap<>();
+            mRoutes2 = new HashMap<>();
+
+            initCities(googleMap);
+
+            initRoutes(googleMap);
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+
+                    if (mRoutes.containsKey(marker.getPosition())) {
+                        if (marker.getPosition().equals(selected)) {
+                            selectRoute(mRoutes.get(marker.getPosition()));
+                            currentMarker = marker;
+                        }
+                    }
+
+                    selected = marker.getPosition();
+
+                    return false;
+                }
+            });
+
+
+            // For zooming automatically to the location of the marker
+            LatLng ny = new LatLng(40, -73);
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(5).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     private void initCities(GoogleMap googleMap) {
@@ -549,53 +559,53 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void initRoutes(GoogleMap googleMap) {
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            List<Route> routes = mMap.getRoutes();
+            Route r = null;
 
-        List<Route> routes = mMap.getRoutes();
-        Route r = null;
+            boolean claimed = false;
 
-        boolean claimed = false;
+            for (int i = 0; i < routes.size(); i++) {
+                r = routes.get(i);
 
-        for (int i = 0; i < routes.size(); i++) {
-            r = routes.get(i);
+                int color;
+                claimed = false;
 
-            int color;
-            claimed = false;
+                try {
+                    color = colorMap.get(r.getColor());
+                } catch (NullPointerException e) {
+                    color = colorMap.get(GREY);
+                }
 
-            try {
-                color = colorMap.get(r.getColor());
-            } catch(NullPointerException e) {
-                color = colorMap.get(GREY);
+                LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+
+                PolylineOptions p = new PolylineOptions()
+                        .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
+                                mid,
+                                new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                        .color(color)
+                        .clickable(true);
+
+                mRouteLines.put(r, googleMap.addPolyline(p));
+
+                if (claimed) {
+                    mRoutes2.put(r,
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(mid)
+                                    .title(r.getClaimedBy().getPlayerName())
+                                    .snippet(new StringBuilder(r.getLength() + " points").toString())
+                            ));
+                } else {
+                    mRoutes2.put(r,
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(mid)
+                                    .title(r.getLength().toString())
+                                    .snippet("unclaimed")
+                            ));
+                }
+
+                mRoutes.put(mid, r);
             }
-
-            LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
-
-            PolylineOptions p = new PolylineOptions()
-                    .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
-                            mid,
-                            new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
-                    .color(color)
-                    .clickable(true);
-
-            mRouteLines.put(r, googleMap.addPolyline(p));
-
-            if(claimed) {
-                mRoutes2.put(r,
-                        googleMap.addMarker(new MarkerOptions()
-                                .position(mid)
-                                .title(r.getClaimedBy().getPlayerName())
-                                .snippet(new StringBuilder(r.getLength() + " points").toString())
-                        ));
-            } else {
-                mRoutes2.put(r,
-                        googleMap.addMarker(new MarkerOptions()
-                                .position(mid)
-                                .title(r.getLength().toString())
-                                .snippet("unclaimed")
-                        ));
-            }
-
-            mRoutes.put(mid, r);
-        }
     }
 
     @Override

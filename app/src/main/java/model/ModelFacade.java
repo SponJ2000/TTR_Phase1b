@@ -186,11 +186,12 @@ public class ModelFacade implements IGameModel {
         p.subtractTrain(cards.size());
         p.addRouteAsClaimed(route.getRouteID());
         ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(route.getRouteID()).setClaimedBy(player);
+        route.setClaimedBy(p);
 //        Player pa = route.getClaimedBy();
 //        if (pa.getPlayerName().equals( player.getPlayerName())) {
 //            System.out.println("route claimed by this user");
 //        }
-        PresenterFacade.getInstance().getPresenter().updateInfo(new Result(true, null, "from claim route"));
+        PresenterFacade.getInstance().getPresenter().updateInfo(route);
         GenericTask genericTask = new GenericTask("ClaimRoute");
         genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
 

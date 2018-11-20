@@ -65,6 +65,8 @@ public class GamePresenter implements IGamePresenter {
             state.finish((Result) result);
         }
         else if(result != null && result.getClass().equals(Route.class)){
+            System.out.println("in update infor undate rout");
+            view.setMap(model.getMap());
             view.updateRoute((Route) result);
         }
         view.setPlayer(model.getPlayer());
@@ -286,7 +288,7 @@ public class GamePresenter implements IGamePresenter {
         public void claimRoute(Route route, Player player) {
             //Check if a player has sufficient cards
             System.out.println("CLAIMED");
-            Object list = model.checkRouteCanClaim(route.getColor(), route.getLength());
+            Object list = model.checkRouteCanClaim(route);
 
             if (list instanceof String) {
                 System.out.println("apprently it wont go to claim");
@@ -306,23 +308,9 @@ public class GamePresenter implements IGamePresenter {
                     cardsToUse = (ArrayList<Card>) list;
                 }
 
-                //Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
                 System.out.println("trying to call model to claim route");
-                model.claimRoute(route, player, cardsToUse);
-
                 actionSelected = true;
-                updateInfo(new Result(true, true, null));
-
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
-
-//                if(result.isSuccess()) {
-//                    model.endTurn();
-//                    wrapper.setState(new NotTurn(wrapper));
-//                }
-//                else {
-//                    wrapper.sendToast(result.getErrorInfo());
-//                }
+                model.claimRoute(route, player, cardsToUse);
             }
         }
 
