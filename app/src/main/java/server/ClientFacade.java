@@ -210,7 +210,6 @@ public class ClientFacade implements IClient{
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             ModelRoot.getInstance().getGame().setTicketDeckSize(cardNum);
-
         }
     }
 

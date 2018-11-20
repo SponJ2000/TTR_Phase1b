@@ -21,6 +21,7 @@ import communication.Game;
 import communication.GameHistory;
 import communication.LobbyGame;
 import communication.GameServer;
+import communication.MapGraph;
 import communication.Message;
 import communication.Player;
 import communication.PlayerStats;
@@ -45,6 +46,7 @@ public class Database {
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
     private List<GameServer> gameList = new ArrayList<>();
     private HashMap<Integer, Integer> routeScores = new HashMap<>();
+    private HashMap<String, MapGraph> gameGraph = new HashMap<>();
 
     public List<GameServer> getGameList() {
         return gameList;
@@ -383,6 +385,7 @@ public class Database {
         }
 
         gameList.add(game);
+        gameGraph.put(gameID, new MapGraph());
         return new Result(true, game, null);
     }
 
@@ -677,6 +680,9 @@ public class Database {
 
                     //update game history
                     gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed_" + routeID + "_routes"));
+
+                    //add to graph
+                    gameGraph.get(gameID).addPath(username, claimedRoute);
                     return new Result(true, true, null);
                 }
 
@@ -801,19 +807,23 @@ public class Database {
         }
 
         //TODO : compute longest path
-        TreeSet<Integer> routeNums = new TreeSet<>();
-        for (PlayerUser p : gameServer.getPlayers()) {
-            routeNums.add(claimedRoutesNum.get(p.getPlayerName()));
+//        TreeSet<Integer> routeNums = new TreeSet<>();
+//        for (PlayerUser p : gameServer.getPlayers()) {
+//            routeNums.add(claimedRoutesNum.get(p.getPlayerName()));
+//        }
+        MapGraph mapGraph = getGraphByGame(gameID);
+        HashMap<String, Integer> paths = mapGraph.findLongestPath();
+
+        int maxRouteNum = -1;
+        for (String s : paths.keySet()) {
+            maxRouteNum = Math.max(maxRouteNum, paths.get(s));
         }
-
-        int maxRouteNum = routeNums.last();
-
         //calculate scores
         for (PlayerUser p : gameServer.getPlayers()) {
             String username = p.getPlayerName();
             int winnedPoints = winnedPoint.get(username);
             int lostPoints = lostPoint.get(username);
-            int pathNum = claimedRoutesNum.get(username);
+            int pathNum = paths.get(username);
             int totalPoints = p.getPoint() + winnedPoints - lostPoints;
             if (pathNum == maxRouteNum) {
                 totalPoints += 10;
@@ -842,6 +852,7 @@ public class Database {
         }
         //TODO : get rid of game?
         gameList.remove(gameServer);
+        gameGraph.remove(gameID);
         LobbyGame lobbyGame = findGameLobbyByID(gameID);
         lobbyGameList.remove(lobbyGame);
 
@@ -858,5 +869,9 @@ public class Database {
         gameServer.moveToNextTurn();
         int index = gameServer.getCurrentPlayerIndex();
         return gameServer.getPlayers().get(index).getPlayerName();
+    }
+
+    private MapGraph getGraphByGame(String gameID) {
+        return gameGraph.get(gameID);
     }
 }

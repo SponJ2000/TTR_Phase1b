@@ -64,9 +64,9 @@ public class GamePresenter implements IGamePresenter {
         if(result != null && result.getClass().equals(Result.class)) {
             state.finish((Result) result);
         }
-//        else if(result != null && result.getClass().equals(Route.class)){
-//            view.updateRoute((Route) result);
-//        }
+        else if(result != null && result.getClass().equals(Route.class)){
+            view.updateRoute((Route) result);
+        }
         view.setPlayer(model.getPlayer());
         if(model.getPlayer() == null) {
             Log.d(TAG, "user is null");
@@ -80,7 +80,6 @@ public class GamePresenter implements IGamePresenter {
             view.setFaceCards(model.getFaceCards());
             view.setMap(model.getMap());
             view.setTickets(model.getTickets());
-            view.updateRoute();
             view.updateUI();
 
         }else {
