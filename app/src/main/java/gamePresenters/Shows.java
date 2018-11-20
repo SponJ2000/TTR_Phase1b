@@ -1,5 +1,5 @@
 package gamePresenters;
 
 public enum Shows {
-    menu, playerInfo, tickets, chat, map, cardSelect
+    menu, playerInfo, tickets, chat, map, score, cardSelect
 }

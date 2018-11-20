@@ -22,14 +22,16 @@ import gamePresenters.ICardSelectPresenter;
 import gamePresenters.IChatPresenter;
 import gamePresenters.IGamePresenter;
 import gamePresenters.IMenuPresenter;
+import gamePresenters.IScorePresenter;
 import gamePresenters.ITicketPresenter;
+import gamePresenters.ScorePresenter;
 import gamePresenters.Shows;
 import gamePresenters.TicketPresenter;
 
 public class GameActivity extends AppCompatActivity implements IGamePresenter.OnShowListener,
         IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener,
         ICardSelectPresenter.OnBackListener, CardDialog.CardDialogListener,
-        IMenuPresenter.MenuListener {
+        IMenuPresenter.MenuListener, IScorePresenter.OnReturnListener {
 
     private static final String TAG = "GameActivity";
 
@@ -85,6 +87,11 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 PresenterFacade.getInstance().setPresenter( new CardSelectPresenter((ICardSelectView) fragment, this, args) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
+            case score:
+                fragment = ScoreFragment.newInstance();
+                PresenterFacade.getInstance().setPresenter( new ScorePresenter((IScoreView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
         }
         Log.d(TAG, "showing a " + show + " fragment");
     }
@@ -97,6 +104,16 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
         fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game fragment back in");
+    }
+
+    @Override
+    public void onReturn() {
+//        FragmentManager fm = getSupportFragmentManager();
+//
+//        Fragment fragment = GameFragment.newInstance();
+//        PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
+//        fm.beginTransaction().replace(R.id.container, fragment).commit();
+        Log.d(TAG, "Going back to gamelistview");
     }
 
     @Override

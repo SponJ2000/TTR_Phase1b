@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
@@ -7,6 +8,7 @@ import communication.GameColor;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerStats;
 import communication.Route;
 import communication.Ticket;
 
@@ -90,5 +92,11 @@ public interface IGameModel {
     void updateOpponent();
 
     void endTurn();
+
+    ArrayList<PlayerStats> getPlayerStats();
+
+    boolean isLastTurn();
+
+    boolean isGameEnded();
 
 }
