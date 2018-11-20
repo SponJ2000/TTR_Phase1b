@@ -1,8 +1,6 @@
 package model;
 
 
-import android.view.Display;
-
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
@@ -10,6 +8,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import communication.Card;
+import communication.DualRoute;
 import communication.GameClient;
 import communication.GameColor;
 import communication.Game;
@@ -22,7 +21,6 @@ import communication.Result;
 import communication.Route;
 import communication.Ticket;
 import server.CommandTask;
-import server.Poller;
 import task.GenericTask;
 
 /**
@@ -362,11 +360,28 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
-    public Object checkRouteCanClaim(GameColor color, int length) {
+    public Object checkRouteCanClaim(Route route) {
+        //First, check to see if it's a dual route
+        if(route.getClass().equals(DualRoute.class)) {
+            if(getPlayers().size() <= 2) {
+                return "Only one dual route can be claimed in a two-player game";
+            }
+
+            String siblingID = ((DualRoute) route).getSibling();
+
+            if (getPlayer().checkRouteIfClaimed(siblingID)) {
+                return "You may not claim both dual routes";
+            }
+        }
+
+        GameColor color = route.getColor();
+        int length = route.getLength();
+
         List<Card> cards = getCards();
 
         if (color == GameColor.GREY) {
-            if (cards.size() >= length) return true;
+            //works through all colors to see if there's enough for a set
+            if (largestSet() >= length) return true;
             else return "Not enough cards";
         }
         else {
@@ -395,6 +410,58 @@ public class ModelFacade implements IGameModel {
         }
 
         //TODO: check for dual routes
+    }
+
+    private int largestSet(){
+        //step 1: make hand
+        int[] hand = {0,0,0,0,0,0,0,0,0};
+
+        for(int i = 0; i < getPlayer().getCards().size(); i++) {
+            Card card = getPlayer().getCards().get(i);
+
+            switch(card.getColor()) {
+                case RED:
+                    hand[0] += 1;
+                    break;
+                case ORANGE:
+                    hand[1] += 1;
+                    break;
+                case YELLOW:
+                    hand[2] += 1;
+                    break;
+                case GREEN:
+                    hand[3] += 1;
+                    break;
+                case BLUE:
+                    hand[4] += 1;
+                    break;
+                case PURPLE:
+                    hand[5] += 1;
+                    break;
+                case WHITE:
+                    hand[6] += 1;
+                    break;
+                case BLACK:
+                    hand[7] += 1;
+                    break;
+                case LOCOMOTIVE:
+                    hand[8] += 1;
+                    break;
+                    default:
+            }
+        }
+
+        //Step 2: check to see which color has the most cards
+        int largest = hand[0];
+
+        for(int i = 1; i < 8; i++) {
+            if (hand[i] > largest) {
+                largest = hand[i];
+            }
+        }
+
+        //Step 3: return that number plus the number of locomotives
+        return largest+hand[8];
     }
 
     @Override

@@ -1,30 +1,21 @@
 package gamePresenters;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
 import communication.Card;
 import communication.GameColor;
-import communication.GameMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-import communication.City;
+import java.util.ArrayList;
+
 import communication.Player;
 import communication.Result;
 import communication.Route;
-import communication.Ticket;
 import model.IGameModel;
-import model.IModelObservable;
-import model.IModelObserver;
 import model.ModelFacade;
-import model.ModelRoot;
 
 public class GamePresenter implements IGamePresenter {
 
@@ -80,7 +71,7 @@ public class GamePresenter implements IGamePresenter {
             view.setFaceCards(model.getFaceCards());
             view.setMap(model.getMap());
             view.setTickets(model.getTickets());
-            view.updateRoute();
+            //view.updateRoute();
             view.updateUI();
 
         }else {
@@ -287,7 +278,7 @@ public class GamePresenter implements IGamePresenter {
         public void claimRoute(Route route, Player player) {
             //Check if a player has sufficient cards
             System.out.println("CLAIMED");
-            Object list = model.checkRouteCanClaim(route.getColor(), route.getLength());
+            Object list = model.checkRouteCanClaim(route);
 
             if (list instanceof String) {
                 System.out.println("apprently it wont go to claim");

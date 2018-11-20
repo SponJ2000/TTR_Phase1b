@@ -4,11 +4,9 @@ import java.util.List;
 
 import communication.Card;
 import communication.GameColor;
-import communication.GameColor;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
-import communication.Result;
 import communication.Route;
 import communication.Ticket;
 
@@ -57,11 +55,10 @@ public interface IGameModel {
      * Checks if the player has enough cards of color and enough trains left to claim a route of
      * given length. Also checks to see if it is a dual route, and, if so, checks to be sure the
      * player has not claimed its sibling.
-     * @param color
-     * @param length
-     * @return  A list of cards if the player can claim the route, an error message if not
+     *
+     * @param route@return  A list of cards if the player can claim the route, an error message if not
      */
-    Object checkRouteCanClaim(GameColor color, int length);
+    Object checkRouteCanClaim(Route route);
 
     /**
      * Returns the color of the selected face-up card
