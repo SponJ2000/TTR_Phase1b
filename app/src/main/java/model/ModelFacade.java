@@ -16,6 +16,7 @@ import communication.LobbyGame;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerStats;
 import communication.PlayerUser;
 import communication.Result;
 import communication.Route;
@@ -506,6 +507,19 @@ public class ModelFacade implements IGameModel {
     public LobbyGame getLobbyGame() {
         return ModelRoot.getInstance().getLobbyGame();
     }
+
+    public ArrayList<PlayerStats> getPlayerStats(){
+        return ModelRoot.getInstance().getGame().getPlayerStatsList();
+    }
+
+    public boolean isLastTurn(){
+        return ModelRoot.getInstance().getGame().isLastRound();
+    }
+
+    public boolean isGameEnded() {
+        return ModelRoot.getInstance().getGame().isGameEnded();
+    }
+
 
 
 }

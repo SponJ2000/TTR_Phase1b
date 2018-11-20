@@ -286,7 +286,7 @@ public class GamePresenter implements IGamePresenter {
         public void claimRoute(Route route, Player player) {
             //Check if a player has sufficient cards
             System.out.println("CLAIMED");
-            Object list = model.checkRouteCanClaim(route.getColor(), route.getLength());
+            Object list = model.checkRouteCanClaim(route);
 
             if (list instanceof String) {
                 System.out.println("apprently it wont go to claim");
