@@ -32,6 +32,7 @@ public class MapGraph{
     //username to routes
     HashMap<String, ArrayList<Route>> graph = new HashMap<>();
     Integer maxLength = Integer.valueOf(0);
+    Boolean hasPath = false;
 
     public void addPath(String username, Route route) {
         if (graph.containsKey(username)) {
@@ -52,6 +53,51 @@ public class MapGraph{
         return paths;
     }
 
+    public boolean hasPath(String username, String city1, String city2) {
+        hasPath = false;
+        ArrayList<Route> routes = graph.get(username);
+        System.out.println(city1 + " " + city2);
+        for (int j = 0; j < routes.size(); j++) {
+            System.out.println(routes.get(j).getCity1().toString() + " " + routes.get(j).getCity2().toString());
+            if (routes.get(j).getCity1().getName().equals(city1)) {
+                System.out.println("EEEEE");
+                ArrayList<Boolean> visited = new ArrayList<>();
+                for (int i = 0; i < routes.size(); i++) {
+                    visited.add(new Boolean(false));
+                }
+                visited.set(j, true);
+            System.out.println("STARTING AT " + routes.get(j).getCity1().toString());
+                dfs2(city1, visited, routes, routes.get(j).getLength(), city2);
+
+                visited = new ArrayList<>();
+                for (int i = 0; i < routes.size(); i++) {
+                    visited.add(new Boolean(false));
+                }
+                visited.set(j, true);
+            System.out.println("STARTING AT " + routes.get(j).getCity1().toString());
+                dfs2(routes.get(j).getCity2().getName(), visited, routes, routes.get(j).getLength(), city2);
+            }
+            else if (routes.get(j).getCity2().getName().equals(city1)){
+                ArrayList<Boolean> visited = new ArrayList<>();
+                for (int i = 0; i < routes.size(); i++) {
+                    visited.add(new Boolean(false));
+                }
+                visited.set(j, true);
+                System.out.println("STARTING AT " + routes.get(j).getCity1().getName());
+                dfs2(routes.get(j).getCity2().getName(), visited, routes, routes.get(j).getLength(), city2);
+
+                visited = new ArrayList<>();
+                for (int i = 0; i < routes.size(); i++) {
+                    visited.add(new Boolean(false));
+                }
+                visited.set(j, true);
+                System.out.println("STARTING AT " + routes.get(j).getCity1().getName());
+                dfs2(routes.get(j).getCity1().getName(), visited, routes, routes.get(j).getLength(), city2);
+            }
+        }
+        return hasPath;
+    }
+
     int findPath(String username) {
         ArrayList<Route> routes = graph.get(username);
         for (int j = 0; j < routes.size(); j++) {
@@ -61,7 +107,7 @@ public class MapGraph{
             }
             visited.set(j, true);
 //            System.out.println("STARTING AT " + routes.get(j).getCity1().toString());
-            dfs(routes.get(j).getCity1().toString(), visited, routes, routes.get(j).getLength());
+            dfs(routes.get(j).getCity1().getName(), visited, routes, routes.get(j).getLength());
 
             //other way
             visited = new ArrayList<>();
@@ -70,9 +116,35 @@ public class MapGraph{
             }
             visited.set(j, true);
 //            System.out.println("STARTING AT " + routes.get(j).getCity2().toString());
-            dfs(routes.get(j).getCity2().toString(), visited, routes, routes.get(j).getLength());
+            dfs(routes.get(j).getCity2().getName(), visited, routes, routes.get(j).getLength());
         }
         return maxLength;
+    }
+
+    void dfs2(String city, ArrayList<Boolean> visited, ArrayList<Route> routes, int depth, String des) {
+        if (des.equals(city)) {
+            System.out.println("EEEEEEEEEEEEEEEEEEEEEEE");
+            hasPath = true;
+        }
+//        System.out.println("DEPTH " + depth + " MAX : " + maxLength);
+        // System.out.println("CCCC " + maxLength + " " + depth);
+
+        for (int i= 0; i < routes.size(); i++) {
+            if (!visited.get(i)) {
+                if (city.equals(routes.get(i).getCity1().getName())) {
+                    visited.set(i, true);
+//                    System.out.println("VISITING " + routes.get(i).getRouteID());
+//                    System.out.println("CURRENT DEPTH " + depth + " AND LENGTH TO BE ADDED " + routes.get(i).getLength());
+                    dfs2(routes.get(i).getCity2().getName(), visited, routes, depth + routes.get(i).getLength(), des);
+                }
+                else if (city.equals(routes.get(i).getCity2().getName())) {
+                    visited.set(i, true);
+//                    System.out.println("VISITING " + routes.get(i).getRouteID());
+//                    System.out.println("CURRENT DEPTH " + depth + " AND LENGTH TO BE ADDED " + routes.get(i).getLength());
+                    dfs2(routes.get(i).getCity1().getName(), visited, routes, depth + routes.get(i).getLength(), des);
+                }
+            }
+        }
     }
 
     void dfs(String city, ArrayList<Boolean> visited, ArrayList<Route> routes, int depth) {
@@ -82,17 +154,17 @@ public class MapGraph{
 
         for (int i= 0; i < routes.size(); i++) {
             if (!visited.get(i)) {
-                if (city.equals(routes.get(i).getCity1().toString())) {
+                if (city.equals(routes.get(i).getCity1().getName())) {
                     visited.set(i, true);
 //                    System.out.println("VISITING " + routes.get(i).getRouteID());
 //                    System.out.println("CURRENT DEPTH " + depth + " AND LENGTH TO BE ADDED " + routes.get(i).getLength());
-                    dfs(routes.get(i).getCity2().toString(), visited, routes, depth + routes.get(i).getLength());
+                    dfs(routes.get(i).getCity2().getName(), visited, routes, depth + routes.get(i).getLength());
                 }
-                else if (city.equals(routes.get(i).getCity2().toString())) {
+                else if (city.equals(routes.get(i).getCity2().getName())) {
                     visited.set(i, true);
 //                    System.out.println("VISITING " + routes.get(i).getRouteID());
 //                    System.out.println("CURRENT DEPTH " + depth + " AND LENGTH TO BE ADDED " + routes.get(i).getLength());
-                    dfs(routes.get(i).getCity1().toString(), visited, routes, depth + routes.get(i).getLength());
+                    dfs(routes.get(i).getCity1().getName(), visited, routes, depth + routes.get(i).getLength());
                 }
             }
         }

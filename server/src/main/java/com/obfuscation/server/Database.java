@@ -783,26 +783,44 @@ public class Database {
                 claimedRoutesNum.put(route.getClaimedBy().getPlayerName(), point);
             }
         }
+        boolean hascity1 = false;
+        boolean hascity2 = false;
+        String start, end;
         for (PlayerUser p : gameServer.getPlayers()) {
             for (Ticket ticket : p.getTickets()) {
-                for (Route route : gameServer.getmMap().getRoutes()) {
-                    String routeID = ticket.getCity1() + "-" + ticket.getCity2();
-                    //TODO : what if swapped
-                    if (route.getRouteID().equals(routeID)) {
-                        //if succeeded
-                        if (route.getClaimedBy() != null && route.getClaimedBy().getPlayerName().equals(p.getPlayerName())) {
-                            int point = winnedPoint.get(p.getPlayerName()) + ticket.getValue();
-                            winnedPoint.put(p.getPlayerName(), point);
-                        }
-
-                        //if failed
-                        else {
-                            int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
-                            lostPoint.put(p.getPlayerName(), point);
-                        }
-                        break;
-                    }
+                start = ticket.getCity1().getName();
+                end = ticket.getCity2().getName();
+                if (gameGraph.get(gameID).hasPath(p.getPlayerName(), start, end)) {
+                    int point = winnedPoint.get(p.getPlayerName()) + ticket.getValue();
+                    winnedPoint.put(p.getPlayerName(), point);
                 }
+                else {
+                    int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
+                    lostPoint.put(p.getPlayerName(), point);
+                }
+//                for (Route route : gameServer.getmMap().getRoutes()) {
+//                    boolean
+//                    if (route.getCity1().getName().equals(ticket.getCity1().getName()) && route.getClaimedBy() != null && route.getClaimedBy().getPlayerName().equals(p.getPlayerName())) {
+//                        int point = winnedPoint.get(p.getPlayerName()) + ticket.getValue();
+//                        winnedPoint.put(p.getPlayerName(), point);
+//                    }
+//
+//
+//                    String routeID = ticket.getCity1() + "-" + ticket.getCity2();
+//                    //TODO : what if swapped
+//                    if (route.getRouteID().equals(routeID)) {
+//                        //if succeeded
+//                        if (route.getClaimedBy() != null && route.getClaimedBy().getPlayerName().equals(p.getPlayerName())) {
+//                        }
+//
+//                        //if failed
+//                        else {
+//                            int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
+//                            lostPoint.put(p.getPlayerName(), point);
+//                        }
+//                        break;
+//                    }
+//                }
             }
         }
 
