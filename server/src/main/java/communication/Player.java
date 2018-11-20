@@ -54,6 +54,10 @@ public class Player implements IPlayer, Serializable{
         return true;
     }
 
+    public boolean checkRouteIfClaimed(String routeID) {
+        return claimedRoutesID.contains(routeID);
+    }
+
     public int getPoint() {
         return point;
     }
