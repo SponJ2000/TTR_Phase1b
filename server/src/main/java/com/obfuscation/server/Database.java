@@ -821,6 +821,9 @@ public class Database {
         //calculate scores
         for (PlayerUser p : gameServer.getPlayers()) {
             String username = p.getPlayerName();
+            if (!paths.containsKey(username)) {
+                paths.put(username, 0);
+            }
             int winnedPoints = winnedPoint.get(username);
             int lostPoints = lostPoint.get(username);
             int pathNum = paths.get(username);

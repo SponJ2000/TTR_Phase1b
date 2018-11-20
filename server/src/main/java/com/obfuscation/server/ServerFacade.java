@@ -245,7 +245,8 @@ public class ServerFacade implements IServer {
                     //initialize opponents
                     for (ClientProxy clientProxy1 : gameIDclientProxyMap.get(gameID)) {
                         if (!clientProxy.getAuthToken().equals(clientProxy1.getAuthToken())) {
-                            PlayerOpponent playerOpponent = new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 40, 4);
+                            //FIXME for testing
+                            PlayerOpponent playerOpponent = new PlayerOpponent(db.findUsernameByAuthToken(clientProxy1.getAuthToken()), 0, 5, 4);
 
                             String opponent = db.findUsernameByAuthToken(clientProxy1.getAuthToken());
                             for (PlayerUser p : game.getPlayers()) {
@@ -470,6 +471,7 @@ public class ServerFacade implements IServer {
 
             //if final move, end game
             if (gameServer.isLastRound() && gameServer.getLastRoundTriggeredBy() != null && gameServer.getLastRoundTriggeredBy().equals(username)) {
+                System.out.println("FINAL SCORE GETTING CALLED");
                 ArrayList<PlayerStats> finalScores = db.getGameResult(gameID);
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     clientProxy.endGame(gameID, finalScores);
@@ -479,8 +481,12 @@ public class ServerFacade implements IServer {
 
             //if the tran car number is less than 3, last round
             if (gameServer.getPlayerbyUserName(username).getTrainNum() < 3) {
+                System.out.println("LAST ROUND GETTING CALLED");
                 gameServer.setLastRound(true);
                 gameServer.setLastRoundTriggeredBy(username);
+                for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+                    clientProxy.lastRound(gameID);
+                }
             }
 
             gameServer.moveToNextTurn();

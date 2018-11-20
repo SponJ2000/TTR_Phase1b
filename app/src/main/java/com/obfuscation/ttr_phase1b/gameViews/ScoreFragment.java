@@ -70,7 +70,9 @@ public class ScoreFragment extends Fragment implements IScoreView {
         mScoreRecycler = (RecyclerView) view.findViewById(R.id.score_recycler_view);
         mScoreRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mPresenter.updateInfo(null);
+        if(mPresenter != null) {
+            mPresenter.updateInfo(null);
+        }
 
         return view;
     }

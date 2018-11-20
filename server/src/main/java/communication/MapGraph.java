@@ -46,6 +46,7 @@ public class MapGraph{
     public HashMap<String, Integer>  findLongestPath() {
         HashMap<String, Integer> paths = new HashMap<>();
         for (String key : graph.keySet()) {
+            maxLength= 0;
             paths.put(key, findPath(key));
         }
         return paths;

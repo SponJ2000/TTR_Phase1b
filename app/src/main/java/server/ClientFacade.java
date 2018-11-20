@@ -275,6 +275,7 @@ public class ClientFacade implements IClient{
 
     @Override
     public void lastRound(String gameID) {
+        System.out.println("last round getting called");
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
            g.setLastRound(true);
@@ -284,7 +285,9 @@ public class ClientFacade implements IClient{
 
     @Override
     public void endGame(String gameID, List<PlayerStats> stats) {
+        System.out.println("end game getting called");
         GameClient g = ModelRoot.getInstance().getGame();
+        g.setGameEnded(true);
         if (g != null) {
             Serializer serializer = new Serializer();
             for(Object O: stats) {
