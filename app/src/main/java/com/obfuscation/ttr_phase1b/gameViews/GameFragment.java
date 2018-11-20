@@ -59,6 +59,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private boolean mIsSetup;
     private boolean mIsTurn;
+    private boolean mLastTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
     private List<Ticket> mTickets;
@@ -99,6 +100,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mFaceCardViews = null;
         mTickets = null;
         mIsSetup = false;
+        mLastTurn = false;
     }
 
     public static GameFragment newInstance() {
@@ -186,6 +188,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         if(!mIsSetup){
             return;
         }
+
         if(mPlayer != null) {
             Log.d(TAG, "updateUI: player: " + mPlayer);
             setColor();
@@ -202,8 +205,14 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             mMapView.getMapAsync(this);
         }if(mIsTurn) {
             mTurnText.setText("Your Turn");
+            if(mLastTurn) {
+                mTurnText.setText("Your Last Turn!");
+            }
         }else {
             mTurnText.setText("");
+            if(mLastTurn) {
+                mTurnText.setText("Last Round!");
+            }
         }
     }
 
@@ -663,8 +672,13 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     @Override
+    public void setLastTurn(boolean lastTurn) {
+        mLastTurn = lastTurn;
+    }
+
+    @Override
     public void sendToast(String toast) {
-        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(), toast, Toast.LENGTH_LONG);
     }
 
     @Override

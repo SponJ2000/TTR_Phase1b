@@ -8,11 +8,11 @@ import model.ModelFacade;
 
 public class ScorePresenter implements IScorePresenter {
 
-    private OnBackListener listener;
+    private OnReturnListener listener;
     private IScoreView view;
     private IGameModel model;
 
-    public ScorePresenter(IScoreView view, OnBackListener listener) {
+    public ScorePresenter(IScoreView view, OnReturnListener listener) {
         this.listener = listener;
         this.view = view;
         this.model = ModelFacade.getInstance();
@@ -20,7 +20,7 @@ public class ScorePresenter implements IScorePresenter {
 
     @Override
     public void onBack() {
-        listener.onBack();
+        listener.onReturn();
     }
 
     @Override

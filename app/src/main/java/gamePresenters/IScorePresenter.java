@@ -12,8 +12,8 @@ public interface IScorePresenter extends IPresenter {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface OnBackListener {
-        void onBack();
+    public interface OnReturnListener {
+        void onReturn();
     }
 
 }

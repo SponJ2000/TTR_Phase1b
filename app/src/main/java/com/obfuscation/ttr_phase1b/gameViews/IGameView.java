@@ -113,6 +113,8 @@ public interface IGameView extends IView {
      */
     void setTurn(boolean turn);
 
+    void setLastTurn(boolean lastTurn);
+
     /**
      * Sends a message to the player in the form of a toast
      * @param toast a String containing the toast to send
