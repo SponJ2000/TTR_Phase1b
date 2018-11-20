@@ -63,7 +63,9 @@ public class ServerFacade implements IServer {
                 String username = db.findUsernameByAuthToken(authToken);
                 PlayerUser currentPlayer = gameServer.getPlayerbyUserName(username);
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
-                    clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
+                    if (!clientProxy.getAuthToken().equals(authToken)) {
+                        clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
+                    }
                     clientProxy.updateTrainDeck(gameID, gameServer.getFaceUpTrainCarCards(), gameServer.getTrainCards().size());
                 }
             }
@@ -388,9 +390,12 @@ public class ServerFacade implements IServer {
 
                     //update opponents points
                     clientProxy.claimRoute(gameID, username, routeID);
-                    clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
-                    clientProxy.updateOpponentTrainCars(gameID, username, currentPlayer.getTrainNum());
                     clientProxy.updatePlayerPoints(gameID, username, currentPlayer.getPoint());
+
+                    if (!clientProxy.getAuthToken().equals(authToken)) {
+                        clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
+                        clientProxy.updateOpponentTrainCars(gameID, username, currentPlayer.getTrainNum());
+                    }
 
                     //update last round if necessary
                     if (gameServer.isLastRound()) {

@@ -21,7 +21,10 @@ import communication.Result;
 import communication.Route;
 import communication.Ticket;
 import model.IGameModel;
+import model.IModelObservable;
+import model.IModelObserver;
 import model.ModelFacade;
+import model.ModelRoot;
 
 public class GamePresenter implements IGamePresenter {
 
@@ -52,9 +55,18 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
+        if(result != null && (result instanceof Result)) {
+            Result r = (Result) result;
+            if (r.getErrorInfo().equals("from claim route")) {
+                System.out.println("called update from claim route");
+            }
+        }
         if(result != null && result.getClass().equals(Result.class)) {
             state.finish((Result) result);
         }
+//        else if(result != null && result.getClass().equals(Route.class)){
+//            view.updateRoute((Route) result);
+//        }
         view.setPlayer(model.getPlayer());
         if(model.getPlayer() == null) {
             Log.d(TAG, "user is null");
@@ -68,7 +80,9 @@ public class GamePresenter implements IGamePresenter {
             view.setFaceCards(model.getFaceCards());
             view.setMap(model.getMap());
             view.setTickets(model.getTickets());
+            view.updateRoute();
             view.updateUI();
+
         }else {
             playerInfoView.setPlayers(model.getPlayers());
             playerInfoView.updateUI();
@@ -105,67 +119,66 @@ public class GamePresenter implements IGamePresenter {
         }
     }
 
-
-    public void onChange(Activity activity) {
-        switch (changeIndex) {
-            case 0:
-                Toast.makeText(activity, "update mPlayer points", Toast.LENGTH_SHORT).show();
-                model.addPoints(8);
-                break;
-            case 1:
-                Toast.makeText(activity, "add train cards", Toast.LENGTH_SHORT).show();
-                model.chooseCard(2);
-                break;
-            case 2:
-                Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
-                model.useCards(GameColor.GREEN, 1);
-                break;
-            case 3:
-                Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
-                ArrayList<Ticket> tickets = new ArrayList<>();
-                tickets.add(new Ticket(new City("berlin",0,0), new City("helsinki",0,0), 8));
-                tickets.add(new Ticket(new City("berlin",0,0), new City("london",0,0), 12));
-                model.addTickets(tickets);
-                break;
-            case 4:
-                Toast.makeText(activity, "remove tickets", Toast.LENGTH_SHORT).show();
-                model.removeTicket(1);
-                model.removeTicket(1);
-                break;
-            case 5:
-                Toast.makeText(activity, "update opponent cards and tickets", Toast.LENGTH_SHORT).show();
-                model.updateOpponent();
-                break;
-            case 6:
-                Toast.makeText(activity, "update face cards and deck", Toast.LENGTH_SHORT).show();
-                model.updateFaceCards();
-                break;
-            case 7:
-                Toast.makeText(activity, "add claimed mRoute", Toast.LENGTH_SHORT).show();
-                List<Route> routes = model.getMap().getRoutes();
-                Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
-
-                Player player = model.getPlayers().get(ThreadLocalRandom.current().nextInt(0, model.getPlayers().size()));
-                model.claimRoute(r, player, null);
-                view.updateRoute(r);
-                break;
-            case 8:
-                if (model.isMyTurn()) {
-                    Toast.makeText(activity, "Not your turn", Toast.LENGTH_SHORT).show();
-                    model.setMyTurn(false);
-                    state = new NotTurn(this);
-                } else {
-                    Toast.makeText(activity, "Your turn!", Toast.LENGTH_SHORT).show();
-                    model.setMyTurn(true);
-                    state = new TurnNoSelection(this);
-                }
-
-
-        }
-        ++changeIndex;
-        changeIndex %= 9;
-        updateInfo(true);
-    }
+    //    public void onChange(Activity activity) {
+//        switch (changeIndex) {
+//            case 0:
+//                Toast.makeText(activity, "update mPlayer points", Toast.LENGTH_SHORT).show();
+//                model.addPoints(8);
+//                break;
+//            case 1:
+//                Toast.makeText(activity, "add train cards", Toast.LENGTH_SHORT).show();
+//                model.chooseCard(2);
+//                break;
+//            case 2:
+//                Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
+//                model.useCards(GameColor.GREEN, 1);
+//                break;
+//            case 3:
+//                Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
+//                ArrayList<Ticket> tickets = new ArrayList<>();
+//                tickets.add(new Ticket(new City("berlin",0,0), new City("helsinki",0,0), 8));
+//                tickets.add(new Ticket(new City("berlin",0,0), new City("london",0,0), 12));
+//                model.addTickets(tickets);
+//                break;
+//            case 4:
+//                Toast.makeText(activity, "remove tickets", Toast.LENGTH_SHORT).show();
+//                model.removeTicket(1);
+//                model.removeTicket(1);
+//                break;
+//            case 5:
+//                Toast.makeText(activity, "update opponent cards and tickets", Toast.LENGTH_SHORT).show();
+//                model.updateOpponent();
+//                break;
+//            case 6:
+//                Toast.makeText(activity, "update face cards and deck", Toast.LENGTH_SHORT).show();
+//                model.updateFaceCards();
+//                break;
+//            case 7:
+//                Toast.makeText(activity, "add claimed mRoute", Toast.LENGTH_SHORT).show();
+//                List<Route> routes = model.getMap().getRoutes();
+//                Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
+//
+//                Player player = model.getPlayers().get(ThreadLocalRandom.current().nextInt(0, model.getPlayers().size()));
+//                model.claimRoute(r, player, null);
+//                view.updateRoute(r);
+//                break;
+//            case 8:
+//                if (model.isMyTurn()) {
+//                    Toast.makeText(activity, "Not your turn", Toast.LENGTH_SHORT).show();
+//                    model.setMyTurn(false);
+//                    state = new NotTurn(this);
+//                } else {
+//                    Toast.makeText(activity, "Your turn!", Toast.LENGTH_SHORT).show();
+//                    model.setMyTurn(true);
+//                    state = new TurnNoSelection(this);
+//                }
+//
+//
+//        }
+//        ++changeIndex;
+//        changeIndex %= 9;
+//        updateInfo(true);
+//    }
 
     public void showMap() {
     }
@@ -273,10 +286,11 @@ public class GamePresenter implements IGamePresenter {
         @Override
         public void claimRoute(Route route, Player player) {
             //Check if a player has sufficient cards
-
+            System.out.println("CLAIMED");
             Object list = model.checkRouteCanClaim(route.getColor(), route.getLength());
 
             if (list instanceof String) {
+                System.out.println("apprently it wont go to claim");
                 wrapper.sendToast((String) list);
             }
             else {
@@ -294,8 +308,11 @@ public class GamePresenter implements IGamePresenter {
                 }
 
                 //Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
+                System.out.println("trying to call model to claim route");
                 model.claimRoute(route, player, cardsToUse);
+
                 actionSelected = true;
+                updateInfo(new Result(true, true, null));
 
                 model.endTurn();
                 wrapper.setState(new NotTurn(wrapper));

@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,14 +31,12 @@ import java.util.Map;
 
 import communication.Card;
 import communication.City;
-import communication.GameClient;
 import communication.GameColor;
 import communication.GameMap;
 import communication.Player;
 import communication.Route;
 import communication.Ticket;
 import gamePresenters.IGamePresenter;
-import model.ModelFacade;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -60,6 +57,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private IGamePresenter mPresenter;
 
+    private boolean mIsSetup;
     private boolean mIsTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
@@ -100,6 +98,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
+        mIsSetup = false;
     }
 
     public static GameFragment newInstance() {
@@ -173,15 +172,20 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mMapView.getMapAsync(this);
 
+        mIsSetup = true;
+
         mPresenter.updateInfo(true);
 
-        Log.d(TAG, "onCreateView: done setup");
-        
+        Log.d(TAG, "onCreateView: done mIsSetup");
+
         return rootView;
     }
 
     @Override
     public void updateUI() {
+        if(!mIsSetup){
+            return;
+        }
         if(mPlayer != null) {
             Log.d(TAG, "updateUI: player: " + mPlayer);
             setColor();
@@ -276,6 +280,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void setColor() {
+        if(!mIsSetup){
+            return;
+        }
         GameColor color = mPlayer.getPlayerColor();
         ColorStateList stateList = null;
         int colorID = colorMap.get(mPlayer.getPlayerColor());
@@ -307,16 +314,49 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     @Override
-    public void updateRoute(Route route) {
-        String name = route.getClaimedBy().getPlayerName();
-        int color = colorMap.get(route.getClaimedBy().getPlayerColor());
+    public void updateRoute(Route r) {
+        String name = r.getClaimedBy().getPlayerName();
+        int color = colorMap.get(r.getClaimedBy().getPlayerColor());
+        boolean claimed = (r.getClaimedBy() != null);
 
-        Polyline p = mRouteLines.get(route);
+        Polyline poly = mRouteLines.get(r);
 
-        p.setColor(color);
-        Marker m = mRoutes2.get(route);
-        m.setTitle(name);
-        m.setSnippet(new StringBuilder(route.getLength() + " points").toString());
+        poly.remove();
+
+        LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+
+        PolylineOptions p = new PolylineOptions()
+                .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
+                        mid,
+                        new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                .color(color)
+                .clickable(true);
+
+        mRouteLines.remove(r);
+        mRouteLines.put(r, googleMap.addPolyline(p));
+
+        Marker m = mRoutes2.get(r);
+        m.remove();
+        mRoutes2.remove(m);
+
+        if(claimed) {
+            mRoutes2.put(r,
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(mid)
+                            .title(r.getClaimedBy().getPlayerName())
+                            .snippet(new StringBuilder(r.getLength() + " points").toString())
+                    ));
+        } else {
+            mRoutes2.put(r,
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(mid)
+                            .title(r.getLength().toString())
+                            .snippet("unclaimed")
+                    ));
+        }
+
+        mRoutes.remove(mid);
+        mRoutes.put(mid, r);
     }
 
     private void initCardViews(View rootView) {
@@ -595,16 +635,25 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void setPoints(int points) {
+        if(!mIsSetup){
+            return;
+        }
         mPointsView.setText("" + points);
     }
 
     @Override
     public void setTrains(int trains) {
+        if(!mIsSetup){
+            return;
+        }
         mTrainsView.setText("" + trains);
     }
 
     @Override
     public void setDeckSize(int size) {
+        if(!mIsSetup){
+            return;
+        }
         mDeckSize.setText("" + size);
     }
 

@@ -1,9 +1,15 @@
 package model;
 
+import android.os.Bundle;
+
+import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import communication.GameClient;
 import communication.LobbyGame;
+import communication.Route;
 import communication.Ticket;
 
 /**
@@ -14,9 +20,12 @@ public class ModelRoot {
 
     private static ModelRoot modelRoot;
 
+    private static List<IModelObserver> observerCollection;
+
     public static ModelRoot getInstance(){
         if (modelRoot == null) {
             modelRoot = new ModelRoot();
+            observerCollection = new ArrayList<>();
         }
 
         return modelRoot;
@@ -120,5 +129,12 @@ public class ModelRoot {
 
     public void setLobbyGame(LobbyGame lobbyGame) {
         this.lobbyGame = lobbyGame;
+    }
+
+    public static void updateRoute(Route r){
+//        Bundle args = new Bundle();
+//        args.putSerializable("route", r);
+
+//        PresenterFacade.getInstance().updatePresenter(r);
     }
 }

@@ -15,6 +15,8 @@ import communication.Result;
 
 public class GenericCommand implements ICommand {
 
+    private static final String TAG = "GenCom";
+
     public String className;
     public String methodName;
     public String[] parameterType;
@@ -70,6 +72,8 @@ public class GenericCommand implements ICommand {
             return (Result)results;
         }
         catch (InvocationTargetException e) {
+            //System.out.println(TAG + ": execute: " + e.getCause().getStackTrace());
+            e.getCause().printStackTrace();
             return new Result(false, null, e.getCause().getMessage());
         }
         catch (Exception e) {

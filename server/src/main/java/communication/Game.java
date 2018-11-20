@@ -72,6 +72,7 @@ public class Game {
 
     public void claimRoute(Route route, Player player) {
         mMap.claimRoute(route, player);
+        // Need to update route on screen
     }
 
     public void insertMessage(Message m) {

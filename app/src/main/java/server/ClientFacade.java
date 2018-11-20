@@ -148,8 +148,23 @@ public class ClientFacade implements IClient{
     public void updateOpponentTrainCards(String gameID, String playerID, Integer cardNum) {
         ModelRoot m = ModelRoot.getInstance();
         PlayerOpponent p = m.getGame().getPlayerOpponentByUsername(playerID);
-        p.setCardNum(cardNum);
 
+        System.out.println("the player is " + playerID);
+
+        ArrayList<PlayerOpponent> pos = m.getGame().getPlayerOpponents();
+
+        for(PlayerOpponent po: pos) {
+            System.out.println("Player: " + po.getPlayerName());
+        }
+
+        if (p == null) {
+            System.out.println("player not found");
+        }
+
+        if (m.getUserName().equals(playerID)) {
+            System.out.println("it is the current user");
+        }
+        p.setCardNum(cardNum);
     }
 
     @Override
@@ -189,8 +204,7 @@ public class ClientFacade implements IClient{
         }
     }
 
-
-    //upate number of card in the deck
+    //update number of card in the deck
     @Override
     public void updateDestinationDeck(String gameID, Integer cardNum) {
         GameClient g = ModelRoot.getInstance().getGame();
@@ -205,11 +219,11 @@ public class ClientFacade implements IClient{
         System.out.println("claimed route with id" + routeID);
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
-            ((Player)g.getPlayerByUserName(playerID)).addRouteAsClaimed(routeID);
             Route r = g.getmMap().getRouteByRouteId(routeID);
             if (r != null) {
                 r.setClaimedBy(((Player)g.getPlayerByUserName(playerID)));
             }
+            ((Player)g.getPlayerByUserName(playerID)).addRouteAsClaimed(routeID);
         }
     }
 

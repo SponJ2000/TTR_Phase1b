@@ -55,6 +55,7 @@ public class CardSelectPresenter implements ICardSelectPresenter {
     public void playerChooseCards(List<Card> cards) {
         model.claimRoute(mRoute, cards);
         model.endTurn();
+        listener.onBack();
     }
 
     @Override

@@ -78,6 +78,10 @@ public class Player implements IPlayer, Serializable{
         trainNum = newNum;
     }
 
+    public void subtractTrain(int numUsed) {
+        trainNum = trainNum - numUsed;
+    }
+
     public GameColor getPlayerColor() {
         return playerColor;
     }

@@ -1,6 +1,8 @@
 package model;
 
 
+import android.view.Display;
+
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
@@ -85,6 +87,7 @@ public class ModelFacade implements IGameModel {
 
 
     public void claimRoute(Route route, List<Card> cards) {
+        System.out.println("come to claim route");
         claimRoute(route, getPlayer(), cards);
     }
 
@@ -182,12 +185,14 @@ public class ModelFacade implements IGameModel {
         for(Card card : cards ) {
             p.useCards(card.getColor(), 1);
         }
+        p.subtractTrain(cards.size());
         p.addRouteAsClaimed(route.getRouteID());
-        route.setClaimedBy(player);
-        Player pa = route.getClaimedBy();
-        if (pa.getPlayerName().equals( player.getPlayerName())) {
-            System.out.println("route claimed by this user");
-        }
+        ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(route.getRouteID()).setClaimedBy(player);
+//        Player pa = route.getClaimedBy();
+//        if (pa.getPlayerName().equals( player.getPlayerName())) {
+//            System.out.println("route claimed by this user");
+//        }
+        PresenterFacade.getInstance().getPresenter().updateInfo(new Result(true, null, "from claim route"));
         GenericTask genericTask = new GenericTask("ClaimRoute");
         genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
 
