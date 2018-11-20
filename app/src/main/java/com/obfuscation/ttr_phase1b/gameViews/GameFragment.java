@@ -327,6 +327,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void updateRoute(Route r) {
+        if(mRouteLines == null) {
+            return;
+        }
        // googleMap.clear();
         String name = r.getClaimedBy().getPlayerName();
         int color = colorMap.get(r.getClaimedBy().getPlayerColor());

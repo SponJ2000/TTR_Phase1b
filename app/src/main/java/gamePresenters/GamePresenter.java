@@ -52,6 +52,7 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void updateInfo(Object result) {
         if(model.isGameEnded()) {
+            Log.d(TAG, "updateInfo: ending game");
             listener.onShow(Shows.score, null);
         }
 

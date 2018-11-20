@@ -1,5 +1,7 @@
 package gamePresenters;
 
+import android.util.Log;
+
 import com.obfuscation.ttr_phase1b.gameViews.IScoreView;
 
 import communication.Result;
@@ -7,6 +9,8 @@ import model.IGameModel;
 import model.ModelFacade;
 
 public class ScorePresenter implements IScorePresenter {
+
+    private static final String TAG = "ScorePres";
 
     private OnReturnListener listener;
     private IScoreView view;
@@ -25,16 +29,19 @@ public class ScorePresenter implements IScorePresenter {
 
     @Override
     public void updateInfo(Object result) {
-        if(result != null && (result instanceof Result)) {
-            Result r = (Result) result;
-            if(r.isSuccess()) {
-                view.setInfo(model.getPlayerStats());
-            }else {
-                showToast(r.getErrorInfo());
-            }
-        }else {
-            view.setInfo(model.getPlayerStats());
-        }
+        Log.d(TAG, "updateInfo: " + model.getPlayerStats());
+        view.setInfo(model.getPlayerStats());
+//        if(result != null && (result instanceof Result)) {
+//            Result r = (Result) result;
+//            if(r.isSuccess()) {
+//                view.setInfo(model.getPlayerStats());
+//            }else {
+//                showToast(r.getErrorInfo());
+//            }
+//        }else {
+//            view.setInfo(model.getPlayerStats());
+//        }
+        view.updateUI();
     }
 
     @Override

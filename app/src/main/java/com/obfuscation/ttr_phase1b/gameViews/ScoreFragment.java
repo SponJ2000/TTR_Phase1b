@@ -69,10 +69,13 @@ public class ScoreFragment extends Fragment implements IScoreView {
 
         mScoreRecycler = (RecyclerView) view.findViewById(R.id.score_recycler_view);
         mScoreRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        Log.d(TAG, "onCreateView: " + mScoreRecycler);
 
         if(mPresenter != null) {
             mPresenter.updateInfo(null);
         }
+
+        updateUI();
 
         return view;
     }
@@ -84,8 +87,10 @@ public class ScoreFragment extends Fragment implements IScoreView {
 
     @Override
     public void updateUI() {
+        Log.d(TAG+"_updateUI", "stats: " + mStats);
+        Log.d(TAG, "updateUI: " + mScoreRecycler);
         if(mScoreRecycler != null && mStats != null) {
-            Log.d(TAG+"_updateUI", "stats: " + mStats);
+            Log.d(TAG, "updateUI: (in function) " + mStats);
             mScoreAdapter = new ScoreAdapter(mStats);
             mScoreRecycler.setAdapter(mScoreAdapter);
         }
