@@ -415,8 +415,6 @@ public class ModelFacade implements IGameModel {
             }
             else return "Not enough cards";
         }
-
-        //TODO: check for dual routes
     }
 
     private int largestSet(){

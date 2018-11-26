@@ -268,7 +268,7 @@ public class Database {
         tickets = new TickectMaker().MakeCards();
 
         //FIXME just for debugging. Should be erased later.
-        tickets = new ArrayList<> (tickets.subList(0, 20));
+//        tickets = new ArrayList<> (tickets.subList(0, 20));
 
         System.out.println("MAKER CARD SIZE " + tickets.size());
         Collections.shuffle(tickets);
