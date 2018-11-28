@@ -153,6 +153,11 @@ public class GamePresenter implements IGamePresenter {
         state.selectTicketsButton();
     }
 
+    @Override
+    public void showTickets() {
+        listener.onShow(Shows.owned_tickets, null);
+    }
+
     public void showChat() {
         this.listener.onShow(Shows.chat, null);
     }

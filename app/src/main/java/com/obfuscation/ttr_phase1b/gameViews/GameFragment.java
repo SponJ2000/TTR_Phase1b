@@ -154,6 +154,13 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mBoard = rootView.findViewById(R.id.bottom_board);
         mTicketsView = rootView.findViewById(R.id.txt_tickets);
+        mTicketsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view tickets");
+                mPresenter.showTickets();
+            }
+        });
         mPointsView = rootView.findViewById(R.id.txt_points);
         mTrainsView = rootView.findViewById(R.id.txt_trains);
         mTurnText = rootView.findViewById(R.id.turn_text);

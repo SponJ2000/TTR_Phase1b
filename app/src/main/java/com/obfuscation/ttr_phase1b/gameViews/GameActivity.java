@@ -22,8 +22,10 @@ import gamePresenters.ICardSelectPresenter;
 import gamePresenters.IChatPresenter;
 import gamePresenters.IGamePresenter;
 import gamePresenters.IMenuPresenter;
+import gamePresenters.IPTicketsPresenter;
 import gamePresenters.IScorePresenter;
 import gamePresenters.ITicketPresenter;
+import gamePresenters.PTicketsPresenter;
 import gamePresenters.ScorePresenter;
 import gamePresenters.Shows;
 import gamePresenters.TicketPresenter;
@@ -31,7 +33,8 @@ import gamePresenters.TicketPresenter;
 public class GameActivity extends AppCompatActivity implements IGamePresenter.OnShowListener,
         IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener,
         ICardSelectPresenter.OnBackListener, CardDialog.CardDialogListener,
-        IMenuPresenter.MenuListener, IScorePresenter.OnReturnListener {
+        IMenuPresenter.MenuListener, IScorePresenter.OnReturnListener,
+        IPTicketsPresenter.OnBackListener {
 
     private static final String TAG = "GameActivity";
 
@@ -90,6 +93,11 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
             case score:
                 fragment = ScoreFragment.newInstance();
                 PresenterFacade.getInstance().setPresenter( new ScorePresenter((IScoreView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
+            case owned_tickets:
+                fragment = PTicketsFragment.newInstance();
+                PresenterFacade.getInstance().setPresenter( new PTicketsPresenter((IPTicketsView) fragment, this) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
         }

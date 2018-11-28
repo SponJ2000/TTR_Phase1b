@@ -11,11 +11,12 @@ import communication.Player;
 import communication.Route;
 import model.IGameModel;
 
-public interface IGamePresenter extends IPresenter{
+public interface IGamePresenter extends IPresenter {
 
     void showMenu();
     void showPlayerInfo(IPlayerInfoView view);
     void selectTickets();
+    void showTickets();
     void showChat();
 
     IGameModel getModel();
