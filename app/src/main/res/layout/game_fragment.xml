@@ -117,13 +117,21 @@
             tools:layout_editor_absoluteY="135dp">
 
             <android.support.design.widget.FloatingActionButton
+                android:id="@+id/history_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/tickets_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:src="@drawable/ic_ticket_w"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="266dp" />
+                android:src="@drawable/ic_ticket_w"/>
 
             <Space
                 android:layout_width="match_parent"
@@ -135,9 +143,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@android:drawable/ic_menu_myplaces"
-                app:backgroundTint="@color/playerBlack"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="327dp" />
+                app:backgroundTint="@color/playerBlack" />
 
             <Space
                 android:layout_width="match_parent"
@@ -149,9 +155,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@android:drawable/stat_notify_chat"
-                app:backgroundTint="@color/playerBlack"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="387dp" />
+                app:backgroundTint="@color/playerBlack"/>
 
             <Space
                 android:layout_width="match_parent"

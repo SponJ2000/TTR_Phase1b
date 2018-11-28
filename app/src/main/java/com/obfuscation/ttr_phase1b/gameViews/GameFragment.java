@@ -70,6 +70,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private TextView mDeckSize;
     private TextView[] mCardViews;
 
+    private FloatingActionButton mHistoryButton;
     private FloatingActionButton mPlayersButton;
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
@@ -121,6 +122,15 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         initColorMap();
 
         selected = null;
+
+        mHistoryButton = rootView.findViewById(R.id.history_button);
+        mHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "View history");
+                mPresenter.showHistory();
+            }
+        });
 
         mPlayersButton = rootView.findViewById(R.id.players_button);
         mPlayersButton.setOnClickListener(new View.OnClickListener() {

@@ -18,9 +18,11 @@ import communication.IPlayer;
 import gamePresenters.CardSelectPresenter;
 import gamePresenters.ChatPresenter;
 import gamePresenters.GamePresenter;
+import gamePresenters.HistoryPresenter;
 import gamePresenters.ICardSelectPresenter;
 import gamePresenters.IChatPresenter;
 import gamePresenters.IGamePresenter;
+import gamePresenters.IHistoryPresenter;
 import gamePresenters.IMenuPresenter;
 import gamePresenters.IPTicketsPresenter;
 import gamePresenters.IScorePresenter;
@@ -34,7 +36,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener,
         ICardSelectPresenter.OnBackListener, CardDialog.CardDialogListener,
         IMenuPresenter.MenuListener, IScorePresenter.OnReturnListener,
-        IPTicketsPresenter.OnBackListener {
+        IPTicketsPresenter.OnBackListener, IHistoryPresenter.OnBackListener {
 
     private static final String TAG = "GameActivity";
 
@@ -98,6 +100,11 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
             case owned_tickets:
                 fragment = PTicketsFragment.newInstance();
                 PresenterFacade.getInstance().setPresenter( new PTicketsPresenter((IPTicketsView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
+            case history:
+                fragment = HistoryFragment.newInstance();
+                PresenterFacade.getInstance().setPresenter( new HistoryPresenter((IHistoryView) fragment, this) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
         }

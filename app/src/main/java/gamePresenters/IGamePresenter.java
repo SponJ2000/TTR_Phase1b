@@ -18,6 +18,7 @@ public interface IGamePresenter extends IPresenter {
     void selectTickets();
     void showTickets();
     void showChat();
+    void showHistory();
 
     IGameModel getModel();
     void sendToast(String toast);

@@ -67,7 +67,7 @@ public class PTicketsFragment extends Fragment implements IPTicketsView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ptickets, container, false);
 
-        mBackButton = (Button) view.findViewById(R.id.ticket_done_button);
+        mBackButton = (Button) view.findViewById(R.id.ptickets_back_button);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,6 +78,8 @@ public class PTicketsFragment extends Fragment implements IPTicketsView {
 
         mTicketRecycler = (RecyclerView) view.findViewById(R.id.ptickets_recycler_view);
         mTicketRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mPresenter.updateInfo(null);
 
         return view;
     }

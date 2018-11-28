@@ -163,6 +163,11 @@ public class GamePresenter implements IGamePresenter {
     }
 
     @Override
+    public void showHistory() {
+        listener.onShow(Shows.history, null);
+    }
+
+    @Override
     public void sendToast(String toast) {
         view.sendToast(toast);
     }

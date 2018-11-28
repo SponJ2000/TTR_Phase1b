@@ -2,21 +2,21 @@ package gamePresenters;
 
 import android.util.Log;
 
-import com.obfuscation.ttr_phase1b.gameViews.IPTicketsView;
+import com.obfuscation.ttr_phase1b.gameViews.IHistoryView;
 
 import communication.Result;
 import model.IGameModel;
 import model.ModelFacade;
 
-public class PTicketsPresenter implements IPTicketsPresenter {
+public class HistoryPresenter implements IHistoryPresenter {
 
-    private static String TAG = "pticksPres";
+    private static String TAG = "histPres";
 
-    private IPTicketsView view;
+    private IHistoryView view;
     private OnBackListener listener;
     private IGameModel model;
 
-    public PTicketsPresenter(IPTicketsView view, OnBackListener listener) {
+    public HistoryPresenter(IHistoryView view, OnBackListener listener) {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
@@ -33,23 +33,21 @@ public class PTicketsPresenter implements IPTicketsPresenter {
         if(result != null && (result instanceof Result)) {
             Result r = (Result) result;
             if (!r.isSuccess()) {
-                Log.d(TAG, "updateInfo: " + r.getErrorInfo());
+                Log.d(TAG, "updateInfo; is not success: " + r.getErrorInfo());
                 view.sendToast(r.getErrorInfo());
             }
         }
         Log.d(TAG, "updateInfo: ");
-        view.setTickets(model.getTickets());
+//        view.setHistory(model.getHistory());
         view.updateUI();
     }
 
     @Override
     public void update() {
-
     }
 
     @Override
     public void showToast(String toast) {
         view.sendToast(toast);
     }
-
 }
