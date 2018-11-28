@@ -5,6 +5,7 @@ import java.util.List;
 
 import communication.Card;
 import communication.GameColor;
+import communication.GameHistory;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
@@ -98,5 +99,7 @@ public interface IGameModel {
     boolean isLastTurn();
 
     boolean isGameEnded();
+
+    List<GameHistory> getGameHistory();
 
 }

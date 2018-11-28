@@ -38,7 +38,7 @@ public class HistoryPresenter implements IHistoryPresenter {
             }
         }
         Log.d(TAG, "updateInfo: ");
-//        view.setHistory(model.getHistory());
+        view.setHistory(model.getGameHistory());
         view.updateUI();
     }
 

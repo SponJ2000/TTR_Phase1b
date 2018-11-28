@@ -84,7 +84,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     }
 
     @Override
-    public void setHistory(ArrayList<GameHistory> history) {
+    public void setHistory(List<GameHistory> history) {
         mHistory = history;
     }
 
@@ -110,19 +110,19 @@ public class HistoryFragment extends Fragment implements IHistoryView {
 
     private class HistoryHolder extends RecyclerView.ViewHolder {
 
+        private TextView mName;
         private TextView mDescription;
-        private TextView mPoints;
 
         public HistoryHolder(View view) {
             super(view);
 
-            mDescription = view.findViewById(R.id.ticket_description);
-            mPoints = view.findViewById(R.id.ticket_points);
+            mName = view.findViewById(R.id.playername);
+            mDescription = view.findViewById(R.id.history_text);
         }
 
         public void bind(GameHistory history) {
-            mDescription.setText("asdf");
-            mPoints.setText("asdf");
+            mName.setText("" + history.getPlayerName());
+            mDescription.setText("" + history.getAction());
         }
 
     }
