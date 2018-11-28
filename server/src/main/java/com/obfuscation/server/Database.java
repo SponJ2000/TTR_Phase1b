@@ -313,20 +313,20 @@ public class Database {
             }
         }
 
-        //set tickets
-        tickets = gameServer.getTickets();
-        for (PlayerUser p : gameServer.getPlayers()) {
-            ArrayList<Ticket> playerTickets = new ArrayList<>();
-            if (tickets.size() < 3) {
-                playerTickets =  tickets;
-            }
-            for (int i = 0; i < 3; i++) {
-                Ticket ticket = tickets.get(0);
-                playerTickets.add(ticket);
-                tickets.remove(0);
-            }
-            p.setTicketToChoose(playerTickets);
-        }
+//        //set tickets
+//        tickets = gameServer.getTickets();
+//        for (PlayerUser p : gameServer.getPlayers()) {
+//            ArrayList<Ticket> playerTickets = new ArrayList<>();
+//            if (tickets.size() < 3) {
+//                playerTickets =  tickets;
+//            }
+//            for (int i = 0; i < 3; i++) {
+//                Ticket ticket = tickets.get(0);
+//                playerTickets.add(ticket);
+//                tickets.remove(0);
+//            }
+//            p.setTicketToChoose(playerTickets);
+//        }
 
         System.out.println("FINAL DECK SIZE " + gameServer.getTickets().size());
         // set faceup cards
@@ -391,6 +391,16 @@ public class Database {
         }
         Player player = user.getPlayer();
         if (!game.getPlayers().contains(player)) return new Result(false, false, "Error: Player not in game");
+
+        //update host
+        if (game.getHost().equals(playerID) && game.getPlayers().size() > 1) {
+            for (Player p : game.getPlayers()) {
+                if (!p.getPlayerName().equals(game.getHost())) {
+                    game.setHost(p.getPlayerName());
+                    break;
+                }
+            }
+        }
 
         if (game.isStarted()){
             //TODO : add absent players
@@ -547,6 +557,7 @@ public class Database {
     }
 
     List<Ticket> getTickets(String gameID, String authToken) {
+        System.out.println("GET TICKETS");
         GameServer game = findGameByID(gameID);
         List<Ticket> tickets = game.getTickets();
         ArrayList<Ticket> playerTickets = new ArrayList<>();
@@ -569,6 +580,7 @@ public class Database {
     }
 
     Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
+        System.out.println("SET TICKETS");
 //        //checking if the ticket to keep is more than 2 tickets
 //        if (tickets.size() > 2) {
 //            return new Result(false, null, "Error : too many tickets");

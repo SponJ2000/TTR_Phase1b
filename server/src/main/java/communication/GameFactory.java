@@ -11,6 +11,14 @@ public class GameFactory {
     private static ArrayList<Ticket> allTickets;
     private static ArrayList<Route> allRoutes;
 
+    public static ArrayList<Ticket> getAllTickets() {
+        return allTickets;
+    }
+
+    public static ArrayList<Route> getAllRoutes() {
+        return allRoutes;
+    }
+
     public static GameFactory getInstance() {
         if(SINGLETON == null) {
             SINGLETON = new GameFactory();
