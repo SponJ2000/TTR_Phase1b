@@ -53,34 +53,5 @@ public class Server {
         server.createContext("/", new DefaultHandler());
 
         server.start();
-
-        //test
-        String id = "id";
-        String gameID = "GAME";
-        String authToken = "authBob";
-
-
-
-
-        ArrayList<Ticket> tickets = new ArrayList<>();
-        ArrayList<Card> cards = new ArrayList<>();
-        cards.add(new Card(GameColor.BLACK));
-        cards.add(new Card(GameColor.RED));
-
-        String x = "{\"className\":\"com.obfuscation.server.ServerFacade\",\"methodName\":\"GetUpdates\",\"parameterType\":[\"java.lang.String\",\"java.lang.String\",\"java.lang.Integer\"],\"parameterValue\":[\"authBob\",\"GAME\",0]}";
-
-        String routeID = "ROUTE";
-        Message message = new Message("Bob", "HELLO WORLD");
-        int index = 1;
-        int state = 0;
-        GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "GetUpdates", new String[]{STRING, STRING, INTEGER}, new Object[]{authToken, gameID, state});
-        System.out.println(new Gson().toJson(genericCommand));
-
-        ServerFacade facade = ServerFacade.getInstance();
-//        facade.Register("Jerry", "jerry");
-//        facade.Register("Tom", "tom");
-//        facade.CreateGame(new Game("Jerry's game", "Jerry", new ArrayList<Player>(), 5), "masterKey");
-//        facade.CreateGame(new Game("TOM", "Tom", new ArrayList<Player>(), 3), "masterKey");
-
     }
 }
