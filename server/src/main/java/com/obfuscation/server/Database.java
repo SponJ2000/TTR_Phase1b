@@ -198,7 +198,6 @@ public class Database {
         lobbyGame.setPlayers(playerList);
 
         lobbyGameList.add(lobbyGame);
-        System.out.println("Get HERE");
         return new Result(true, lobbyGameList, null);
     }
 
@@ -234,11 +233,11 @@ public class Database {
 
         //FIXME * should be 12, just reducing the number for debugging
         //FIXME should be 14
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 1; i++) {
             Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
             trainCards.add(locomotiveCard);
         }
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 2; i++) {
             Card purpleCard = new Card(GameColor.PURPLE);
             Card blueCard = new Card(GameColor.BLUE);
             Card orangeCard = new Card(GameColor.ORANGE);
@@ -257,20 +256,17 @@ public class Database {
             trainCards.add(yellowCard);
         }
 
-
-
-        System.out.println("TRAIN CARD SIZE " + trainCards.size());
         Collections.shuffle(trainCards);
         gameServer.setTrainCards(trainCards);
 
         ArrayList<Ticket> tickets = new ArrayList<>();
         //initialize destTickets
         tickets = new TickectMaker().MakeCards();
+        System.out.println("TICKET SIZE : " + tickets.size());
 
         //FIXME just for debugging. Should be erased later.
 //        tickets = new ArrayList<> (tickets.subList(0, 20));
 
-        System.out.println("MAKER CARD SIZE " + tickets.size());
         Collections.shuffle(tickets);
 
         //set the deck
@@ -285,7 +281,6 @@ public class Database {
                 trainCards.remove(0);
             }
             player.setCards(playerTrainCards);
-            System.out.println("CARD SET");
             System.out.println(player.getCards().size());
         }
 
@@ -294,7 +289,6 @@ public class Database {
         //If 3 are locomotives, then shuffle again
         ArrayList<Card> faceUpTrainCards = null;
         while (true) {
-            System.out.println("GEH TE");
             faceUpTrainCards = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 Card card = trainCards.get(0);
@@ -303,15 +297,12 @@ public class Database {
             }
 
             int counter = 0;
-            System.out.println("COLOR ");
             for (int i = 0; i < 5; i++) {
                 System.out.println(faceUpTrainCards.get(i).getColor());
                 if (faceUpTrainCards.get(i).getColor() == GameColor.LOCOMOTIVE) {
-                    System.out.println("COUNTING");
                     counter++;
                 }
             }
-            System.out.println("E "  + counter);
             if (counter >= 3) {
                 //if locomotive is more than 3, discard them and shuffle again
                 gameServer.getDiscardDeck().addAll(faceUpTrainCards);
@@ -336,6 +327,8 @@ public class Database {
             }
             p.setTicketToChoose(playerTickets);
         }
+
+        System.out.println("FINAL DECK SIZE " + gameServer.getTickets().size());
         // set faceup cards
         gameServer.setFaceUpTrainCarCards(faceUpTrainCards);
 
@@ -576,10 +569,10 @@ public class Database {
     }
 
     Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
-        //checking if the ticket to keep is more than 2 tickets
-        if (tickets.size() > 2) {
-            return new Result(false, null, "Error : too many tickets");
-        }
+//        //checking if the ticket to keep is more than 2 tickets
+//        if (tickets.size() > 2) {
+//            return new Result(false, null, "Error : too many tickets");
+//        }
         try {
             GameServer game = findGameByID(gameID);
             if (game != null) {
@@ -591,18 +584,16 @@ public class Database {
                         tickets1 = player.getTicketToChoose();
                     }
                 }
-                System.out.println("KEEP TICKET " + tickets.size());
-                System.out.println("PLAYER TICKET CHOOSE " + tickets1.size());
+
                 Set<Integer> overlap = new HashSet<>();
                 for (int i = 0; i < tickets.size(); i++) {
                     for (int j = 0; j < tickets1.size(); j++) {
                         if (tickets.get(i).equals(tickets1.get(j))) {
-                            System.out.println("))))");
                             overlap.add(j);
                         }
                     }
                 }
-                System.out.println("OVERLAP SIZE + " + overlap.size());
+
                 List<Ticket> ticketDeck = game.getTickets();
                 for (int i = 0; i < tickets1.size(); i++) {
                     if (!overlap.contains(i)) {
@@ -701,6 +692,10 @@ public class Database {
                     if (game.getDeckSize() <= 0) {
                         putDiscardToCardDeck(game);
                     }
+
+                    if (game.getTrainCards().size() == 0) {
+                        return new Result(false, null, "The deck is empty");
+                    }
                     Card card = game.getTrainCards().get(0);
                     game.getTrainCards().remove(0);
 
@@ -717,6 +712,9 @@ public class Database {
                         }
 
                         //draw card from the deck and set it to face up cards
+                        if (game.getTrainCards().size() == 0) {
+                            return new Result(false, null, "The deck is empty");
+                        }
                         Card topCard = game.getTrainCards().get(0);
                         game.getTrainCards().remove(0);
                         game.getFaceUpTrainCarCards().set(index, topCard);
@@ -783,8 +781,8 @@ public class Database {
                 claimedRoutesNum.put(route.getClaimedBy().getPlayerName(), point);
             }
         }
-        boolean hascity1 = false;
-        boolean hascity2 = false;
+
+        //computing ticket paths
         String start, end;
         for (PlayerUser p : gameServer.getPlayers()) {
             for (Ticket ticket : p.getTickets()) {
@@ -798,37 +796,10 @@ public class Database {
                     int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
                     lostPoint.put(p.getPlayerName(), point);
                 }
-//                for (Route route : gameServer.getmMap().getRoutes()) {
-//                    boolean
-//                    if (route.getCity1().getName().equals(ticket.getCity1().getName()) && route.getClaimedBy() != null && route.getClaimedBy().getPlayerName().equals(p.getPlayerName())) {
-//                        int point = winnedPoint.get(p.getPlayerName()) + ticket.getValue();
-//                        winnedPoint.put(p.getPlayerName(), point);
-//                    }
-//
-//
-//                    String routeID = ticket.getCity1() + "-" + ticket.getCity2();
-//                    //TODO : what if swapped
-//                    if (route.getRouteID().equals(routeID)) {
-//                        //if succeeded
-//                        if (route.getClaimedBy() != null && route.getClaimedBy().getPlayerName().equals(p.getPlayerName())) {
-//                        }
-//
-//                        //if failed
-//                        else {
-//                            int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
-//                            lostPoint.put(p.getPlayerName(), point);
-//                        }
-//                        break;
-//                    }
-//                }
             }
         }
 
-        //TODO : compute longest path
-//        TreeSet<Integer> routeNums = new TreeSet<>();
-//        for (PlayerUser p : gameServer.getPlayers()) {
-//            routeNums.add(claimedRoutesNum.get(p.getPlayerName()));
-//        }
+        //computing longest path
         MapGraph mapGraph = getGraphByGame(gameID);
         HashMap<String, Integer> paths = mapGraph.findLongestPath();
 
