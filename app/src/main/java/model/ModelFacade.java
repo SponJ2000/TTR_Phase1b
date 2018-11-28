@@ -12,6 +12,7 @@ import communication.DualRoute;
 import communication.GameClient;
 import communication.GameColor;
 import communication.Game;
+import communication.GameHistory;
 import communication.LobbyGame;
 import communication.GameMap;
 import communication.Message;
@@ -321,7 +322,16 @@ public class ModelFacade implements IGameModel {
     }
 
     public ArrayList<LobbyGame> getLobbyGameList() {
-        return ModelRoot.getInstance().getLobbyGames();
+        ArrayList<LobbyGame> unstarted = new ArrayList<LobbyGame>();
+        ArrayList<LobbyGame> allLobby = ModelRoot.getInstance().getLobbyGames();
+        if (allLobby != null) {
+            for (LobbyGame lobbyGame : allLobby) {
+                if (!lobbyGame.isStarted()) {
+                    unstarted.add(lobbyGame);
+                }
+            }
+        }
+        return unstarted;
     }
 
     public GameClient getCurrentGame() {
@@ -524,6 +534,8 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getGame().isGameEnded();
     }
 
-
+    public List<GameHistory> getGameHistory() {
+        return getCurrentGame().getGameHistories();
+    }
 
 }

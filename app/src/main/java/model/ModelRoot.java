@@ -84,11 +84,19 @@ public class ModelRoot {
         this.gameLobbies = gameLobbies;
     }
 
+    public void removeLobbybyID(String Id) {
+        for (LobbyGame gameLobby: gameLobbies) {
+            if (gameLobby.getGameID().equals(Id)) {
+                gameLobbies.remove(gameLobby);
+            }
+        }
+    }
+
     public GameClient getGame(){
         return game;
     }
 
-    public LobbyGame getGameLobbyById(String id) {
+    public LobbyGame removeLobbyByID(String id) {
         for (LobbyGame gl: gameLobbies) {
             if (gl.getGameID().equals(id)) {
                 return gl;
