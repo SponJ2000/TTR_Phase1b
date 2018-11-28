@@ -93,7 +93,7 @@ public class ClientFacade implements IClient{
                     }
                 }
             }
-            ModelRoot.getInstance().removeLobbyByID(gameClient.getGameID());
+//            ModelRoot.getInstance().removeLobbyByID(gameClient.getGameID());
             ModelRoot.getInstance().setDisplayState(DisplayState.GAME);
             updatePresenter(DisplayState.GAME);
             ModelFacade.getInstance().getChoiceTickets();
