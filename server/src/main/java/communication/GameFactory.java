@@ -107,7 +107,7 @@ public class GameFactory {
 //        Montreal to Atlanta (9), Sault Ste. Marie to Oklahoma City (9), Seattle to Los Angeles (9), Chicago to Santa Fe (9)
         allTickets.add(new Ticket(cityMap.get("Montreal"), cityMap.get("Atlanta"), 9));
         allTickets.add(new Ticket(cityMap.get("Sault_Ste_Marie"), cityMap.get("Oklahoma_City"), 9));
-        allTickets.add(new Ticket(cityMap.get("Seattle"), cityMap.get("Los Angeles"), 9));
+        allTickets.add(new Ticket(cityMap.get("Seattle"), cityMap.get("Los_Angeles"), 9));
         allTickets.add(new Ticket(cityMap.get("Chicago"), cityMap.get("Santa_Fe"), 9));
 //        Duluth to El Paso (10), Toronto to Miami (10)
         allTickets.add(new Ticket(cityMap.get("Duluth"), cityMap.get("El_Paso"), 10));

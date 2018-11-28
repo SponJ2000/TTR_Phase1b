@@ -18,6 +18,7 @@ import communication.Card;
 import communication.City;
 import communication.DualRoute;
 import communication.Game;
+import communication.GameFactory;
 import communication.GameHistory;
 import communication.LobbyGame;
 import communication.GameServer;
@@ -261,7 +262,7 @@ public class Database {
 
         ArrayList<Ticket> tickets = new ArrayList<>();
         //initialize destTickets
-        tickets = new TickectMaker().MakeCards();
+        tickets = GameFactory.getAllTickets();
         System.out.println("TICKET SIZE : " + tickets.size());
 
         //FIXME just for debugging. Should be erased later.
@@ -562,7 +563,9 @@ public class Database {
         List<Ticket> tickets = game.getTickets();
         ArrayList<Ticket> playerTickets = new ArrayList<>();
         if (tickets.size() < 3) {
-            return tickets;
+            List<Ticket> newTickets = new ArrayList<>(tickets);
+            game.getTickets().clear();
+            return newTickets;
         }
         for (int i = 0; i < 3; i++) {
             Ticket ticket = tickets.get(0);
