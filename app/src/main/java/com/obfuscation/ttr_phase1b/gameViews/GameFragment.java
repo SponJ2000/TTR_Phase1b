@@ -335,9 +335,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                 break;
         }
 
-        mChatButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
+        mHistoryButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
         mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
         mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
+        mChatButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
 
         mBoard.setBackgroundResource(board);
     }
