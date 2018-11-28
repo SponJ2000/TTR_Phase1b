@@ -96,4 +96,13 @@ public class LobbyGame {
     public void setVersionNum(int versionNum) {
         this.versionNum = versionNum;
     }
+
+    public void removePlayerByID (String playerID) {
+        for (Player p: players) {
+            if (p.getPlayerName().equals(playerID)) {
+                players.remove(p);
+            }
+        }
+
+    }
 }
