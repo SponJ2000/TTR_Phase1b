@@ -93,10 +93,11 @@ public class ClientFacade implements IClient{
                     }
                 }
             }
-
+            ModelRoot.getInstance().removeLobbyByID(gameClient.getGameID());
             ModelRoot.getInstance().setDisplayState(DisplayState.GAME);
             updatePresenter(DisplayState.GAME);
             ModelFacade.getInstance().getChoiceTickets();
+
 
 //            System.out.println("current turn is " + ModelRoot.getInstance().getGame().getTurnUser());
         }catch (Exception e) {
