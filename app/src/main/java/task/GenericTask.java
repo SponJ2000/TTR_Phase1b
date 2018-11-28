@@ -14,6 +14,7 @@ import communication.Message;
 import communication.Result;
 import communication.Serializer;
 import communication.Ticket;
+import model.ModelFacade;
 import model.ModelRoot;
 import server.CommandTask;
 import server.Poller;
@@ -95,6 +96,9 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 break;
             case "GetLobby":
                 FetchLobbyGameFrom(result);
+                break;
+            case "leaveLobbyGame":
+                onLeaveLobbyGame(result);
                 break;
             case "GetTickets":
                 FetchTicketsOption(result);
@@ -196,6 +200,12 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         }
         else {
             System.out.println("user turn ending failed");
+        }
+    }
+
+    private void onLeaveLobbyGame(Result result) {
+        if (result.isSuccess()) {
+            ModelRoot.getInstance().getLobbyGame().removePlayerByID(ModelRoot.getInstance().getUserName());
         }
     }
 }
