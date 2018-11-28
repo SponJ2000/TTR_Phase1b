@@ -1,12 +1,14 @@
 package gamePresenters;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
+import com.obfuscation.ttr_phase1b.gameViews.PlayerInfoDialogFragment;
 
 import communication.Card;
 import communication.GameColor;
@@ -17,6 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import communication.City;
 import communication.Player;
+import communication.PlayerOpponent;
 import communication.Result;
 import communication.Route;
 import communication.Ticket;
@@ -89,7 +92,7 @@ public class GamePresenter implements IGamePresenter {
             view.updateUI();
 
         }else {
-            playerInfoView.setPlayers(model.getPlayers());
+            playerInfoView.setPlayers(model.getOpponents());
             playerInfoView.updateUI();
         }
     }
@@ -115,13 +118,19 @@ public class GamePresenter implements IGamePresenter {
     public void showPlayerInfo(IPlayerInfoView view) {
         if(view == null) {
             this.listener.onShow(Shows.playerInfo, null);
+
         }else {
             Log.d(TAG, "showPlayerInfo: " + model.getPlayers());
             playerInfoView = view;
             playerInfoView.setPresenter(this);
-            playerInfoView.setPlayers(model.getPlayers());
+            playerInfoView.setPlayers(model.getOpponents());
             playerInfoView.updateUI();
         }
+    }
+
+    @Override
+    public List<PlayerOpponent> getPlayers() {
+        return model.getOpponents();
     }
 
     @Override
@@ -143,6 +152,12 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void onBack() {
         this.listener.onShow(Shows.map, null);
+    }
+
+    @Override
+    public void onClose(Fragment fragment){
+
+        this.listener.onClose(fragment);
     }
 
     public void showMenu() {
@@ -204,6 +219,7 @@ public class GamePresenter implements IGamePresenter {
         @Override
         void selectFaceUp(int index) {
             Log.d(TAG, "selectFaceUp: " + model.checkCard(index));
+
             if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 Log.d(TAG, "selectFaceUp locomotive");
                 model.chooseCard(index);
@@ -220,9 +236,14 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         void selectDeck() {
-            model.chooseCard(-1);
-            isSelectOne = true;
-            wrapper.setState(new TurnOneCard(wrapper));
+            if(model.getDeckSize() > 0) {
+                model.chooseCard(-1);
+                isSelectOne = true;
+                wrapper.setState(new TurnOneCard(wrapper));
+            }
+            else {
+                wrapper.sendToast("Deck is empty!");
+            }
 
         }
 
@@ -308,10 +329,15 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectDeck() {
-            wrapper.getModel().chooseCard(-1);
-            model.endTurn();
-            wrapper.setState(new NotTurn(wrapper));
-            actionSelected = true;
+            if(model.getDeckSize() > 0) {
+                wrapper.getModel().chooseCard(-1);
+                model.endTurn();
+                wrapper.setState(new NotTurn(wrapper));
+                actionSelected = true;
+            }
+            else {
+                wrapper.sendToast("Deck is empty!");
+            }
         }
 
         @Override

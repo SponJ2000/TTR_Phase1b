@@ -21,6 +21,7 @@ import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import java.util.List;
 
 import communication.Player;
+import communication.PlayerOpponent;
 import gamePresenters.IGamePresenter;
 
 
@@ -30,13 +31,16 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
 
     private IGamePresenter mPresenter;
 
-    private List<Player> mPlayers;
+    private List<PlayerOpponent> mPlayers;
 
     private Button mBackButton;
     private RecyclerView mPlayerRecycler;
     private PlayerAdapter mPlayerAdapter;
 
+    private PlayerInfoDialogFragment self;
+
     public PlayerInfoDialogFragment() {
+        self = this;
     }
 
     public static PlayerInfoDialogFragment newInstance() {
@@ -55,17 +59,21 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_player_info_dialog, container, false);
 
-        mBackButton = view.findViewById(R.id.playerinfo_back_button);
+        mBackButton = view.findViewById(R.id.playerinfo_close_btn);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now sending message");
-                mPresenter.onBack();
+                mPresenter.onClose(self);
             }
         });
 
         mPlayerRecycler = view.findViewById(R.id.playerinfo_recycler_view);
         mPlayerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        if(mPresenter != null) {
+            mPlayers = mPresenter.getPlayers();
+        }
 
         updateUI();
 
@@ -73,13 +81,14 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
     }
 
     @Override
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(List<PlayerOpponent> players) {
         mPlayers = players;
     }
 
     @Override
     public void updateUI() {
         Log.d(TAG, "getting updated: " + mPlayerRecycler);
+
         if(mPlayerRecycler != null && mPlayers != null) {
             Log.d(TAG+"_updateUI", "mPlayers: " + mPlayers);
             mPlayerAdapter = new PlayerAdapter(mPlayers);
@@ -124,9 +133,9 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
 
     private class PlayerAdapter extends RecyclerView.Adapter<PlayerHolder> {
 
-        private List<Player> mPlayers;
+        private List<PlayerOpponent> mPlayers;
 
-        public PlayerAdapter(List<Player> players) {
+        public PlayerAdapter(List<PlayerOpponent> players) {
             mPlayers = players;
         }
 

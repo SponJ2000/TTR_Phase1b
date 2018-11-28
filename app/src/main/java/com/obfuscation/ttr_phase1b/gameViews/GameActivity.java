@@ -79,7 +79,7 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
             case playerInfo:
                 fragment = PlayerInfoDialogFragment.newInstance();
                 ((IGamePresenter) PresenterFacade.getInstance().getPresenter()).showPlayerInfo((IPlayerInfoView) fragment);
-                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                fm.beginTransaction().add(R.id.container, fragment).commit();
                 break;
             case map:
                 fragment = GameFragment.newInstance();
@@ -122,11 +122,19 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
     }
 
     @Override
+    public void onClose(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        fm.beginTransaction().remove(fragment).commit();
+        Log.d(TAG, "Removed player info fragment");
+    }
+
+    @Override
     public void onReturn() {
 //        FragmentManager fm = getSupportFragmentManager();
 //
 //        Fragment fragment = GameFragment.newInstance();
-//        PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
+//        PresenterFacade.newInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
 //        fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Going back to gamelistview");
     }

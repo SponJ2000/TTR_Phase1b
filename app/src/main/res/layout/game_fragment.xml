@@ -131,19 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:src="@drawable/ic_ticket_w"/>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/players_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:backgroundTint="@color/playerBlack" />
+                android:src="@drawable/ic_ticket_w" />
 
             <Space
                 android:layout_width="match_parent"
@@ -161,6 +149,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/bottom_board"
+            android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="12dp"
+            android:orientation="vertical">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/players_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:backgroundTint="@color/playerBlack" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
         </LinearLayout>
 
         <LinearLayout

@@ -17,6 +17,7 @@ import communication.LobbyGame;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerOpponent;
 import communication.PlayerStats;
 import communication.PlayerUser;
 import communication.Result;
@@ -173,7 +174,7 @@ public class ModelFacade implements IGameModel {
 
 //    public void CheckGame() {
 //        GenericTask genericTask = new GenericTask("CheckGame");
-//        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
+//        genericTask.execute(ModelRoot.newInstance().getAuthToken(), ModelRoot.newInstance().getGame().getGameID(), Poller.gameVersion);
 //    }
 
     @Override
@@ -225,6 +226,11 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public List<PlayerOpponent> getOpponents() {
+        return getCurrentGame().getPlayerOpponents();
+    }
+
+    @Override
     public void addPoints(int p) {
         getPlayer().setPoint(p);
     }
@@ -246,7 +252,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void updateOpponent() {
-//        List<Player> players = ModelRoot.getInstance().getGame().getPlayers();
+//        List<Player> players = ModelRoot.newInstance().getGame().getPlayers();
 //        players.get(1).setTrainCarNum(12);
 //        players.get(1).setCardNum(24);
 //        players.get(1).setPoint(32);
@@ -280,13 +286,13 @@ public class ModelFacade implements IGameModel {
     //update the list of cards user has
     public void updateCards() {
 //not for this phase
-//        return ModelRoot.getInstance().getGame().getTrainCards();
+//        return ModelRoot.newInstance().getGame().getTrainCards();
     }
 
     @Override
     //it is just a get method
     public void updateFaceCards() {
-//        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(0);
+//        ModelRoot.newInstance().getGame().UserTakeFaceUpCard(0);
     }
 
     @Override
@@ -301,7 +307,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void chooseCard(int index) {
-//        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(index);
+//        ModelRoot.newInstance().getGame().UserTakeFaceUpCard(index);
         if(index >= 0) {
             getCurrentGame().removeFaceUpTrainCarCardsByIndex(index);
             PresenterFacade.getInstance().updatePresenter(new Result(true, null, null));

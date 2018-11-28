@@ -24,7 +24,7 @@ public class TicketPresenter implements ITicketPresenter {
         view.setPresenter(this);
         this.listener = listener;
         model = ModelFacade.getInstance();
-//        model = FakeModel.getInstance();
+//        model = FakeModel.newInstance();
     }
 
     @Override
