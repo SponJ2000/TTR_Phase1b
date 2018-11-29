@@ -83,4 +83,19 @@ public class Route implements Serializable{
     public void setRouteID(String routeID) {
         this.routeID = routeID;
     }
+
+    public double[] getStartPos() {
+        return getPos(city1);
+    }
+
+    public double[] getEndPos() {
+        return getPos(city2);
+    }
+
+    private double[] getPos(City city) {
+        double[] pos = new double[2];
+        pos[0] = city.getLat();
+        pos[1] = city.getLng();
+        return pos;
+    }
 }

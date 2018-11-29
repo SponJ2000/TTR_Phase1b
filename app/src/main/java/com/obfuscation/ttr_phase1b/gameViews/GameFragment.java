@@ -361,12 +361,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         poly.remove();
 
+        LatLng start = new LatLng(r.getStartPos()[0], r.getStartPos()[1]);
         LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+        LatLng end = new LatLng(r.getEndPos()[0], r.getEndPos()[1]);
 
         PolylineOptions p = new PolylineOptions()
-                .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
-                        mid,
-                        new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                .add(start, mid, end)
                 .color(color)
                 .clickable(true);
 
@@ -604,7 +604,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
                 int color;
                 claimed = (r.getClaimedBy() != null);
+                LatLng start;
                 LatLng mid;
+                LatLng end;
 
                 if (claimed) {
                     Log.d(TAG, "initRoutes: claimer: " + r.getClaimedBy() + ", color: " + r.getClaimedBy().getPlayerColor());
@@ -614,18 +616,15 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                         color = colorMap.get(GREY);
                     }
 
+                    start = new LatLng(r.getStartPos()[0], r.getStartPos()[1]);
                     mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
-
-                    List<PatternItem> pattern = Arrays.asList(
-                            new Dash(30), new Gap(20));
+                    end = new LatLng(r.getEndPos()[0], r.getEndPos()[1]);
 
 
                     PolylineOptions p = new PolylineOptions()
-                            .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
-                                    mid,
-                                    new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                            .add(start, mid, end)
                             .color(color)
-                            .clickable(true).pattern(pattern);
+                            .clickable(true);
 
                     mRouteLines.put(r, googleMap.addPolyline(p));
                     mRoutes2.put(r,
@@ -641,14 +640,17 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                         color = colorMap.get(GREY);
                     }
 
+                    start = new LatLng(r.getStartPos()[0], r.getStartPos()[1]);
                     mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+                    end = new LatLng(r.getEndPos()[0], r.getEndPos()[1]);
+
+                    List<PatternItem> pattern = Arrays.asList(
+                            new Dash(30), new Gap(20));
 
                     PolylineOptions p = new PolylineOptions()
-                            .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
-                                    mid,
-                                    new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                            .add(start, mid, end)
                             .color(color)
-                            .clickable(true);
+                            .clickable(true).pattern(pattern);
 
                     mRouteLines.put(r, googleMap.addPolyline(p));
                     mRoutes2.put(r,
