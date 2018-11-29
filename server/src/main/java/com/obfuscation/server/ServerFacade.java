@@ -235,7 +235,7 @@ public class ServerFacade implements IServer {
                     gameClient.setPlayerUser(game.getPlayerbyUserName(username));
                     gameClient.setTrainCardDeckSize(game.getTrainCards().size());
                     gameClient.setFaceUpTrainCarCards(game.getFaceUpTrainCarCards());
-                    gameClient.getPlayerUser().setTicketToChoose(game.getPlayerbyUserName(username).getTicketToChoose());
+                    //gameClient.getPlayerUser().setTicketToChoose(game.getPlayerbyUserName(username).getTicketToChoose());
                     gameClient.setTicketDeckSize(game.getTickets().size());
                     gameClient.setTurnUser(game.getCurrentPlayer());
                     //initialize user player
