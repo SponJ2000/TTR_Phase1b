@@ -616,7 +616,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
                     mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
 
-                    List<PatternItem> pattern = Arrays.<PatternItem>asList(
+                    List<PatternItem> pattern = Arrays.asList(
                             new Dash(30), new Gap(20));
 
 

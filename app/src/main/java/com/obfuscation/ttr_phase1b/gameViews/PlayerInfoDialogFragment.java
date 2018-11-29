@@ -25,13 +25,14 @@ import communication.GameColor;
 import communication.Player;
 import communication.PlayerOpponent;
 import gamePresenters.IGamePresenter;
+import gamePresenters.IPInfoPresenter;
 
 
 public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoView {
 
     private static final String TAG = "PlayerDiaFrag";
 
-    private IGamePresenter mPresenter;
+    private IPInfoPresenter mPresenter;
 
     private List<PlayerOpponent> mPlayers;
 
@@ -105,7 +106,7 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
 
     @Override
     public void setPresenter(IPresenter presenter) {
-        mPresenter = (IGamePresenter) presenter;
+        mPresenter = (IPInfoPresenter) presenter;
     }
 
     private class PlayerHolder extends RecyclerView.ViewHolder {

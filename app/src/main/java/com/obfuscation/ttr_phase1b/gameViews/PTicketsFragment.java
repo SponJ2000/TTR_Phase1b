@@ -20,6 +20,7 @@ import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import java.util.List;
 
 import communication.Ticket;
+import gamePresenters.IGamePresenter;
 import gamePresenters.IPTicketsPresenter;
 
 /**
@@ -42,7 +43,10 @@ public class PTicketsFragment extends Fragment implements IPTicketsView {
     private TicketAdapter mTicketAdapter;
     private RecyclerView mTicketRecycler;
 
+    PTicketsFragment self;
+
     public PTicketsFragment() {
+        self = this;
     }
 
     /**
@@ -72,7 +76,7 @@ public class PTicketsFragment extends Fragment implements IPTicketsView {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Now choosing tickets");
-                mPresenter.onBack();
+                mPresenter.onClose(self);
             }
         });
 

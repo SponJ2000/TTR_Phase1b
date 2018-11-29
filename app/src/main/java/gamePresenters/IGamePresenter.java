@@ -1,6 +1,5 @@
 package gamePresenters;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 
@@ -9,7 +8,6 @@ import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
 import java.util.List;
 
-import communication.GameMap;
 import communication.Player;
 import communication.PlayerOpponent;
 import communication.Route;
@@ -45,7 +43,7 @@ public interface IGamePresenter extends IPresenter {
      */
     interface OnShowListener {
         void onShow(Shows show, Bundle args);
-        void onClose(Fragment fragment);
+        void onClose(Fragment fragment, IGamePresenter presenter);
     }
 
 }

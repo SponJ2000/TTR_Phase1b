@@ -243,6 +243,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
             if (remain > 0) {
                 sendToast("Not enough cards: need " + remain + " more");
+                return;
             }
             else {
 

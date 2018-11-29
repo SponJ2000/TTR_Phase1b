@@ -1,33 +1,24 @@
 package gamePresenters;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.obfuscation.ttr_phase1b.gameViews.IGameView;
 import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
-import com.obfuscation.ttr_phase1b.gameViews.PlayerInfoDialogFragment;
 
 import communication.Card;
 import communication.GameColor;
-import communication.GameMap;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-import communication.City;
 import communication.Player;
 import communication.PlayerOpponent;
 import communication.Result;
 import communication.Route;
-import communication.Ticket;
 import model.IGameModel;
-import model.IModelObservable;
-import model.IModelObserver;
 import model.ModelFacade;
-import model.ModelRoot;
 
 public class GamePresenter implements IGamePresenter {
 
@@ -157,7 +148,7 @@ public class GamePresenter implements IGamePresenter {
     @Override
     public void onClose(Fragment fragment){
 
-        this.listener.onClose(fragment);
+        this.listener.onClose(fragment, null);
     }
 
     public void showMenu() {
