@@ -19,12 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -612,12 +616,16 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
                     mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
 
+                    List<PatternItem> pattern = Arrays.<PatternItem>asList(
+                            new Dash(30), new Gap(20));
+
+
                     PolylineOptions p = new PolylineOptions()
                             .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
                                     mid,
                                     new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
                             .color(color)
-                            .clickable(true);
+                            .clickable(true).pattern(pattern);
 
                     mRouteLines.put(r, googleMap.addPolyline(p));
                     mRoutes2.put(r,

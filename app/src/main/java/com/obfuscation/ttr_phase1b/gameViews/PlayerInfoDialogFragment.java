@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
 import java.util.List;
 
+import communication.GameColor;
 import communication.Player;
 import communication.PlayerOpponent;
 import gamePresenters.IGamePresenter;
@@ -112,6 +114,7 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
         private TextView mPlayerPointView;
         private TextView mPlayerTrainsView;
         private TextView mPlayerCardsView;
+        private LinearLayout mLayout;
 
         public PlayerHolder(View view) {
             super(view);
@@ -120,6 +123,7 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
             mPlayerPointView = view.findViewById(R.id.player_points);
             mPlayerCardsView = view.findViewById(R.id.player_cards);
             mPlayerTrainsView = view.findViewById(R.id.player_trains);
+            mLayout = view.findViewById(R.id.player_info_layout);
         }
 
         public void bind(Player player) {
@@ -127,6 +131,32 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
             mPlayerPointView.setText("" + player.getPoint());
             mPlayerCardsView.setText("" + player.getCardNum());
             mPlayerTrainsView.setText("" + player.getTrainNum());
+
+            mLayout.setBackgroundColor(getPlayerColor(player.getPlayerColor()));
+        }
+
+        private int getPlayerColor(GameColor color) {
+            int retColor = 0;
+            switch (color) {
+                case PLAYER_RED:
+                    retColor = getResources().getColor(R.color.playerRedLight);
+                    break;
+                case PLAYER_BLUE:
+                    retColor = getResources().getColor(R.color.playerBlueLight);
+                    break;
+                case PLAYER_PURPLE:
+                    retColor = getResources().getColor(R.color.playerPurpleLight);
+                    break;
+                case PLAYER_BLACK:
+                    retColor = getResources().getColor(R.color.playerBlackLight);
+                    break;
+                case PLAYER_YELLOW:
+                    retColor = getResources().getColor(R.color.playerYellowLight);
+                    break;
+                    default:
+                        retColor = getResources().getColor(R.color.trainGrey);
+            }
+            return retColor;
         }
 
     }
