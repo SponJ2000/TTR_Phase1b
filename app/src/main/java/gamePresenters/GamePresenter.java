@@ -215,13 +215,10 @@ public class GamePresenter implements IGamePresenter {
                 Log.d(TAG, "selectFaceUp locomotive");
                 model.chooseCard(index);
                 actionSelected = true;
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
             }
             else {
                 wrapper.getModel().chooseCard(index);
                 isSelectOne = true;
-                wrapper.setState(new TurnOneCard(wrapper));
             }
         }
 
@@ -230,7 +227,6 @@ public class GamePresenter implements IGamePresenter {
             if(model.getDeckSize() > 0) {
                 model.chooseCard(-1);
                 isSelectOne = true;
-                wrapper.setState(new TurnOneCard(wrapper));
             }
             else {
                 wrapper.sendToast("Deck is empty!");
@@ -241,9 +237,7 @@ public class GamePresenter implements IGamePresenter {
         @Override
         public void selectTicketsButton() {
             listener.onShow(Shows.tickets, null);
-            wrapper.setState(new NotTurn(wrapper));
             actionSelected = true;
-//            wrapper.setState(new TurnNoTickets(wrapper));
         }
 
         @Override
@@ -262,9 +256,8 @@ public class GamePresenter implements IGamePresenter {
                     Bundle args = new Bundle();
                     args.putSerializable("route", route);
                     args.putInt("cardsToSelect", route.getLength());
-                    listener.onShow(Shows.cardSelect, args);
-                    wrapper.setState(new NotTurn(wrapper));
                     actionSelected = true;
+                    listener.onShow(Shows.cardSelect, args);
                     return;
                 }
                 else {
@@ -313,8 +306,6 @@ public class GamePresenter implements IGamePresenter {
             }
             else {
                 model.chooseCard(index);
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
                 actionSelected = true;
             }
         }
@@ -323,8 +314,6 @@ public class GamePresenter implements IGamePresenter {
         public void selectDeck() {
             if(model.getDeckSize() > 0) {
                 wrapper.getModel().chooseCard(-1);
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
                 actionSelected = true;
             }
             else {
