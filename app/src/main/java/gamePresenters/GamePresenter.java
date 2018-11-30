@@ -314,6 +314,9 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectFaceUp(int index) {
+            if(actionSelected) {
+                return;
+            }
             Log.d(TAG, "selectFaceUp: " + wrapper.getModel().checkCard(index));
             if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 wrapper.sendToast("You can't select a locomotive card as your second choice.");
@@ -326,6 +329,9 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectDeck() {
+            if(actionSelected) {
+                return;
+            }
             if(model.getDeckSize() > 0) {
                 wrapper.getModel().chooseCard(-1);
                 actionSelected = true;
@@ -342,9 +348,11 @@ public class GamePresenter implements IGamePresenter {
                     Log.d(TAG, "finish turn");
                     model.endTurn();
                     wrapper.setState(new NotTurn(wrapper));
+                    actionSelected = false;
                 }
             }else {
                 wrapper.sendToast(result.getErrorInfo());
+                actionSelected = false;
             }
         }
     }
