@@ -93,10 +93,12 @@ public class LobbyFragment extends Fragment implements IPresenter {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Now starting");
-                ismLeaving = false;
-                ismStarting = true;
-                ModelFacade.getInstance().startGame(mGame.getGameID());
+                if (mGame.getPlayerCount() == mGame.getMaxPlayers()) {
+                    Log.d(TAG, "Now starting");
+                    ismLeaving = false;
+                    ismStarting = true;
+                    ModelFacade.getInstance().startGame(mGame.getGameID());
+                }
             }
         });
 

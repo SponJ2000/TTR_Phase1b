@@ -234,11 +234,11 @@ public class Database {
 
         //FIXME * should be 12, just reducing the number for debugging
         //FIXME should be 14
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 14; i++) {
             Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
             trainCards.add(locomotiveCard);
         }
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 12; i++) {
             Card purpleCard = new Card(GameColor.PURPLE);
             Card blueCard = new Card(GameColor.BLUE);
             Card orangeCard = new Card(GameColor.ORANGE);
@@ -278,7 +278,7 @@ public class Database {
         //set player train cards
         for (PlayerUser player : gameServer.getPlayers()) {
             ArrayList<Card> playerTrainCards = new ArrayList<>();
-            for (int i = 0; i < 400; i++) {
+            for (int i = 0; i < 4; i++) {
                 Card card = trainCards.get(0);
                 playerTrainCards.add(card);
                 trainCards.remove(0);
