@@ -102,6 +102,7 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void showToast(String toast) {
+        Log.d(TAG, "showToast: " + toast);
         view.sendToast(toast);
     }
 
@@ -180,6 +181,7 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void sendToast(String toast) {
+        Log.d(TAG, "sendToast: " + toast);
         view.sendToast(toast);
     }
 
@@ -220,12 +222,12 @@ public class GamePresenter implements IGamePresenter {
             Log.d(TAG, "selectFaceUp: " + model.checkCard(index));
             if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 Log.d(TAG, "selectFaceUp locomotive");
-                model.chooseCard(index);
                 actionSelected = true;
+                model.chooseCard(index);
             }
             else {
-                wrapper.getModel().chooseCard(index);
                 isSelectOne = true;
+                wrapper.getModel().chooseCard(index);
             }
         }
 
@@ -237,8 +239,8 @@ public class GamePresenter implements IGamePresenter {
             }
             if(model.getDeckSize() > 0) {
                 Log.d(TAG, "choosing deck");
-                model.chooseCard(-1);
                 isSelectOne = true;
+                model.chooseCard(-1);
             }
             else {
                 wrapper.sendToast("Deck is empty!");
@@ -251,8 +253,8 @@ public class GamePresenter implements IGamePresenter {
             if(actionSelected || isSelectOne) {
                 return;
             }
-            listener.onShow(Shows.tickets, null);
             actionSelected = true;
+            listener.onShow(Shows.tickets, null);
         }
 
         @Override
