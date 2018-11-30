@@ -30,6 +30,7 @@ public class GamePresenter implements IGamePresenter {
     private IGameModel model;
 
     private ITurnState state;
+    private boolean ending;
 
     public GamePresenter(IGameView view, OnShowListener listener) {
         this.view = view;
@@ -37,6 +38,7 @@ public class GamePresenter implements IGamePresenter {
         this.listener = listener;
         model = ModelFacade.getInstance();
         state = new NotTurn(this);
+        ending = false;
     }
 
     public void setState(ITurnState state){
@@ -45,6 +47,9 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
+        if(!model.isMyTurn()) {
+            ending = false;
+        }
         if(model.isGameEnded()) {
             Log.d(TAG, "updateInfo: ending game");
             listener.onShow(Shows.score, null);
@@ -67,7 +72,7 @@ public class GamePresenter implements IGamePresenter {
         view.setPlayer(model.getPlayer());
         if(model.getPlayer() == null) {
             Log.d(TAG, "user is null");
-        }if(model.isMyTurn() && state.getClass().equals(NotTurn.class)) {
+        }if(model.isMyTurn() && state.getClass().equals(NotTurn.class) && !ending) {
             setState(new TurnNoSelection(this));
         }else if(!model.isMyTurn() && !state.getClass().equals(NotTurn.class)) {
             setState(new NotTurn(this));
@@ -291,6 +296,7 @@ public class GamePresenter implements IGamePresenter {
                 }else if(actionSelected) {
                     Log.d(TAG, "finish turn");
                     model.endTurn();
+                    ending = true;
                     wrapper.setState(new NotTurn(wrapper));
                     actionSelected = false;
                 }
@@ -347,8 +353,8 @@ public class GamePresenter implements IGamePresenter {
                 if(actionSelected) {
                     Log.d(TAG, "finish turn");
                     model.endTurn();
+                    ending = true;
                     wrapper.setState(new NotTurn(wrapper));
-                    actionSelected = false;
                 }
             }else {
                 wrapper.sendToast(result.getErrorInfo());
