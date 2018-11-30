@@ -316,21 +316,21 @@ public class Database {
             }
         }
 
-        //set tickets
-        //FIXME FOR TESTING
-        tickets = gameServer.getTickets();
-        for (PlayerUser p : gameServer.getPlayers()) {
-            ArrayList<Ticket> playerTickets = new ArrayList<>();
-            if (tickets.size() < 3) {
-                playerTickets =  tickets;
-            }
-            for (int i = 0; i < 7; i++) {
-                Ticket ticket = tickets.get(0);
-                playerTickets.add(ticket);
-                tickets.remove(0);
-            }
-            p.setTickets(playerTickets);
-        }
+//        //set tickets
+//        //FIXME FOR TESTING
+//        tickets = gameServer.getTickets();
+//        for (PlayerUser p : gameServer.getPlayers()) {
+//            ArrayList<Ticket> playerTickets = new ArrayList<>();
+//            if (tickets.size() < 3) {
+//                playerTickets =  tickets;
+//            }
+//            for (int i = 0; i < 3; i++) {
+//                Ticket ticket = tickets.get(0);
+//                playerTickets.add(ticket);
+//                tickets.remove(0);
+//            }
+//            p.setTickets(playerTickets);
+//        }
 
         System.out.println("FINAL DECK SIZE " + gameServer.getTrainCards().size());
         // set faceup cards

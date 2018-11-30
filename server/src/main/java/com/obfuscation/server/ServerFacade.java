@@ -481,7 +481,7 @@ public class ServerFacade implements IServer {
             }
 
             //if the tran car number is less than 3, last round
-            if (gameServer.getPlayerbyUserName(username).getTrainNum() < 3) {
+            if (gameServer.getPlayerbyUserName(username).getTrainNum() < 3 && !gameServer.isLastRound()) {
                 System.out.println("LAST ROUND GETTING CALLED");
                 gameServer.setLastRound(true);
                 gameServer.setLastRoundTriggeredBy(username);
