@@ -52,7 +52,9 @@ public class CardSelectPresenter implements ICardSelectPresenter {
                 model.endTurn();
                 listener.onBack();
             }else {
+                Log.d(TAG, "failed: " + r.getErrorInfo());
                 view.sendToast(r.getErrorInfo());
+                listener.onBack();
             }
         }
     }
