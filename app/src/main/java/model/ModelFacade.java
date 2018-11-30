@@ -88,7 +88,6 @@ public class ModelFacade implements IGameModel {
 
 
     public void claimRoute(Route route, List<Card> cards) {
-        System.out.println("come to claim route");
         claimRoute(route, getPlayer(), cards);
     }
 
@@ -399,6 +398,9 @@ public class ModelFacade implements IGameModel {
 
         GameColor color = route.getColor();
         int length = route.getLength();
+        if(getPlayer().getTrainNum() < length) {
+            return "You don't have enough train cars!";
+        }
 
         List<Card> cards = getCards();
 

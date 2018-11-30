@@ -1,6 +1,7 @@
 package gamePresenters;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.gameViews.ICardSelectView;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import communication.Card;
 import communication.GameColor;
 import communication.Player;
+import communication.Result;
 import communication.Route;
 import model.IGameModel;
 import model.ModelFacade;
@@ -19,26 +21,40 @@ import model.ModelFacade;
 
 public class CardSelectPresenter implements ICardSelectPresenter {
 
+    private static String TAG = "cardSelPres";
+
     ICardSelectPresenter.OnBackListener listener;
     ICardSelectView view;
     IGameModel model;
 
     Route mRoute;
+    boolean actionSelected;
 
     public CardSelectPresenter(ICardSelectView view, OnBackListener listener, Bundle args) {
         this.view = view;
-        //this.view.setCardsToSelect(args.getInt("cardsToSelect"));
         view.setPresenter(this);
         this.listener = listener;
         model = ModelFacade.getInstance();
 
         mRoute = (Route) args.getSerializable("route");
+        actionSelected = false;
     }
 
 
     @Override
     public void updateInfo(Object result) {
-
+        Log.d(TAG, "updateInfo: ");
+        if(result instanceof Result) {
+            Result r = (Result) result;
+            Log.d(TAG, "result not null: " + r);
+            if(r.isSuccess() && actionSelected) {
+                Log.d(TAG, "updateInfo: ending turn");
+                model.endTurn();
+                listener.onBack();
+            }else {
+                view.sendToast(r.getErrorInfo());
+            }
+        }
     }
 
     @Override
@@ -48,14 +64,13 @@ public class CardSelectPresenter implements ICardSelectPresenter {
 
     @Override
     public void showToast(String toast) {
-
+        view.sendToast(toast);
     }
 
     @Override
     public void playerChooseCards(List<Card> cards) {
         model.claimRoute(mRoute, cards);
-        model.endTurn();
-        listener.onBack();
+        actionSelected = true;
     }
 
     @Override
