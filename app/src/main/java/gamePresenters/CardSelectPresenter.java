@@ -71,8 +71,8 @@ public class CardSelectPresenter implements ICardSelectPresenter {
 
     @Override
     public void playerChooseCards(List<Card> cards) {
-        model.claimRoute(mRoute, cards);
         actionSelected = true;
+        model.claimRoute(mRoute, cards);
     }
 
     @Override

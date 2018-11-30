@@ -1,6 +1,8 @@
 package model;
 
 
+import android.util.Log;
+
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ import task.GenericTask;
  */
 
 public class ModelFacade implements IGameModel {
+
+    private static String TAG = "modelFacade";
 
     private static ModelFacade modelFacade;
 
@@ -412,10 +416,8 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void claimRoute(Route route, Player player, List<Card> cards) {
-        System.out.println("come to claim route");
+        Log.d(TAG, "claimRoute: " + route.getRouteID());
         PlayerUser p = (PlayerUser) player;
-        System.out.println("there is cards amount: ");
-        System.out.println(cards.size());
         for(Card card : cards ) {
             p.useCards(card.getColor(), 1);
         }

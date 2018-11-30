@@ -55,17 +55,10 @@ public class GamePresenter implements IGamePresenter {
             listener.onShow(Shows.score, null);
         }
 
-        if(result != null && (result instanceof Result)) {
-            Result r = (Result) result;
-            if (r.getErrorInfo().equals("from claim route")) {
-                System.out.println("called update from claim route");
-            }
-        }
-        if(result != null && result.getClass().equals(Result.class)) {
+        if(result instanceof Result) {
             state.finish((Result) result);
-        }
-        else if(result != null && result.getClass().equals(Route.class)){
-            System.out.println("in update infor undate rout");
+        }else if(result instanceof Route){
+            Log.d(TAG, "updateInfo: result is route");
             view.setMap(model.getMap());
             view.updateRoute((Route) result);
         }
@@ -263,7 +256,6 @@ public class GamePresenter implements IGamePresenter {
                 return;
             }
             //Check if a player has sufficient cards
-            System.out.println("CLAIMED");
             Object list = model.checkRouteCanClaim(route);
 
             if (list instanceof String) {
@@ -284,7 +276,6 @@ public class GamePresenter implements IGamePresenter {
                     cardsToUse = (ArrayList<Card>) list;
                 }
 
-                System.out.println("trying to call model to claim route");
                 actionSelected = true;
                 model.claimRoute(route, player, cardsToUse);
             }
@@ -292,6 +283,7 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         void finish(Result result) {
+            Log.d(TAG, "TurnNoSelection: finish called");
             if(result.isSuccess()) {
                 if(isSelectOne) {
                     Log.d(TAG, "TurnNoSelection: to turnOneCard");
