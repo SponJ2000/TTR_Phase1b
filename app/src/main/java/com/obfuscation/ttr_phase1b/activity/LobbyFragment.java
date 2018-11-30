@@ -127,6 +127,10 @@ public class LobbyFragment extends Fragment implements IPresenter {
     }
 
     private void updateUI() {
+        // CHANGED THIS PART
+        if (mHost != null) {
+            mHostnameView.setText(mHost);
+        }
         if(mLobbyRecycler != null) {
             mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
             mLobbyRecycler.setAdapter(mLobbyAdapter);
