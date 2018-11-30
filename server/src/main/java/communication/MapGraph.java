@@ -56,6 +56,9 @@ public class MapGraph{
     public boolean hasPath(String username, String city1, String city2) {
         hasPath = false;
         ArrayList<Route> routes = graph.get(username);
+        if (graph.get(username) == null) {
+            routes = new ArrayList<>();
+        }
         System.out.println(city1 + " " + city2);
         for (int j = 0; j < routes.size(); j++) {
             System.out.println(routes.get(j).getCity1().toString() + " " + routes.get(j).getCity2().toString());
