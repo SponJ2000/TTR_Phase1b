@@ -146,9 +146,12 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     }
 
     private void FetchLobbyGameFrom(Result result) {
+        System.out.println("FETCHING LOBBY");;
+        System.out.println(result.toString());
         if (result.isSuccess()) {
             ModelRoot modelRoot = ModelRoot.getInstance();
             modelRoot.setLobbyGame((LobbyGame) result.getData());
+            System.out.println(modelRoot.getLobbyGame().getHost());
             GameClient gameClient = new GameClient(modelRoot.getLobbyGame().getGameID(), modelRoot.getUserName());
             modelRoot.setGame(gameClient);
         }

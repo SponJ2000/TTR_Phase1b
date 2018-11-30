@@ -147,7 +147,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
     @Override
     public void updateInfo(Object result) {
-        Log.d(TAG, "getting updated");
+        Log.d(TAG, "getting updated " + mHost);
         if(ismLeaving) {
             ismLeaving = false;
             onGameLeave();

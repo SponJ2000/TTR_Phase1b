@@ -105,7 +105,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
 
     @Override
     public void sendToast(String toast) {
-        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT).show();
     }
 
     private class HistoryHolder extends RecyclerView.ViewHolder {

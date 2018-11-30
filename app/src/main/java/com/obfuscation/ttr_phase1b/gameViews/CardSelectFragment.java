@@ -182,7 +182,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
     @Override
     public void sendToast(String toast) {
         Log.d(TAG, "sendToast: " + toast);
-        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT).show();
 
     }
 
