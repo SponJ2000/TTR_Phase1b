@@ -56,11 +56,13 @@ public class GamePresenter implements IGamePresenter {
         }
 
         if(result instanceof Result) {
-            state.finish((Result) result);
-        }else if(result instanceof Route){
-            Log.d(TAG, "updateInfo: result is route");
-            view.setMap(model.getMap());
-            view.updateRoute((Route) result);
+            Result r = (Result) result;
+            if(r.getData() instanceof Route) {
+                Log.d(TAG, "updateInfo: result is route");
+                view.setMap(model.getMap());
+                view.updateRoute((Route) r.getData());
+            }
+            state.finish(r);
         }
         view.setPlayer(model.getPlayer());
         if(model.getPlayer() == null) {
