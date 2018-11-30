@@ -400,6 +400,7 @@ public class ServerFacade implements IServer {
                     //update opponents points
                     clientProxy.claimRoute(gameID, username, routeID);
                     clientProxy.updatePlayerPoints(gameID, username, currentPlayer.getPoint());
+                    clientProxy.updateTrainDeck(gameID, gameServer.getFaceUpTrainCarCards(), gameServer.getTrainCards().size());
 
                     if (!clientProxy.getAuthToken().equals(authToken)) {
                         clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());

@@ -234,11 +234,11 @@ public class Database {
 
         //FIXME * should be 12, just reducing the number for debugging
         //FIXME should be 14
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 500; i++) {
             Card locomotiveCard = new Card(GameColor.LOCOMOTIVE);
             trainCards.add(locomotiveCard);
         }
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 300; i++) {
             Card purpleCard = new Card(GameColor.PURPLE);
             Card blueCard = new Card(GameColor.BLUE);
             Card orangeCard = new Card(GameColor.ORANGE);
@@ -260,6 +260,8 @@ public class Database {
         Collections.shuffle(trainCards);
         gameServer.setTrainCards(trainCards);
 
+        System.out.println("TRAIN CARD SIZE " + trainCards.size());
+
         ArrayList<Ticket> tickets = new ArrayList<>();
         //initialize destTickets
         tickets = GameFactory.getAllTickets();
@@ -276,7 +278,7 @@ public class Database {
         //set player train cards
         for (PlayerUser player : gameServer.getPlayers()) {
             ArrayList<Card> playerTrainCards = new ArrayList<>();
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 400; i++) {
                 Card card = trainCards.get(0);
                 playerTrainCards.add(card);
                 trainCards.remove(0);
@@ -314,22 +316,23 @@ public class Database {
             }
         }
 
-//        //set tickets
-//        tickets = gameServer.getTickets();
-//        for (PlayerUser p : gameServer.getPlayers()) {
-//            ArrayList<Ticket> playerTickets = new ArrayList<>();
-//            if (tickets.size() < 3) {
-//                playerTickets =  tickets;
-//            }
-//            for (int i = 0; i < 3; i++) {
-//                Ticket ticket = tickets.get(0);
-//                playerTickets.add(ticket);
-//                tickets.remove(0);
-//            }
-//            p.setTicketToChoose(playerTickets);
-//        }
+        //set tickets
+        //FIXME FOR TESTING
+        tickets = gameServer.getTickets();
+        for (PlayerUser p : gameServer.getPlayers()) {
+            ArrayList<Ticket> playerTickets = new ArrayList<>();
+            if (tickets.size() < 3) {
+                playerTickets =  tickets;
+            }
+            for (int i = 0; i < 7; i++) {
+                Ticket ticket = tickets.get(0);
+                playerTickets.add(ticket);
+                tickets.remove(0);
+            }
+            p.setTickets(playerTickets);
+        }
 
-        System.out.println("FINAL DECK SIZE " + gameServer.getTickets().size());
+        System.out.println("FINAL DECK SIZE " + gameServer.getTrainCards().size());
         // set faceup cards
         gameServer.setFaceUpTrainCarCards(faceUpTrainCards);
 
@@ -687,6 +690,8 @@ public class Database {
                     //update game history
                     gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed_" + routeID + "_routes"));
 
+                    //if deck is empty, refill
+                    putDiscardToCardDeck(gameServer);
                     //add to graph
                     gameGraph.get(gameID).addPath(username, claimedRoute);
                     return new Result(true, true, null);
@@ -704,11 +709,12 @@ public class Database {
             if (game != null) {
                 if (index == -1) {
                     //draw from deck
-                    if (game.getDeckSize() <= 0) {
+                    if (game.getDeckSize() == 0) {
                         putDiscardToCardDeck(game);
                     }
 
                     if (game.getTrainCards().size() == 0) {
+                        System.out.println("DECK IS EMPTy");
                         return new Result(false, null, "The deck is empty");
                     }
                     Card card = game.getTrainCards().get(0);
@@ -716,13 +722,17 @@ public class Database {
 
                     //add card to player cards
                     game.getPlayerbyUserName(username).getCards().add(card);
+
+                    if (game.getDeckSize() == 0) {
+                        putDiscardToCardDeck(game);
+                    }
                     return new Result(true, card, null);
                 }
                 else if (index >= 0 && index <= 4) {
                     if (game.getFaceUpTrainCarCards().size() > index) {
                         //get card from the face up cards
                         Card card = game.getFaceUpTrainCarCards().get(index);
-                        if (game.getDeckSize() <= 0) {
+                        if (game.getDeckSize() == 0) {
                             putDiscardToCardDeck(game);
                         }
 
@@ -751,7 +761,7 @@ public class Database {
                                 ArrayList<Card> faceUpTrainCards = new ArrayList<>();
                                 for (int i = 0; i < 5; i++) {
                                     //if deck is empty, shuffle
-                                    if (game.getTrainCards().size() <= 0) {
+                                    if (game.getTrainCards().size() == 0) {
                                         putDiscardToCardDeck(game);
                                     }
                                     Card newCard = game.getTrainCards().get(0);
@@ -768,6 +778,11 @@ public class Database {
                         }
                         game.getPlayerbyUserName(username).getCards().add(card);
                         game.getGameHistories().add(new GameHistory(gameID, username, "drew_train_card"));
+
+                        if (game.getDeckSize() == 0) {
+                            putDiscardToCardDeck(game);
+                        }
+
                         return new Result(true, card, null);
                     }
                 }
@@ -817,6 +832,10 @@ public class Database {
         //computing longest path
         MapGraph mapGraph = getGraphByGame(gameID);
         HashMap<String, Integer> paths = mapGraph.findLongestPath();
+        System.out.println("LONGEST PATH");
+        for (String s : paths.keySet()) {
+            System.out.println(s + " " + paths.get(s));
+        }
 
         int maxRouteNum = -1;
         for (String s : paths.keySet()) {
@@ -866,10 +885,19 @@ public class Database {
         return playerStats;
     }
     private void putDiscardToCardDeck(GameServer gameServer) {
+        System.out.println("DISCARD FILE");
+        System.out.println("BEFORE");
+        System.out.println(gameServer.getTrainCards().size());
+        System.out.println(gameServer.getDiscardDeck().size());
         ArrayList<Card> disCards = gameServer.getDiscardDeck();
-        Collections.shuffle(disCards);
-        gameServer.setTrainCards(disCards);
-        gameServer.getDiscardDeck().clear();
+        if (gameServer.getTrainCards().size() == 0 && disCards.size() != 0) {
+            Collections.shuffle(disCards);
+            gameServer.getTrainCards().addAll(disCards);
+            gameServer.getDiscardDeck().clear();
+        }
+        System.out.println("AFTER");
+        System.out.println(gameServer.getTrainCards().size());
+        System.out.println(gameServer.getDiscardDeck().size());
     }
 
     private String nextTurn(GameServer gameServer) {
