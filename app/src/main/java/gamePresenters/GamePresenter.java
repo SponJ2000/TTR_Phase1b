@@ -209,8 +209,10 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         void selectFaceUp(int index) {
+            if(actionSelected || isSelectOne) {
+                return;
+            }
             Log.d(TAG, "selectFaceUp: " + model.checkCard(index));
-
             if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 Log.d(TAG, "selectFaceUp locomotive");
                 model.chooseCard(index);
@@ -224,6 +226,9 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         void selectDeck() {
+            if(actionSelected || isSelectOne) {
+                return;
+            }
             if(model.getDeckSize() > 0) {
                 model.chooseCard(-1);
                 isSelectOne = true;
@@ -236,12 +241,18 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectTicketsButton() {
+            if(actionSelected || isSelectOne) {
+                return;
+            }
             listener.onShow(Shows.tickets, null);
             actionSelected = true;
         }
 
         @Override
         public void claimRoute(Route route, Player player) {
+            if(actionSelected || isSelectOne) {
+                return;
+            }
             //Check if a player has sufficient cards
             System.out.println("CLAIMED");
             Object list = model.checkRouteCanClaim(route);
@@ -281,9 +292,12 @@ public class GamePresenter implements IGamePresenter {
                     Log.d(TAG, "finish turn");
                     model.endTurn();
                     wrapper.setState(new NotTurn(wrapper));
+                    actionSelected = false;
                 }
             }else {
                 wrapper.sendToast(result.getErrorInfo());
+                isSelectOne = false;
+                actionSelected = false;
             }
         }
     }
