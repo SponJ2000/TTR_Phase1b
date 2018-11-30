@@ -98,9 +98,10 @@ public class LobbyGame {
     }
 
     public void removePlayerByID (String playerID) {
-        for (Player p: players) {
-            if (p.getPlayerName().equals(playerID)) {
-                players.remove(p);
+        for (int i = 0; i < players.size(); i++) {
+            if (players.get(i).getPlayerName().equals(playerID)) {
+                players.remove(i);
+                break;
             }
         }
 
