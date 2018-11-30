@@ -1,6 +1,8 @@
 package model;
 
 
+import android.util.Log;
+
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import communication.LobbyGame;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerOpponent;
 import communication.PlayerStats;
 import communication.PlayerUser;
 import communication.Result;
@@ -30,6 +33,8 @@ import task.GenericTask;
  */
 
 public class ModelFacade implements IGameModel {
+
+    private static String TAG = "modelFacade";
 
     private static ModelFacade modelFacade;
 
@@ -82,13 +87,6 @@ public class ModelFacade implements IGameModel {
 
 
 //        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
-    }
-
-
-
-    public void claimRoute(Route route, List<Card> cards) {
-        System.out.println("come to claim route");
-        claimRoute(route, getPlayer(), cards);
     }
 
     public static ModelFacade getInstance() {
@@ -173,31 +171,8 @@ public class ModelFacade implements IGameModel {
 
 //    public void CheckGame() {
 //        GenericTask genericTask = new GenericTask("CheckGame");
-//        genericTask.execute(ModelRoot.getInstance().getAuthToken(), ModelRoot.getInstance().getGame().getGameID(), Poller.gameVersion);
+//        genericTask.execute(ModelRoot.newInstance().getAuthToken(), ModelRoot.newInstance().getGame().getGameID(), Poller.gameVersion);
 //    }
-
-    @Override
-    public void claimRoute(Route route, Player player, List<Card> cards) {
-        System.out.println("come to claim route");
-        PlayerUser p = (PlayerUser) player;
-        System.out.println("there is cards amount: ");
-        System.out.println(cards.size());
-        for(Card card : cards ) {
-            p.useCards(card.getColor(), 1);
-        }
-        p.subtractTrain(cards.size());
-        p.addRouteAsClaimed(route.getRouteID());
-        ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(route.getRouteID()).setClaimedBy(player);
-        route.setClaimedBy(p);
-//        Player pa = route.getClaimedBy();
-//        if (pa.getPlayerName().equals( player.getPlayerName())) {
-//            System.out.println("route claimed by this user");
-//        }
-        PresenterFacade.getInstance().getPresenter().updateInfo(route);
-        GenericTask genericTask = new GenericTask("ClaimRoute");
-        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
-
-    }
 
     @Override
     public void sendMessage(Message message) {
@@ -225,6 +200,11 @@ public class ModelFacade implements IGameModel {
     }
 
     @Override
+    public List<PlayerOpponent> getOpponents() {
+        return getCurrentGame().getPlayerOpponents();
+    }
+
+    @Override
     public void addPoints(int p) {
         getPlayer().setPoint(p);
     }
@@ -246,7 +226,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void updateOpponent() {
-//        List<Player> players = ModelRoot.getInstance().getGame().getPlayers();
+//        List<Player> players = ModelRoot.newInstance().getGame().getPlayers();
 //        players.get(1).setTrainCarNum(12);
 //        players.get(1).setCardNum(24);
 //        players.get(1).setPoint(32);
@@ -280,13 +260,13 @@ public class ModelFacade implements IGameModel {
     //update the list of cards user has
     public void updateCards() {
 //not for this phase
-//        return ModelRoot.getInstance().getGame().getTrainCards();
+//        return ModelRoot.newInstance().getGame().getTrainCards();
     }
 
     @Override
     //it is just a get method
     public void updateFaceCards() {
-//        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(0);
+//        ModelRoot.newInstance().getGame().UserTakeFaceUpCard(0);
     }
 
     @Override
@@ -301,7 +281,7 @@ public class ModelFacade implements IGameModel {
 
     @Override
     public void chooseCard(int index) {
-//        ModelRoot.getInstance().getGame().UserTakeFaceUpCard(index);
+//        ModelRoot.newInstance().getGame().UserTakeFaceUpCard(index);
         if(index >= 0) {
             getCurrentGame().removeFaceUpTrainCarCardsByIndex(index);
             PresenterFacade.getInstance().updatePresenter(new Result(true, null, null));
@@ -379,20 +359,23 @@ public class ModelFacade implements IGameModel {
         }
 
         //First, check to see if it's a dual route
-        if(route.getClass().equals(DualRoute.class)) {
-            if(getPlayers().size() <= 2) {
-                return "Only one dual route can be claimed in a two-player game";
-            }
-
-            String siblingID = ((DualRoute) route).getSibling();
-
-            if (getPlayer().checkRouteIfClaimed(siblingID)) {
-                return "You may not claim both dual routes";
+        if(route.getSibling() != null) {
+            String siblingID = route.getSibling();
+            Route rib = ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(siblingID);
+            if(rib.getClaimedBy() != null) {
+                if(ModelRoot.getInstance().getGame().getPlayerStatsList().size() < 2) {
+                    return "Only one dual route can be claimed in a two-player game";
+                }if (getPlayer().checkRouteIfClaimed(siblingID)) {
+                    return "You may not claim both dual routes";
+                }
             }
         }
 
         GameColor color = route.getColor();
         int length = route.getLength();
+        if(getPlayer().getTrainNum() < length) {
+            return "You don't have enough train cars!";
+        }
 
         List<Card> cards = getCards();
 
@@ -425,6 +408,27 @@ public class ModelFacade implements IGameModel {
             }
             else return "Not enough cards";
         }
+    }
+
+    public void claimRoute(Route route, List<Card> cards) {
+        claimRoute(route, getPlayer(), cards);
+    }
+
+    @Override
+    public void claimRoute(Route route, Player player, List<Card> cards) {
+        Log.d(TAG, "claimRoute: " + route.getRouteID());
+        PlayerUser p = (PlayerUser) player;
+        for(Card card : cards ) {
+            p.useCards(card.getColor(), 1);
+        }
+        p.subtractTrain(cards.size());
+        p.addRouteAsClaimed(route.getRouteID());
+        ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(route.getRouteID()).setClaimedBy(player);
+        route.setClaimedBy(p);
+        PresenterFacade.getInstance().getPresenter().updateInfo(route);
+        GenericTask genericTask = new GenericTask("ClaimRoute");
+        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
+
     }
 
     private int largestSet(){

@@ -4,21 +4,29 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.gameViews.IPTicketsView;
+import com.obfuscation.ttr_phase1b.gameViews.IPlayerInfoView;
 
+import java.util.List;
+
+import communication.PlayerOpponent;
 import communication.Result;
 import model.IGameModel;
 import model.ModelFacade;
 
-public class PTicketsPresenter implements IPTicketsPresenter {
+/**
+ * Created by jalton on 11/29/18.
+ */
+
+public class PInfoPresenter implements IPInfoPresenter {
 
     private static String TAG = "pticksPres";
 
-    private IPTicketsView view;
-    private OnCloseListener listener;
+    private IPlayerInfoView view;
+    private IPTicketsPresenter.OnCloseListener listener;
     private IGameModel model;
     private IGamePresenter prevPresenter;
 
-    public PTicketsPresenter(IPTicketsView view, OnCloseListener listener, IGamePresenter prevPresenter) {
+    public PInfoPresenter(IPlayerInfoView view, IPTicketsPresenter.OnCloseListener listener, IGamePresenter prevPresenter) {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
@@ -33,19 +41,7 @@ public class PTicketsPresenter implements IPTicketsPresenter {
 
     @Override
     public void updateInfo(Object result) {
-        if(result != null && (result instanceof Result)) {
-            Result r = (Result) result;
-            if (!r.isSuccess()) {
-                Log.d(TAG, "updateInfo: " + r.getErrorInfo());
-                view.sendToast(r.getErrorInfo());
-            }
-        }
-        Log.d(TAG, "updateInfo: ");
-        view.setTickets(model.getTickets());
-        view.updateUI();
-        if(prevPresenter != null) {
-            prevPresenter.updateInfo(result);
-        }
+        prevPresenter.updateInfo(result);
     }
 
     @Override
@@ -63,4 +59,20 @@ public class PTicketsPresenter implements IPTicketsPresenter {
         prevPresenter = pres;
     }
 
+    @Override
+    public List<PlayerOpponent> getPlayers() {
+        if(prevPresenter != null) {
+            return prevPresenter.getPlayers();
+        }
+        return null;
+    }
+
+    @Override
+    public void showPlayerInfo(IPlayerInfoView view) {
+        Log.d(TAG, "showPlayerInfo: " + model.getPlayers());
+        this.view = view;
+        this.view.setPresenter(this);
+        this.view.setPlayers(model.getOpponents());
+        this.view.updateUI();
+    }
 }

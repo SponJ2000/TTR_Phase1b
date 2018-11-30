@@ -2,7 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center_horizontal"
     tools:context=".gameViews.PTicketsFragment">
 
     <LinearLayout
@@ -10,27 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/ptickets_back_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/ptickets_back_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="back"/>
-
-            <TextView
-                android:id="@+id/ptickets_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="25dp"
-                android:paddingLeft="30dp"
-                android:layout_gravity="center_vertical"
-                android:text="Your tickets:"/>
-
-        </LinearLayout>
+            android:layout_gravity="end"
+            android:text="close" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,10 +26,13 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ptickets_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
 
     </LinearLayout>
 

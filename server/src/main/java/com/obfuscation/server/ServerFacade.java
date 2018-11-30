@@ -235,7 +235,7 @@ public class ServerFacade implements IServer {
                     gameClient.setPlayerUser(game.getPlayerbyUserName(username));
                     gameClient.setTrainCardDeckSize(game.getTrainCards().size());
                     gameClient.setFaceUpTrainCarCards(game.getFaceUpTrainCarCards());
-                    gameClient.getPlayerUser().setTicketToChoose(game.getPlayerbyUserName(username).getTicketToChoose());
+                    //gameClient.getPlayerUser().setTicketToChoose(game.getPlayerbyUserName(username).getTicketToChoose());
                     gameClient.setTicketDeckSize(game.getTickets().size());
                     gameClient.setTurnUser(game.getCurrentPlayer());
                     //initialize user player
@@ -400,6 +400,7 @@ public class ServerFacade implements IServer {
                     //update opponents points
                     clientProxy.claimRoute(gameID, username, routeID);
                     clientProxy.updatePlayerPoints(gameID, username, currentPlayer.getPoint());
+                    clientProxy.updateTrainDeck(gameID, gameServer.getFaceUpTrainCarCards(), gameServer.getTrainCards().size());
 
                     if (!clientProxy.getAuthToken().equals(authToken)) {
                         clientProxy.updateOpponentTrainCards(gameID, username, currentPlayer.getCardNum());
@@ -480,7 +481,7 @@ public class ServerFacade implements IServer {
             }
 
             //if the tran car number is less than 3, last round
-            if (gameServer.getPlayerbyUserName(username).getTrainNum() < 3) {
+            if (gameServer.getPlayerbyUserName(username).getTrainNum() < 3 && !gameServer.isLastRound()) {
                 System.out.println("LAST ROUND GETTING CALLED");
                 gameServer.setLastRound(true);
                 gameServer.setLastRoundTriggeredBy(username);

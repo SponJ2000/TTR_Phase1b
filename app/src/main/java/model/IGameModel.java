@@ -9,6 +9,7 @@ import communication.GameHistory;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerOpponent;
 import communication.PlayerStats;
 import communication.Route;
 import communication.Ticket;
@@ -81,6 +82,8 @@ public interface IGameModel {
     void sendMessage(Message message);
 
     List<Player> getPlayers();
+
+    List<PlayerOpponent> getOpponents();
 
     void addPoints(int p);
 

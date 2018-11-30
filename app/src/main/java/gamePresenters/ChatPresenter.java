@@ -22,7 +22,7 @@ public class ChatPresenter implements IChatPresenter {
         view.setPresenter(this);
         this.listener = listener;
         model = ModelFacade.getInstance();
-//        model = FakeModel.getInstance();
+//        model = FakeModel.newInstance();
         view.setMessages(model.getMessages());
         view.setUsername(model.getUserName());
     }
