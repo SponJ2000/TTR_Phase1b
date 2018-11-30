@@ -189,10 +189,9 @@ public class ModelFacade implements IGameModel {
         p.addRouteAsClaimed(route.getRouteID());
         ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(route.getRouteID()).setClaimedBy(player);
         route.setClaimedBy(p);
-//        Player pa = route.getClaimedBy();
-//        if (pa.getPlayerName().equals( player.getPlayerName())) {
-//            System.out.println("route claimed by this user");
-//        }
+        if(route.isDual()) {
+            ((DualRoute) ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId( ((DualRoute) route).getSibling() )).setSibClaimed(true);
+        }
         PresenterFacade.getInstance().getPresenter().updateInfo(route);
         GenericTask genericTask = new GenericTask("ClaimRoute");
         genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
@@ -384,14 +383,11 @@ public class ModelFacade implements IGameModel {
         }
 
         //First, check to see if it's a dual route
-        if(route.getClass().equals(DualRoute.class)) {
-            if(getPlayers().size() <= 2) {
-                return "Only one dual route can be claimed in a two-player game";
-            }
-
+        if(route.isDual()) {
             String siblingID = ((DualRoute) route).getSibling();
-
-            if (getPlayer().checkRouteIfClaimed(siblingID)) {
+            if(getPlayers().size() <= 2 && ((DualRoute) route).isSibClaimed()) {
+                return "Only one dual route can be claimed in a two-player game";
+            }if (((DualRoute) route).isSibClaimed() && getPlayer().checkRouteIfClaimed(siblingID)) {
                 return "You may not claim both dual routes";
             }
         }

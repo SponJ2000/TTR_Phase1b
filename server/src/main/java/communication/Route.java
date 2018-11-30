@@ -14,6 +14,7 @@ public class Route implements Serializable{
     private Player claimedBy = null; //TODO : use username? or playeropponenet?
     private double[] midPoint;
     private String routeID;
+    private boolean isDual;
 
     private String sibling;
 
@@ -22,12 +23,21 @@ public class Route implements Serializable{
         this.city2 = city2;
         this.length = length;
         this.color = color;
+        isDual = false;
 
         midPoint = new double[] {0.0,0.0};
 
         midPoint[0] = (city1.getLat()+city2.getLat())/2.0;
         midPoint[1] = (city1.getLng()+city2.getLng())/2.0;
         routeID = city1.getName() + "-" + city2.getName();
+    }
+
+    public void setDual(boolean dual) {
+        isDual = dual;
+    }
+
+    public boolean isDual() {
+        return isDual;
     }
 
     public City getCity1() {
