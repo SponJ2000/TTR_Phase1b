@@ -267,11 +267,11 @@ public class ClientFacade implements IClient{
         GameClient g = ModelRoot.getInstance().getGame();
         if (g != null) {
             Serializer serializer = new Serializer();
+            g.getGameHistories().clear();
             for(Object O: gh) {
-                g.getGameHistories().clear();
                 g.addHistory(serializer.deserializeGameHistory(O.toString()));
-                updatePresenter(g.getGameHistories());
             }
+            updatePresenter(g.getGameHistories());
         }
     }
 
