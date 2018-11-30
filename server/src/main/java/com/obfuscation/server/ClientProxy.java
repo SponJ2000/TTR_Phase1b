@@ -63,7 +63,7 @@ public class ClientProxy implements IClient {
                 , "initializeGame"
                 , new String[]{GAMECLIENT}
                 , new Object[] {game});
-        System.out.println("GET HERE");
+//        System.out.println("GET HERE");
         notSeenCommands.put(game.getGameID(), new ArrayList<GenericCommand>());
         notSeenCommands.get(game.getGameID()).add(command);
     }
@@ -166,7 +166,7 @@ public class ClientProxy implements IClient {
                 , new String[]{STRING, MESSAGE}
                 , new Object[] {gameID, m});
         notSeenCommands.get(gameID).add(command);
-        System.out.println("UPDATING CHAT : " + notSeenCommands.get(gameID).size());
+//        System.out.println("UPDATING CHAT : " + notSeenCommands.get(gameID).size());
     }
 
     @Override
@@ -248,10 +248,10 @@ public class ClientProxy implements IClient {
     //TODO : clients have to keep track of games and the last command id, and send them (keep map<gameID, commandID>)
     public Result getNotSeenCommands(String gameID, Integer state) {
         try {
-            System.out.println("state come in as: " + state.toString());
+//            System.out.println("state come in as: " + state.toString());
             if (notSeenCommands != null) {
                 if (notSeenCommands.get(gameID) != null) {
-                    System.out.println("HAHA : " + notSeenCommands.get(gameID).size());
+//                    System.out.println("HAHA : " + notSeenCommands.get(gameID).size());
 //                    for (int i = 0; i < notSeenCommands.get(gameID).size(); i++) {
 //                        System.out.println(notSeenCommands.get(gameID).);
 //                    }
@@ -262,7 +262,7 @@ public class ClientProxy implements IClient {
                         ArrayList<GenericCommand> g = new ArrayList<GenericCommand>();
                         for (GenericCommand c : commands) {
                            // System.out.println("COMMANDS GETTING ADDED");
-                            System.out.println(c.methodName);
+//                            System.out.println(c.methodName);
                             //System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
                             g.add((GenericCommand) c);
                         }

@@ -117,7 +117,7 @@ public class Poller {
             for (int i = 0 ; i < commands.size(); i++) {
 //                System.out.println("get into this loop");
                 try {
-                    System.out.println(commands.get(i).toString());
+//                    System.out.println(commands.get(i).toString());
                     GenericCommand c = (GenericCommand) serializer.deserializeCommand(commands.get(i).toString());
 //                    System.out.println("Command Detail");
 //                    System.out.println("command class: " + c.className);

@@ -27,7 +27,7 @@ public class DefaultHandler implements HttpHandler {
             String filePathStr = "web" + File.separator + "index.html";
             Path filePath = FileSystems.getDefault().getPath(filePathStr);
             Files.copy(filePath, exchange.getResponseBody());
-            System.out.println(exchange.getRequestURI().toString());
+//            System.out.println(exchange.getRequestURI().toString());
         }
         else {
             String filePathStr = "web" + urlPath;

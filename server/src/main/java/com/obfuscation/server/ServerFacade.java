@@ -37,10 +37,10 @@ public class ServerFacade implements IServer {
     @Override
     public Result SendMessage(String authToken, String gameID, Message message) {
         try {
-            System.out.println("Updating the message");
+//            System.out.println("Updating the message");
             //FIXME**
             Result result = db.sendMessage(gameID, message.getText(), authToken);
-            System.out.println(result.toString());
+//            System.out.println(result.toString());
             if (result.isSuccess()) {
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     clientProxy.updateChat(gameID, (Message) result.getData());
@@ -186,9 +186,9 @@ public class ServerFacade implements IServer {
     @Override
     public Result CreateLobby(LobbyGame lobbyGame, String authToken) {
         try {
-            System.out.println(authToken + " EEE");
+//            System.out.println(authToken + " EEE");
             Result result = db.newGameLobby(lobbyGame, authToken);
-            System.out.println("WHAT IS " + result.toString());
+//            System.out.println("WHAT IS " + result.toString());
             if (result.isSuccess()) {
                 for (ClientProxy clientProxy : clientproxies) {
                     clientProxy.updateGameLobbyList(lobbyGame.getGameID());
@@ -323,16 +323,16 @@ public class ServerFacade implements IServer {
     @Override
     public Result CheckGameList(String authToken){
         try {
-            System.out.println("User Checking gamelist");
-            System.out.println(authToken);
+//            System.out.println("User Checking gamelist");
+//            System.out.println(authToken);
             Result result = null;
             for (ClientProxy clientProxy : clientproxies) {
                 if (clientProxy.getAuthToken().equals(authToken)) {
                     result = clientProxy.checkUpdates(null);
                 }
             }
-            System.out.println("EE");
-            System.out.println(result.toString());
+//            System.out.println("EE");
+//            System.out.println(result.toString());
             return result;
         }
         catch (Exception e) {
@@ -360,18 +360,18 @@ public class ServerFacade implements IServer {
     @Override
     public Result CheckGameLobby(String authToken, String gameID) {
         try {
-            System.out.println("User checking gsame");
+//            System.out.println("User checking gsame");
             Result result = null;
             for (ClientProxy clientProxy : clientproxies) {
-                System.out.println(clientProxy.getAuthToken());
-                System.out.println(authToken);
-                System.out.println("^^^^^^^^^");
+//                System.out.println(clientProxy.getAuthToken());
+//                System.out.println(authToken);
+//                System.out.println("^^^^^^^^^");
                 if (clientProxy.getAuthToken().equals(authToken)) {
                     result = clientProxy.checkUpdates(gameID);
                 }
             }
 
-            System.out.println("With isSuccess" + result.isSuccess());
+//            System.out.println("With isSuccess" + result.isSuccess());
             return result;
         }
         catch (Exception e) {
@@ -443,13 +443,13 @@ public class ServerFacade implements IServer {
             for (Object o : ticketsToKeep) {
                 ticketsToChoose2.add((Ticket) serializer.deserializeTicket(o.toString()));
             }
-            System.out.println("RETRUN TICKET CALLED");
+//            System.out.println("RETRUN TICKET CALLED");
             Result result = db.setTickets(gameID, authToken, ticketsToChoose2);
             String playerID = db.findUsernameByAuthToken(authToken);
             if (result.isSuccess()) {
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     clientProxy.updateOpponentTickets(gameID, playerID, new Integer(((ArrayList<Ticket>) result.getData()).size()));
-                    System.out.println("UPDATING DECK " + db.findGameByID(gameID).getTickets().size());
+//                    System.out.println("UPDATING DECK " + db.findGameByID(gameID).getTickets().size());
                     clientProxy.updateDestinationDeck(gameID, new Integer(db.findGameByID(gameID).getTickets().size()));
                 }
             }
@@ -463,7 +463,7 @@ public class ServerFacade implements IServer {
 
     @Override
     public Result EndTurn(String gameID, String authToken) {
-        System.out.println("get end turn command");
+//        System.out.println("get end turn command");
         // Ending turn
         try {
             //if last player of last round ended, end the game

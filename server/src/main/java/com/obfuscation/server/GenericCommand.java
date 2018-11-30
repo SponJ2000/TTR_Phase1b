@@ -31,7 +31,7 @@ public class GenericCommand implements ICommand {
 
     @Override
     public Result execute() {
-        System.out.println(this.toString());
+//        System.out.println(this.toString());
         try {
             Class<?> retClass = Class.forName(className);
 
@@ -57,8 +57,8 @@ public class GenericCommand implements ICommand {
             }
 
             Method method = retClass.getMethod(methodName, paramTypeClass);
-            System.out.println(parameterType);
-            System.out.println(method.getGenericParameterTypes().getClass().toString());
+//            System.out.println(parameterType);
+//            System.out.println(method.getGenericParameterTypes().getClass().toString());
 
 //            for (String s : parameterType) {
 //                System.out.println("D : " + s);

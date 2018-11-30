@@ -682,6 +682,8 @@ public class Database {
                     gameServer.getmMap().claimRoute(claimedRoute, p);
 
                     //deduct train car number
+                    System.out.println("SUBTRACTING");
+                    System.out.println(p.getTrainNum() - cards.size());
                     p.setTrainNum(p.getTrainNum() - cards.size());
 
                     //give proper points

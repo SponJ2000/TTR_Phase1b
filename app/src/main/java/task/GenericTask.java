@@ -1,6 +1,7 @@
 package task;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
@@ -25,6 +26,8 @@ import server.ServerProxy;
  */
 
 public class GenericTask extends AsyncTask<Object, Void, Result> {
+
+    private static final String TAG = "genTask";
 
     String action;
 //    Object holder;
@@ -82,7 +85,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     @Override
     public void onPostExecute(Result result) {
-
+        Log.d(TAG, "onPostExecute: " + result);
         switch (action) {
             case "login":
                 OnSignIn(result);
