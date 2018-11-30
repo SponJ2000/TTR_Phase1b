@@ -232,9 +232,11 @@ public class GamePresenter implements IGamePresenter {
         @Override
         void selectDeck() {
             if(actionSelected || isSelectOne) {
+                Log.d(TAG, "already selected");
                 return;
             }
             if(model.getDeckSize() > 0) {
+                Log.d(TAG, "choosing deck");
                 model.chooseCard(-1);
                 isSelectOne = true;
             }
@@ -290,15 +292,14 @@ public class GamePresenter implements IGamePresenter {
         void finish(Result result) {
             if(result.isSuccess()) {
                 if(isSelectOne) {
-                    Log.d(TAG, "to turnOneCard");
+                    Log.d(TAG, "TurnNoSelection: to turnOneCard");
                     wrapper.setState(new TurnOneCard(wrapper));
                     isSelectOne = false;
                 }else if(actionSelected) {
-                    Log.d(TAG, "finish turn");
+                    Log.d(TAG, "TurnNoSelection: finish turn");
                     model.endTurn();
                     ending = true;
                     wrapper.setState(new NotTurn(wrapper));
-                    actionSelected = false;
                 }
             }else {
                 wrapper.sendToast(result.getErrorInfo());
@@ -336,9 +337,11 @@ public class GamePresenter implements IGamePresenter {
         @Override
         public void selectDeck() {
             if(actionSelected) {
+                Log.d(TAG, "already selected");
                 return;
             }
             if(model.getDeckSize() > 0) {
+                Log.d(TAG, "choosing deck");
                 wrapper.getModel().chooseCard(-1);
                 actionSelected = true;
             }
@@ -351,7 +354,7 @@ public class GamePresenter implements IGamePresenter {
         void finish(Result result) {
             if(result.isSuccess()) {
                 if(actionSelected) {
-                    Log.d(TAG, "finish turn");
+                    Log.d(TAG, "TurnOneCard: finish turn");
                     model.endTurn();
                     ending = true;
                     wrapper.setState(new NotTurn(wrapper));

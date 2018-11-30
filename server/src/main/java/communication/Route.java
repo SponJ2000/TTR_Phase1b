@@ -15,6 +15,8 @@ public class Route implements Serializable{
     private double[] midPoint;
     private String routeID;
 
+    private String sibling;
+
     public Route(City city1, City city2, int length, GameColor color) {
         this.city1 = city1;
         this.city2 = city2;
@@ -98,4 +100,11 @@ public class Route implements Serializable{
         pos[1] = city.getLng();
         return pos;
     }
+
+
+
+    public void addSibling(String sibling) {
+        this.sibling = sibling;
+    }
+
 }
