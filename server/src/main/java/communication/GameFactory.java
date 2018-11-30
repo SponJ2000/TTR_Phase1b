@@ -176,6 +176,7 @@ public class GameFactory {
         dr.setSibling(dr2.getDualRouteID());
         allRoutes.add(dr);
         allRoutes.add(dr2);
+
         allRoutes.add(new Route(cityMap.get("Raleigh"), cityMap.get("Charleston"), 2, GameColor.GREY));
         allRoutes.add(new Route(cityMap.get("Charleston"), cityMap.get("Miami"), 4, GameColor.PURPLE));
         allRoutes.add(new Route(cityMap.get("Miami"), cityMap.get("New_Orleans"), 6, GameColor.RED));

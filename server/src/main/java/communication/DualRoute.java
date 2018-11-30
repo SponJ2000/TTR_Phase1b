@@ -9,18 +9,12 @@ package communication;
 
 public class DualRoute extends Route {
 
-    private String sibling;
-    private String dualRouteID;
-    private boolean isSibClaimed;
-
     private double[] start;
     private double[] end;
 
     public DualRoute(City city1, City city2, int length, GameColor color, boolean first, double[] offset) {
         super(city1, city2, length, color);
         setDual(true);
-        sibling = null;
-        isSibClaimed = false;
 
         start = new double[2];
         start[0] = city1.getLat();
@@ -54,11 +48,8 @@ public class DualRoute extends Route {
             }
         }
 
-        if (first) {
-            dualRouteID = city1.getName() + "-" + city2.getName();
-        }
-        else {
-            dualRouteID = city1.getName() + "-" + city2.getName() + "2";
+        if (!first) {
+            routeID = city1.getName() + "-" + city2.getName() + "2";
         }
 
     }
@@ -73,28 +64,9 @@ public class DualRoute extends Route {
         return end;
     }
 
-    public void setSibling(String sibling) {
-        this.sibling = sibling;
-    }
-
-    public String getSibling() {
-        return sibling;
-    }
-
     public String getDualRouteID() {
-        return dualRouteID;
+        return routeID;
     }
 
-    public void setDualRouteID(String dualRouteID) {
-        this.dualRouteID = dualRouteID;
-    }
-
-    public void setSibClaimed(boolean b) {
-        isSibClaimed = b;
-    }
-
-    public boolean isSibClaimed() {
-        return isSibClaimed;
-    }
 
 }

@@ -85,12 +85,6 @@ public class ModelFacade implements IGameModel {
 //        mCurrentGame = new Game("new republic (the game id)", mHost.getPlayerName(), fakePlayers, 5);
     }
 
-
-
-    public void claimRoute(Route route, List<Card> cards) {
-        claimRoute(route, getPlayer(), cards);
-    }
-
     public static ModelFacade getInstance() {
         if (modelFacade == null) {
             modelFacade = new ModelFacade();
@@ -175,28 +169,6 @@ public class ModelFacade implements IGameModel {
 //        GenericTask genericTask = new GenericTask("CheckGame");
 //        genericTask.execute(ModelRoot.newInstance().getAuthToken(), ModelRoot.newInstance().getGame().getGameID(), Poller.gameVersion);
 //    }
-
-    @Override
-    public void claimRoute(Route route, Player player, List<Card> cards) {
-        System.out.println("come to claim route");
-        PlayerUser p = (PlayerUser) player;
-        System.out.println("there is cards amount: ");
-        System.out.println(cards.size());
-        for(Card card : cards ) {
-            p.useCards(card.getColor(), 1);
-        }
-        p.subtractTrain(cards.size());
-        p.addRouteAsClaimed(route.getRouteID());
-        ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(route.getRouteID()).setClaimedBy(player);
-        route.setClaimedBy(p);
-        if(route.isDual()) {
-            ((DualRoute) ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId( ((DualRoute) route).getSibling() )).setSibClaimed(true);
-        }
-        PresenterFacade.getInstance().getPresenter().updateInfo(route);
-        GenericTask genericTask = new GenericTask("ClaimRoute");
-        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
-
-    }
 
     @Override
     public void sendMessage(Message message) {
@@ -383,12 +355,15 @@ public class ModelFacade implements IGameModel {
         }
 
         //First, check to see if it's a dual route
-        if(route.isDual()) {
-            String siblingID = ((DualRoute) route).getSibling();
-            if(getPlayers().size() <= 2 && ((DualRoute) route).isSibClaimed()) {
-                return "Only one dual route can be claimed in a two-player game";
-            }if (((DualRoute) route).isSibClaimed() && getPlayer().checkRouteIfClaimed(siblingID)) {
-                return "You may not claim both dual routes";
+        if(route.getSibling() != null) {
+            String siblingID = route.getSibling();
+            Route rib = ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(siblingID);
+            if(rib.getClaimedBy() != null) {
+                if(ModelRoot.getInstance().getGame().getPlayerStatsList().size() < 2) {
+                    return "Only one dual route can be claimed in a two-player game";
+                }if (getPlayer().checkRouteIfClaimed(siblingID)) {
+                    return "You may not claim both dual routes";
+                }
             }
         }
 
@@ -429,6 +404,29 @@ public class ModelFacade implements IGameModel {
             }
             else return "Not enough cards";
         }
+    }
+
+    public void claimRoute(Route route, List<Card> cards) {
+        claimRoute(route, getPlayer(), cards);
+    }
+
+    @Override
+    public void claimRoute(Route route, Player player, List<Card> cards) {
+        System.out.println("come to claim route");
+        PlayerUser p = (PlayerUser) player;
+        System.out.println("there is cards amount: ");
+        System.out.println(cards.size());
+        for(Card card : cards ) {
+            p.useCards(card.getColor(), 1);
+        }
+        p.subtractTrain(cards.size());
+        p.addRouteAsClaimed(route.getRouteID());
+        ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(route.getRouteID()).setClaimedBy(player);
+        route.setClaimedBy(p);
+        PresenterFacade.getInstance().getPresenter().updateInfo(route);
+        GenericTask genericTask = new GenericTask("ClaimRoute");
+        genericTask.execute( ModelRoot.getInstance().getGame().getGameID(), route.getRouteID(),cards,ModelRoot.getInstance().getAuthToken());
+
     }
 
     private int largestSet(){

@@ -31,6 +31,8 @@ public class GameMap {
 
         r.setClaimedBy(player);
         r.setColor(player.getPlayerColor());
+        Route sec = getRouteByRouteId(r.getSibling());
+        sec.setSibClaimed(true);
     }
 
     public Route getRouteByRouteId(String routeID) {

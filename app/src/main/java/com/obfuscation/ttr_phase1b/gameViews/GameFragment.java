@@ -736,6 +736,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void sendToast(String toast) {
+        Log.d(TAG, "sendToast: " + toast);
         Toast.makeText(getContext(), toast, Toast.LENGTH_LONG);
     }
 
