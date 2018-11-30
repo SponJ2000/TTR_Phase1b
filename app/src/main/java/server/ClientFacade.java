@@ -17,6 +17,7 @@ import communication.Player;
 import communication.PlayerOpponent;
 import communication.PlayerStats;
 import communication.PlayerUser;
+import communication.Result;
 import communication.Route;
 import communication.Serializer;
 import communication.Ticket;
@@ -238,7 +239,7 @@ public class ClientFacade implements IClient{
             Route r = g.getmMap().getRouteByRouteId(routeID);
             if (r != null) {
                 r.setClaimedBy(((Player)g.getPlayerByUserName(playerID)));
-                updatePresenter(r);
+                updatePresenter(new Result(true,r,null));
             }
             ((Player)g.getPlayerByUserName(playerID)).addRouteAsClaimed(routeID);
             updatePresenter(((Player)g.getPlayerByUserName(playerID)));
