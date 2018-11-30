@@ -253,7 +253,7 @@ public class GamePresenter implements IGamePresenter {
             Object list = model.checkRouteCanClaim(route);
 
             if (list instanceof String) {
-                System.out.println("apprently it wont go to claim");
+                Log.d(TAG, "claimRoute: " + list);
                 wrapper.sendToast((String) list);
             }
             else {
@@ -264,6 +264,7 @@ public class GamePresenter implements IGamePresenter {
                     args.putInt("cardsToSelect", route.getLength());
                     listener.onShow(Shows.cardSelect, args);
                     wrapper.setState(new NotTurn(wrapper));
+                    actionSelected = true;
                     return;
                 }
                 else {
