@@ -11,6 +11,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Button
+            android:id="@+id/ptickets_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="close" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,26 +26,13 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/ptickets_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="10" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="25dp" />
-
-        <Button
-            android:id="@+id/ptickets_back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-
-            android:text="close" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
 
     </LinearLayout>
 
