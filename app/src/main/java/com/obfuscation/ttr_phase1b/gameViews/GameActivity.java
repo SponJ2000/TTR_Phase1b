@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.R;
+import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 import com.obfuscation.ttr_phase1b.gameViews.dummy.CardDialog;
 
@@ -78,10 +79,12 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 break;
             case playerInfo:
                 fragment = PlayerInfoDialogFragment.newInstance();
-                IGamePresenter prevPres = (IGamePresenter) PresenterFacade.getInstance().getPresenter();
-                PresenterFacade.getInstance().setPresenter( new PInfoPresenter((IPlayerInfoView) fragment, this, prevPres));
-                ((IPInfoPresenter) PresenterFacade.getInstance().getPresenter()).showPlayerInfo((IPlayerInfoView) fragment);
-                fm.beginTransaction().add(R.id.container, fragment).commit();
+                IPresenter prevPres = PresenterFacade.getInstance().getPresenter();
+                if (prevPres instanceof IGamePresenter) {
+                    PresenterFacade.getInstance().setPresenter( new PInfoPresenter((IPlayerInfoView) fragment, this, (IGamePresenter) prevPres));
+                    ((IPInfoPresenter) PresenterFacade.getInstance().getPresenter()).showPlayerInfo((IPlayerInfoView) fragment);
+                    fm.beginTransaction().add(R.id.container, fragment).commit();
+                }
                 break;
             case map:
                 fragment = GameFragment.newInstance();
@@ -101,9 +104,11 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 break;
             case owned_tickets:
                 fragment = PTicketsFragment.newInstance();
-                IGamePresenter oldPres = (IGamePresenter) PresenterFacade.getInstance().getPresenter();
-                PresenterFacade.getInstance().setPresenter( new PTicketsPresenter((IPTicketsView) fragment, this, oldPres) );
-                fm.beginTransaction().add(R.id.container, fragment).commit();
+                IPresenter oldPres = PresenterFacade.getInstance().getPresenter();
+                if (oldPres instanceof IGamePresenter) {
+                    PresenterFacade.getInstance().setPresenter( new PTicketsPresenter((IPTicketsView) fragment, this, (IGamePresenter) oldPres) );
+                    fm.beginTransaction().add(R.id.container, fragment).commit();
+                }
                 break;
             case history:
                 fragment = HistoryFragment.newInstance();
