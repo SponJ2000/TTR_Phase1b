@@ -79,6 +79,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
 
+    private TextView mTicketDeckSize;
+
     private LinearLayout mBoard;
     private TextView mTicketsView;
     private TextView mPointsView;
@@ -458,6 +460,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mDeck.setBackgroundResource(R.drawable.card_deck2);
 
         mDeckSize = rootView.findViewById(R.id.txt_deck);
+        mTicketDeckSize = rootView.findViewById(R.id.txt_tickets_deck);
 
         mCardViews = new TextView[9];
         mCardViews[0] = rootView.findViewById(R.id.txt_cards_orange);
@@ -722,6 +725,14 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
             return;
         }
         mDeckSize.setText("" + size);
+    }
+
+    @Override
+    public void setTicketDeckSize(int size) {
+        if(!mIsSetup){
+            return;
+        }
+        mTicketDeckSize.setText("" + size);
     }
 
     @Override

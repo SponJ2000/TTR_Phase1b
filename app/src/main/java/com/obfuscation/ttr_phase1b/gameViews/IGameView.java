@@ -93,9 +93,19 @@ public interface IGameView extends IView {
      * @pre size is an int >= 0
      * @post the View element for deck size is updated
      *
-     * @param size the new points total
+     * @param size the new deck size
      */
     void setDeckSize(int size);
+
+    /**
+     * Sets the number of cards remaining in ticket deck
+     *
+     * @pre size is an int >= 0
+     * @post the View element for deck size is updated
+     *
+     * @param size the new deck size
+     */
+    void setTicketDeckSize(int size);
 
     /**
      * Updates the provided Route's color and data text

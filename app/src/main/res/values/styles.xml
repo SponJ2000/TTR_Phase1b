@@ -29,4 +29,16 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="ButtonOverlayText">
+        <item name="android:paddingLeft">4px</item>
+        <item name="android:paddingBottom">4px</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:gravity">bottom|center_horizontal</item>
+    </style>
+
 </resources>

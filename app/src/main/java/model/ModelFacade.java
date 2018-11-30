@@ -107,6 +107,11 @@ public class ModelFacade implements IGameModel {
         return ModelRoot.getInstance().getGame().getTrainCardDeckSize();
     }
 
+    @Override
+    public int getTicketDeckSize() {
+        return ModelRoot.getInstance().getGame().getTicketDeckSize();
+    }
+
     public void login(String userName, String password){
         GenericTask genericTask = new GenericTask("login");
         genericTask.execute(userName,password);

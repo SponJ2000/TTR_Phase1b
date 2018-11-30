@@ -75,6 +75,8 @@ public interface IGameModel {
 
     int getDeckSize();
 
+    int getTicketDeckSize();
+
     void updateMessages();
 
     List<Message> getMessages();

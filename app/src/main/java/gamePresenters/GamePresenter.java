@@ -76,6 +76,7 @@ public class GamePresenter implements IGamePresenter {
             view.setLastTurn(model.isLastTurn());
             view.setTurn(model.isMyTurn());
             view.setDeckSize(model.getDeckSize());
+            view.setTicketDeckSize(model.getTicketDeckSize());
             view.setCards(model.getCards());
             view.setFaceCards(model.getFaceCards());
             view.setMap(model.getMap());
@@ -245,11 +246,13 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectTicketsButton() {
-            if(actionSelected || isSelectOne) {
-                return;
+            if (model.getTicketDeckSize() > 0) {
+                if(actionSelected || isSelectOne) {
+                    return;
+                }
+                actionSelected = true;
+                listener.onShow(Shows.tickets, null);
             }
-            actionSelected = true;
-            listener.onShow(Shows.tickets, null);
         }
 
         @Override
