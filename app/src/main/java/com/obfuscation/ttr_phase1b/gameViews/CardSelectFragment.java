@@ -211,9 +211,9 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
             return;
         }
 
-        String toast = "selected cards " + i;
+//        String toast = "selected cards " + i;
 
-        sendToast(toast);
+//        sendToast(toast);
 
         // toUse holds 2 ints
         // index 0 holds the number of color cards

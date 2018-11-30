@@ -368,8 +368,8 @@ public class ModelFacade implements IGameModel {
             String siblingID = route.getSibling();
             Route rib = ModelRoot.getInstance().getGame().getmMap().getRouteByRouteId(siblingID);
             if(rib.getClaimedBy() != null) {
-                if(ModelRoot.getInstance().getGame().getPlayerStatsList().size() < 2) {
-                    return "Only one dual route can be claimed in a two-player game";
+                if(ModelRoot.getInstance().getGame().getPlayerOpponents().size() < 3) {
+                    return "Only one dual route can be claimed if there are < 4 players";
                 }if (getPlayer().checkRouteIfClaimed(siblingID)) {
                     return "You may not claim both dual routes";
                 }

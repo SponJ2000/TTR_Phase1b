@@ -115,6 +115,7 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
         private TextView mPlayerPointView;
         private TextView mPlayerTrainsView;
         private TextView mPlayerCardsView;
+        private TextView mPlayerTicketsView;
         private LinearLayout mLayout;
 
         public PlayerHolder(View view) {
@@ -124,6 +125,7 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
             mPlayerPointView = view.findViewById(R.id.player_points);
             mPlayerCardsView = view.findViewById(R.id.player_cards);
             mPlayerTrainsView = view.findViewById(R.id.player_trains);
+            mPlayerTicketsView = view.findViewById(R.id.player_tickets);
             mLayout = view.findViewById(R.id.player_info_layout);
         }
 
@@ -132,6 +134,7 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
             mPlayerPointView.setText("" + player.getPoint());
             mPlayerCardsView.setText("" + player.getCardNum());
             mPlayerTrainsView.setText("" + player.getTrainNum());
+            mPlayerTicketsView.setText("" + player.getTicketNum());
 
             mLayout.setBackgroundColor(getPlayerColor(player.getPlayerColor()));
         }
@@ -159,7 +162,6 @@ public class PlayerInfoDialogFragment extends Fragment implements IPlayerInfoVie
             }
             return retColor;
         }
-
     }
 
     private class PlayerAdapter extends RecyclerView.Adapter<PlayerHolder> {
