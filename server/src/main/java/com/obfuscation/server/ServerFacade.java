@@ -446,11 +446,16 @@ public class ServerFacade implements IServer {
 //            System.out.println("RETRUN TICKET CALLED");
             Result result = db.setTickets(gameID, authToken, ticketsToChoose2);
             String playerID = db.findUsernameByAuthToken(authToken);
+            GameServer gameServer = db.findGameByID(gameID);
             if (result.isSuccess()) {
+                Integer ticketNum = gameServer.getPlayerbyUserName(playerID).getTickets().size();
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
                     clientProxy.updateOpponentTickets(gameID, playerID, new Integer(((ArrayList<Ticket>) result.getData()).size()));
 //                    System.out.println("UPDATING DECK " + db.findGameByID(gameID).getTickets().size());
                     clientProxy.updateDestinationDeck(gameID, new Integer(db.findGameByID(gameID).getTickets().size()));
+                    if (!clientProxy.getAuthToken().equals(authToken)) {
+                        clientProxy.updateOpponentTickets(gameID, playerID, ticketNum);
+                    }
                 }
             }
             return new Result(true, true, null);
