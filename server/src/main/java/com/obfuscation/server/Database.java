@@ -1,6 +1,7 @@
 package com.obfuscation.server;
 
 import java.lang.reflect.Array;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,6 +33,7 @@ import communication.Route;
 import communication.TickectMaker;
 import communication.Ticket;
 import communication.GameColor;
+import dao.DAOFacade;
 
 import static communication.GameColor.GREY;
 
@@ -46,6 +48,15 @@ public class Database {
     //TODO : make gameid and gamelobbyid same
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
     private List<GameServer> gameList = new ArrayList<>();
+
+    /**
+     * gameUpdates stores the list of commands that we save.
+     * This list is expanded and saved in the following commands:
+     * sendMessage()
+     *
+     */
+    private Map<String, List<GenericCommand>> gameUpdates = new HashMap<>();
+    private int updateDelta;
     private HashMap<Integer, Integer> routeScores = new HashMap<>();
     private HashMap<String, MapGraph> gameGraph = new HashMap<>();
 
@@ -55,6 +66,14 @@ public class Database {
 
     public void setGameList(List<GameServer> gameList) {
         this.gameList = gameList;
+        initGameUpdates();
+    }
+
+    private void initGameUpdates() {
+        for (int i = 0; i < gameList.size(); i++) {
+            List<GenericCommand> newList = new ArrayList<>();
+            gameUpdates.put(gameList.get(i).getGameID(), newList);
+        }
     }
 
     private List<ActiveUser> activeUsers;
@@ -382,6 +401,8 @@ public class Database {
         }
 
         gameList.add(game);
+        List<GenericCommand> updateList = new ArrayList<>();
+        gameUpdates.put(gameID, updateList);
         gameGraph.put(gameID, new MapGraph());
         return new Result(true, game, null);
     }
@@ -886,6 +907,7 @@ public class Database {
         }
         //TODO : get rid of game?
         gameList.remove(gameServer);
+        gameUpdates.remove(gameID);
         gameGraph.remove(gameID);
         LobbyGame lobbyGame = findGameLobbyByID(gameID);
         lobbyGameList.remove(lobbyGame);
@@ -917,4 +939,33 @@ public class Database {
     private MapGraph getGraphByGame(String gameID) {
         return gameGraph.get(gameID);
     }
+
+    public void saveCommand(String gameID, GenericCommand command) {
+        // 1: add command to list
+        List<GenericCommand> list = gameUpdates.get(gameID);
+        list.add(command);
+
+        // 2: if list.size == updateDelta, save entire game state
+        if (list.size() >= updateDelta) {
+            list = new ArrayList<>();
+            gameUpdates.put(gameID, list);
+            saveGameState(gameID);
+        }
+        // 3: else, save commandList
+        else {
+            saveUpdates(gameID, list);
+        }
+    }
+
+    private void saveGameState(String gameID) {
+        Blob gameBlob = BLOBSerializer.getInstance().serialize(findGameByID(gameID));
+        DAOFacade.getInstance().updateGame(gameID, gameBlob);
+    }
+
+    private void saveUpdates(String gameID, List<GenericCommand> updates) {
+        Blob gameBlob = BLOBSerializer.getInstance().serialize(updates);
+        //TODO: call DAOFacade
+    }
+
+    
 }

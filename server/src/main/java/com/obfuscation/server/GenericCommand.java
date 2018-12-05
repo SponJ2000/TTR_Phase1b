@@ -81,4 +81,8 @@ public class GenericCommand implements ICommand {
             return new Result(false, null, e.getMessage());
         }
     }
+
+    public String getMethodName() {
+        return methodName;
+    }
 }
