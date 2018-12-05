@@ -142,6 +142,7 @@ public class Database {
             loginInfo.put(id, password);
             String authToken = generateAuthToken();
             authTokenMap.put(id, authToken);
+            DAOFacade.getInstance().addUser(id, password, authToken);
             return login(id, password);
         }
         else{
@@ -170,6 +171,7 @@ public class Database {
                 }
                 //Create and return result object
                 System.out.println("LOGGED IN " + authTokenMap.get(id));
+                DAOFacade.getInstance().updateAuthToken(id, authToken);
                 return new Result(true, authTokenMap.get(id), null);
             }
             else{
@@ -218,6 +220,8 @@ public class Database {
         lobbyGame.setPlayers(playerList);
 
         lobbyGameList.add(lobbyGame);
+        Blob blob = BLOBSerializer.getInstance().serialize(lobbyGame);
+        DAOFacade.getInstance().addLobby(lobbyGame.getGameID(), blob);
         return new Result(true, lobbyGameList, null);
     }
 
@@ -238,6 +242,8 @@ public class Database {
         else if (game.getPlayers().size() < game.getMaxPlayers()) {
             if (!game.getPlayers().contains(player)) {
                 game.getPlayers().add(player);
+                Blob blob = BLOBSerializer.getInstance().serialize(game);
+                DAOFacade.getInstance().addLobby(gameID, blob);
                 return new Result(true, true, null);
             }
             else return new Result(false, null, "Error: player already in game");
@@ -403,6 +409,13 @@ public class Database {
         gameList.add(game);
         List<GenericCommand> updateList = new ArrayList<>();
         gameUpdates.put(gameID, updateList);
+
+        // database stuff
+        Blob blob = BLOBSerializer.getInstance().serialize(game);
+        DAOFacade.getInstance().removeLobby(lobbyGame.getGameID());
+        DAOFacade.getInstance().addGame(gameID, blob);
+        saveUpdates(gameID, updateList);
+
         gameGraph.put(gameID, new MapGraph());
         return new Result(true, game, null);
     }
@@ -432,6 +445,8 @@ public class Database {
             //game.get.add(player);
         }
         else game.getPlayers().remove(player);
+        Blob blob = BLOBSerializer.getInstance().serialize(game);
+        DAOFacade.getInstance().addLobby(gameID, blob);
         return new Result(true, true, null);
 
     }
@@ -450,6 +465,8 @@ public class Database {
 //            mAbsentPlayers.remove(player);
 //        }
 
+        Blob blob = BLOBSerializer.getInstance().serialize(game);
+        DAOFacade.getInstance().addLobby(gameID, blob);
         return new Result(true, true, null);
     }
 
@@ -951,10 +968,9 @@ public class Database {
             gameUpdates.put(gameID, list);
             saveGameState(gameID);
         }
-        // 3: else, save commandList
-        else {
-            saveUpdates(gameID, list);
-        }
+
+        // 3: save commandList
+        saveUpdates(gameID, list);
     }
 
     private void saveGameState(String gameID) {
@@ -964,7 +980,7 @@ public class Database {
 
     private void saveUpdates(String gameID, List<GenericCommand> updates) {
         Blob gameBlob = BLOBSerializer.getInstance().serialize(updates);
-        //TODO: call DAOFacade
+        DAOFacade.getInstance().updateCmdList(gameID, gameBlob);
     }
 
     

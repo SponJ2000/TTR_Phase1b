@@ -79,7 +79,7 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     }
 
     @Override
-    public boolean updateAuthToken(String id) {
+    public boolean updateAuthToken(String id, String authtoken) {
         return false;
     }
 
