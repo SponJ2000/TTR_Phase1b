@@ -5,6 +5,10 @@ import java.util.List;
 
 public class TSVUserDao implements IUserDao {
 
+    TSVUserDao() {
+
+    }
+
     @Override
     public boolean addUser(String id, String password, String authtoken) {
         return false;

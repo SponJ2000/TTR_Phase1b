@@ -5,6 +5,10 @@ import java.util.List;
 
 public class TSVLobbyDao implements ILobbyDao {
 
+    TSVLobbyDao() {
+
+    }
+
     @Override
     public boolean addLobby(String id, Blob lobby) {
         return false;

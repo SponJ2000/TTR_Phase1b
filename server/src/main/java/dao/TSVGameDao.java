@@ -5,8 +5,7 @@ import java.util.List;
 
 public class TSVGameDao implements IGameDao {
 
-    public TSVGameDao() {
-
+    TSVGameDao() {
     }
 
     @Override
