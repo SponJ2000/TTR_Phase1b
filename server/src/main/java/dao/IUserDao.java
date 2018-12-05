@@ -9,7 +9,7 @@ public interface IUserDao {
 
     boolean addUser(String id, String password, String authtoken);
     boolean removeUser(String id);
-    boolean updateAuthToken(String id);
-    List<Blob> getUsers();
+    boolean updateAuthToken(String id, String authtoken);
+    List<User> getUsers();
 
 }
