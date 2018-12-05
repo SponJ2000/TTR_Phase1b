@@ -728,6 +728,7 @@ public class Database {
                     if (game.getDeckSize() == 0) {
                         putDiscardToCardDeck(game);
                     }
+                    game.getGameHistories().add(new GameHistory(gameID, username, "drew_train_card"));
                     return new Result(true, card, null);
                 }
                 else if (index >= 0 && index <= 4) {
@@ -739,19 +740,24 @@ public class Database {
                         }
 
                         //draw card from the deck and set it to face up cards
-                        if (game.getTrainCards().size() == 0) {
-                            return new Result(false, null, "The deck is empty");
+//                        if (game.getTrainCards().size() == 0) {
+//                            return new Result(false, null, "The deck is empty");
+//                        }
+                        if (game.getTrainCards().size() > 0) {
+                            Card topCard = game.getTrainCards().get(0);
+                            game.getTrainCards().remove(0);
+                            game.getFaceUpTrainCarCards().set(index, topCard);
                         }
-                        Card topCard = game.getTrainCards().get(0);
-                        game.getTrainCards().remove(0);
-                        game.getFaceUpTrainCarCards().set(index, topCard);
+                        else {
+                            game.getFaceUpTrainCarCards().remove(index);
+                        }
 
                         while (true) {
                             int counter = 0;
 
                             //counting locomotive cards
-                            for (int i = 0; i < 5; i++) {
-                                System.out.println(game.getFaceUpTrainCarCards().get(i).getColor());
+                            for (int i = 0; i < game.getFaceUpTrainCarCards().size(); i++) {
+//                                System.out.println(game.getFaceUpTrainCarCards().get(i).getColor());
                                 if (game.getFaceUpTrainCarCards().get(i).getColor() == GameColor.LOCOMOTIVE) {
                                     System.out.println("COUNTING");
                                     counter++;
