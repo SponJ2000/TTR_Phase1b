@@ -54,7 +54,7 @@ public class TSVUserDao implements IUserDao {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
             if(rows.get(i)[0].equals(id)) {
-                rows.remove(i);
+                rows.get(i)[2] = authtoken;
                 break;
             }
         }
