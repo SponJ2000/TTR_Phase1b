@@ -10,6 +10,6 @@ public interface IUserDao {
     boolean addUser(String id, String password, String authtoken);
     boolean removeUser(String id);
     boolean updateAuthToken(String id, String authtoken);
-    List<Blob> getUsers();
+    List<User> getUsers();
 
 }
