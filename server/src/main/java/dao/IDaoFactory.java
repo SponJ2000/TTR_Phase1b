@@ -1,6 +1,6 @@
 package dao;
 
-public interface IDoaFactory {
+public interface IDaoFactory {
 
     IUserDao getUserDao();
     ILobbyDao getLobbyDao();
