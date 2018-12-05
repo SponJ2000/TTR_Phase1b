@@ -5,6 +5,10 @@ import java.util.List;
 
 public class TSVGameDao implements IGameDao {
 
+    public TSVGameDao() {
+
+    }
+
     @Override
     public boolean addGame(String gameID, Blob game) {
         return false;
