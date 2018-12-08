@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import communication.Result;
 
 /**
  * Created by haoyucn on 12/5/18.
@@ -73,6 +76,39 @@ public class SQLDBConnection {
             closeConnection();
         }
         return null;
+    }
+
+    // return null for false result
+    public PreparedStatement getPreparedStatment(String sql){
+        PreparedStatement preparedStatement = null;
+        if (openConnection()) {
+            try {
+                preparedStatement = conn.prepareStatement(sql);
+            }
+            catch(SQLException e) {
+                e.printStackTrace();
+                closeConnection();
+            }
+        }
+        return preparedStatement;
+    }
+
+    public Result executeStatement(PreparedStatement p) {
+        try{
+            boolean isSuccess = p.execute();
+            if (!isSuccess) {
+                closeConnection();
+                return new Result(isSuccess, p.getWarnings(), "SQL Failure");
+            }
+            conn.commit();
+            closeConnection();
+            return new Result(true, p.getResultSet(), null);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            closeConnection();
+            return new Result(false, e,e.getMessage());
+        }
     }
 
     private boolean closeConnection() {
