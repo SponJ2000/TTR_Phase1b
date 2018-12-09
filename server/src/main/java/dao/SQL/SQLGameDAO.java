@@ -2,6 +2,7 @@ package dao.SQL;
 
 import com.google.gson.Gson;
 import com.obfuscation.server.GenericCommand;
+import com.obfuscation.server.Server;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,6 +174,7 @@ public class SQLGameDAO implements IGameDao{
     }
 
     public List<GameServer> getGames(Game g) {
+        ArrayList<GameServer> games = new ArrayList<>();
         Result result = null;
         String statement = "SELECT * FROM games;";
 //        PreparedStatement ps = connection.getPreparedStatment(statement);
@@ -194,10 +196,11 @@ public class SQLGameDAO implements IGameDao{
                 ArrayList<String> gameJsons = new ArrayList<String>();
                 System.out.println(rs.getFetchSize());
                 while(rs.next()) {
-
-                    String gameJson = new String(b.getBytes(1,(int) b.length()));
-                    gameJsons.add(gameJson);
-                    System.out.println(gameJson);
+                    Serializer serializer = new Serializer();
+                    games.add(serializer.deserializeGameServer(rs.getString("game")));
+//                    String gameJson = new String(b.getBytes(1,(int) b.length()));
+//                    gameJsons.add(gameJson);
+//                    System.out.println(gameJson);
                 }
                 return null;
             } catch (SQLException e) {

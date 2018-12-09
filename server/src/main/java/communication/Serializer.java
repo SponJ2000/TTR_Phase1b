@@ -55,6 +55,11 @@ public class Serializer {
         return game;
     }
 
+    public GameServer deserializeGameServer(String json) {
+        GameServer game = gson.fromJson(json, GameServer.class);
+        return game;
+    }
+
     public LobbyGame deserializeGameLobby(String json) {
         LobbyGame lobbyGame = gson.fromJson(json, LobbyGame.class);
         return lobbyGame;
@@ -63,6 +68,10 @@ public class Serializer {
     public Card deserializeCard(String json) {
         Card c = gson.fromJson(json, Card.class);
         return c;
+    }
+
+    public String serializeObject(Object o) {
+        return gson.toJson(o);
     }
 
     public GameHistory deserializeGameHistory(String json) {
