@@ -1,6 +1,5 @@
 package dao.SQL;
 
-import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,7 +26,7 @@ public class SQLLobbyDAO implements ILobbyDao {
             sqlLobbyDAO.updateLobby("GsAMEID", new LobbyGame("SDFSDF"));
 
             ArrayList<LobbyGame> lobbies = new ArrayList<>();
-            lobbies.addAll(sqlLobbyDAO.getLobbies(null));
+            lobbies.addAll(sqlLobbyDAO.getLobbies());
             System.out.println(new Serializer().serializeObject(lobbies));
         }catch (Exception e) {
             e.printStackTrace();
@@ -105,11 +104,7 @@ public class SQLLobbyDAO implements ILobbyDao {
     }
 
     @Override
-    public List<Blob> getLobbies() {
-        return null;
-    }
-
-    public List<LobbyGame> getLobbies(Game game) {
+    public List<LobbyGame> getLobbies() {
         ArrayList<LobbyGame> lobbyGames = new ArrayList<>();
         Result result = null;
         String statement = "SELECT * FROM lobbies";

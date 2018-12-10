@@ -24,7 +24,7 @@ public class TSVLobbyDao implements ILobbyDao {
 
     TSVLobbyDao() {
         String[] header = new String[ARRAY_SIZE];
-        header[i_TYPE] = LOBBY
+        header[i_TYPE] = LOBBY;
         header[i_ID] = "id";
         header[i_LOBBY] = "lobby";
         header[i_NULL] = "null";
@@ -79,7 +79,7 @@ public class TSVLobbyDao implements ILobbyDao {
     }
 
     @Override
-    public List<Blob> getLobbies() {
+    public List<LobbyGame> getLobbies() {
         List<Blob> lobbies = new ArrayList<>();
         List<String[]> rows = rw.readAll();
         for(String[] row : rows) {
@@ -92,7 +92,7 @@ public class TSVLobbyDao implements ILobbyDao {
                 }
             }
         }
-        return lobbies;
+        return null;
     }
 
 }

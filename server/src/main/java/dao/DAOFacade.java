@@ -1,6 +1,8 @@
 package dao;
 
-import java.sql.Blob;
+import com.obfuscation.server.GenericCommand;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import communication.GameServer;
@@ -72,7 +74,7 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     }
 
     @Override
-    public List<Blob> getLobbies() {
+    public List<LobbyGame> getLobbies() {
         return null;
     }
 

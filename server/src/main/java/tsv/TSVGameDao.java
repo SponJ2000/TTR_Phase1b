@@ -1,5 +1,8 @@
 package tsv;
 
+import com.obfuscation.server.GenericCommand;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import communication.GameServer;
