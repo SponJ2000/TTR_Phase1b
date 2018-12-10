@@ -18,7 +18,6 @@ import communication.Result;
 
 public class SQLDBConnection {
 
-
     String url;
     Connection conn;
 

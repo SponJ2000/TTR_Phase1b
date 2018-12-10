@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PlugInManager {
+    // call this to dynamically load jar files
     public static void main(String[] args) throws Exception {
         if(args.length != 3) {
             printUsage();
@@ -22,18 +23,18 @@ public class PlugInManager {
     }
 
     private void start(String pluginDirectory, String pluginJarName, String pluginClassName) throws Exception {
-//        MessagePlugin messagePlugin = getMessagePluginInstance(pluginDirectory, pluginJarName, pluginClassName);
+        IDaoFactory daoFactory = getDaoFactoryinInstance(pluginDirectory, pluginJarName, pluginClassName);
 //        System.out.println(messagePlugin.getMessage());
     }
 
-//    private MessagePlugin getMessagePluginInstance(String pluginDirectory, String pluginJarName, String pluginClassName) throws Exception {
-//        // Get a class loader and set it up to load the jar file
-//        File pluginJarFile = new File(pluginDirectory, pluginJarName);
-//        URL pluginURL = pluginJarFile.toURI().toURL();
-//        URLClassLoader loader = new URLClassLoader(new URL[]{pluginURL});
-//
-//        // Load the jar file's plugin class, create and return an instance
-//        Class<? extends MessagePlugin> messagePluginClass = (Class<MessagePlugin>) loader.loadClass(pluginClassName);
-//        return messagePluginClass.getDeclaredConstructor(null).newInstance();
-//    }
+    private IDaoFactory getDaoFactoryinInstance(String pluginDirectory, String pluginJarName, String pluginClassName) throws Exception {
+        // Get a class loader and set it up to load the jar file
+        File pluginJarFile = new File(pluginDirectory, pluginJarName);
+        URL pluginURL = pluginJarFile.toURI().toURL();
+        URLClassLoader loader = new URLClassLoader(new URL[]{pluginURL});
+
+        // Load the jar file's plugin class, create and return an instance
+        Class<? extends IDaoFactory> messagePluginClass = (Class<IDaoFactory>) loader.loadClass(pluginClassName);
+        return messagePluginClass.getDeclaredConstructor(null).newInstance();
+    }
 }
