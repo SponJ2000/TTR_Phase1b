@@ -41,6 +41,15 @@ public class Server {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+//        //get the persistancy type and number of commands
+//        PlugInManager plugInManager = new PlugInManager();
+//
+//        if (args.length != 2) {
+//            plugInManager.printUsage();
+//            return;
+//        }
+//        String persistenceType = args[0];
+//        int commandNum = Integer.parseInt(args[1]);
 
         //for testing
         System.out.println("server running at port : " + portNumber);
