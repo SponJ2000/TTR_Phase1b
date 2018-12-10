@@ -1,6 +1,4 @@
-package tsv;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
+package dao.tsv;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,7 +10,7 @@ import java.util.List;
 public class TSVReaderWriter {
 
 
-    private static final String FILENAME = "tsv_database.tsv";
+    private static final String FILENAME = "tsv_database.dao.tsv";
     private static final String DELIMITER = "\t";
     private static final String NEW_LINE = "\n";
 

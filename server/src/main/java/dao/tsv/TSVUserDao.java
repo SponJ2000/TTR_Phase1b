@@ -1,16 +1,12 @@
-package tsv;
+package dao.tsv;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
-import communication.Player;
-import communication.PlayerUser;
 import dao.IUserDao;
 import dao.User;
-import tsv.TSVReaderWriter;
 
-import static tsv.DATA_TYPES.USER;
+import static dao.tsv.DATA_TYPES.USER;
 
 public class TSVUserDao implements IUserDao {
 

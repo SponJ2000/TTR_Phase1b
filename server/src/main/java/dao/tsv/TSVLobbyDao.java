@@ -1,4 +1,4 @@
-package tsv;
+package dao.tsv;
 
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import communication.LobbyGame;
 import dao.ILobbyDao;
 
-import static tsv.DATA_TYPES.LOBBY;
+import static dao.tsv.DATA_TYPES.LOBBY;
 
 
 public class TSVLobbyDao implements ILobbyDao {

@@ -1,4 +1,4 @@
-package tsv;
+package dao.tsv;
 
 import dao.IDaoFactory;
 import dao.IGameDao;
