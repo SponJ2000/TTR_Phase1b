@@ -1,4 +1,9 @@
-package dao;
+package tsv;
+
+import dao.IDaoFactory;
+import dao.IGameDao;
+import dao.ILobbyDao;
+import dao.IUserDao;
 
 public class TSVDaoFactory implements IDaoFactory {
 

@@ -1,17 +1,14 @@
 package dao.SQL;
 
-import java.sql.Array;
 import java.sql.Blob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import communication.Game;
-import communication.GameServer;
 import communication.LobbyGame;
 import communication.Result;
 import communication.Serializer;
@@ -38,10 +35,6 @@ public class SQLLobbyDAO implements ILobbyDao {
     }
 
     @Override
-    public boolean addLobby(String id, Blob lobby) {
-        return false;
-    }
-
     public boolean addLobby(String id, LobbyGame lobbyGame) {
         Result result = null;
         String statement = "INSERT INTO lobbies (id, lobby) " +
@@ -90,10 +83,6 @@ public class SQLLobbyDAO implements ILobbyDao {
 
 
     @Override
-    public boolean updateLobby(String id, Blob lobby) {
-        return false;
-    }
-
     public boolean updateLobby(String gameID, LobbyGame lobbyGame) {
         Result result = null;
         String statement = "UPDATE lobbies SET lobby = ? WHERE id = ?";

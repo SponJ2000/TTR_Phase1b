@@ -1,15 +1,7 @@
 package dao.SQL;
 
-import com.google.gson.Gson;
 import com.obfuscation.server.GenericCommand;
-import com.obfuscation.server.Server;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Array;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,9 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.rowset.serial.SerialBlob;
-
-import communication.Game;
 import communication.GameServer;
 import communication.Result;
 import communication.Serializer;
@@ -46,17 +35,13 @@ public class SQLGameDAO implements IGameDao{
         try {
             GameServer gameServer = new GameServer();
 
-            sqlGameDAO.getGames(null);
+            sqlGameDAO.getGames();
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public boolean addGame(String gameID, Blob game) {
-        return false;
-    }
-
 //    tested
     public boolean addGame(String gameID, GameServer game) {
         Result result = null;
@@ -106,10 +91,6 @@ public class SQLGameDAO implements IGameDao{
 
 
     @Override
-    public boolean updateGame(String gameID, Blob game) {
-        return false;
-    }
-
     //    tested
     public boolean updateGame(String gameID, GameServer game) {
         Result result = null;
@@ -133,10 +114,6 @@ public class SQLGameDAO implements IGameDao{
     }
 
     @Override
-    public boolean updateCmdList(String gameID, Blob cmdlist) {
-        return false;
-    }
-
     // tested
     public boolean updateCmdList(String gameID, ArrayList<GenericCommand> cmdlist) {
         Result result = null;
@@ -169,11 +146,7 @@ public class SQLGameDAO implements IGameDao{
 
 
     @Override
-    public List<Blob> getGames() {
-        return null;
-    }
-
-    public List<GameServer> getGames(Game g) {
+    public List<GameServer> getGames() {
         ArrayList<GameServer> games = new ArrayList<>();
         Result result = null;
         String statement = "SELECT * FROM games;";

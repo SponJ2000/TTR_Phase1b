@@ -1,10 +1,9 @@
-package dao;
+package tsv;
 
-import java.sql.Blob;
-import java.util.ArrayList;
 import java.util.List;
 
-import tsv.TSVReaderWriter;
+import communication.GameServer;
+import dao.IGameDao;
 
 public class TSVGameDao implements IGameDao {
 
@@ -20,7 +19,7 @@ public class TSVGameDao implements IGameDao {
     }
 
     @Override
-    public boolean addGame(String gameID, Blob game) {
+    public boolean addGame(String gameID, GameServer game) {
         String[] row = new String[3];
 
         row[0] = gameID;
@@ -46,7 +45,7 @@ public class TSVGameDao implements IGameDao {
     }
 
     @Override
-    public boolean updateGame(String gameID, Blob game) {
+    public boolean updateGame(String gameID, GameServer game) {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
             if(rows.get(i)[0].equals(gameID)) {
@@ -60,7 +59,7 @@ public class TSVGameDao implements IGameDao {
     }
 
     @Override
-    public boolean updateCmdList(String gameID, Blob cmdlist) {
+    public boolean updateCmdList(String gameID, ArrayList<GenericCommand> cmdlist) {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
             if(rows.get(i)[0].equals(gameID)) {
@@ -78,7 +77,7 @@ public class TSVGameDao implements IGameDao {
     }
 
     @Override
-    public List<Blob> getGames() {
+    public List<GameServer> getGames() {
         return null;
 //        List<Blob> games = new ArrayList<>();
 //        List<String[]> rows = rw.readAll();

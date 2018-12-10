@@ -1,14 +1,18 @@
 package dao;
 
-import java.sql.Blob;
+import com.obfuscation.server.GenericCommand;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import communication.GameServer;
 
 public interface IGameDao {
 
-    boolean addGame(String gameID, Blob game);
+    boolean addGame(String gameID, GameServer game);
     boolean removeGame(String gameID);
-    boolean updateGame(String gameID, Blob game);
-    boolean updateCmdList(String gameID, Blob cmdlist);
-    List<Blob> getGames();
+    boolean updateGame(String gameID, GameServer game);
+    boolean updateCmdList(String gameID, ArrayList<GenericCommand> cmdlist);
+    List<GameServer> getGames();
 
 }

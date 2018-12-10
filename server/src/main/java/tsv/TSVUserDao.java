@@ -1,4 +1,4 @@
-package dao;
+package tsv;
 
 import java.sql.Blob;
 import java.util.ArrayList;
@@ -6,27 +6,40 @@ import java.util.List;
 
 import communication.Player;
 import communication.PlayerUser;
+import dao.IUserDao;
+import dao.User;
 import tsv.TSVReaderWriter;
+
+import static tsv.DATA_TYPES.USER;
 
 public class TSVUserDao implements IUserDao {
 
     private TSVReaderWriter rw;
 
+    private static int ARRAY_SIZE = 4;
+
+    private static int i_TYPE = 0;
+    private static int i_ID = 1;
+    private static int i_PASS = 2;
+    private static int i_AUTH = 3;
+
     TSVUserDao() {
-        String[] header = new String[3];
-        header[0] = "id";
-        header[1] = "password";
-        header[2] = "authtoken";
+        String[] header = new String[ARRAY_SIZE];
+        header[i_TYPE] = "type";
+        header[i_ID] = "id";
+        header[i_PASS] = "password";
+        header[i_AUTH] = "authtoken";
         rw = new TSVReaderWriter(header);
         rw.writeHeader();
     }
 
     @Override
     public boolean addUser(String id, String password, String authtoken) {
-        String[] row = new String[3];
-        row[0] = id;
-        row[1] = password;
-        row[2] = authtoken;
+        String[] row = new String[ARRAY_SIZE];
+        row[i_TYPE] = USER;
+        row[i_ID] = id;
+        row[i_PASS] = password;
+        row[i_AUTH] = authtoken;
 
         rw.writeLine(row);
 
@@ -38,9 +51,12 @@ public class TSVUserDao implements IUserDao {
 
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
-            if(rows.get(i)[0].equals(id)) {
-                rows.remove(i);
-                break;
+            String[] row = rows.get(i);
+            if (row[i_TYPE].equals(USER)) {
+                if(row[i_ID].equals(id)) {
+                    rows.remove(i);
+                    break;
+                }
             }
         }
         rw.writeLines(rows);
@@ -53,9 +69,12 @@ public class TSVUserDao implements IUserDao {
 
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
-            if(rows.get(i)[0].equals(id)) {
-                rows.get(i)[2] = authtoken;
-                break;
+            String[] row = rows.get(i);
+            if(row[i_TYPE].equals(USER)) {
+                if(row[i_ID].equals(id)) {
+                    row[i_AUTH] = authtoken;
+                    break;
+                }
             }
         }
         rw.writeLines(rows);
@@ -68,7 +87,9 @@ public class TSVUserDao implements IUserDao {
         List<User> users = new ArrayList<>();
         List<String[]> rows = rw.readAll();
         for(String[] user : rows) {
-            users.add(new User(user[0], user[1], user[2]));
+            if (user[i_TYPE].equals(USER)) {
+                users.add(new User(user[i_ID], user[i_PASS], user[i_AUTH]));
+            }
         }
         return users;
     }

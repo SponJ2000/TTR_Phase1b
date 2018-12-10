@@ -3,6 +3,9 @@ package dao;
 import java.sql.Blob;
 import java.util.List;
 
+import communication.GameServer;
+import communication.LobbyGame;
+
 /**
  * Created by jalton on 12/5/18.
  */
@@ -29,12 +32,12 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     }
 
     @Override
-    public boolean addGame(String gameID, Blob game) {
+    public boolean addGame(String gameID, GameServer game) {
         return false;
     }
 
     @Override
-    public boolean addLobby(String id, Blob lobby) {
+    public boolean addLobby(String id, LobbyGame lobby) {
         return false;
     }
 
@@ -54,12 +57,12 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     }
 
     @Override
-    public boolean updateLobby(String id, Blob lobby) {
+    public boolean updateLobby(String id, LobbyGame lobby) {
         return false;
     }
 
     @Override
-    public boolean updateGame(String gameID, Blob game) {
+    public boolean updateGame(String gameID, GameServer game) {
         return false;
     }
 
@@ -74,7 +77,7 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     }
 
     @Override
-    public boolean updateCmdList(String gameID, Blob cmdlist) {
+    public boolean updateCmdList(String gameID, ArrayList<GenericCommand> cmdlist) {
         return false;
     }
 
@@ -84,12 +87,11 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     }
 
     @Override
-    public List<Blob> getUsers() {
-        return null;
-    }
+    public List<User> getUsers() {
+        return null; }
 
     @Override
-    public List<Blob> getGames() {
+    public List<GameServer> getGames() {
         return null;
     }
 }
