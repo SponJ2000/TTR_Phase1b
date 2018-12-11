@@ -7,6 +7,7 @@ import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 
 import communication.LobbyGame;
+import communication.Serializer;
 import dao.ILobbyDao;
 
 import static dao.tsv.DATA_TYPES.LOBBY;
@@ -80,13 +81,14 @@ public class TSVLobbyDao implements ILobbyDao {
 
     @Override
     public List<LobbyGame> getLobbies() {
-        List<Blob> lobbies = new ArrayList<>();
+        List<LobbyGame> lobbies = new ArrayList<>();
         List<String[]> rows = rw.readAll();
         for(String[] row : rows) {
             if(row[i_TYPE].equals(LOBBY)) {
                 try {
-                    Blob lobby = new SerialBlob(row[i_LOBBY].getBytes());
-                    lobbies.add(lobby);
+                    Serializer serializer = new Serializer();
+                //TODO: finish this
+                    lobbies.add(serializer.deserializeGameLobby(""));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
