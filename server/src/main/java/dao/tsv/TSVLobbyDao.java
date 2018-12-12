@@ -69,7 +69,7 @@ public class TSVLobbyDao implements ILobbyDao {
             if(rows.get(i)[i_TYPE].equals(LOBBY)) {
                 String [] row = rows.get(i);
                 if(row[i_ID].equals(id)) {
-                    row[i_LOBBY] = lobby.toString();
+                    row[i_LOBBY] = new Serializer().serializeObject(lobby);
                     break;
                 }
             }
@@ -87,14 +87,13 @@ public class TSVLobbyDao implements ILobbyDao {
             if(row[i_TYPE].equals(LOBBY)) {
                 try {
                     Serializer serializer = new Serializer();
-                //TODO: finish this
-                    lobbies.add(serializer.deserializeGameLobby(""));
+                    lobbies.add(serializer.deserializeGameLobby(row[i_LOBBY]));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        return null;
+        return lobbies;
     }
 
 }

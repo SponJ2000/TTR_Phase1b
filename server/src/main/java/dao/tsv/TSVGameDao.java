@@ -38,7 +38,7 @@ public class TSVGameDao implements IGameDao {
         String[] row = new String[ARRAY_SIZE];
         row[i_TYPE] = GAME;
         row[i_ID] = gameID;
-        row[i_GAME] = game.toString();
+        row[i_GAME] = new Serializer().serializeGameServer(game);
         row[i_CMDL] = "";
         rw.writeLine(row);
 
@@ -117,13 +117,19 @@ public class TSVGameDao implements IGameDao {
 
     @Override
     public List<GameServer> getGames() {
-        return null;
-//        List<Blob> games = new ArrayList<>();
-//        List<String[]> rows = rw.readAll();
-//        for(String[] row : rows) {
-//            games.add(row);
-//        }
-//        return games;
+        List<GameServer> games = new ArrayList<>();
+        List<String[]> rows = rw.readAll();
+        for(String[] row : rows) {
+            if(row[i_TYPE].equals(GAME)) {
+                try {
+                    Serializer serializer = new Serializer();
+                    games.add(serializer.deserializeGameServer(row[i_GAME]));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return games;
     }
 
 }
