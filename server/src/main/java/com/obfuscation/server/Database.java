@@ -34,6 +34,7 @@ import communication.TickectMaker;
 import communication.Ticket;
 import communication.GameColor;
 import dao.DAOFacade;
+import dao.User;
 
 import static communication.GameColor.GREY;
 
@@ -43,7 +44,7 @@ import static communication.GameColor.GREY;
  */
 
 public class Database {
-    private Map<String, String> loginInfo;
+    private Map<String, String> loginInfo = new HashMap<>();
     //TODO : make gameid and gamelobbyid same
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
     private List<GameServer> gameList = new ArrayList<>();
@@ -85,8 +86,29 @@ public class Database {
     }
 
     private List<ActiveUser> activeUsers;
-    private List<String> authTokens;
-    private HashMap<String, String> authTokenMap;
+    private HashMap<String, String> authTokenMap = new HashMap<>();
+    private List<User> users;
+
+    public void initializeDatabase(int commandNum) {
+        updateDelta = commandNum;
+        lobbyGameList = DAOFacade.getInstance().getLobbies();
+        gameList = DAOFacade.getInstance().getGames();
+        users = DAOFacade.getInstance().getUsers();
+
+        for (User user : users) {
+            authTokenMap.put(user.getId(), user.getAuthtoken());
+            loginInfo.put(user.getId(), user.getPassword());
+        }
+
+        List<GenericCommand> commands = DAOFacade.getInstance().getCommands();
+        for (GenericCommand genericCommand : commands) {
+            genericCommand.execute();
+        }
+
+
+
+
+    }
 
     public void setDummyGame() {
         try {
@@ -123,7 +145,6 @@ public class Database {
         lobbyGameList = new ArrayList<>();
         activeUsers = new ArrayList<>();
         authTokenMap = new HashMap<>();
-        authTokens = new ArrayList<>();
         authTokenMap.put("Bob", "authBob");
         authTokenMap.put("Joe", "authJoe");
         loginInfo.put("Bob", "password");
@@ -594,10 +615,6 @@ public class Database {
      */
     String generateAuthToken(){
         String authToken = UUID.randomUUID().toString();
-        while (authTokens.contains(authToken)){
-            authToken = UUID.randomUUID().toString();
-        }
-        authTokens.add(authToken);
         return authToken;
     }
 

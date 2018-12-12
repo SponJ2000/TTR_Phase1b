@@ -7,9 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import communication.Game;
 import communication.GameServer;
+import communication.ICommand;
+import communication.Message;
 import communication.Result;
 import communication.Serializer;
 import dao.IGameDao;
@@ -20,6 +25,13 @@ import dao.IGameDao;
  */
 
 public class SQLGameDAO implements IGameDao{
+    private static final String SERVER_FACADE = "com.obfuscation.server.ServerFacade";
+    private static final String STRING = "java.lang.String";
+    private static final String INTEGER = "java.lang.Integer";
+    //    TODO: helps to find the typeName
+    private static final String ARRAYLISTCARD = "??";
+    private static final String LIST = List.class.getName();
+
     SQLDBConnection connection;
 
     public SQLGameDAO() {
@@ -34,7 +46,14 @@ public class SQLGameDAO implements IGameDao{
         SQLGameDAO sqlGameDAO = new SQLGameDAO();
         try {
             GameServer gameServer = new GameServer();
-
+            gameServer.setGameID("gameID");
+            GenericCommand genericCommand = new GenericCommand(SERVER_FACADE,
+                    "SendMessage", new String[]{STRING,STRING, Message.class.getName()},
+                    new Object[]{"masterkey", "gameID", "HELLO WORLD"});
+            sqlGameDAO.addGame("gameID", gameServer);
+            ArrayList<GenericCommand> commands = new ArrayList<>();
+            commands.add(genericCommand);
+            sqlGameDAO.updateCmdList("gameID", commands);
             sqlGameDAO.getGames();
         }catch (Exception e) {
             e.printStackTrace();
@@ -171,6 +190,14 @@ public class SQLGameDAO implements IGameDao{
                 while(rs.next()) {
                     Serializer serializer = new Serializer();
                     games.add(serializer.deserializeGameServer(rs.getString("game")));
+                    String cmdListString = rs.getString("cmdlist");
+                    ArrayList<Object> list = serializer.deserializeList(cmdListString);
+                    ArrayList<ICommand> commandList = new ArrayList<>();
+                    for (Object o : list) {
+                        System.out.println("adding command");
+                        System.out.println(o.toString());
+                        commandList.add(serializer.deserializeCommand(o.toString()));
+                    }
 //                    String gameJson = new String(b.getBytes(1,(int) b.length()));
 //                    gameJsons.add(gameJson);
 //                    System.out.println(gameJson);
@@ -188,4 +215,50 @@ public class SQLGameDAO implements IGameDao{
 
         return null;
     }
+
+    @Override
+    public List<GenericCommand> getCommands() {
+        ArrayList<GenericCommand> commandList = new ArrayList<>();
+        Result result = null;
+        String statement = "SELECT * FROM games;";
+//        PreparedStatement ps = connection.getPreparedStatment(statement);
+        Statement ps = connection.getStatement();
+        try {
+//            result = connection.executeQueryStatement(ps);
+            result = new Result(true, ps.executeQuery(statement),null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        if (result == null) {
+            return null;
+        }
+        else if (result.isSuccess()){
+            ResultSet rs = (ResultSet) result.getData();
+            try {
+                ArrayList<String> gameJsons = new ArrayList<String>();
+                System.out.println(rs.getFetchSize());
+                while(rs.next()) {
+                    Serializer serializer = new Serializer();
+                    String cmdListString = rs.getString("cmdlist");
+                    ArrayList<Object> list = serializer.deserializeList(cmdListString);
+
+                    for (Object o : list) {
+                        System.out.println("adding command");
+                        System.out.println(o.toString());
+                        commandList.add(serializer.deserializeGenericCommand(o.toString()));
+                    }
+
+//                    String gameJson = new String(b.getBytes(1,(int) b.length()));
+//                    gameJsons.add(gameJson);
+//                    System.out.println(gameJson);
+                }
+                return commandList;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return null;    }
 }
