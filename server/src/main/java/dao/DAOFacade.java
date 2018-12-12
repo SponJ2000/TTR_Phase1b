@@ -17,6 +17,10 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     private IDaoFactory daoFactory = null;
     private static DAOFacade instance = null;
 
+    private IUserDao userDao;
+    private ILobbyDao lobbyDao;
+    private IGameDao gameDao;
+
     private DAOFacade() {
 
     }
@@ -31,69 +35,72 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
 
     public void setDaoFactory(IDaoFactory factory) {
         daoFactory = factory;
+        userDao = daoFactory.getUserDao();
+        lobbyDao = daoFactory.getLobbyDao();
+        gameDao = daoFactory.getGameDao();
     }
 
     @Override
     public boolean addGame(String gameID, GameServer game) {
-        return false;
+        return gameDao.addGame(gameID, game);
     }
 
     @Override
     public boolean addLobby(String id, LobbyGame lobby) {
-        return false;
+        return lobbyDao.addLobby(id, lobby);
     }
 
     @Override
     public boolean addUser(String id, String password, String authtoken) {
-        return false;
+        return userDao.addUser(id, password, authtoken);
     }
 
     @Override
     public boolean removeLobby(String id) {
-        return false;
+        return lobbyDao.removeLobby(id);
     }
 
     @Override
     public boolean removeGame(String gameID) {
-        return false;
+        return gameDao.removeGame(gameID);
     }
 
     @Override
     public boolean updateLobby(String id, LobbyGame lobby) {
-        return false;
+        return lobbyDao.updateLobby(id, lobby);
     }
 
     @Override
     public boolean updateGame(String gameID, GameServer game) {
-        return false;
+        return gameDao.updateGame(gameID, game);
     }
 
     @Override
     public boolean removeUser(String id) {
-        return false;
+        return userDao.removeUser(id);
     }
 
     @Override
     public List<LobbyGame> getLobbies() {
-        return null;
+        return lobbyDao.getLobbies();
     }
 
     @Override
     public boolean updateCmdList(String gameID, ArrayList<GenericCommand> cmdlist) {
-        return false;
+        return gameDao.updateCmdList(gameID, cmdlist);
     }
 
     @Override
     public boolean updateAuthToken(String id, String authtoken) {
-        return false;
+        return userDao.updateAuthToken(id, authtoken);
     }
 
     @Override
     public List<User> getUsers() {
-        return null; }
+        return userDao.getUsers(); }
 
     @Override
     public List<GameServer> getGames() {
-        return null;
+        return gameDao.getGames();
     }
 }
