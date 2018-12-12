@@ -25,7 +25,7 @@ public class SQLUserDAO implements IUserDao {
         try {
             ps.setString(1,id);
             ps.setString(2, password);
-            ps.setString(2, authtoken);
+            ps.setString(3, authtoken);
             result = connection.executeUpdateStatement(ps);
 
         } catch (SQLException e) {
@@ -90,7 +90,6 @@ public class SQLUserDAO implements IUserDao {
         try {
             ResultSet result1 = ps.executeQuery(statement);
             System.out.println("PRINTING");
-            System.out.println(result1.getInt("id"));
             System.out.println("FINISHED");
 //            while (result1.)
             result = new Result(true, result1,null);

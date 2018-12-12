@@ -16,6 +16,7 @@ import communication.Player;
 import communication.PlayerUser;
 import communication.Ticket;
 import dao.PlugInManager;
+import sqldao.SQLFactory;
 
 
 /**
@@ -45,16 +46,23 @@ public class Server {
         //get the persistancy type and number of commands
         PlugInManager plugInManager = new PlugInManager();
 
-        if (args.length != 2) {
-            System.out.println("persistence_type and number_of_commands-between-checkpoints");
-            return;
-        }
+//        if (args.length != 2) {
+//            System.out.println("persistence_type and number_of_commands-between-checkpoints");
+//            return;
+//        }
         String persistenceType = args[0];
         int commandNum = Integer.parseInt(args[1]);
+        String wipe = null;
+        if (args.length > 2) {
+            wipe = args[2];
+        }
+
+        //TODO : add clear functionality
 
         switch (persistenceType) {
             case "sqlite":
-                plugInManager.setFactory("directory", "sql.jar", "SQLFactory");
+                String fileDirectory = System.getProperty("user.dir") + "/server/src/main/java/";
+                plugInManager.setFactory(fileDirectory, "RelationalDB3.jar", SQLFactory.class.getName());
                 break;
             case "tsv":
                 plugInManager.setFactory("directory", "tsv.jar", "TSVDaoFactory");

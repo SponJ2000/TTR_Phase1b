@@ -47,10 +47,9 @@ public class SQLGameDAO implements IGameDao{
             GenericCommand genericCommand = new GenericCommand(SERVER_FACADE,
                     "SendMessage", new String[]{STRING,STRING, Message.class.getName()},
                     new Object[]{"masterkey", "gameID", "HELLO WORLD"});
-            sqlGameDAO.addGame("gameID", gameServer);
+            sqlGameDAO.removeGame("GsAMEID");
             ArrayList<GenericCommand> commands = new ArrayList<>();
             commands.add(genericCommand);
-            sqlGameDAO.updateCmdList("gameID", commands);
             sqlGameDAO.getGames();
         }catch (Exception e) {
             e.printStackTrace();

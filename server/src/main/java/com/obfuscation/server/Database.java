@@ -145,12 +145,12 @@ public class Database {
         lobbyGameList = new ArrayList<>();
         activeUsers = new ArrayList<>();
         authTokenMap = new HashMap<>();
-        authTokenMap.put("Bob", "authBob");
-        authTokenMap.put("Joe", "authJoe");
-        loginInfo.put("Bob", "password");
-        loginInfo.put("Joe", "password");
-        login("Bob", "password");
-        login("Joe", "password");
+//        authTokenMap.put("Bob", "authBob");
+//        authTokenMap.put("Joe", "authJoe");
+//        loginInfo.put("Bob", "password");
+//        loginInfo.put("Joe", "password");
+//        login("Bob", "password");
+//        login("Joe", "password");
 
         //setting route scores
         routeScores.put(1, 1);
@@ -159,7 +159,7 @@ public class Database {
         routeScores.put(4, 7);
         routeScores.put(5, 10);
         routeScores.put(6, 15);
-        setDummyGame();
+        //setDummyGame();
     }
 
     Result register(String id, String password){

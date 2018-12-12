@@ -103,4 +103,9 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     public List<GameServer> getGames() {
         return gameDao.getGames();
     }
+
+    @Override
+    public List<GenericCommand> getCommands() {
+        return gameDao.getCommands();
+    }
 }

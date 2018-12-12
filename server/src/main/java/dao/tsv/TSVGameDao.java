@@ -132,4 +132,8 @@ public class TSVGameDao implements IGameDao {
         return games;
     }
 
+    @Override
+    public List<GenericCommand> getCommands() {
+        return null;
+    }
 }

@@ -38,6 +38,7 @@ public class PlugInManager {
             URL pluginURL = pluginJarFile.toURI().toURL();
             URLClassLoader loader = new URLClassLoader(new URL[]{pluginURL});
 
+            System.out.println(pluginURL.toString());
             // Load the jar file's plugin class, create and return an instance
             Class<? extends IDaoFactory> messagePluginClass = (Class<IDaoFactory>) loader.loadClass(pluginClassName);
             return messagePluginClass.getDeclaredConstructor(null).newInstance();
