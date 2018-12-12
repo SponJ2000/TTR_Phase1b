@@ -151,7 +151,7 @@ public class ChatFragment extends Fragment implements IChatView {
 
     @Override
     public void sendToast(String toast) {
-        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -32,6 +32,7 @@ public class GameClient extends Game {
 
     public GameClient(){
         super();
+        playerStatsList = new ArrayList<PlayerStats>();
     }
     public GameClient(String gameID, String userName) {
         super(gameID);

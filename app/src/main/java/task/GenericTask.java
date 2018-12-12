@@ -1,6 +1,7 @@
 package task;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 
@@ -14,6 +15,7 @@ import communication.Message;
 import communication.Result;
 import communication.Serializer;
 import communication.Ticket;
+import model.ModelFacade;
 import model.ModelRoot;
 import server.CommandTask;
 import server.Poller;
@@ -24,6 +26,8 @@ import server.ServerProxy;
  */
 
 public class GenericTask extends AsyncTask<Object, Void, Result> {
+
+    private static final String TAG = "genTask";
 
     String action;
 //    Object holder;
@@ -81,7 +85,7 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
 
     @Override
     public void onPostExecute(Result result) {
-
+        Log.d(TAG, "onPostExecute: " + result);
         switch (action) {
             case "login":
                 OnSignIn(result);
@@ -95,6 +99,9 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
                 break;
             case "GetLobby":
                 FetchLobbyGameFrom(result);
+                break;
+            case "leaveLobbyGame":
+                onLeaveLobbyGame(result);
                 break;
             case "GetTickets":
                 FetchTicketsOption(result);
@@ -139,9 +146,12 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
     }
 
     private void FetchLobbyGameFrom(Result result) {
+        System.out.println("FETCHING LOBBY");;
+        System.out.println(result.toString());
         if (result.isSuccess()) {
             ModelRoot modelRoot = ModelRoot.getInstance();
             modelRoot.setLobbyGame((LobbyGame) result.getData());
+            System.out.println(modelRoot.getLobbyGame().getHost());
             GameClient gameClient = new GameClient(modelRoot.getLobbyGame().getGameID(), modelRoot.getUserName());
             modelRoot.setGame(gameClient);
         }
@@ -196,6 +206,12 @@ public class GenericTask extends AsyncTask<Object, Void, Result> {
         }
         else {
             System.out.println("user turn ending failed");
+        }
+    }
+
+    private void onLeaveLobbyGame(Result result) {
+        if (result.isSuccess()) {
+            ModelRoot.getInstance().getLobbyGame().removePlayerByID(ModelRoot.getInstance().getUserName());
         }
     }
 }

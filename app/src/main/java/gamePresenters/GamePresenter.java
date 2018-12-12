@@ -1,5 +1,6 @@
 package gamePresenters;
 
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -10,8 +11,10 @@ import communication.Card;
 import communication.GameColor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import communication.Player;
+import communication.PlayerOpponent;
 import communication.Result;
 import communication.Route;
 import model.IGameModel;
@@ -21,23 +24,21 @@ public class GamePresenter implements IGamePresenter {
 
     private static String TAG = "gamePres";
 
-    private static int changeIndex = 0;
-
     private IPlayerInfoView playerInfoView;
     private IGameView view;
     private OnShowListener listener;
     private IGameModel model;
 
     private ITurnState state;
+    private boolean ending;
 
     public GamePresenter(IGameView view, OnShowListener listener) {
         this.view = view;
         view.setPresenter(this);
         this.listener = listener;
         model = ModelFacade.getInstance();
-//        model = FakeModel.getInstance();
-
         state = new NotTurn(this);
+        ending = false;
     }
 
     public void setState(ITurnState state){
@@ -46,36 +47,44 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void updateInfo(Object result) {
-        if(result != null && (result instanceof Result)) {
+        if(!model.isMyTurn()) {
+            ending = false;
+        }
+        if(model.isGameEnded()) {
+            Log.d(TAG, "updateInfo: ending game");
+            listener.onShow(Shows.score, null);
+        }
+
+        if(result instanceof Result) {
             Result r = (Result) result;
-            if (r.getErrorInfo().equals("from claim route")) {
-                System.out.println("called update from claim route");
+            if(r.getData() instanceof Route) {
+                Log.d(TAG, "updateInfo: result is route");
+                view.setMap(model.getMap());
+                view.updateRoute((Route) r.getData());
             }
+            state.finish(r);
         }
-        if(result != null && result.getClass().equals(Result.class)) {
-            state.finish((Result) result);
-        }
-//        else if(result != null && result.getClass().equals(Route.class)){
-//            view.updateRoute((Route) result);
-//        }
         view.setPlayer(model.getPlayer());
         if(model.getPlayer() == null) {
             Log.d(TAG, "user is null");
-        }if(model.isMyTurn() && state.getClass().equals(NotTurn.class)) {
+        }if(model.isMyTurn() && state.getClass().equals(NotTurn.class) && !ending) {
             setState(new TurnNoSelection(this));
+        }else if(!model.isMyTurn() && !state.getClass().equals(NotTurn.class)) {
+            setState(new NotTurn(this));
         }
         if(playerInfoView == null) {
+            view.setLastTurn(model.isLastTurn());
             view.setTurn(model.isMyTurn());
             view.setDeckSize(model.getDeckSize());
+            view.setTicketDeckSize(model.getTicketDeckSize());
             view.setCards(model.getCards());
             view.setFaceCards(model.getFaceCards());
             view.setMap(model.getMap());
             view.setTickets(model.getTickets());
-            //view.updateRoute();
             view.updateUI();
 
         }else {
-            playerInfoView.setPlayers(model.getPlayers());
+            playerInfoView.setPlayers(model.getOpponents());
             playerInfoView.updateUI();
         }
     }
@@ -89,6 +98,7 @@ public class GamePresenter implements IGamePresenter {
 
     @Override
     public void showToast(String toast) {
+        Log.d(TAG, "showToast: " + toast);
         view.sendToast(toast);
     }
 
@@ -101,77 +111,19 @@ public class GamePresenter implements IGamePresenter {
     public void showPlayerInfo(IPlayerInfoView view) {
         if(view == null) {
             this.listener.onShow(Shows.playerInfo, null);
+
         }else {
             Log.d(TAG, "showPlayerInfo: " + model.getPlayers());
             playerInfoView = view;
             playerInfoView.setPresenter(this);
-            playerInfoView.setPlayers(model.getPlayers());
+            playerInfoView.setPlayers(model.getOpponents());
             playerInfoView.updateUI();
         }
     }
 
-    //    public void onChange(Activity activity) {
-//        switch (changeIndex) {
-//            case 0:
-//                Toast.makeText(activity, "update mPlayer points", Toast.LENGTH_SHORT).show();
-//                model.addPoints(8);
-//                break;
-//            case 1:
-//                Toast.makeText(activity, "add train cards", Toast.LENGTH_SHORT).show();
-//                model.chooseCard(2);
-//                break;
-//            case 2:
-//                Toast.makeText(activity, "remove train cards", Toast.LENGTH_SHORT).show();
-//                model.useCards(GameColor.GREEN, 1);
-//                break;
-//            case 3:
-//                Toast.makeText(activity, "add tickets", Toast.LENGTH_SHORT).show();
-//                ArrayList<Ticket> tickets = new ArrayList<>();
-//                tickets.add(new Ticket(new City("berlin",0,0), new City("helsinki",0,0), 8));
-//                tickets.add(new Ticket(new City("berlin",0,0), new City("london",0,0), 12));
-//                model.addTickets(tickets);
-//                break;
-//            case 4:
-//                Toast.makeText(activity, "remove tickets", Toast.LENGTH_SHORT).show();
-//                model.removeTicket(1);
-//                model.removeTicket(1);
-//                break;
-//            case 5:
-//                Toast.makeText(activity, "update opponent cards and tickets", Toast.LENGTH_SHORT).show();
-//                model.updateOpponent();
-//                break;
-//            case 6:
-//                Toast.makeText(activity, "update face cards and deck", Toast.LENGTH_SHORT).show();
-//                model.updateFaceCards();
-//                break;
-//            case 7:
-//                Toast.makeText(activity, "add claimed mRoute", Toast.LENGTH_SHORT).show();
-//                List<Route> routes = model.getMap().getRoutes();
-//                Route r = routes.get(ThreadLocalRandom.current().nextInt(0, routes.size()));
-//
-//                Player player = model.getPlayers().get(ThreadLocalRandom.current().nextInt(0, model.getPlayers().size()));
-//                model.claimRoute(r, player, null);
-//                view.updateRoute(r);
-//                break;
-//            case 8:
-//                if (model.isMyTurn()) {
-//                    Toast.makeText(activity, "Not your turn", Toast.LENGTH_SHORT).show();
-//                    model.setMyTurn(false);
-//                    state = new NotTurn(this);
-//                } else {
-//                    Toast.makeText(activity, "Your turn!", Toast.LENGTH_SHORT).show();
-//                    model.setMyTurn(true);
-//                    state = new TurnNoSelection(this);
-//                }
-//
-//
-//        }
-//        ++changeIndex;
-//        changeIndex %= 9;
-//        updateInfo(true);
-//    }
-
-    public void showMap() {
+    @Override
+    public List<PlayerOpponent> getPlayers() {
+        return model.getOpponents();
     }
 
     @Override
@@ -195,6 +147,12 @@ public class GamePresenter implements IGamePresenter {
         this.listener.onShow(Shows.map, null);
     }
 
+    @Override
+    public void onClose(Fragment fragment){
+
+        this.listener.onClose(fragment, null);
+    }
+
     public void showMenu() {
         this.listener.onShow(Shows.menu, null);
     }
@@ -203,12 +161,23 @@ public class GamePresenter implements IGamePresenter {
         state.selectTicketsButton();
     }
 
+    @Override
+    public void showTickets() {
+        listener.onShow(Shows.owned_tickets, null);
+    }
+
     public void showChat() {
         this.listener.onShow(Shows.chat, null);
     }
 
     @Override
+    public void showHistory() {
+        listener.onShow(Shows.history, null);
+    }
+
+    @Override
     public void sendToast(String toast) {
+        Log.d(TAG, "sendToast: " + toast);
         view.sendToast(toast);
     }
 
@@ -243,45 +212,59 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         void selectFaceUp(int index) {
+            if(actionSelected || isSelectOne) {
+                return;
+            }
             Log.d(TAG, "selectFaceUp: " + model.checkCard(index));
             if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 Log.d(TAG, "selectFaceUp locomotive");
-                model.chooseCard(index);
                 actionSelected = true;
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
+                model.chooseCard(index);
             }
             else {
-                wrapper.getModel().chooseCard(index);
                 isSelectOne = true;
-                wrapper.setState(new TurnOneCard(wrapper));
+                wrapper.getModel().chooseCard(index);
             }
         }
 
         @Override
         void selectDeck() {
-            model.chooseCard(-1);
-            isSelectOne = true;
-            wrapper.setState(new TurnOneCard(wrapper));
+            if(actionSelected || isSelectOne) {
+                Log.d(TAG, "already selected");
+                return;
+            }
+            if(model.getDeckSize() > 0) {
+                Log.d(TAG, "choosing deck");
+                isSelectOne = true;
+                model.chooseCard(-1);
+            }
+            else {
+                wrapper.sendToast("Deck is empty!");
+            }
 
         }
 
         @Override
         public void selectTicketsButton() {
-            listener.onShow(Shows.tickets, null);
-            wrapper.setState(new NotTurn(wrapper));
-            actionSelected = true;
-//            wrapper.setState(new TurnNoTickets(wrapper));
+            if (model.getTicketDeckSize() > 0) {
+                if(actionSelected || isSelectOne) {
+                    return;
+                }
+                actionSelected = true;
+                listener.onShow(Shows.tickets, null);
+            }
         }
 
         @Override
         public void claimRoute(Route route, Player player) {
+            if(actionSelected || isSelectOne) {
+                return;
+            }
             //Check if a player has sufficient cards
-            System.out.println("CLAIMED");
             Object list = model.checkRouteCanClaim(route);
 
             if (list instanceof String) {
-                System.out.println("apprently it wont go to claim");
+                Log.d(TAG, "claimRoute: " + list);
                 wrapper.sendToast((String) list);
             }
             else {
@@ -290,48 +273,37 @@ public class GamePresenter implements IGamePresenter {
                     Bundle args = new Bundle();
                     args.putSerializable("route", route);
                     args.putInt("cardsToSelect", route.getLength());
+                    actionSelected = true;
                     listener.onShow(Shows.cardSelect, args);
-                    wrapper.setState(new NotTurn(wrapper));
                     return;
                 }
                 else {
                     cardsToUse = (ArrayList<Card>) list;
                 }
 
-                //Result result = wrapper.getModel().claimRoute(route, player, cardsToUse);
-                System.out.println("trying to call model to claim route");
-                model.claimRoute(route, player, cardsToUse);
-
                 actionSelected = true;
-                updateInfo(new Result(true, true, null));
-
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
-
-//                if(result.isSuccess()) {
-//                    model.endTurn();
-//                    wrapper.setState(new NotTurn(wrapper));
-//                }
-//                else {
-//                    wrapper.sendToast(result.getErrorInfo());
-//                }
+                model.claimRoute(route, player, cardsToUse);
             }
         }
 
         @Override
         void finish(Result result) {
+            Log.d(TAG, "TurnNoSelection: finish called");
             if(result.isSuccess()) {
                 if(isSelectOne) {
-                    Log.d(TAG, "to turnOneCard");
+                    Log.d(TAG, "TurnNoSelection: to turnOneCard");
                     wrapper.setState(new TurnOneCard(wrapper));
                     isSelectOne = false;
                 }else if(actionSelected) {
-                    Log.d(TAG, "finish turn");
+                    Log.d(TAG, "TurnNoSelection: finish turn");
                     model.endTurn();
+                    ending = true;
                     wrapper.setState(new NotTurn(wrapper));
                 }
             }else {
                 wrapper.sendToast(result.getErrorInfo());
+                isSelectOne = false;
+                actionSelected = false;
             }
         }
     }
@@ -348,36 +320,47 @@ public class GamePresenter implements IGamePresenter {
 
         @Override
         public void selectFaceUp(int index) {
+            if(actionSelected) {
+                return;
+            }
             Log.d(TAG, "selectFaceUp: " + wrapper.getModel().checkCard(index));
             if (model.checkCard(index).equals(GameColor.LOCOMOTIVE)) {
                 wrapper.sendToast("You can't select a locomotive card as your second choice.");
             }
             else {
                 model.chooseCard(index);
-                model.endTurn();
-                wrapper.setState(new NotTurn(wrapper));
                 actionSelected = true;
             }
         }
 
         @Override
         public void selectDeck() {
-            wrapper.getModel().chooseCard(-1);
-            model.endTurn();
-            wrapper.setState(new NotTurn(wrapper));
-            actionSelected = true;
+            if(actionSelected) {
+                Log.d(TAG, "already selected");
+                return;
+            }
+            if(model.getDeckSize() > 0) {
+                Log.d(TAG, "choosing deck");
+                wrapper.getModel().chooseCard(-1);
+                actionSelected = true;
+            }
+            else {
+                wrapper.sendToast("Deck is empty!");
+            }
         }
 
         @Override
         void finish(Result result) {
             if(result.isSuccess()) {
                 if(actionSelected) {
-                    Log.d(TAG, "finish turn");
+                    Log.d(TAG, "TurnOneCard: finish turn");
                     model.endTurn();
+                    ending = true;
                     wrapper.setState(new NotTurn(wrapper));
                 }
             }else {
                 wrapper.sendToast(result.getErrorInfo());
+                actionSelected = false;
             }
         }
     }

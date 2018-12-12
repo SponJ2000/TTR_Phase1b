@@ -31,7 +31,7 @@ public class GenericCommand implements ICommand {
 
     @Override
     public Result execute() {
-        System.out.println(this.toString());
+//        System.out.println(this.toString());
         try {
             Class<?> retClass = Class.forName(className);
 
@@ -44,9 +44,9 @@ public class GenericCommand implements ICommand {
             for (int i = 0; i < parameterType.length; i++) {
                 try {
                     paramTypeClass[i] = Class.forName(parameterType[i]);
-                    System.out.println("A----------------");
-                    System.out.println(parameterValue[i].toString());
-                    System.out.println("B-----------------");
+                   // System.out.println("A----------------");
+                   // System.out.println(parameterValue[i].toString());
+                   // System.out.println("B-----------------");
                     parameterValue[i] = new Gson().fromJson(parameterValue[i].toString(), paramTypeClass[i]);
 
                 } catch (Exception e) {
@@ -57,15 +57,15 @@ public class GenericCommand implements ICommand {
             }
 
             Method method = retClass.getMethod(methodName, paramTypeClass);
-            System.out.println(parameterType);
-            System.out.println(method.getGenericParameterTypes().getClass().toString());
+//            System.out.println(parameterType);
+//            System.out.println(method.getGenericParameterTypes().getClass().toString());
 
-            for (String s : parameterType) {
-                System.out.println("D : " + s);
-            }
-            for (Object o : parameterValue) {
-                System.out.println("D : " + o.getClass());
-            }
+//            for (String s : parameterType) {
+//                System.out.println("D : " + s);
+//            }
+//            for (Object o : parameterValue) {
+//                System.out.println("D : " + o.getClass());
+//            }
 
             Object results = method.invoke(serverFacadeInstance, parameterValue);
 
@@ -80,5 +80,9 @@ public class GenericCommand implements ICommand {
             e.printStackTrace();
             return new Result(false, null, e.getMessage());
         }
+    }
+
+    public String getMethodName() {
+        return methodName;
     }
 }

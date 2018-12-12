@@ -1,6 +1,7 @@
 package com.obfuscation.server;
 
 import java.lang.reflect.Array;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,9 +19,11 @@ import communication.Card;
 import communication.City;
 import communication.DualRoute;
 import communication.Game;
+import communication.GameFactory;
 import communication.GameHistory;
 import communication.LobbyGame;
 import communication.GameServer;
+import communication.MapGraph;
 import communication.Message;
 import communication.Player;
 import communication.PlayerStats;
@@ -30,6 +33,7 @@ import communication.Route;
 import communication.TickectMaker;
 import communication.Ticket;
 import communication.GameColor;
+import dao.DAOFacade;
 
 import static communication.GameColor.GREY;
 
@@ -44,7 +48,17 @@ public class Database {
     //TODO : make gameid and gamelobbyid same
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
     private List<GameServer> gameList = new ArrayList<>();
+
+    /**
+     * gameUpdates stores the list of commands that we save.
+     * This list is expanded and saved in the following commands:
+     * sendMessage()
+     *
+     */
+    private Map<String, List<GenericCommand>> gameUpdates = new HashMap<>();
+    private int updateDelta;
     private HashMap<Integer, Integer> routeScores = new HashMap<>();
+    private HashMap<String, MapGraph> gameGraph = new HashMap<>();
 
     public List<GameServer> getGameList() {
         return gameList;
@@ -52,6 +66,14 @@ public class Database {
 
     public void setGameList(List<GameServer> gameList) {
         this.gameList = gameList;
+        initGameUpdates();
+    }
+
+    private void initGameUpdates() {
+        for (int i = 0; i < gameList.size(); i++) {
+            List<GenericCommand> newList = new ArrayList<>();
+            gameUpdates.put(gameList.get(i).getGameID(), newList);
+        }
     }
 
     private List<ActiveUser> activeUsers;
@@ -120,6 +142,7 @@ public class Database {
             loginInfo.put(id, password);
             String authToken = generateAuthToken();
             authTokenMap.put(id, authToken);
+            DAOFacade.getInstance().addUser(id, password, authToken);
             return login(id, password);
         }
         else{
@@ -148,6 +171,7 @@ public class Database {
                 }
                 //Create and return result object
                 System.out.println("LOGGED IN " + authTokenMap.get(id));
+                DAOFacade.getInstance().updateAuthToken(id, authToken);
                 return new Result(true, authTokenMap.get(id), null);
             }
             else{
@@ -196,7 +220,8 @@ public class Database {
         lobbyGame.setPlayers(playerList);
 
         lobbyGameList.add(lobbyGame);
-        System.out.println("Get HERE");
+        Blob blob = BLOBSerializer.getInstance().serialize(lobbyGame);
+        DAOFacade.getInstance().addLobby(lobbyGame.getGameID(), blob);
         return new Result(true, lobbyGameList, null);
     }
 
@@ -217,6 +242,8 @@ public class Database {
         else if (game.getPlayers().size() < game.getMaxPlayers()) {
             if (!game.getPlayers().contains(player)) {
                 game.getPlayers().add(player);
+                Blob blob = BLOBSerializer.getInstance().serialize(game);
+                DAOFacade.getInstance().addLobby(gameID, blob);
                 return new Result(true, true, null);
             }
             else return new Result(false, null, "Error: player already in game");
@@ -255,20 +282,19 @@ public class Database {
             trainCards.add(yellowCard);
         }
 
-
-
-        System.out.println("TRAIN CARD SIZE " + trainCards.size());
         Collections.shuffle(trainCards);
         gameServer.setTrainCards(trainCards);
 
+        System.out.println("TRAIN CARD SIZE " + trainCards.size());
+
         ArrayList<Ticket> tickets = new ArrayList<>();
         //initialize destTickets
-        tickets = new TickectMaker().MakeCards();
+        tickets = GameFactory.getAllTickets();
+        System.out.println("TICKET SIZE : " + tickets.size());
 
         //FIXME just for debugging. Should be erased later.
-        tickets = new ArrayList<> (tickets.subList(0, 20));
+//        tickets = new ArrayList<> (tickets.subList(0, 20));
 
-        System.out.println("MAKER CARD SIZE " + tickets.size());
         Collections.shuffle(tickets);
 
         //set the deck
@@ -283,7 +309,6 @@ public class Database {
                 trainCards.remove(0);
             }
             player.setCards(playerTrainCards);
-            System.out.println("CARD SET");
             System.out.println(player.getCards().size());
         }
 
@@ -292,7 +317,6 @@ public class Database {
         //If 3 are locomotives, then shuffle again
         ArrayList<Card> faceUpTrainCards = null;
         while (true) {
-            System.out.println("GEH TE");
             faceUpTrainCards = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 Card card = trainCards.get(0);
@@ -301,15 +325,12 @@ public class Database {
             }
 
             int counter = 0;
-            System.out.println("COLOR ");
             for (int i = 0; i < 5; i++) {
                 System.out.println(faceUpTrainCards.get(i).getColor());
                 if (faceUpTrainCards.get(i).getColor() == GameColor.LOCOMOTIVE) {
-                    System.out.println("COUNTING");
                     counter++;
                 }
             }
-            System.out.println("E "  + counter);
             if (counter >= 3) {
                 //if locomotive is more than 3, discard them and shuffle again
                 gameServer.getDiscardDeck().addAll(faceUpTrainCards);
@@ -320,20 +341,23 @@ public class Database {
             }
         }
 
-        //set tickets
-        tickets = gameServer.getTickets();
-        for (PlayerUser p : gameServer.getPlayers()) {
-            ArrayList<Ticket> playerTickets = new ArrayList<>();
-            if (tickets.size() < 3) {
-                playerTickets =  tickets;
-            }
-            for (int i = 0; i < 3; i++) {
-                Ticket ticket = tickets.get(0);
-                playerTickets.add(ticket);
-                tickets.remove(0);
-            }
-            p.setTicketToChoose(playerTickets);
-        }
+//        //set tickets
+//        //FIXME FOR TESTING
+//        tickets = gameServer.getTickets();
+//        for (PlayerUser p : gameServer.getPlayers()) {
+//            ArrayList<Ticket> playerTickets = new ArrayList<>();
+//            if (tickets.size() < 3) {
+//                playerTickets =  tickets;
+//            }
+//            for (int i = 0; i < 3; i++) {
+//                Ticket ticket = tickets.get(0);
+//                playerTickets.add(ticket);
+//                tickets.remove(0);
+//            }
+//            p.setTickets(playerTickets);
+//        }
+
+        System.out.println("FINAL DECK SIZE " + gameServer.getTrainCards().size());
         // set faceup cards
         gameServer.setFaceUpTrainCarCards(faceUpTrainCards);
 
@@ -349,7 +373,7 @@ public class Database {
             return new Result(false, null, "Error: Invalid token");
         }
 
-//        if(lobbyGame.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
+        if(lobbyGame.getPlayers().size() < 2) return new Result(false, null, "Error: Cannot start a game with less than 2 players");
         GameServer game = new GameServer();
 
         if (findGameByID(gameID) != null) return new Result(false, null, "Error : already started");
@@ -383,6 +407,16 @@ public class Database {
         }
 
         gameList.add(game);
+        List<GenericCommand> updateList = new ArrayList<>();
+        gameUpdates.put(gameID, updateList);
+
+        // database stuff
+        Blob blob = BLOBSerializer.getInstance().serialize(game);
+        DAOFacade.getInstance().removeLobby(lobbyGame.getGameID());
+        DAOFacade.getInstance().addGame(gameID, blob);
+        saveUpdates(gameID, updateList);
+
+        gameGraph.put(gameID, new MapGraph());
         return new Result(true, game, null);
     }
 
@@ -396,11 +430,23 @@ public class Database {
         Player player = user.getPlayer();
         if (!game.getPlayers().contains(player)) return new Result(false, false, "Error: Player not in game");
 
+        //update host
+        if (game.getHost().equals(playerID) && game.getPlayers().size() > 1) {
+            for (Player p : game.getPlayers()) {
+                if (!p.getPlayerName().equals(game.getHost())) {
+                    game.setHost(p.getPlayerName());
+                    break;
+                }
+            }
+        }
+
         if (game.isStarted()){
             //TODO : add absent players
             //game.get.add(player);
         }
         else game.getPlayers().remove(player);
+        Blob blob = BLOBSerializer.getInstance().serialize(game);
+        DAOFacade.getInstance().addLobby(gameID, blob);
         return new Result(true, true, null);
 
     }
@@ -419,6 +465,8 @@ public class Database {
 //            mAbsentPlayers.remove(player);
 //        }
 
+        Blob blob = BLOBSerializer.getInstance().serialize(game);
+        DAOFacade.getInstance().addLobby(gameID, blob);
         return new Result(true, true, null);
     }
 
@@ -551,11 +599,14 @@ public class Database {
     }
 
     List<Ticket> getTickets(String gameID, String authToken) {
+        System.out.println("GET TICKETS");
         GameServer game = findGameByID(gameID);
         List<Ticket> tickets = game.getTickets();
         ArrayList<Ticket> playerTickets = new ArrayList<>();
         if (tickets.size() < 3) {
-            return tickets;
+            List<Ticket> newTickets = new ArrayList<>(tickets);
+            game.getTickets().clear();
+            return newTickets;
         }
         for (int i = 0; i < 3; i++) {
             Ticket ticket = tickets.get(0);
@@ -573,10 +624,11 @@ public class Database {
     }
 
     Result setTickets(String gameID, String authToken, List<Ticket> tickets) {
-        //checking if the ticket to keep is more than 2 tickets
-        if (tickets.size() > 2) {
-            return new Result(false, null, "Error : too many tickets");
-        }
+        System.out.println("SET TICKETS");
+//        //checking if the ticket to keep is more than 2 tickets
+//        if (tickets.size() > 2) {
+//            return new Result(false, null, "Error : too many tickets");
+//        }
         try {
             GameServer game = findGameByID(gameID);
             if (game != null) {
@@ -588,18 +640,16 @@ public class Database {
                         tickets1 = player.getTicketToChoose();
                     }
                 }
-                System.out.println("KEEP TICKET " + tickets.size());
-                System.out.println("PLAYER TICKET CHOOSE " + tickets1.size());
+
                 Set<Integer> overlap = new HashSet<>();
                 for (int i = 0; i < tickets.size(); i++) {
                     for (int j = 0; j < tickets1.size(); j++) {
                         if (tickets.get(i).equals(tickets1.get(j))) {
-                            System.out.println("))))");
                             overlap.add(j);
                         }
                     }
                 }
-                System.out.println("OVERLAP SIZE + " + overlap.size());
+
                 List<Ticket> ticketDeck = game.getTickets();
                 for (int i = 0; i < tickets1.size(); i++) {
                     if (!overlap.contains(i)) {
@@ -670,6 +720,8 @@ public class Database {
                     gameServer.getmMap().claimRoute(claimedRoute, p);
 
                     //deduct train car number
+                    System.out.println("SUBTRACTING");
+                    System.out.println(p.getTrainNum() - cards.size());
                     p.setTrainNum(p.getTrainNum() - cards.size());
 
                     //give proper points
@@ -677,6 +729,11 @@ public class Database {
 
                     //update game history
                     gameServer.getGameHistories().add(new GameHistory(gameID, username, "claimed_" + routeID + "_routes"));
+
+                    //if deck is empty, refill
+                    putDiscardToCardDeck(gameServer);
+                    //add to graph
+                    gameGraph.get(gameID).addPath(username, claimedRoute);
                     return new Result(true, true, null);
                 }
 
@@ -692,35 +749,53 @@ public class Database {
             if (game != null) {
                 if (index == -1) {
                     //draw from deck
-                    if (game.getDeckSize() <= 0) {
+                    if (game.getDeckSize() == 0) {
                         putDiscardToCardDeck(game);
+                    }
+
+                    if (game.getTrainCards().size() == 0) {
+                        System.out.println("DECK IS EMPTy");
+                        return new Result(false, null, "The deck is empty");
                     }
                     Card card = game.getTrainCards().get(0);
                     game.getTrainCards().remove(0);
 
                     //add card to player cards
                     game.getPlayerbyUserName(username).getCards().add(card);
+
+                    if (game.getDeckSize() == 0) {
+                        putDiscardToCardDeck(game);
+                    }
+                    game.getGameHistories().add(new GameHistory(gameID, username, "drew_train_card"));
                     return new Result(true, card, null);
                 }
                 else if (index >= 0 && index <= 4) {
                     if (game.getFaceUpTrainCarCards().size() > index) {
                         //get card from the face up cards
                         Card card = game.getFaceUpTrainCarCards().get(index);
-                        if (game.getDeckSize() <= 0) {
+                        if (game.getDeckSize() == 0) {
                             putDiscardToCardDeck(game);
                         }
 
                         //draw card from the deck and set it to face up cards
-                        Card topCard = game.getTrainCards().get(0);
-                        game.getTrainCards().remove(0);
-                        game.getFaceUpTrainCarCards().set(index, topCard);
+//                        if (game.getTrainCards().size() == 0) {
+//                            return new Result(false, null, "The deck is empty");
+//                        }
+                        if (game.getTrainCards().size() > 0) {
+                            Card topCard = game.getTrainCards().get(0);
+                            game.getTrainCards().remove(0);
+                            game.getFaceUpTrainCarCards().set(index, topCard);
+                        }
+                        else {
+                            game.getFaceUpTrainCarCards().remove(index);
+                        }
 
                         while (true) {
                             int counter = 0;
 
                             //counting locomotive cards
-                            for (int i = 0; i < 5; i++) {
-                                System.out.println(game.getFaceUpTrainCarCards().get(i).getColor());
+                            for (int i = 0; i < game.getFaceUpTrainCarCards().size(); i++) {
+//                                System.out.println(game.getFaceUpTrainCarCards().get(i).getColor());
                                 if (game.getFaceUpTrainCarCards().get(i).getColor() == GameColor.LOCOMOTIVE) {
                                     System.out.println("COUNTING");
                                     counter++;
@@ -732,7 +807,7 @@ public class Database {
                                 ArrayList<Card> faceUpTrainCards = new ArrayList<>();
                                 for (int i = 0; i < 5; i++) {
                                     //if deck is empty, shuffle
-                                    if (game.getTrainCards().size() <= 0) {
+                                    if (game.getTrainCards().size() == 0) {
                                         putDiscardToCardDeck(game);
                                     }
                                     Card newCard = game.getTrainCards().get(0);
@@ -749,6 +824,11 @@ public class Database {
                         }
                         game.getPlayerbyUserName(username).getCards().add(card);
                         game.getGameHistories().add(new GameHistory(gameID, username, "drew_train_card"));
+
+                        if (game.getDeckSize() == 0) {
+                            putDiscardToCardDeck(game);
+                        }
+
                         return new Result(true, card, null);
                     }
                 }
@@ -777,43 +857,45 @@ public class Database {
                 claimedRoutesNum.put(route.getClaimedBy().getPlayerName(), point);
             }
         }
+
+        //computing ticket paths
+        String start, end;
         for (PlayerUser p : gameServer.getPlayers()) {
             for (Ticket ticket : p.getTickets()) {
-                for (Route route : gameServer.getmMap().getRoutes()) {
-                    String routeID = ticket.getCity1() + "-" + ticket.getCity2();
-                    //TODO : what if swapped
-                    if (route.getRouteID().equals(routeID)) {
-                        //if succeeded
-                        if (route.getClaimedBy() != null && route.getClaimedBy().getPlayerName().equals(p.getPlayerName())) {
-                            int point = winnedPoint.get(p.getPlayerName()) + ticket.getValue();
-                            winnedPoint.put(p.getPlayerName(), point);
-                        }
-
-                        //if failed
-                        else {
-                            int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
-                            lostPoint.put(p.getPlayerName(), point);
-                        }
-                        break;
-                    }
+                start = ticket.getCity1().getName();
+                end = ticket.getCity2().getName();
+                if (gameGraph.get(gameID).hasPath(p.getPlayerName(), start, end)) {
+                    int point = winnedPoint.get(p.getPlayerName()) + ticket.getValue();
+                    winnedPoint.put(p.getPlayerName(), point);
+                }
+                else {
+                    int point = lostPoint.get(p.getPlayerName()) + ticket.getValue();
+                    lostPoint.put(p.getPlayerName(), point);
                 }
             }
         }
 
-        //TODO : compute longest path
-        TreeSet<Integer> routeNums = new TreeSet<>();
-        for (PlayerUser p : gameServer.getPlayers()) {
-            routeNums.add(claimedRoutesNum.get(p.getPlayerName()));
+        //computing longest path
+        MapGraph mapGraph = getGraphByGame(gameID);
+        HashMap<String, Integer> paths = mapGraph.findLongestPath();
+        System.out.println("LONGEST PATH");
+        for (String s : paths.keySet()) {
+            System.out.println(s + " " + paths.get(s));
         }
 
-        int maxRouteNum = routeNums.last();
-
+        int maxRouteNum = -1;
+        for (String s : paths.keySet()) {
+            maxRouteNum = Math.max(maxRouteNum, paths.get(s));
+        }
         //calculate scores
         for (PlayerUser p : gameServer.getPlayers()) {
             String username = p.getPlayerName();
+            if (!paths.containsKey(username)) {
+                paths.put(username, 0);
+            }
             int winnedPoints = winnedPoint.get(username);
             int lostPoints = lostPoint.get(username);
-            int pathNum = claimedRoutesNum.get(username);
+            int pathNum = paths.get(username);
             int totalPoints = p.getPoint() + winnedPoints - lostPoints;
             if (pathNum == maxRouteNum) {
                 totalPoints += 10;
@@ -842,16 +924,27 @@ public class Database {
         }
         //TODO : get rid of game?
         gameList.remove(gameServer);
+        gameUpdates.remove(gameID);
+        gameGraph.remove(gameID);
         LobbyGame lobbyGame = findGameLobbyByID(gameID);
         lobbyGameList.remove(lobbyGame);
 
         return playerStats;
     }
     private void putDiscardToCardDeck(GameServer gameServer) {
+        System.out.println("DISCARD FILE");
+        System.out.println("BEFORE");
+        System.out.println(gameServer.getTrainCards().size());
+        System.out.println(gameServer.getDiscardDeck().size());
         ArrayList<Card> disCards = gameServer.getDiscardDeck();
-        Collections.shuffle(disCards);
-        gameServer.setTrainCards(disCards);
-        gameServer.getDiscardDeck().clear();
+        if (gameServer.getTrainCards().size() == 0 && disCards.size() != 0) {
+            Collections.shuffle(disCards);
+            gameServer.getTrainCards().addAll(disCards);
+            gameServer.getDiscardDeck().clear();
+        }
+        System.out.println("AFTER");
+        System.out.println(gameServer.getTrainCards().size());
+        System.out.println(gameServer.getDiscardDeck().size());
     }
 
     private String nextTurn(GameServer gameServer) {
@@ -859,4 +952,36 @@ public class Database {
         int index = gameServer.getCurrentPlayerIndex();
         return gameServer.getPlayers().get(index).getPlayerName();
     }
+
+    private MapGraph getGraphByGame(String gameID) {
+        return gameGraph.get(gameID);
+    }
+
+    public void saveCommand(String gameID, GenericCommand command) {
+        // 1: add command to list
+        List<GenericCommand> list = gameUpdates.get(gameID);
+        list.add(command);
+
+        // 2: if list.size == updateDelta, save entire game state
+        if (list.size() >= updateDelta) {
+            list = new ArrayList<>();
+            gameUpdates.put(gameID, list);
+            saveGameState(gameID);
+        }
+
+        // 3: save commandList
+        saveUpdates(gameID, list);
+    }
+
+    private void saveGameState(String gameID) {
+        Blob gameBlob = BLOBSerializer.getInstance().serialize(findGameByID(gameID));
+        DAOFacade.getInstance().updateGame(gameID, gameBlob);
+    }
+
+    private void saveUpdates(String gameID, List<GenericCommand> updates) {
+        Blob gameBlob = BLOBSerializer.getInstance().serialize(updates);
+        DAOFacade.getInstance().updateCmdList(gameID, gameBlob);
+    }
+
+    
 }

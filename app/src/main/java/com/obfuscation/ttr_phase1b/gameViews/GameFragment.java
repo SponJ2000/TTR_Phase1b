@@ -19,12 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.obfuscation.ttr_phase1b.R;
 import com.obfuscation.ttr_phase1b.activity.IPresenter;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +63,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     private boolean mIsSetup;
     private boolean mIsTurn;
+    private boolean mLastTurn;
     private List<Card> mCards;
     private List<Card> mFaceCards;
     private List<Ticket> mTickets;
@@ -69,9 +74,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private TextView mDeckSize;
     private TextView[] mCardViews;
 
+    private FloatingActionButton mHistoryButton;
     private FloatingActionButton mPlayersButton;
     private FloatingActionButton mTicketsButton;
     private FloatingActionButton mChatButton;
+
+    private TextView mTicketDeckSize;
 
     private LinearLayout mBoard;
     private TextView mTicketsView;
@@ -93,12 +101,16 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     private Map<GameColor, Integer> cardMap;
     private Map<GameColor, Integer> colorMap;
 
+    private Marker currentMarker;
+    private boolean first = true;
+
     public GameFragment() {
         mIsTurn = false;
         mCards = null;
         mFaceCardViews = null;
         mTickets = null;
         mIsSetup = false;
+        mLastTurn = false;
     }
 
     public static GameFragment newInstance() {
@@ -116,6 +128,15 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         initColorMap();
 
         selected = null;
+
+        mHistoryButton = rootView.findViewById(R.id.history_button);
+        mHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "View history");
+                mPresenter.showHistory();
+            }
+        });
 
         mPlayersButton = rootView.findViewById(R.id.players_button);
         mPlayersButton.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +170,13 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         mBoard = rootView.findViewById(R.id.bottom_board);
         mTicketsView = rootView.findViewById(R.id.txt_tickets);
+        mTicketsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "view tickets");
+                mPresenter.showTickets();
+            }
+        });
         mPointsView = rootView.findViewById(R.id.txt_points);
         mTrainsView = rootView.findViewById(R.id.txt_trains);
         mTurnText = rootView.findViewById(R.id.turn_text);
@@ -160,9 +188,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mMapView = rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
-        mMapView.getMapAsync(this);
-
-        mMapView.onResume();
+//        mMapView.getMapAsync(this);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -171,6 +197,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         }
 
         mMapView.getMapAsync(this);
+
+        mMapView.onResume();
 
         mIsSetup = true;
 
@@ -186,6 +214,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         if(!mIsSetup){
             return;
         }
+
         if(mPlayer != null) {
             Log.d(TAG, "updateUI: player: " + mPlayer);
             setColor();
@@ -199,11 +228,17 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         }if(mTickets != null) {
             updateTickets();
         }if(mMap != null) {
-            mMapView.getMapAsync(this);
+//            mMapView.getMapAsync(this);
         }if(mIsTurn) {
             mTurnText.setText("Your Turn");
+            if(mLastTurn) {
+                mTurnText.setText("Your Last Turn!");
+            }
         }else {
             mTurnText.setText("");
+            if(mLastTurn) {
+                mTurnText.setText("Last Round!");
+            }
         }
     }
 
@@ -306,29 +341,34 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                 break;
         }
 
-        mChatButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
+        mHistoryButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
         mPlayersButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
         mTicketsButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
+        mChatButton.setBackgroundTintList(ColorStateList.valueOf(colorID));
 
         mBoard.setBackgroundResource(board);
     }
 
     @Override
     public void updateRoute(Route r) {
+        if(mRouteLines == null) {
+            return;
+        }
+       // googleMap.clear();
         String name = r.getClaimedBy().getPlayerName();
         int color = colorMap.get(r.getClaimedBy().getPlayerColor());
-        boolean claimed = (r.getClaimedBy() != null);
-
+//        boolean claimed = (r.getClaimedBy() != null);
+        boolean claimed = true;
         Polyline poly = mRouteLines.get(r);
 
         poly.remove();
 
+        LatLng start = new LatLng(r.getStartPos()[0], r.getStartPos()[1]);
         LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+        LatLng end = new LatLng(r.getEndPos()[0], r.getEndPos()[1]);
 
         PolylineOptions p = new PolylineOptions()
-                .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
-                        mid,
-                        new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
+                .add(start, mid, end)
                 .color(color)
                 .clickable(true);
 
@@ -337,8 +377,10 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
         Marker m = mRoutes2.get(r);
         m.remove();
-        mRoutes2.remove(m);
-
+        mRoutes2.remove(r);
+//        for (Route route : mRoutes2.keySet()) {
+//            mRoutes2.get(route).remove();
+//        }
         if(claimed) {
             mRoutes2.put(r,
                     googleMap.addMarker(new MarkerOptions()
@@ -346,7 +388,8 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
                             .title(r.getClaimedBy().getPlayerName())
                             .snippet(new StringBuilder(r.getLength() + " points").toString())
                     ));
-        } else {
+        }
+        else {
             mRoutes2.put(r,
                     googleMap.addMarker(new MarkerOptions()
                             .position(mid)
@@ -417,6 +460,7 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mDeck.setBackgroundResource(R.drawable.card_deck2);
 
         mDeckSize = rootView.findViewById(R.id.txt_deck);
+        mTicketDeckSize = rootView.findViewById(R.id.txt_tickets_deck);
 
         mCardViews = new TextView[9];
         mCardViews[0] = rootView.findViewById(R.id.txt_cards_orange);
@@ -472,55 +516,58 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //googleMap = mMap;
+        if (true) {
+            first = false;
+            this.googleMap = googleMap;
 
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            boolean success = googleMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            getActivity(), R.raw.map_style));
+            try {
+                // Customise the styling of the base map using a JSON object defined
+                // in a raw resource file.
+                boolean success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                getActivity(), R.raw.map_style));
 
-            if (!success) {
-                Log.e(TAG, "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, "Can't find style. Error: ", e);
-        }
-
-
-        // Drop markers on all the cities
-
-        mRouteLines = new HashMap<>();
-        mRoutes = new HashMap<>();
-        mRoutes2 = new HashMap<>();
-
-        initCities(googleMap);
-
-        initRoutes(googleMap);
-
-        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                if (mRoutes.containsKey(marker.getPosition())) {
-                    if (marker.getPosition().equals(selected)) {
-                        selectRoute(mRoutes.get(marker.getPosition()));
-
-                    }
+                if (!success) {
+                    Log.e(TAG, "Style parsing failed.");
                 }
-
-                selected = marker.getPosition();
-
-                return false;
+            } catch (Resources.NotFoundException e) {
+                Log.e(TAG, "Can't find style. Error: ", e);
             }
-        });
 
 
-        // For zooming automatically to the location of the marker
-        LatLng ny = new LatLng(40, -73);
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(5).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            // Drop markers on all the cities
+
+            mRouteLines = new HashMap<>();
+            mRoutes = new HashMap<>();
+            mRoutes2 = new HashMap<>();
+
+            initCities(googleMap);
+
+            initRoutes(googleMap);
+
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+
+                    if (mRoutes.containsKey(marker.getPosition())) {
+                        if (marker.getPosition().equals(selected)) {
+                            selectRoute(mRoutes.get(marker.getPosition()));
+                            currentMarker = marker;
+                        }
+                    }
+
+                    selected = marker.getPosition();
+
+                    return false;
+                }
+            });
+
+
+            // For zooming automatically to the location of the marker
+            LatLng ny = new LatLng(40, -73);
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(ny).zoom(5).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     private void initCities(GoogleMap googleMap) {
@@ -549,53 +596,76 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     private void initRoutes(GoogleMap googleMap) {
+            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            List<Route> routes = mMap.getRoutes();
+            Route r = null;
 
-        List<Route> routes = mMap.getRoutes();
-        Route r = null;
+            boolean claimed;
 
-        boolean claimed = false;
+            for (int i = 0; i < routes.size(); i++) {
+                r = routes.get(i);
 
-        for (int i = 0; i < routes.size(); i++) {
-            r = routes.get(i);
+                int color;
+                claimed = (r.getClaimedBy() != null);
+                LatLng start;
+                LatLng mid;
+                LatLng end;
 
-            int color;
-            claimed = false;
+                if (claimed) {
+                    Log.d(TAG, "initRoutes: claimer: " + r.getClaimedBy() + ", color: " + r.getClaimedBy().getPlayerColor());
+                    try {
+                        color = colorMap.get(r.getClaimedBy().getPlayerColor());
+                    } catch (NullPointerException e) {
+                        color = colorMap.get(GREY);
+                    }
 
-            try {
-                color = colorMap.get(r.getColor());
-            } catch(NullPointerException e) {
-                color = colorMap.get(GREY);
+                    start = new LatLng(r.getStartPos()[0], r.getStartPos()[1]);
+                    mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+                    end = new LatLng(r.getEndPos()[0], r.getEndPos()[1]);
+
+
+                    PolylineOptions p = new PolylineOptions()
+                            .add(start, mid, end)
+                            .color(color)
+                            .clickable(true);
+
+                    mRouteLines.put(r, googleMap.addPolyline(p));
+                    mRoutes2.put(r,
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(mid)
+                                    .title(r.getClaimedBy().getPlayerName())
+                                    .snippet(new StringBuilder(r.getLength() + " points").toString())
+                            ));
+                } else {
+                    try {
+                        color = colorMap.get(r.getColor());
+                    } catch (NullPointerException e) {
+                        color = colorMap.get(GREY);
+                    }
+
+                    start = new LatLng(r.getStartPos()[0], r.getStartPos()[1]);
+                    mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
+                    end = new LatLng(r.getEndPos()[0], r.getEndPos()[1]);
+
+                    List<PatternItem> pattern = Arrays.asList(
+                            new Dash(30), new Gap(20));
+
+                    PolylineOptions p = new PolylineOptions()
+                            .add(start, mid, end)
+                            .color(color)
+                            .clickable(true).pattern(pattern);
+
+                    mRouteLines.put(r, googleMap.addPolyline(p));
+                    mRoutes2.put(r,
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(mid)
+                                    .title(r.getLength().toString())
+                                    .snippet("unclaimed")
+                            ));
+                }
+
+                mRoutes.put(mid, r);
             }
-
-            LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
-
-            PolylineOptions p = new PolylineOptions()
-                    .add(new LatLng(r.getCity1().getLat(), r.getCity1().getLng()),
-                            mid,
-                            new LatLng(r.getCity2().getLat(), r.getCity2().getLng()))
-                    .color(color)
-                    .clickable(true);
-
-            mRouteLines.put(r, googleMap.addPolyline(p));
-
-            if(claimed) {
-                mRoutes2.put(r,
-                        googleMap.addMarker(new MarkerOptions()
-                                .position(mid)
-                                .title(r.getClaimedBy().getPlayerName())
-                                .snippet(new StringBuilder(r.getLength() + " points").toString())
-                        ));
-            } else {
-                mRoutes2.put(r,
-                        googleMap.addMarker(new MarkerOptions()
-                                .position(mid)
-                                .title(r.getLength().toString())
-                                .snippet("unclaimed")
-                        ));
-            }
-
-            mRoutes.put(mid, r);
-        }
     }
 
     @Override
@@ -658,13 +728,27 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
     }
 
     @Override
+    public void setTicketDeckSize(int size) {
+        if(!mIsSetup){
+            return;
+        }
+        mTicketDeckSize.setText("" + size);
+    }
+
+    @Override
     public void setTurn(boolean turn) {
         mIsTurn = turn;
     }
 
     @Override
+    public void setLastTurn(boolean lastTurn) {
+        mLastTurn = lastTurn;
+    }
+
+    @Override
     public void sendToast(String toast) {
-        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
+        Log.d(TAG, "sendToast: " + toast);
+        Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
     }
 
     @Override

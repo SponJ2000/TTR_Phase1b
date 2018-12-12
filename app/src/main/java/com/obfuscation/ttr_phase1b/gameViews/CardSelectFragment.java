@@ -4,6 +4,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,7 +181,8 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
     @Override
     public void sendToast(String toast) {
-        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT);
+        Log.d(TAG, "sendToast: " + toast);
+        Toast.makeText(getContext(), toast, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -209,9 +211,9 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
             return;
         }
 
-        String toast = "selected cards " + i;
+//        String toast = "selected cards " + i;
 
-        sendToast(toast);
+//        sendToast(toast);
 
         // toUse holds 2 ints
         // index 0 holds the number of color cards
@@ -243,6 +245,7 @@ public class CardSelectFragment extends Fragment implements ICardSelectView, Car
 
             if (remain > 0) {
                 sendToast("Not enough cards: need " + remain + " more");
+                return;
             }
             else {
 

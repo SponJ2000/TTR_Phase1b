@@ -14,22 +14,30 @@ import com.obfuscation.ttr_phase1b.activity.IPresenter;
 import com.obfuscation.ttr_phase1b.activity.PresenterFacade;
 import com.obfuscation.ttr_phase1b.gameViews.dummy.CardDialog;
 
-import communication.IPlayer;
 import gamePresenters.CardSelectPresenter;
 import gamePresenters.ChatPresenter;
 import gamePresenters.GamePresenter;
+import gamePresenters.HistoryPresenter;
 import gamePresenters.ICardSelectPresenter;
 import gamePresenters.IChatPresenter;
 import gamePresenters.IGamePresenter;
+import gamePresenters.IHistoryPresenter;
 import gamePresenters.IMenuPresenter;
+import gamePresenters.IPInfoPresenter;
+import gamePresenters.IPTicketsPresenter;
+import gamePresenters.IScorePresenter;
 import gamePresenters.ITicketPresenter;
+import gamePresenters.PInfoPresenter;
+import gamePresenters.PTicketsPresenter;
+import gamePresenters.ScorePresenter;
 import gamePresenters.Shows;
 import gamePresenters.TicketPresenter;
 
 public class GameActivity extends AppCompatActivity implements IGamePresenter.OnShowListener,
         IChatPresenter.OnBackListener, ITicketPresenter.OnBackListener,
         ICardSelectPresenter.OnBackListener, CardDialog.CardDialogListener,
-        IMenuPresenter.MenuListener {
+        IMenuPresenter.MenuListener, IScorePresenter.OnReturnListener,
+        IPTicketsPresenter.OnCloseListener, IHistoryPresenter.OnBackListener {
 
     private static final String TAG = "GameActivity";
 
@@ -71,8 +79,12 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 break;
             case playerInfo:
                 fragment = PlayerInfoDialogFragment.newInstance();
-                ((IGamePresenter) PresenterFacade.getInstance().getPresenter()).showPlayerInfo((IPlayerInfoView) fragment);
-                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                IPresenter prevPres = PresenterFacade.getInstance().getPresenter();
+                if (prevPres instanceof IGamePresenter) {
+                    PresenterFacade.getInstance().setPresenter( new PInfoPresenter((IPlayerInfoView) fragment, this, (IGamePresenter) prevPres));
+                    ((IPInfoPresenter) PresenterFacade.getInstance().getPresenter()).showPlayerInfo((IPlayerInfoView) fragment);
+                    fm.beginTransaction().add(R.id.container, fragment).commit();
+                }
                 break;
             case map:
                 fragment = GameFragment.newInstance();
@@ -83,6 +95,24 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
                 fragment = CardSelectFragment.newInstance();
                 fragment.setArguments(args);
                 PresenterFacade.getInstance().setPresenter( new CardSelectPresenter((ICardSelectView) fragment, this, args) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
+            case score:
+                fragment = ScoreFragment.newInstance();
+                PresenterFacade.getInstance().setPresenter( new ScorePresenter((IScoreView) fragment, this) );
+                fm.beginTransaction().replace(R.id.container, fragment).commit();
+                break;
+            case owned_tickets:
+                fragment = PTicketsFragment.newInstance();
+                IPresenter oldPres = PresenterFacade.getInstance().getPresenter();
+                if (oldPres instanceof IGamePresenter) {
+                    PresenterFacade.getInstance().setPresenter( new PTicketsPresenter((IPTicketsView) fragment, this, (IGamePresenter) oldPres) );
+                    fm.beginTransaction().add(R.id.container, fragment).commit();
+                }
+                break;
+            case history:
+                fragment = HistoryFragment.newInstance();
+                PresenterFacade.getInstance().setPresenter( new HistoryPresenter((IHistoryView) fragment, this) );
                 fm.beginTransaction().replace(R.id.container, fragment).commit();
                 break;
         }
@@ -97,6 +127,28 @@ public class GameActivity extends AppCompatActivity implements IGamePresenter.On
         PresenterFacade.getInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
         fm.beginTransaction().replace(R.id.container, fragment).commit();
         Log.d(TAG, "Loaded the game fragment back in");
+    }
+
+    @Override
+    public void onClose(Fragment fragment, IGamePresenter presenter) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        if(presenter != null) {
+            PresenterFacade.getInstance().setPresenter(presenter);
+        }
+
+        fm.beginTransaction().remove(fragment).commit();
+        Log.d(TAG, "Removed fragment");
+    }
+
+    @Override
+    public void onReturn() {
+//        FragmentManager fm = getSupportFragmentManager();
+//
+//        Fragment fragment = GameFragment.newInstance();
+//        PresenterFacade.newInstance().setPresenter( new GamePresenter((IGameView) fragment, this) );
+//        fm.beginTransaction().replace(R.id.container, fragment).commit();
+        Log.d(TAG, "Going back to gamelistview");
     }
 
     @Override

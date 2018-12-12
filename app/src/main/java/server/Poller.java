@@ -30,7 +30,7 @@ public class Poller {
         @Override
         public void run() {
             if (running) {
-//                System.out.println("***********************************************" + ModelRoot.getInstance().getDisplayState());
+//                System.out.println("***********************************************" + ModelRoot.newInstance().getDisplayState());
                 switch (ModelRoot.getInstance().getDisplayState()) {
                     case GAMELOBBYLIST:
                         CheckandUpdateGameList();
@@ -97,7 +97,7 @@ public class Poller {
         ServerProxy serverProxy = new ServerProxy();
 //        System.out.println("check and update gamem is called");
 //        System.out.print("current gamestate is: ");
-//        System.out.print(ModelRoot.getInstance().getGame().getState());
+//        System.out.print(ModelRoot.newInstance().getGame().getState());
 //        System.out.print('\n');
 
         Result result = serverProxy.CheckGame(ModelRoot.getInstance().getAuthToken(),ModelRoot.getInstance().getGame().getGameID(), ModelRoot.getInstance().getGame().getState());
@@ -117,7 +117,7 @@ public class Poller {
             for (int i = 0 ; i < commands.size(); i++) {
 //                System.out.println("get into this loop");
                 try {
-                    System.out.println(commands.get(i).toString());
+//                    System.out.println(commands.get(i).toString());
                     GenericCommand c = (GenericCommand) serializer.deserializeCommand(commands.get(i).toString());
 //                    System.out.println("Command Detail");
 //                    System.out.println("command class: " + c.className);
@@ -130,7 +130,7 @@ public class Poller {
                     commandTask.execute();
                     ModelRoot.getInstance().getGame().stateIncreament();
 //                    System.out.print("New game state after : ");
-//                    System.out.print(ModelRoot.getInstance().getGame().getState());
+//                    System.out.print(ModelRoot.newInstance().getGame().getState());
 //                    System.out.print("\n");
 //                    System.out.println("number of train card: ");
 

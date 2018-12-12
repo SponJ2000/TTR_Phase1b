@@ -181,6 +181,9 @@ public class TicketFragment extends Fragment implements ITicketView {
             mTicket = index;
             mDescription.setText(ticket.getCity1() + " to " + ticket.getCity2());
             mPoints.setText("" + ticket.getValue());
+            if (mChosenTickets[mTicket]) {
+                mCheckbox.setChecked(true);
+            }
             mCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

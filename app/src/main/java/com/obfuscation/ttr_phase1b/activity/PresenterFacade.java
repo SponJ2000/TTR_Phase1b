@@ -46,6 +46,7 @@ public class PresenterFacade {
         if(data != null && data.getClass().equals(Result.class)) {
             Result r = (Result) data;
             if(!r.isSuccess()) {
+                Log.d(TAG, "show error: " + r.getErrorInfo());
                 mPresenter.showToast(r.getErrorInfo());
             }
         }

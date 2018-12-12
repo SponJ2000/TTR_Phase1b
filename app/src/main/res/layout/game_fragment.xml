@@ -117,27 +117,36 @@
             tools:layout_editor_absoluteY="135dp">
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/tickets_button"
+                android:id="@+id/history_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:src="@drawable/ic_ticket_w"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="266dp" />
+                android:src="@drawable/ic_clock_w"/>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/players_button"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:src="@android:drawable/ic_menu_myplaces"
-                app:backgroundTint="@color/playerBlack"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="327dp" />
+                android:layout_height="match_parent">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/tickets_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/ic_ticket_w2" />
+
+                <TextView
+                    android:id="@+id/txt_tickets_deck"
+                    style="@style/ButtonOverlayText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="16dp"
+                    android:layout_weight="1"
+                    android:text="30" />
+            </FrameLayout>
 
             <Space
                 android:layout_width="match_parent"
@@ -149,14 +158,33 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@android:drawable/stat_notify_chat"
-                app:backgroundTint="@color/playerBlack"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="387dp" />
+                app:backgroundTint="@color/playerBlack"/>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="16dp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/bottom_board"
+            android:layout_alignParentEnd="true"
+            android:layout_marginHorizontal="12dp"
+            android:orientation="vertical">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/players_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:backgroundTint="@color/playerBlack" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
         </LinearLayout>
 
         <LinearLayout

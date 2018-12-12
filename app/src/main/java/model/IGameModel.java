@@ -1,12 +1,16 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import communication.Card;
 import communication.GameColor;
+import communication.GameHistory;
 import communication.GameMap;
 import communication.Message;
 import communication.Player;
+import communication.PlayerOpponent;
+import communication.PlayerStats;
 import communication.Route;
 import communication.Ticket;
 
@@ -71,6 +75,8 @@ public interface IGameModel {
 
     int getDeckSize();
 
+    int getTicketDeckSize();
+
     void updateMessages();
 
     List<Message> getMessages();
@@ -78,6 +84,8 @@ public interface IGameModel {
     void sendMessage(Message message);
 
     List<Player> getPlayers();
+
+    List<PlayerOpponent> getOpponents();
 
     void addPoints(int p);
 
@@ -90,5 +98,13 @@ public interface IGameModel {
     void updateOpponent();
 
     void endTurn();
+
+    ArrayList<PlayerStats> getPlayerStats();
+
+    boolean isLastTurn();
+
+    boolean isGameEnded();
+
+    List<GameHistory> getGameHistory();
 
 }

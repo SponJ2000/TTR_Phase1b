@@ -4,6 +4,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('src/main/java/gson-2.8.5.jar')
     testImplementation 'junit:junit:4.12'
+    implementation files('sqlite-jdbc-3.23.1.jar')
 }
 
 sourceCompatibility = "1.8"

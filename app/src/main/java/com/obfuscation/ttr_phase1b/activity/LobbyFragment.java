@@ -93,10 +93,12 @@ public class LobbyFragment extends Fragment implements IPresenter {
         mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "Now starting");
-                ismLeaving = false;
-                ismStarting = true;
-                ModelFacade.getInstance().startGame(mGame.getGameID());
+                if (mGame.getPlayerCount() == mGame.getMaxPlayers()) {
+                    Log.d(TAG, "Now starting");
+                    ismLeaving = false;
+                    ismStarting = true;
+                    ModelFacade.getInstance().startGame(mGame.getGameID());
+                }
             }
         });
 
@@ -125,6 +127,10 @@ public class LobbyFragment extends Fragment implements IPresenter {
     }
 
     private void updateUI() {
+        // CHANGED THIS PART
+        if (mHost != null) {
+            mHostnameView.setText(mHost);
+        }
         if(mLobbyRecycler != null) {
             mLobbyAdapter = new LobbyAdapter(mGame.getPlayers());
             mLobbyRecycler.setAdapter(mLobbyAdapter);
@@ -145,7 +151,7 @@ public class LobbyFragment extends Fragment implements IPresenter {
 
     @Override
     public void updateInfo(Object result) {
-        Log.d(TAG, "getting updated");
+        Log.d(TAG, "getting updated " + mHost);
         if(ismLeaving) {
             ismLeaving = false;
             onGameLeave();

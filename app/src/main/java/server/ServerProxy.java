@@ -146,6 +146,8 @@ public class ServerProxy implements communication.IServer {
     @Override
     public Result SendMessage(String authToken, String gameID, Message message) {
         GenericCommand genericCommand = new GenericCommand(SERVER_FACADE, "SendMessage", new String[]{STRING,STRING,Message.class.getName()}, new Object[]{authToken, gameID, message});
+        System.out.println("send message");
+        System.out.println(message.getText());
         return RunCommand(genericCommand);
     }
 

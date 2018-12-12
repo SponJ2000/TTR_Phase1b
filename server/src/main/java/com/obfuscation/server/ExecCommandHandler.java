@@ -30,7 +30,7 @@ public class ExecCommandHandler implements HttpHandler {
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
 
-            System.out.println("command come in");
+//            System.out.println("command come in");
             InputStream reqBody = httpExchange.getRequestBody();
             String requestString = readString(reqBody);
 
