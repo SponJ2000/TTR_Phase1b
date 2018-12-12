@@ -8,6 +8,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PlugInManager {
+    private static IDaoFactory factory;
+
+    public static IDaoFactory getFactory() {
+        return factory;
+    }
     // call this to dynamically load jar files
     public static void main(String[] args) throws Exception {
         if(args.length != 3) {
@@ -24,6 +29,8 @@ public class PlugInManager {
 
     private void start(String pluginDirectory, String pluginJarName, String pluginClassName) throws Exception {
         IDaoFactory daoFactory = getDaoFactoryinInstance(pluginDirectory, pluginJarName, pluginClassName);
+        factory = daoFactory;
+        DAOFacade.getInstance().setDaoFactory(daoFactory);
 //        System.out.println(messagePlugin.getMessage());
     }
 
