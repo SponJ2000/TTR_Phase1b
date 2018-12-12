@@ -19,6 +19,8 @@ public class LobbyDaoTest {
         ILobbyDao dao = new TSVDaoFactory().getLobbyDao();
 
         LobbyGame game = createGame();
+        LobbyGame comp = createGame();
+        assert(comp.equals(game));
         dao.addLobby(game.getGameID(), game);
         List<LobbyGame> games = dao.getLobbies();
         System.out.println("" + games.size());

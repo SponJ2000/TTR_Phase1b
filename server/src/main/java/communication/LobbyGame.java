@@ -111,9 +111,7 @@ public class LobbyGame {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         LobbyGame lobbyGame = (LobbyGame) o;
-
         if (maxPlayers != lobbyGame.maxPlayers) return false;
         if (playerListVerisonNum != lobbyGame.playerListVerisonNum) return false;
         if (started != lobbyGame.started) return false;

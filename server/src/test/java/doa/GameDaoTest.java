@@ -27,6 +27,8 @@ public class GameDaoTest {
         IGameDao dao = new TSVDaoFactory().getGameDao();
 
         GameServer game = createGame();
+        GameServer comp = createGame();
+        assert(comp.equals(game));
         dao.addGame(game.getGameID(), game);
         List<GameServer> games = dao.getGames();
         assert(games.size() == 1);

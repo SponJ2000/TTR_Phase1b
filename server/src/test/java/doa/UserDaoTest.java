@@ -20,8 +20,6 @@ public class UserDaoTest {
         dao.addUser(user.getId(), user.getPassword(), user.getAuthtoken());
         List<User> users = dao.getUsers();
         assert(users.size() == 1);
-        System.out.println(user);
-        System.out.println(users.get(0));
         assert(users.get(0).equals(user));
 
         System.out.println("No problems");
