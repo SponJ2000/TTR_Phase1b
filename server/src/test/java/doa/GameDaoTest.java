@@ -53,7 +53,6 @@ public class GameDaoTest {
         //Assign PlayerColors
         List<GameColor> colors = Arrays.asList(GameColor.PLAYER_BLACK, GameColor.PLAYER_BLUE,
                 GameColor.PLAYER_PURPLE, GameColor.PLAYER_RED, GameColor.PLAYER_YELLOW);
-        Collections.shuffle(colors);
         for (int i = 0; i < game.getPlayers().size(); i++) {
             game.getPlayers().get(i).setPlayerColor(colors.get(i));
         }
@@ -82,38 +81,18 @@ public class GameDaoTest {
             trainCards.add(blackCard);
             trainCards.add(yellowCard);
         }
-        Collections.shuffle(trainCards);
         game.setTrainCards(trainCards);
 
-        // set faceuptrain cards - if 3 are locomotives, then shuffle again
-        ArrayList<Card> faceUpTrainCards = null;
-        while (true) {
-            faceUpTrainCards = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                Card card = trainCards.get(0);
-                faceUpTrainCards.add(card);
-                trainCards.remove(0);
-            }
-
-            int counter = 0;
-            for (int i = 0; i < 5; i++) {
-                if (faceUpTrainCards.get(i).getColor() == GameColor.LOCOMOTIVE) {
-                    counter++;
-                }
-            }
-            if (counter >= 3) {
-                //if locomotive is more than 3, discard them and shuffle again
-                game.getDiscardDeck().addAll(faceUpTrainCards);
-                faceUpTrainCards.clear();
-            }
-            else {
-                break;
-            }
+        // set faceuptrain cards
+        ArrayList<Card> faceUpTrainCards = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Card card = trainCards.get(0);
+            faceUpTrainCards.add(card);
+            trainCards.remove(0);
         }
         game.setFaceUpTrainCarCards(faceUpTrainCards);
 
         ArrayList<Ticket> tickets = GameFactory.getAllTickets();
-        Collections.shuffle(tickets);
         game.setTickets(tickets);
 
         //set player train cards

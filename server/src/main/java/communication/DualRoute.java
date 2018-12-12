@@ -1,5 +1,9 @@
 package communication;
 
+import com.google.gson.Gson;
+
+import java.util.Arrays;
+
 /**
  * Created by jalton on 11/14/18.
  *
@@ -68,5 +72,22 @@ public class DualRoute extends Route {
         return routeID;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        DualRoute dualRoute = (DualRoute) o;
+        return Arrays.equals(start, dualRoute.start) &&
+                Arrays.equals(end, dualRoute.end);
+    }
 
+    @Override
+    public int hashCode() {
+
+        int result = super.hashCode();
+        result = 31 * result + Arrays.hashCode(start);
+        result = 31 * result + Arrays.hashCode(end);
+        return result;
+    }
 }

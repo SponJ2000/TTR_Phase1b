@@ -126,30 +126,20 @@ public class GameServer extends Game {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        System.out.println(1);
         if (o == null || getClass() != o.getClass()) return false;
-        System.out.println(2);
         if (!super.equals(o)) return false;
-        System.out.println(3);
         GameServer that = (GameServer) o;
         if (currentPlayerIndex != that.currentPlayerIndex) return false;
-        System.out.println(4);
         if (trainCards != null ? !trainCards.equals(that.trainCards) : that.trainCards != null)
             return false;
-        System.out.println(5);
         if (discardDeck != null ? !discardDeck.equals(that.discardDeck) : that.discardDeck != null)
             return false;
-        System.out.println(6);
         if (tickets != null ? !tickets.equals(that.tickets) : that.tickets != null) return false;
-        System.out.println(7);
         if (currentPlayer != null ? !currentPlayer.equals(that.currentPlayer) : that.currentPlayer != null)
             return false;
-        System.out.println(8);
         if (lastRoundTriggeredBy != null ? !lastRoundTriggeredBy.equals(that.lastRoundTriggeredBy) : that.lastRoundTriggeredBy != null)
             return false;
-        System.out.println(9);
         if (players != null ? !players.equals(that.players) : that.players != null) return false;
-        System.out.println(10);
         return mAbsentPlayers != null ? mAbsentPlayers.equals(that.mAbsentPlayers) : that.mAbsentPlayers == null;
     }
 

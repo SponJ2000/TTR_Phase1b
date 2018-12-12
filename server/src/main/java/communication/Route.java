@@ -1,6 +1,10 @@
 package communication;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Created by jalton on 10/24/18.
@@ -131,4 +135,29 @@ public class Route implements Serializable{
         return isSibClaimed;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Route route = (Route) o;
+        if(!Objects.equals(city1, route.city1) || !Objects.equals(city2, route.city2) ||
+            !Objects.equals(length, route.length) || !(color == route.color) ||
+            !Objects.equals(claimedBy, route.claimedBy) ||
+            !Arrays.equals(midPoint, route.midPoint) || !Objects.equals(routeID, route.routeID))
+            return false;
+        System.out.println(isDual == route.isDual &&
+                isSibClaimed == route.isSibClaimed &&
+                Objects.equals(sibling, route.sibling));
+        return isDual == route.isDual &&
+                isSibClaimed == route.isSibClaimed &&
+                Objects.equals(sibling, route.sibling);
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(city1, city2, length, color, claimedBy, routeID, isDual, sibling, isSibClaimed);
+        result = 31 * result + Arrays.hashCode(midPoint);
+        return result;
+    }
 }

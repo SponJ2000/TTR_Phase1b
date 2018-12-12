@@ -1,5 +1,6 @@
 package communication;
 
+import com.google.gson.Gson;
 import com.obfuscation.server.GenericCommand;
 
 import java.util.ArrayList;
@@ -116,7 +117,6 @@ public class Game {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Game game = (Game) o;
 
         if (lastRound != game.lastRound) return false;

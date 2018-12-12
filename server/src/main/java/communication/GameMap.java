@@ -1,5 +1,7 @@
 package communication;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +50,9 @@ public class GameMap {
         if (o == null || getClass() != o.getClass()) return false;
 
         GameMap gameMap = (GameMap) o;
-
         if (cities != null ? !cities.equals(gameMap.cities) : gameMap.cities != null) return false;
-        return routes != null ? routes.equals(gameMap.routes) : gameMap.routes == null;
+        return true;
+//        return routes != null ? routes.equals(gameMap.routes) : gameMap.routes == null;
     }
 
     @Override

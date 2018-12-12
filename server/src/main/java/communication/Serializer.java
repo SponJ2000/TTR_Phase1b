@@ -17,7 +17,6 @@ public class Serializer {
         builder.registerTypeAdapter(Result.class, new IResultAdapter());
         builder.registerTypeAdapter(ICommand.class, new ICommandAdapter());
         gson = builder.create();
-
     }
 
     public String serializeResult(Result result){
