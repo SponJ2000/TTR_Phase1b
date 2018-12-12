@@ -43,7 +43,6 @@ import static communication.GameColor.GREY;
  */
 
 public class Database {
-
     private Map<String, String> loginInfo;
     //TODO : make gameid and gamelobbyid same
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
@@ -57,6 +56,15 @@ public class Database {
      */
     private Map<String, List<GenericCommand>> gameUpdates = new HashMap<>();
     private int updateDelta;
+
+    public int getUpdateDelta() {
+        return updateDelta;
+    }
+
+    public void setUpdateDelta(int updateDelta) {
+        this.updateDelta = updateDelta;
+    }
+
     private HashMap<Integer, Integer> routeScores = new HashMap<>();
     private HashMap<String, MapGraph> gameGraph = new HashMap<>();
 
@@ -220,7 +228,6 @@ public class Database {
         lobbyGame.setPlayers(playerList);
 
         lobbyGameList.add(lobbyGame);
-//        Blob blob = BLOBSerializer.getInstance().serialize(lobbyGame);
         DAOFacade.getInstance().addLobby(lobbyGame.getGameID(), lobbyGame);
         return new Result(true, lobbyGameList, null);
     }
@@ -242,7 +249,6 @@ public class Database {
         else if (game.getPlayers().size() < game.getMaxPlayers()) {
             if (!game.getPlayers().contains(player)) {
                 game.getPlayers().add(player);
-//                Blob blob = BLOBSerializer.getInstance().serialize(game);
                 DAOFacade.getInstance().addLobby(gameID, game);
                 return new Result(true, true, null);
             }
@@ -407,14 +413,13 @@ public class Database {
         }
 
         gameList.add(game);
-        List<GenericCommand> updateList = new ArrayList<>();
+        ArrayList<GenericCommand> updateList = new ArrayList<>();
         gameUpdates.put(gameID, updateList);
 
         // database stuff
-//        Blob blob = BLOBSerializer.getInstance().serialize(game);
         DAOFacade.getInstance().removeLobby(lobbyGame.getGameID());
         DAOFacade.getInstance().addGame(gameID, game);
-        saveUpdates(gameID, (ArrayList<GenericCommand>) updateList);
+        saveUpdates(gameID, updateList);
 
         gameGraph.put(gameID, new MapGraph());
         return new Result(true, game, null);
@@ -445,7 +450,6 @@ public class Database {
             //game.get.add(player);
         }
         else game.getPlayers().remove(player);
-//        Blob blob = BLOBSerializer.getInstance().serialize(game);
         DAOFacade.getInstance().addLobby(gameID, game);
         return new Result(true, true, null);
 
@@ -465,7 +469,6 @@ public class Database {
 //            mAbsentPlayers.remove(player);
 //        }
 
-//        Blob blob = BLOBSerializer.getInstance().serialize(game);
         DAOFacade.getInstance().addLobby(gameID, game);
         return new Result(true, true, null);
     }
@@ -959,7 +962,7 @@ public class Database {
 
     public void saveCommand(String gameID, GenericCommand command) {
         // 1: add command to list
-        ArrayList<GenericCommand> list = (ArrayList) gameUpdates.get(gameID);
+        ArrayList<GenericCommand> list = (ArrayList<GenericCommand>) gameUpdates.get(gameID);
         list.add(command);
 
         // 2: if list.size == updateDelta, save entire game state
@@ -974,12 +977,10 @@ public class Database {
     }
 
     private void saveGameState(String gameID) {
-//        Blob gameBlob = BLOBSerializer.getInstance().serialize(findGameByID(gameID));
         DAOFacade.getInstance().updateGame(gameID, findGameByID(gameID));
     }
 
     private void saveUpdates(String gameID, ArrayList<GenericCommand> updates) {
-//        Blob gameBlob = BLOBSerializer.getInstance().serialize(updates);
         DAOFacade.getInstance().updateCmdList(gameID, updates);
     }
 
