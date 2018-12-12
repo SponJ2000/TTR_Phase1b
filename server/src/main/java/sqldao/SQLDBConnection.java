@@ -19,7 +19,7 @@ import communication.Result;
 public class SQLDBConnection {
 
     String url;
-    Connection conn;
+    static Connection conn;
 
     public SQLDBConnection() {
         String fileDirectory = System.getProperty("user.dir") + "/server/src/main/java/dao/SQL/";

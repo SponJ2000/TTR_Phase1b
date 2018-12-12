@@ -15,11 +15,23 @@ import dao.User;
 public class SQLUserDAO implements IUserDao {
     SQLDBConnection connection = new SQLDBConnection();
 
+    public static void main (String[] argv) {
+        User user = new User("abab", "werweer", "dfadxccc");
+        SQLUserDAO sqlUserDAO = new SQLUserDAO();
+        sqlUserDAO.addUser(user.getId(),user.getPassword(),user.getAuthtoken());
+        List<User> users = sqlUserDAO.getUsers();
+        for(User u : users) {
+            if (u.equals(user)) {
+                System.out.println("user found");
+            }
+        }
+    }
+
     @Override
     public boolean addUser(String id, String password, String authtoken) {
         Result result = null;
         String statement = "INSERT INTO users (id, password, authtoken) " +
-                "VALUES (?, ?)";
+                "VALUES (?, ?, ?)";
         PreparedStatement ps = connection.getPreparedStatment(statement);
 
         try {
@@ -109,8 +121,8 @@ public class SQLUserDAO implements IUserDao {
                 System.out.println("RESULT SIZE " + rs.getFetchSize());
                 while(rs.next()) {
                     //rs.getInt()
-                    System.out.println(rs.getString("id"));
-                    System.out.println(rs.getString("lobby"));
+//                    System.out.println(rs.getString("id"));
+//                    System.out.println(rs.getString("password"));
                     Serializer serializer = new Serializer();
 
                     users.add(new User(rs.getString("id"), rs.getString("password"), rs.getString("authtoken")));

@@ -1,5 +1,7 @@
 package sqldao;
 
+import com.google.gson.Gson;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -112,7 +114,9 @@ public class SQLLobbyDAO implements ILobbyDao {
         try {
             ResultSet result1 = ps.executeQuery(statement);
             System.out.println("PRINTING");
-            System.out.println(result1.getInt("id"));
+//            System.out.println(result1.getInt("id")); //this cause a problem
+//            Gson gson = new Gson();
+//            System.out.println(gson.toJson(result1));
             System.out.println("FINISHED");
 //            while (result1.)
             result = new Result(true, result1,null);
