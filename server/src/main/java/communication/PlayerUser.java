@@ -98,6 +98,30 @@ public class PlayerUser extends Player implements IPlayer{
     }
 
     @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PlayerUser that = (PlayerUser) o;
+
+        if (tickets != null ? !tickets.equals(that.tickets) : that.tickets != null) return false;
+        if (cards != null ? !cards.equals(that.cards) : that.cards != null) return false;
+        if (ticketToChoose != null ? !ticketToChoose.equals(that.ticketToChoose) : that.ticketToChoose != null)
+            return false;
+        return cardToChoose != null ? cardToChoose.equals(that.cardToChoose) : that.cardToChoose == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = tickets != null ? tickets.hashCode() : 0;
+        result = 31 * result + (cards != null ? cards.hashCode() : 0);
+        result = 31 * result + (ticketToChoose != null ? ticketToChoose.hashCode() : 0);
+        result = 31 * result + (cardToChoose != null ? cardToChoose.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public int getCardNum() {
         return cards.size();
     }

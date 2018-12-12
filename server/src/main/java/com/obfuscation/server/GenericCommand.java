@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.UUID;
 
 import communication.ICommand;
@@ -84,5 +85,31 @@ public class GenericCommand implements ICommand {
 
     public String getMethodName() {
         return methodName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GenericCommand that = (GenericCommand) o;
+
+        if (className != null ? !className.equals(that.className) : that.className != null)
+            return false;
+        if (methodName != null ? !methodName.equals(that.methodName) : that.methodName != null)
+            return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(parameterType, that.parameterType)) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(parameterValue, that.parameterValue);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = className != null ? className.hashCode() : 0;
+        result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(parameterType);
+        result = 31 * result + Arrays.hashCode(parameterValue);
+        return result;
     }
 }

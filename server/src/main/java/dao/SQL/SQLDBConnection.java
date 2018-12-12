@@ -170,7 +170,6 @@ public class SQLDBConnection {
             }
             conn.commit();
             closeConnection();
-            System.out.println("sfafwearewrewrw");
             return new Result(true, false, null);
 
         } catch (SQLException e) {

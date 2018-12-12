@@ -45,4 +45,25 @@ public class GameHistory {
     public String toString() {
         return playerName + "_" + action;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GameHistory that = (GameHistory) o;
+
+        if (gameID != null ? !gameID.equals(that.gameID) : that.gameID != null) return false;
+        if (playerName != null ? !playerName.equals(that.playerName) : that.playerName != null)
+            return false;
+        return action != null ? action.equals(that.action) : that.action == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = gameID != null ? gameID.hashCode() : 0;
+        result = 31 * result + (playerName != null ? playerName.hashCode() : 0);
+        result = 31 * result + (action != null ? action.hashCode() : 0);
+        return result;
+    }
 }

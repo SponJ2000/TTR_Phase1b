@@ -111,4 +111,32 @@ public class Game {
         }
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Game game = (Game) o;
+
+        if (lastRound != game.lastRound) return false;
+        if (gameID != null ? !gameID.equals(game.gameID) : game.gameID != null) return false;
+        if (messages != null ? !messages.equals(game.messages) : game.messages != null)
+            return false;
+        if (faceUpTrainCarCards != null ? !faceUpTrainCarCards.equals(game.faceUpTrainCarCards) : game.faceUpTrainCarCards != null)
+            return false;
+        if (mMap != null ? !mMap.equals(game.mMap) : game.mMap != null) return false;
+        return gameHistories != null ? gameHistories.equals(game.gameHistories) : game.gameHistories == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = gameID != null ? gameID.hashCode() : 0;
+        result = 31 * result + (messages != null ? messages.hashCode() : 0);
+        result = 31 * result + (faceUpTrainCarCards != null ? faceUpTrainCarCards.hashCode() : 0);
+        result = 31 * result + (mMap != null ? mMap.hashCode() : 0);
+        result = 31 * result + (lastRound ? 1 : 0);
+        result = 31 * result + (gameHistories != null ? gameHistories.hashCode() : 0);
+        return result;
+    }
 }
