@@ -7,6 +7,9 @@ import dao.IUserDao;
 
 public class TSVDaoFactory implements IDaoFactory {
 
+    public TSVDaoFactory() {
+    }
+
     @Override
     public IUserDao getUserDao() {
         return new TSVUserDao();
