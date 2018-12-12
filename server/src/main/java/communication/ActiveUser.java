@@ -19,6 +19,27 @@ public class ActiveUser {
         joinedGames = new ArrayList<>();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActiveUser that = (ActiveUser) o;
+
+        if (player != null ? !player.equals(that.player) : that.player != null) return false;
+        if (authToken != null ? !authToken.equals(that.authToken) : that.authToken != null)
+            return false;
+        return joinedGames != null ? joinedGames.equals(that.joinedGames) : that.joinedGames == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = player != null ? player.hashCode() : 0;
+        result = 31 * result + (authToken != null ? authToken.hashCode() : 0);
+        result = 31 * result + (joinedGames != null ? joinedGames.hashCode() : 0);
+        return result;
+    }
+
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }

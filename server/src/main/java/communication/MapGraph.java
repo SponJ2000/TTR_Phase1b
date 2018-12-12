@@ -150,6 +150,28 @@ public class MapGraph{
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MapGraph mapGraph = (MapGraph) o;
+
+        if (graph != null ? !graph.equals(mapGraph.graph) : mapGraph.graph != null) return false;
+        if (maxLength != null ? !maxLength.equals(mapGraph.maxLength) : mapGraph.maxLength != null)
+            return false;
+        return hasPath != null ? hasPath.equals(mapGraph.hasPath) : mapGraph.hasPath == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = graph != null ? graph.hashCode() : 0;
+        result = 31 * result + (maxLength != null ? maxLength.hashCode() : 0);
+        result = 31 * result + (hasPath != null ? hasPath.hashCode() : 0);
+        return result;
+    }
+
     void dfs(String city, ArrayList<Boolean> visited, ArrayList<Route> routes, int depth) {
         this.maxLength = Math.max(depth, this.maxLength);
 //        System.out.println("DEPTH " + depth + " MAX : " + maxLength);
@@ -171,5 +193,7 @@ public class MapGraph{
                 }
             }
         }
+
+
     }
 }

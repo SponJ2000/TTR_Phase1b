@@ -118,4 +118,30 @@ public class Player implements IPlayer, Serializable{
                 '}';
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Player player = (Player) o;
+
+        if (playerName != null ? !playerName.equals(player.playerName) : player.playerName != null)
+            return false;
+        if (point != null ? !point.equals(player.point) : player.point != null) return false;
+        if (claimedRoutesID != null ? !claimedRoutesID.equals(player.claimedRoutesID) : player.claimedRoutesID != null)
+            return false;
+        if (playerColor != player.playerColor) return false;
+        return trainNum != null ? trainNum.equals(player.trainNum) : player.trainNum == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = playerName != null ? playerName.hashCode() : 0;
+        result = 31 * result + (point != null ? point.hashCode() : 0);
+        result = 31 * result + (claimedRoutesID != null ? claimedRoutesID.hashCode() : 0);
+        result = 31 * result + (playerColor != null ? playerColor.hashCode() : 0);
+        result = 31 * result + (trainNum != null ? trainNum.hashCode() : 0);
+        return result;
+    }
 }
