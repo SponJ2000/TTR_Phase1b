@@ -41,4 +41,22 @@ public class GameMap {
         }
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GameMap gameMap = (GameMap) o;
+
+        if (cities != null ? !cities.equals(gameMap.cities) : gameMap.cities != null) return false;
+        return routes != null ? routes.equals(gameMap.routes) : gameMap.routes == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = cities != null ? cities.hashCode() : 0;
+        result = 31 * result + (routes != null ? routes.hashCode() : 0);
+        return result;
+    }
 }

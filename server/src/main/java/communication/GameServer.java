@@ -122,4 +122,39 @@ public class GameServer extends Game {
     public void setLastRoundTriggeredBy(String lastRoundTriggeredBy) {
         this.lastRoundTriggeredBy = lastRoundTriggeredBy;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        GameServer that = (GameServer) o;
+
+        if (currentPlayerIndex != that.currentPlayerIndex) return false;
+
+        if (trainCards != null ? !trainCards.equals(that.trainCards) : that.trainCards != null)
+            return false;
+        if (discardDeck != null ? !discardDeck.equals(that.discardDeck) : that.discardDeck != null)
+            return false;
+        if (tickets != null ? !tickets.equals(that.tickets) : that.tickets != null) return false;
+        if (currentPlayer != null ? !currentPlayer.equals(that.currentPlayer) : that.currentPlayer != null)
+            return false;
+        if (lastRoundTriggeredBy != null ? !lastRoundTriggeredBy.equals(that.lastRoundTriggeredBy) : that.lastRoundTriggeredBy != null)
+            return false;
+        if (players != null ? !players.equals(that.players) : that.players != null) return false;
+        return mAbsentPlayers != null ? mAbsentPlayers.equals(that.mAbsentPlayers) : that.mAbsentPlayers == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = trainCards != null ? trainCards.hashCode() : 0;
+        result = 31 * result + (discardDeck != null ? discardDeck.hashCode() : 0);
+        result = 31 * result + (tickets != null ? tickets.hashCode() : 0);
+        result = 31 * result + currentPlayerIndex;
+        result = 31 * result + (currentPlayer != null ? currentPlayer.hashCode() : 0);
+        result = 31 * result + (lastRoundTriggeredBy != null ? lastRoundTriggeredBy.hashCode() : 0);
+        result = 31 * result + (players != null ? players.hashCode() : 0);
+        result = 31 * result + (mAbsentPlayers != null ? mAbsentPlayers.hashCode() : 0);
+        return result;
+    }
 }

@@ -54,4 +54,22 @@ public class Message {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Message message = (Message) o;
+
+        if (playerID != null ? !playerID.equals(message.playerID) : message.playerID != null)
+            return false;
+        return text != null ? text.equals(message.text) : message.text == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = playerID != null ? playerID.hashCode() : 0;
+        result = 31 * result + (text != null ? text.hashCode() : 0);
+        return result;
+    }
 }

@@ -106,4 +106,33 @@ public class LobbyGame {
         }
 
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LobbyGame lobbyGame = (LobbyGame) o;
+
+        if (maxPlayers != lobbyGame.maxPlayers) return false;
+        if (playerListVerisonNum != lobbyGame.playerListVerisonNum) return false;
+        if (started != lobbyGame.started) return false;
+        if (versionNum != lobbyGame.versionNum) return false;
+        if (gameID != null ? !gameID.equals(lobbyGame.gameID) : lobbyGame.gameID != null)
+            return false;
+        if (host != null ? !host.equals(lobbyGame.host) : lobbyGame.host != null) return false;
+        return players != null ? players.equals(lobbyGame.players) : lobbyGame.players == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = gameID != null ? gameID.hashCode() : 0;
+        result = 31 * result + (host != null ? host.hashCode() : 0);
+        result = 31 * result + maxPlayers;
+        result = 31 * result + playerListVerisonNum;
+        result = 31 * result + (players != null ? players.hashCode() : 0);
+        result = 31 * result + (started ? 1 : 0);
+        result = 31 * result + versionNum;
+        return result;
+    }
 }
