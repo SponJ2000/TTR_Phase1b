@@ -43,7 +43,6 @@ import static communication.GameColor.GREY;
  */
 
 public class Database {
-
     private Map<String, String> loginInfo;
     //TODO : make gameid and gamelobbyid same
     private List<LobbyGame> lobbyGameList = new ArrayList<>();
@@ -57,6 +56,15 @@ public class Database {
      */
     private Map<String, List<GenericCommand>> gameUpdates = new HashMap<>();
     private int updateDelta;
+
+    public int getUpdateDelta() {
+        return updateDelta;
+    }
+
+    public void setUpdateDelta(int updateDelta) {
+        this.updateDelta = updateDelta;
+    }
+
     private HashMap<Integer, Integer> routeScores = new HashMap<>();
     private HashMap<String, MapGraph> gameGraph = new HashMap<>();
 

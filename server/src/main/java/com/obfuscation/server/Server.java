@@ -15,6 +15,7 @@ import communication.Message;
 import communication.Player;
 import communication.PlayerUser;
 import communication.Ticket;
+import dao.PlugInManager;
 
 
 /**
@@ -41,15 +42,25 @@ public class Server {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-//        //get the persistancy type and number of commands
-//        PlugInManager plugInManager = new PlugInManager();
-//
-//        if (args.length != 2) {
-//            plugInManager.printUsage();
-//            return;
-//        }
-//        String persistenceType = args[0];
-//        int commandNum = Integer.parseInt(args[1]);
+        //get the persistancy type and number of commands
+        PlugInManager plugInManager = new PlugInManager();
+
+        if (args.length != 2) {
+            System.out.println("persistence_type and number_of_commands-between-checkpoints");
+            return;
+        }
+        String persistenceType = args[0];
+        int commandNum = Integer.parseInt(args[1]);
+
+        switch (persistenceType) {
+            case "sqlite":
+                plugInManager.setFactory("directory", "sql.jar", "SQLFactory");
+                break;
+            case "tsv":
+                plugInManager.setFactory("directory", "tsv.jar", "TSVDaoFactory");
+                break;
+        }
+        Database.getInstance().setUpdateDelta(commandNum);
 
         //for testing
         System.out.println("server running at port : " + portNumber);
