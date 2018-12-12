@@ -1,4 +1,4 @@
-package dao.SQL;
+package sqldao;
 
 import com.obfuscation.server.GenericCommand;
 
@@ -7,11 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import communication.Game;
 import communication.GameServer;
 import communication.ICommand;
 import communication.Message;

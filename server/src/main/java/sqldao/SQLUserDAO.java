@@ -1,4 +1,4 @@
-package dao.SQL;
+package sqldao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,44 +7,25 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import communication.Game;
-import communication.LobbyGame;
 import communication.Result;
 import communication.Serializer;
-import dao.ILobbyDao;
+import dao.IUserDao;
+import dao.User;
 
-public class SQLLobbyDAO implements ILobbyDao {
+public class SQLUserDAO implements IUserDao {
     SQLDBConnection connection = new SQLDBConnection();
 
-    public static void main(String argv[]) {
-        SQLLobbyDAO sqlLobbyDAO = new SQLLobbyDAO();
-        try {
-//            LobbyGame lobbyGame = new LobbyGame("hello");
-//            lobbyGame.setGameID("Gs AMEID");
-//
-//            sqlLobbyDAO.addLobby(lobbyGame.getGameID(), lobbyGame);
-            sqlLobbyDAO.updateLobby("GsAMEID", new LobbyGame("SDFSDF"));
-
-            ArrayList<LobbyGame> lobbies = new ArrayList<>();
-            lobbies.addAll(sqlLobbyDAO.getLobbies());
-            System.out.println(new Serializer().serializeObject(lobbies));
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
-    public boolean addLobby(String id, LobbyGame lobbyGame) {
+    public boolean addUser(String id, String password, String authtoken) {
         Result result = null;
-        String statement = "INSERT INTO lobbies (id, lobby) " +
+        String statement = "INSERT INTO users (id, password, authtoken) " +
                 "VALUES (?, ?)";
         PreparedStatement ps = connection.getPreparedStatment(statement);
 
         try {
             ps.setString(1,id);
-            Serializer serializer = new Serializer();
-            String lobbyString = serializer.serializeObject(lobbyGame);
-            ps.setString(2, lobbyString);
+            ps.setString(2, password);
+            ps.setString(2, authtoken);
             result = connection.executeUpdateStatement(ps);
 
         } catch (SQLException e) {
@@ -55,13 +36,13 @@ public class SQLLobbyDAO implements ILobbyDao {
         if (result == null) {
             return false;
         }
-        return result.isSuccess();
+        return false;
     }
 
     @Override
-    public boolean removeLobby(String id) {
+    public boolean removeUser(String id) {
         Result result = null;
-        String statement = "DELETE FROM lobbies WHERE id = ?";
+        String statement = "DELETE FROM users WHERE id = ?";
         PreparedStatement ps = connection.getPreparedStatment(statement);
 
         try {
@@ -76,21 +57,17 @@ public class SQLLobbyDAO implements ILobbyDao {
         if (result == null) {
             return false;
         }
-        return result.isSuccess();
-    }
-
-
+        return result.isSuccess();    }
 
     @Override
-    public boolean updateLobby(String gameID, LobbyGame lobbyGame) {
+    public boolean updateAuthToken(String id, String authtoken) {
         Result result = null;
-        String statement = "UPDATE lobbies SET lobby = ? WHERE id = ?";
+        String statement = "UPDATE users SET authtoken = ? WHERE id = ?";
         PreparedStatement ps = connection.getPreparedStatment(statement);
 
         try {
-            String lobbyString = new Serializer().serializeObject(lobbyGame);
-            ps.setString(1,lobbyString);
-            ps.setString(2,gameID);
+            ps.setString(1,authtoken);
+            ps.setString(2,id);
             result = connection.executeUpdateStatement(ps);
 
         } catch (SQLException e) {
@@ -104,10 +81,10 @@ public class SQLLobbyDAO implements ILobbyDao {
     }
 
     @Override
-    public List<LobbyGame> getLobbies() {
-        ArrayList<LobbyGame> lobbyGames = new ArrayList<>();
+    public List<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>();
         Result result = null;
-        String statement = "SELECT * FROM lobbies";
+        String statement = "SELECT * FROM users";
 //        PreparedStatement ps = connection.getPreparedStatment(statement);
         Statement ps = connection.getStatement();
         try {
@@ -137,7 +114,7 @@ public class SQLLobbyDAO implements ILobbyDao {
                     System.out.println(rs.getString("lobby"));
                     Serializer serializer = new Serializer();
 
-                    lobbyGames.add(serializer.deserializeGameLobby(rs.getString("lobby")));
+                    users.add(new User(rs.getString("id"), rs.getString("password"), rs.getString("authtoken")));
                     System.out.println(rs.toString());
 
 //                    String gameJson = new String(b.getBytes(1,(int) b.length()));
@@ -149,6 +126,6 @@ public class SQLLobbyDAO implements ILobbyDao {
                 return null;
             }
         }
-        return lobbyGames;
+        return users;
     }
 }

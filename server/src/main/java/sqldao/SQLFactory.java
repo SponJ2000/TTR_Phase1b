@@ -1,13 +1,9 @@
-package dao.SQL;
+package sqldao;
 
 import dao.IDaoFactory;
 import dao.IGameDao;
 import dao.ILobbyDao;
 import dao.IUserDao;
-import dao.SQL.SQLDBConnection;
-import dao.SQL.SQLGameDAO;
-import dao.SQL.SQLLobbyDAO;
-import dao.SQL.SQLUserDAO;
 
 public class SQLFactory implements IDaoFactory {
 

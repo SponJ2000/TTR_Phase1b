@@ -1,4 +1,4 @@
-package dao.SQL;
+package sqldao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,23 +10,40 @@ import java.util.List;
 import communication.LobbyGame;
 import communication.Result;
 import communication.Serializer;
-import dao.IUserDao;
-import dao.User;
+import dao.ILobbyDao;
 
-public class SQLUserDAO implements IUserDao {
+public class SQLLobbyDAO implements ILobbyDao {
     SQLDBConnection connection = new SQLDBConnection();
 
+    public static void main(String argv[]) {
+        SQLLobbyDAO sqlLobbyDAO = new SQLLobbyDAO();
+        try {
+//            LobbyGame lobbyGame = new LobbyGame("hello");
+//            lobbyGame.setGameID("Gs AMEID");
+//
+//            sqlLobbyDAO.addLobby(lobbyGame.getGameID(), lobbyGame);
+            sqlLobbyDAO.updateLobby("GsAMEID", new LobbyGame("SDFSDF"));
+
+            ArrayList<LobbyGame> lobbies = new ArrayList<>();
+            lobbies.addAll(sqlLobbyDAO.getLobbies());
+            System.out.println(new Serializer().serializeObject(lobbies));
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
-    public boolean addUser(String id, String password, String authtoken) {
+    public boolean addLobby(String id, LobbyGame lobbyGame) {
         Result result = null;
-        String statement = "INSERT INTO users (id, password, authtoken) " +
+        String statement = "INSERT INTO lobbies (id, lobby) " +
                 "VALUES (?, ?)";
         PreparedStatement ps = connection.getPreparedStatment(statement);
 
         try {
             ps.setString(1,id);
-            ps.setString(2, password);
-            ps.setString(2, authtoken);
+            Serializer serializer = new Serializer();
+            String lobbyString = serializer.serializeObject(lobbyGame);
+            ps.setString(2, lobbyString);
             result = connection.executeUpdateStatement(ps);
 
         } catch (SQLException e) {
@@ -37,13 +54,13 @@ public class SQLUserDAO implements IUserDao {
         if (result == null) {
             return false;
         }
-        return false;
+        return result.isSuccess();
     }
 
     @Override
-    public boolean removeUser(String id) {
+    public boolean removeLobby(String id) {
         Result result = null;
-        String statement = "DELETE FROM users WHERE id = ?";
+        String statement = "DELETE FROM lobbies WHERE id = ?";
         PreparedStatement ps = connection.getPreparedStatment(statement);
 
         try {
@@ -58,17 +75,21 @@ public class SQLUserDAO implements IUserDao {
         if (result == null) {
             return false;
         }
-        return result.isSuccess();    }
+        return result.isSuccess();
+    }
+
+
 
     @Override
-    public boolean updateAuthToken(String id, String authtoken) {
+    public boolean updateLobby(String gameID, LobbyGame lobbyGame) {
         Result result = null;
-        String statement = "UPDATE users SET authtoken = ? WHERE id = ?";
+        String statement = "UPDATE lobbies SET lobby = ? WHERE id = ?";
         PreparedStatement ps = connection.getPreparedStatment(statement);
 
         try {
-            ps.setString(1,authtoken);
-            ps.setString(2,id);
+            String lobbyString = new Serializer().serializeObject(lobbyGame);
+            ps.setString(1,lobbyString);
+            ps.setString(2,gameID);
             result = connection.executeUpdateStatement(ps);
 
         } catch (SQLException e) {
@@ -82,10 +103,10 @@ public class SQLUserDAO implements IUserDao {
     }
 
     @Override
-    public List<User> getUsers() {
-        ArrayList<User> users = new ArrayList<>();
+    public List<LobbyGame> getLobbies() {
+        ArrayList<LobbyGame> lobbyGames = new ArrayList<>();
         Result result = null;
-        String statement = "SELECT * FROM users";
+        String statement = "SELECT * FROM lobbies";
 //        PreparedStatement ps = connection.getPreparedStatment(statement);
         Statement ps = connection.getStatement();
         try {
@@ -115,7 +136,7 @@ public class SQLUserDAO implements IUserDao {
                     System.out.println(rs.getString("lobby"));
                     Serializer serializer = new Serializer();
 
-                    users.add(new User(rs.getString("id"), rs.getString("password"), rs.getString("authtoken")));
+                    lobbyGames.add(serializer.deserializeGameLobby(rs.getString("lobby")));
                     System.out.println(rs.toString());
 
 //                    String gameJson = new String(b.getBytes(1,(int) b.length()));
@@ -127,6 +148,6 @@ public class SQLUserDAO implements IUserDao {
                 return null;
             }
         }
-        return users;
+        return lobbyGames;
     }
 }
