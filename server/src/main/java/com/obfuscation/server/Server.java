@@ -60,7 +60,7 @@ public class Server {
                 plugInManager.setFactory("directory", "tsv.jar", "TSVDaoFactory");
                 break;
         }
-        Database.getInstance().setUpdateDelta(commandNum);
+        Database.getInstance().initializeDatabase(commandNum);
 
         //for testing
         System.out.println("server running at port : " + portNumber);

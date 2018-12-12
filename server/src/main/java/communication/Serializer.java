@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.obfuscation.server.GenericCommand;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by jalton on 10/1/18.
  */
@@ -44,6 +47,11 @@ public class Serializer {
         return command;
     }
 
+    public GenericCommand deserializeGenericCommand(String json){
+        GenericCommand command = gson.fromJson(json, GenericCommand.class);
+        return command;
+    }
+
     public Ticket deserializeTicket(String json){
         Ticket ticket = gson.fromJson(json, Ticket.class);
         return ticket;
@@ -75,6 +83,10 @@ public class Serializer {
 
     public GameHistory deserializeGameHistory(String json) {
         return gson.fromJson(json, GameHistory.class);
+    }
+
+    public ArrayList<Object> deserializeList(String json) {
+        return gson.fromJson(json, ArrayList.class);
     }
 
     public PlayerStats deserializePlayerStats(String json) {
