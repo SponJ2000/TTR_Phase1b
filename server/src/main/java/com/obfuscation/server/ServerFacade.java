@@ -18,6 +18,7 @@ import communication.PlayerUser;
 import communication.Result;
 import communication.Serializer;
 import communication.Ticket;
+import dao.User;
 
 /**
  * Created by jalton on 10/1/18.
@@ -36,6 +37,14 @@ public class ServerFacade implements IServer {
     private List<ClientProxy> clientproxies = new ArrayList<>();
     private Map<String, List<ClientProxy>> gameIDclientProxyMap = new HashMap<>();
     private static ServerFacade instance = new ServerFacade();
+
+    public void initializeServer() {
+        List<GameServer> games = db.getGameList();
+        for (GameServer gameServer : games) {
+            clientproxies = gameServer.getOriginalClientProxies();
+            gameIDclientProxyMap.put(gameServer.getGameID(), gameServer.getClientProxies());
+        }
+    }
 
     public static ServerFacade getInstance(){
         return instance;
@@ -246,6 +255,8 @@ public class ServerFacade implements IServer {
                 db.setupGame(gameID);
                 ArrayList<Object> objects = new ArrayList<>();
                 game = db.findGameByID(gameID);
+                game.getClientProxies().addAll(gameIDclientProxyMap.get(gameID));
+                game.getOriginalClientProxies().addAll(clientproxies);
                 objects.add(game);
                 System.out.println("STARTING GAME : " + gameIDclientProxyMap.get(gameID).size());
                 for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {

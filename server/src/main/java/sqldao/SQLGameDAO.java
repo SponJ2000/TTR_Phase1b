@@ -141,9 +141,10 @@ public class SQLGameDAO implements IGameDao{
             Serializer serializer = new Serializer();
             for (GenericCommand c : cmdlist) {
                 sb.append(serializer.serializeCommand(c));
+                sb.append(",");
             }
             if(sb.charAt(sb.length() -1) == ',') {
-                sb.setCharAt(sb.charAt(sb.length() - 1),']');
+                sb.setCharAt(sb.length() - 1,']');
             }
             ps.setString(1,sb.toString());
             ps.setString(2,gameID);
@@ -187,6 +188,8 @@ public class SQLGameDAO implements IGameDao{
                     Serializer serializer = new Serializer();
                     games.add(serializer.deserializeGameServer(rs.getString("game")));
                     String cmdListString = rs.getString("cmdlist");
+                    System.out.println("DESERIALIZING COMMANDS");
+                    System.out.println(cmdListString);
                     ArrayList<Object> list = serializer.deserializeList(cmdListString);
                     ArrayList<ICommand> commandList = new ArrayList<>();
                     for (Object o : list) {
@@ -198,7 +201,7 @@ public class SQLGameDAO implements IGameDao{
 //                    gameJsons.add(gameJson);
 //                    System.out.println(gameJson);
                 }
-                return null;
+                return games;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return null;
