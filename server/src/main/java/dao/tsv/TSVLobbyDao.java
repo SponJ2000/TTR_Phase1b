@@ -97,4 +97,8 @@ public class TSVLobbyDao implements ILobbyDao {
         return lobbies;
     }
 
+    @Override
+    public boolean clear() {
+        return false;
+    }
 }

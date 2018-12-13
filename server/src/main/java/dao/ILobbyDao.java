@@ -10,5 +10,5 @@ public interface ILobbyDao {
     boolean removeLobby(String id);
     boolean updateLobby(String id, LobbyGame lobby);
     List<LobbyGame> getLobbies();
-
+    boolean clear();
 }

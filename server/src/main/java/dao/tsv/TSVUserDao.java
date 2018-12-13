@@ -90,4 +90,8 @@ public class TSVUserDao implements IUserDao {
         return users;
     }
 
+    @Override
+    public boolean clear() {
+        return false;
+    }
 }

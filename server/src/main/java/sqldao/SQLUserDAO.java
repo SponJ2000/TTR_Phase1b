@@ -139,4 +139,18 @@ public class SQLUserDAO implements IUserDao {
         }
         return users;
     }
+
+    @Override
+    public boolean clear() {
+        Result result = null;
+        String statement = "DELETE FROM users";
+        PreparedStatement ps = connection.getPreparedStatment(statement);
+
+        result = connection.executeUpdateStatement(ps);
+
+        if (result == null) {
+            return false;
+        }
+        return result.isSuccess();
+    }
 }

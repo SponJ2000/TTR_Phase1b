@@ -108,4 +108,12 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
     public List<GenericCommand> getCommands() {
         return gameDao.getCommands();
     }
+
+    @Override
+    public boolean clear() {
+        gameDao.clear();
+        lobbyDao.clear();
+        userDao.clear();
+        return true;
+    }
 }

@@ -15,6 +15,7 @@ import communication.Message;
 import communication.Player;
 import communication.PlayerUser;
 import communication.Ticket;
+import dao.DAOFacade;
 import dao.PlugInManager;
 import sqldao.SQLFactory;
 
@@ -50,8 +51,13 @@ public class Server {
 //            System.out.println("persistence_type and number_of_commands-between-checkpoints");
 //            return;
 //        }
+        for (String s : args) {
+            System.out.println(s);
+        }
+
         String persistenceType = args[0];
         int commandNum = Integer.parseInt(args[1]);
+
         String wipe = null;
         if (args.length > 2) {
             wipe = args[2];
@@ -69,6 +75,10 @@ public class Server {
                 break;
         }
         Database.getInstance().initializeDatabase(commandNum);
+        if (wipe.equals("-wipe")) {
+            System.out.println("WIPTING OUT");
+            DAOFacade.getInstance().clear();
+        }
 
         //for testing
         System.out.println("server running at port : " + portNumber);

@@ -395,7 +395,6 @@ public class Database {
 
         gameServer.setTrainCards(trainCards);
 
-        saveGameState(gameID);
     }
     Result startGame(String gameID, String authToken) {
         LobbyGame lobbyGame = findGameLobbyByID(gameID);
@@ -681,16 +680,18 @@ public class Database {
                         game.getTickets().add(tickets1.get(i));
                     }
                 }
+                ArrayList<Ticket> playerTickets = new ArrayList<>();
                 for (PlayerUser player : game.getPlayers()) {
                     if (player.getPlayerName().equals(playerID)) {
                         player.getTickets().addAll((ArrayList<Ticket>) tickets);
                         player.setTicketToChoose(new ArrayList<>());
+                        playerTickets.addAll(player.getTickets());
                     }
                 }
 
                 //update gameHistory
                 game.getGameHistories().add(new GameHistory(gameID, playerID, "drew_" + tickets.size() + "_tickets"));
-                return new Result(true, tickets, null);
+                return new Result(true, playerTickets, null);
             }
 //                //TODO : if the deck size is less then 3?
         }
@@ -998,7 +999,7 @@ public class Database {
         saveUpdates(gameID, list);
     }
 
-    private void saveGameState(String gameID) {
+    public void saveGameState(String gameID) {
         DAOFacade.getInstance().updateGame(gameID, findGameByID(gameID));
     }
 

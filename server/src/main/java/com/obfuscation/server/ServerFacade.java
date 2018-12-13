@@ -39,6 +39,7 @@ public class ServerFacade implements IServer {
     private static ServerFacade instance = new ServerFacade();
 
     public void initializeServer() {
+        System.out.println("INITIALIZING SERVERFACADE");
         List<GameServer> games = db.getGameList();
         for (GameServer gameServer : games) {
             clientproxies = gameServer.getOriginalClientProxies();
@@ -301,6 +302,7 @@ public class ServerFacade implements IServer {
                     objects.add(gameClient);
                     clientProxy.initializeGame(gameClient);
 
+                    db.saveGameState(gameID);
 
                     //add command to initialize
                 }

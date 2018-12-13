@@ -16,5 +16,6 @@ public interface IGameDao {
     boolean updateCmdList(String gameID, ArrayList<GenericCommand> cmdlist);
     List<GameServer> getGames();
     List<GenericCommand> getCommands();
+    boolean clear();
 
 }

@@ -114,6 +114,8 @@ public class SQLGameDAO implements IGameDao{
 
         try {
             String gameString = new Serializer().serializeGameServer(game);
+            System.out.println("SERIALIZED GAME");
+            System.out.println(gameString);
             ps.setString(1,gameString);
             ps.setString(2,gameID);
             result = connection.executeUpdateStatement(ps);
@@ -187,6 +189,8 @@ public class SQLGameDAO implements IGameDao{
                 while(rs.next()) {
                     Serializer serializer = new Serializer();
                     games.add(serializer.deserializeGameServer(rs.getString("game")));
+                    System.out.println("GAME FROM DATABASE");
+                    System.out.println(rs.getString("game"));
                     String cmdListString = rs.getString("cmdlist");
                     System.out.println("DESERIALIZING COMMANDS");
                     System.out.println(cmdListString);
@@ -260,4 +264,18 @@ public class SQLGameDAO implements IGameDao{
             }
         }
         return null;    }
+
+    @Override
+    public boolean clear() {
+        Result result = null;
+        String statement = "DELETE FROM games";
+        PreparedStatement ps = connection.getPreparedStatment(statement);
+
+        result = connection.executeUpdateStatement(ps);
+
+        if (result == null) {
+            return false;
+        }
+        return result.isSuccess();
+    }
 }

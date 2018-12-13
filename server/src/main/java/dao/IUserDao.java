@@ -11,5 +11,5 @@ public interface IUserDao {
     boolean removeUser(String id);
     boolean updateAuthToken(String id, String authtoken);
     List<User> getUsers();
-
+    boolean clear();
 }

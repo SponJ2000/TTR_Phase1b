@@ -154,4 +154,18 @@ public class SQLLobbyDAO implements ILobbyDao {
         }
         return lobbyGames;
     }
+
+    @Override
+    public boolean clear() {
+        Result result = null;
+        String statement = "DELETE FROM lobbies";
+        PreparedStatement ps = connection.getPreparedStatment(statement);
+
+        result = connection.executeUpdateStatement(ps);
+
+        if (result == null) {
+            return false;
+        }
+        return result.isSuccess();
+    }
 }
