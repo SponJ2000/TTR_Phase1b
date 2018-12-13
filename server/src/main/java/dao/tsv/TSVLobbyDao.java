@@ -36,9 +36,9 @@ public class TSVLobbyDao implements ILobbyDao {
     @Override
     public boolean addLobby(String id, LobbyGame lobby) {
         String[] row = new String[ARRAY_SIZE];
-
+        row[i_TYPE] = LOBBY;
         row[i_ID] = id;
-        row[i_LOBBY] = lobby.toString();
+        row[i_LOBBY] = new Serializer().serializeGameLobby(lobby);
         row[i_NULL] = "";
         rw.writeLine(row);
 
@@ -69,7 +69,7 @@ public class TSVLobbyDao implements ILobbyDao {
             if(rows.get(i)[i_TYPE].equals(LOBBY)) {
                 String [] row = rows.get(i);
                 if(row[i_ID].equals(id)) {
-                    row[i_LOBBY] = new Serializer().serializeObject(lobby);
+                    row[i_LOBBY] = new Serializer().serializeGameLobby(lobby);
                     break;
                 }
             }
@@ -83,6 +83,7 @@ public class TSVLobbyDao implements ILobbyDao {
     public List<LobbyGame> getLobbies() {
         List<LobbyGame> lobbies = new ArrayList<>();
         List<String[]> rows = rw.readAll();
+
         for(String[] row : rows) {
             if(row[i_TYPE].equals(LOBBY)) {
                 try {

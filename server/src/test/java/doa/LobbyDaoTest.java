@@ -17,30 +17,40 @@ public class LobbyDaoTest {
         System.out.println("Start");
 
         ILobbyDao dao = new TSVDaoFactory().getLobbyDao();
+        ArrayList<Player> players;
+        List<LobbyGame> games;
 
-        LobbyGame game = createGame();
-        LobbyGame comp = createGame();
-        assert(comp.equals(game));
-        dao.addLobby(game.getGameID(), game);
-        List<LobbyGame> games = dao.getLobbies();
-        System.out.println("" + games.size());
-        assert(games.size() == 1);
-        System.out.println(game);
-        System.out.println(games.get(0));
-        assert(games.get(0).equals(game));
-
-        System.out.println("No problems");
-    }
-
-    private LobbyGame createGame() {
-        ArrayList<Player> players = new ArrayList<>();
+        players = new ArrayList<>();
         players.add(new Player("bob"));
         players.add(new Player("babe"));
         players.add(new Player("buddy"));
         players.add(new Player("buns"));
 
         LobbyGame game = new LobbyGame("bob", "mygameid", players, 3);
-        return game;
+        LobbyGame comp = new LobbyGame("bob", "mygameid", players, 3);
+        assert(comp.equals(game));
+
+        dao.addLobby(game.getGameID(), game);
+        games = dao.getLobbies();
+        assert(games.size() == 1);
+        assert(games.get(0).equals(game));
+
+        players = new ArrayList<>();
+        players.add(new Player("bob"));
+        players.add(new Player("babe"));
+        players.add(new Player("buddy"));
+        game.setMaxPlayers(5);
+        game.setPlayers(players);
+        dao.updateLobby(game.getGameID(), game);
+        games = dao.getLobbies();
+        assert(games.size() == 1);
+        assert(games.get(0).equals(game));
+
+        dao.removeLobby(game.getGameID());
+        games = dao.getLobbies();
+        assert(games.size() == 0);
+
+        System.out.println("No problems");
     }
 
 }

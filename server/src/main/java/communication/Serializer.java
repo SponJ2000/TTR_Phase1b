@@ -32,6 +32,11 @@ public class Serializer {
         return json;
     }
 
+    public String serializeGameLobby(LobbyGame g) {
+        String json = gson.toJson(g);
+        return json;
+    }
+
     public Result deserializeResult(String json) {
         Result result = gson.fromJson(json, Result.class);
         return result;
