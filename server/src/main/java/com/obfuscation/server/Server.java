@@ -68,7 +68,7 @@ public class Server {
         switch (persistenceType) {
             case "sqlite":
                 String fileDirectory = System.getProperty("user.dir") + "/server/src/main/java/";
-                plugInManager.setFactory(fileDirectory, "RelationalDB3.jar", SQLFactory.class.getName());
+                plugInManager.setFactory(fileDirectory, "RelationalDB2.jar", SQLFactory.class.getName());
                 break;
             case "tsv":
                 plugInManager.setFactory("directory", "tsv.jar", "TSVDaoFactory");
