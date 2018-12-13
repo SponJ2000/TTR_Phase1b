@@ -7,6 +7,7 @@ import java.util.List;
 import dao.IUserDao;
 import dao.User;
 import dao.tsv.TSVDaoFactory;
+import sqldao.SQLFactory;
 
 public class UserDaoTest {
 
@@ -16,11 +17,48 @@ public class UserDaoTest {
 
         IUserDao dao = new TSVDaoFactory().getUserDao();
 
+        List<User> users;
         User user = new User("bob", "password", "authtoken");
         dao.addUser(user.getId(), user.getPassword(), user.getAuthtoken());
-        List<User> users = dao.getUsers();
+        users = dao.getUsers();
         assert(users.size() == 1);
         assert(users.get(0).equals(user));
+
+        user.setAuthtoken("authtoken");
+        dao.updateAuthToken(user.getId(), user.getAuthtoken());
+        users = dao.getUsers();
+        assert(users.size() == 1);
+        assert(users.get(0).equals(user));
+
+        dao.removeUser(user.getId());
+        users = dao.getUsers();
+        assert(users.size() == 0);
+
+        System.out.println("No problems");
+    }
+
+    @Test
+    public void SQLTest() {
+        System.out.println("Start");
+
+        IUserDao dao = new SQLFactory().getUserDao();
+
+        List<User> users;
+        User user = new User("bob", "password", "authtoken");
+        dao.addUser(user.getId(), user.getPassword(), user.getAuthtoken());
+        users = dao.getUsers();
+        assert(users.size() == 1);
+        assert(users.get(0).equals(user));
+
+        user.setAuthtoken("authtoken");
+        dao.updateAuthToken(user.getId(), user.getAuthtoken());
+        users = dao.getUsers();
+        assert(users.size() == 1);
+        assert(users.get(0).equals(user));
+
+        dao.removeUser(user.getId());
+        users = dao.getUsers();
+        assert(users.size() == 0);
 
         System.out.println("No problems");
     }

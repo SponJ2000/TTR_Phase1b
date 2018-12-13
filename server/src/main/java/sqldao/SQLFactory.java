@@ -7,22 +7,22 @@ import dao.IUserDao;
 
 public class SQLFactory implements IDaoFactory {
 
-    private SQLUserDAO userDAO = new SQLUserDAO();
-    private SQLLobbyDAO lobbyDAO = new SQLLobbyDAO();
-    private SQLGameDAO gameDAO = new SQLGameDAO();
+    public SQLFactory() {
+    }
 
     @Override
     public IUserDao getUserDao() {
-        return userDAO;
+        return new SQLUserDAO();
     }
 
     @Override
     public ILobbyDao getLobbyDao() {
-        return lobbyDAO;
+        return new SQLLobbyDAO();
     }
 
     @Override
     public IGameDao getGameDao() {
-        return gameDAO;
+        return new SQLGameDAO();
     }
+
 }
