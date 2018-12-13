@@ -361,7 +361,9 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         boolean claimed = true;
         Polyline poly = mRouteLines.get(r);
 
-        poly.remove();
+        if (poly != null) {
+            poly.remove();
+        }
 
         LatLng start = new LatLng(r.getStartPos()[0], r.getStartPos()[1]);
         LatLng mid = new LatLng(r.getMidPoint()[0], r.getMidPoint()[1]);
@@ -376,8 +378,12 @@ public class GameFragment extends Fragment implements IGameView, OnMapReadyCallb
         mRouteLines.put(r, googleMap.addPolyline(p));
 
         Marker m = mRoutes2.get(r);
-        m.remove();
-        mRoutes2.remove(r);
+        if (m != null) {
+            m.remove();
+        }
+        if (r != null) {
+            mRoutes2.remove(r);
+        }
 //        for (Route route : mRoutes2.keySet()) {
 //            mRoutes2.get(route).remove();
 //        }
