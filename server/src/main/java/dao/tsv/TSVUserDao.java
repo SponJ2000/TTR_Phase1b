@@ -20,13 +20,6 @@ public class TSVUserDao implements IUserDao {
     private static int i_AUTH = 3;
 
     TSVUserDao() {
-        String[] header = new String[ARRAY_SIZE];
-        header[i_TYPE] = "type";
-        header[i_ID] = "id";
-        header[i_PASS] = "password";
-        header[i_AUTH] = "authtoken";
-        rw = new TSVReaderWriter(header);
-        rw.writeHeader();
     }
 
     @Override
@@ -36,9 +29,7 @@ public class TSVUserDao implements IUserDao {
         row[i_ID] = id;
         row[i_PASS] = password;
         row[i_AUTH] = authtoken;
-
         rw.writeLine(row);
-
         return true;
     }
 
@@ -92,6 +83,13 @@ public class TSVUserDao implements IUserDao {
 
     @Override
     public boolean clear() {
-        return false;
+        String[] header = new String[ARRAY_SIZE];
+        header[i_TYPE] = "type";
+        header[i_ID] = "id";
+        header[i_PASS] = "password";
+        header[i_AUTH] = "authtoken";
+        rw = new TSVReaderWriter(header);
+        rw.writeHeader();
+        return true;
     }
 }

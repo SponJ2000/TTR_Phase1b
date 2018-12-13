@@ -16,6 +16,7 @@ public class UserDaoTest {
         System.out.println("Start");
 
         IUserDao dao = new TSVDaoFactory().getUserDao();
+        dao.clear();
 
         List<User> users;
         User user = new User("bob", "password", "authtoken");
@@ -42,6 +43,7 @@ public class UserDaoTest {
         System.out.println("Start");
 
         IUserDao dao = new SQLFactory().getUserDao();
+        dao.clear();
 
         List<User> users;
         User user = new User("bob", "password", "authtoken");

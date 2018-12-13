@@ -1,12 +1,9 @@
 package doa;
 
-import com.obfuscation.server.GenericCommand;
-
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import communication.Card;
@@ -18,7 +15,6 @@ import communication.Ticket;
 import dao.IGameDao;
 import dao.tsv.TSVDaoFactory;
 import sqldao.SQLFactory;
-import sqldao.SQLGameDAO;
 
 public class GameDaoTest {
 
@@ -27,6 +23,7 @@ public class GameDaoTest {
         System.out.println("Start");
 
         IGameDao dao = new TSVDaoFactory().getGameDao();
+        dao.clear();
 
         List<GameServer> games;
         GameServer game = createGame();
@@ -64,6 +61,7 @@ public class GameDaoTest {
         System.out.println("Start");
 
         IGameDao dao = new SQLFactory().getGameDao();
+        dao.clear();
 
         List<GameServer> games;
         GameServer game = createGame();

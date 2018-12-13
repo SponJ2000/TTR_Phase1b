@@ -24,13 +24,6 @@ public class TSVLobbyDao implements ILobbyDao {
     private static int i_NULL = 3;
 
     TSVLobbyDao() {
-        String[] header = new String[ARRAY_SIZE];
-        header[i_TYPE] = LOBBY;
-        header[i_ID] = "id";
-        header[i_LOBBY] = "lobby";
-        header[i_NULL] = "null";
-        rw = new TSVReaderWriter(header);
-        rw.writeHeader();
     }
 
     @Override
@@ -99,6 +92,13 @@ public class TSVLobbyDao implements ILobbyDao {
 
     @Override
     public boolean clear() {
-        return false;
+        String[] header = new String[ARRAY_SIZE];
+        header[i_TYPE] = LOBBY;
+        header[i_ID] = "id";
+        header[i_LOBBY] = "lobby";
+        header[i_NULL] = "null";
+        rw = new TSVReaderWriter(header);
+        rw.writeHeader();
+        return true;
     }
 }

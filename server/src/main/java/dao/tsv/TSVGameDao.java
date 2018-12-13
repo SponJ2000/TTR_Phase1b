@@ -24,13 +24,6 @@ public class TSVGameDao implements IGameDao {
     private static int i_CMDL = 3;
 
     TSVGameDao() {
-        String[] header = new String[ARRAY_SIZE];
-        header[i_TYPE] = "type";
-        header[i_ID] = "id";
-        header[i_GAME] = "game";
-        header[i_CMDL] = "cmdlist";
-        rw = new TSVReaderWriter(header);
-        rw.writeHeader();
     }
 
     @Override
@@ -139,6 +132,14 @@ public class TSVGameDao implements IGameDao {
 
     @Override
     public boolean clear() {
-        return false;
+        String[] header = new String[ARRAY_SIZE];
+        header[i_TYPE] = "type";
+        header[i_ID] = "id";
+        header[i_GAME] = "game";
+        header[i_CMDL] = "cmdlist";
+        rw = new TSVReaderWriter(header);
+        rw.writeHeader();
+        return true;
     }
+
 }

@@ -18,6 +18,7 @@ public class LobbyDaoTest {
         System.out.println("Start");
 
         ILobbyDao dao = new TSVDaoFactory().getLobbyDao();
+        dao.clear();
         ArrayList<Player> players;
         List<LobbyGame> games;
 
@@ -59,6 +60,7 @@ public class LobbyDaoTest {
         System.out.println("Start");
 
         ILobbyDao dao = new SQLFactory().getLobbyDao();
+        dao.clear();
         ArrayList<Player> players;
         List<LobbyGame> games;
 
