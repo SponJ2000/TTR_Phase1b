@@ -148,6 +148,9 @@ public class SQLGameDAO implements IGameDao{
             if(sb.charAt(sb.length() -1) == ',') {
                 sb.setCharAt(sb.length() - 1,']');
             }
+            else {
+                sb.append("]");
+            }
             ps.setString(1,sb.toString());
             ps.setString(2,gameID);
             result = connection.executeUpdateStatement(ps);

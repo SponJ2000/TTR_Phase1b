@@ -986,7 +986,6 @@ public class Database {
     public void saveCommand(String gameID, GenericCommand command) {
         // 1: add command to list
         ArrayList<GenericCommand> list = (ArrayList<GenericCommand>) gameUpdates.get(gameID);
-        list.add(command);
 
         // 2: if list.size == updateDelta, save entire game state
         if (list.size() >= updateDelta) {
@@ -994,6 +993,8 @@ public class Database {
             gameUpdates.put(gameID, list);
             saveGameState(gameID);
         }
+
+        list.add(command);
 
         // 3: save commandList
         saveUpdates(gameID, list);
