@@ -82,6 +82,7 @@ public class DAOFacade implements IGameDao, ILobbyDao, IUserDao {
 
     @Override
     public List<LobbyGame> getLobbies() {
+        System.out.println(lobbyDao);
         return lobbyDao.getLobbies();
     }
 

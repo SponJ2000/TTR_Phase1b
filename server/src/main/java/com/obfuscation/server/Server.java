@@ -3,6 +3,9 @@ package com.obfuscation.server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -65,15 +68,42 @@ public class Server {
         }
 
         //TODO : add clear functionality
+        BufferedReader reader = null;
+        String line;
+        ArrayList<String> configs = new ArrayList<>();
+
+        try {
+            reader = new BufferedReader(new FileReader("/users/guest/h/haoyucn/AndroidStudioProjects/TTR_Phase1b/config.txt"));
+
+//          skipping header
+            while((line = reader.readLine()) != null) {
+                configs.add(line);
+                System.out.println(line);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("No File");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                reader.close();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }catch (NullPointerException e) {
+                System.out.println("Reader null");
+            }
+        }
 
         String fileDirectory = System.getProperty("user.dir") + "/server/src/main/java/";
 
         switch (persistenceType) {
             case "sqlite":
-                plugInManager.setFactory(fileDirectory, "RelationalDB2.jar", SQLFactory.class.getName());
+                plugInManager.setFactory(fileDirectory, configs.get(0), SQLFactory.class.getName());
                 break;
             case "tsv":
-                plugInManager.setFactory(fileDirectory, "FlatFileDB1.jar", TSVDaoFactory.class.getName());
+                plugInManager.setFactory(fileDirectory, configs.get(1), TSVDaoFactory.class.getName());
                 break;
         }
         if (wipe != null && wipe.equals("-wipe")) {
