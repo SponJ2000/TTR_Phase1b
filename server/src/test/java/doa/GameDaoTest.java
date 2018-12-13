@@ -26,13 +26,33 @@ public class GameDaoTest {
 
         IGameDao dao = new TSVDaoFactory().getGameDao();
 
+        List<GameServer> games;
         GameServer game = createGame();
         GameServer comp = createGame();
         assert(comp.equals(game));
         dao.addGame(game.getGameID(), game);
-        List<GameServer> games = dao.getGames();
+        games = dao.getGames();
         assert(games.size() == 1);
         assert(games.get(0).equals(game));
+
+        ArrayList<Ticket> tickets = game.getTickets();
+        ArrayList<Ticket> playerTickets;
+        for (PlayerUser player : game.getPlayers()) {
+            playerTickets = player.getTickets();
+            for (int i = 0; i < 1; i++) {
+                playerTickets.add(tickets.get(0));
+                tickets.remove(0);
+            }
+            player.setTickets(playerTickets);
+        }
+        dao.updateGame(game.getGameID(), game);
+        games = dao.getGames();
+        assert(games.size() == 1);
+        assert(games.get(0).equals(game));
+
+        dao.removeGame(game.getGameID());
+        games = dao.getGames();
+        assert(games.size() == 0);
 
         System.out.println("No problems");
     }
