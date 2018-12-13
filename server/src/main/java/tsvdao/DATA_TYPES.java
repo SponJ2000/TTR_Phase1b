@@ -1,4 +1,4 @@
-package dao.tsv;
+package tsvdao;
 
 /**
  * Created by jalton on 12/10/18.

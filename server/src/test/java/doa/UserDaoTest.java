@@ -6,7 +6,7 @@ import java.util.List;
 
 import dao.IUserDao;
 import dao.User;
-import dao.tsv.TSVDaoFactory;
+import tsvdao.TSVDaoFactory;
 import sqldao.SQLFactory;
 
 public class UserDaoTest {

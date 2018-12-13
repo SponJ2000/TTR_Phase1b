@@ -1,16 +1,11 @@
-package dao.tsv;
+package tsvdao;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.rowset.serial.SerialBlob;
 
 import communication.LobbyGame;
 import communication.Serializer;
 import dao.ILobbyDao;
-
-import static dao.tsv.DATA_TYPES.LOBBY;
 
 
 public class TSVLobbyDao implements ILobbyDao {
@@ -24,12 +19,18 @@ public class TSVLobbyDao implements ILobbyDao {
     private static int i_NULL = 3;
 
     TSVLobbyDao() {
+        String[] header = new String[ARRAY_SIZE];
+        header[i_TYPE] = DATA_TYPES.LOBBY;
+        header[i_ID] = "id";
+        header[i_LOBBY] = "lobby";
+        header[i_NULL] = "null";
+        rw = new TSVReaderWriter(header);
     }
 
     @Override
     public boolean addLobby(String id, LobbyGame lobby) {
         String[] row = new String[ARRAY_SIZE];
-        row[i_TYPE] = LOBBY;
+        row[i_TYPE] = DATA_TYPES.LOBBY;
         row[i_ID] = id;
         row[i_LOBBY] = new Serializer().serializeGameLobby(lobby);
         row[i_NULL] = "";
@@ -42,7 +43,7 @@ public class TSVLobbyDao implements ILobbyDao {
     public boolean removeLobby(String id) {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
-            if(rows.get(i)[i_TYPE].equals(LOBBY)) {
+            if(rows.get(i)[i_TYPE].equals(DATA_TYPES.LOBBY)) {
                 String [] row = rows.get(i);
                 if(row[i_ID].equals(id)) {
                     rows.remove(i);
@@ -59,7 +60,7 @@ public class TSVLobbyDao implements ILobbyDao {
     public boolean updateLobby(String id, LobbyGame lobby) {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
-            if(rows.get(i)[i_TYPE].equals(LOBBY)) {
+            if(rows.get(i)[i_TYPE].equals(DATA_TYPES.LOBBY)) {
                 String [] row = rows.get(i);
                 if(row[i_ID].equals(id)) {
                     row[i_LOBBY] = new Serializer().serializeGameLobby(lobby);
@@ -75,10 +76,17 @@ public class TSVLobbyDao implements ILobbyDao {
     @Override
     public List<LobbyGame> getLobbies() {
         List<LobbyGame> lobbies = new ArrayList<>();
-        List<String[]> rows = rw.readAll();
+        List<String[]> rows = null;
+
+        rows = rw.readAll();
+
+        if (rows == null) {
+            System.out.println("No lobbies found");
+            return lobbies;
+        }
 
         for(String[] row : rows) {
-            if(row[i_TYPE].equals(LOBBY)) {
+            if(row[i_TYPE].equals(DATA_TYPES.LOBBY)) {
                 try {
                     Serializer serializer = new Serializer();
                     lobbies.add(serializer.deserializeGameLobby(row[i_LOBBY]));
@@ -93,7 +101,7 @@ public class TSVLobbyDao implements ILobbyDao {
     @Override
     public boolean clear() {
         String[] header = new String[ARRAY_SIZE];
-        header[i_TYPE] = LOBBY;
+        header[i_TYPE] = DATA_TYPES.LOBBY;
         header[i_ID] = "id";
         header[i_LOBBY] = "lobby";
         header[i_NULL] = "null";

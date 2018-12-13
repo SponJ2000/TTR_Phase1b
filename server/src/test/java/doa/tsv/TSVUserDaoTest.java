@@ -7,9 +7,7 @@ import java.util.List;
 
 import dao.IUserDao;
 import dao.User;
-import dao.tsv.TSVDaoFactory;
-import dao.tsv.TSVReaderWriter;
-import dao.tsv.TSVUserDao;
+import tsvdao.TSVDaoFactory;
 
 public class TSVUserDaoTest {
 

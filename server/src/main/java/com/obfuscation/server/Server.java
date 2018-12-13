@@ -18,6 +18,7 @@ import communication.Ticket;
 import dao.DAOFacade;
 import dao.PlugInManager;
 import sqldao.SQLFactory;
+import tsvdao.TSVDaoFactory;
 
 
 /**
@@ -65,13 +66,14 @@ public class Server {
 
         //TODO : add clear functionality
 
+        String fileDirectory = System.getProperty("user.dir") + "/server/src/main/java/";
+
         switch (persistenceType) {
             case "sqlite":
-                String fileDirectory = System.getProperty("user.dir") + "/server/src/main/java/";
                 plugInManager.setFactory(fileDirectory, "RelationalDB2.jar", SQLFactory.class.getName());
                 break;
             case "tsv":
-                plugInManager.setFactory("directory", "tsv.jar", "TSVDaoFactory");
+                plugInManager.setFactory(fileDirectory, "FlatFileDB1.jar", TSVDaoFactory.class.getName());
                 break;
         }
         Database.getInstance().initializeDatabase(commandNum);

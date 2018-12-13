@@ -8,7 +8,7 @@ import java.util.List;
 import communication.LobbyGame;
 import communication.Player;
 import dao.ILobbyDao;
-import dao.tsv.TSVDaoFactory;
+import tsvdao.TSVDaoFactory;
 import sqldao.SQLFactory;
 
 public class LobbyDaoTest {

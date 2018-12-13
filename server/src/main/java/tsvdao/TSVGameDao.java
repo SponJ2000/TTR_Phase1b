@@ -1,4 +1,4 @@
-package dao.tsv;
+package tsvdao;
 
 import com.obfuscation.server.GenericCommand;
 
@@ -8,8 +8,6 @@ import java.util.List;
 import communication.GameServer;
 import communication.Serializer;
 import dao.IGameDao;
-
-import static dao.tsv.DATA_TYPES.GAME;
 
 
 public class TSVGameDao implements IGameDao {
@@ -24,12 +22,18 @@ public class TSVGameDao implements IGameDao {
     private static int i_CMDL = 3;
 
     TSVGameDao() {
+        String[] header = new String[ARRAY_SIZE];
+        header[i_TYPE] = "type";
+        header[i_ID] = "id";
+        header[i_GAME] = "game";
+        header[i_CMDL] = "cmdlist";
+        rw = new TSVReaderWriter(header);
     }
 
     @Override
     public boolean addGame(String gameID, GameServer game) {
         String[] row = new String[ARRAY_SIZE];
-        row[i_TYPE] = GAME;
+        row[i_TYPE] = DATA_TYPES.GAME;
         row[i_ID] = gameID;
         row[i_GAME] = new Serializer().serializeGameServer(game);
         row[i_CMDL] = "";
@@ -42,7 +46,7 @@ public class TSVGameDao implements IGameDao {
     public boolean removeGame(String gameID) {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
-            if(rows.get(i)[i_TYPE].equals(GAME)) {
+            if(rows.get(i)[i_TYPE].equals(DATA_TYPES.GAME)) {
                 String[] row = rows.get(i);
                 if(row[i_ID].equals(gameID)) {
                     rows.remove(i);
@@ -60,7 +64,7 @@ public class TSVGameDao implements IGameDao {
     public boolean updateGame(String gameID, GameServer game) {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
-            if(rows.get(i)[i_TYPE].equals(GAME)) {
+            if(rows.get(i)[i_TYPE].equals(DATA_TYPES.GAME)) {
                 String[] row = rows.get(i);
                 if (row[i_ID].equals(gameID)) {
                     row[i_GAME] = new Serializer().serializeGameServer(game);
@@ -77,11 +81,11 @@ public class TSVGameDao implements IGameDao {
     public boolean updateCmdList(String gameID, ArrayList<GenericCommand> cmdlist) {
         List<String[]> rows = rw.readAll();
         for(int i = 0; i < rows.size(); i++) {
-            if(rows.get(i)[i_TYPE].equals(GAME)) {
+            if(rows.get(i)[i_TYPE].equals(DATA_TYPES.GAME)) {
                 String[] row = rows.get(i);
                 if (row.equals(gameID)) {
                     String[] r = new String[ARRAY_SIZE];
-                    r[i_TYPE] = GAME;
+                    r[i_TYPE] = DATA_TYPES.GAME;
                     r[i_ID] = row[i_ID];
                     r[i_GAME] = row[i_GAME];
                     r[i_CMDL] = serializeCmdList(cmdlist);
@@ -111,9 +115,16 @@ public class TSVGameDao implements IGameDao {
     @Override
     public List<GameServer> getGames() {
         List<GameServer> games = new ArrayList<>();
-        List<String[]> rows = rw.readAll();
+        List<String[]> rows = null;
+
+        rows = rw.readAll();
+
+        if (rows == null) {
+            return games;
+        }
+
         for(String[] row : rows) {
-            if(row[i_TYPE].equals(GAME)) {
+            if(row[i_TYPE].equals(DATA_TYPES.GAME)) {
                 try {
                     Serializer serializer = new Serializer();
                     games.add(serializer.deserializeGameServer(row[i_GAME]));
@@ -127,7 +138,40 @@ public class TSVGameDao implements IGameDao {
 
     @Override
     public List<GenericCommand> getCommands() {
-        return null;
+        List<GenericCommand> commands = new ArrayList<>();
+        List<String[]> rows = null;
+
+        rows = rw.readAll();
+
+        if (rows == null) {
+            return commands;
+        }
+
+        if (rows == null) {
+            return commands;
+        }
+
+        for(String[] row : rows) {
+            if(row[i_TYPE].equals(DATA_TYPES.GAME)) {
+                if (row.length < ARRAY_SIZE) {
+                    return commands;
+                }
+                try {
+                    Serializer serializer = new Serializer();
+                    ArrayList<Object> list = serializer.deserializeList(row[i_CMDL]);
+
+                    for (Object o : list) {
+                        System.out.println("adding command");
+                        System.out.println(o.toString());
+                        commands.add(serializer.deserializeGenericCommand(o.toString()));
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return commands;
     }
 
     @Override
@@ -138,6 +182,7 @@ public class TSVGameDao implements IGameDao {
         header[i_GAME] = "game";
         header[i_CMDL] = "cmdlist";
         rw = new TSVReaderWriter(header);
+        rw.clear();
         rw.writeHeader();
         return true;
     }

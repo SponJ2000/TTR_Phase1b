@@ -3,7 +3,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import dao.tsv.TSVReaderWriter;
+import tsvdao.TSVReaderWriter;
 
 public class TSVReaderWriterTest {
 

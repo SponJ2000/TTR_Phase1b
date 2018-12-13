@@ -1,6 +1,8 @@
-package dao.tsv;
+package tsvdao;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,13 +43,19 @@ public class TSVReaderWriter {
                 }
             }
 
-        }catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            System.out.println("No File");
+            return null;
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }finally {
             try {
                 reader.close();
             }catch (IOException e) {
                 e.printStackTrace();
+            }catch (NullPointerException e) {
+                System.out.println("Reader null");
             }
         }
 
@@ -134,6 +142,11 @@ public class TSVReaderWriter {
             }
         }
 
+    }
+
+    public void clear() {
+        File file = new File(FILENAME);
+        file.delete();
     }
 
 }

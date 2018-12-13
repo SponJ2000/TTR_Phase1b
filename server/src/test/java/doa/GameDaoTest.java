@@ -13,7 +13,7 @@ import communication.GameServer;
 import communication.PlayerUser;
 import communication.Ticket;
 import dao.IGameDao;
-import dao.tsv.TSVDaoFactory;
+import tsvdao.TSVDaoFactory;
 import sqldao.SQLFactory;
 
 public class GameDaoTest {
