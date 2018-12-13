@@ -75,7 +75,7 @@ public class Server {
                 break;
         }
         Database.getInstance().initializeDatabase(commandNum);
-        if (wipe.equals("-wipe")) {
+        if (wipe != null && wipe.equals("-wipe")) {
             System.out.println("WIPTING OUT");
             DAOFacade.getInstance().clear();
         }

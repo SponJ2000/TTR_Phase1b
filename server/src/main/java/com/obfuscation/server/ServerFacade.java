@@ -386,7 +386,11 @@ public class ServerFacade implements IServer {
     @Override
     public Result CheckGame(String authToken, String gameID, Integer state) {
         try {
-            for (ClientProxy clientProxy : gameIDclientProxyMap.get(gameID)) {
+            List<ClientProxy> proxies = gameIDclientProxyMap.get(gameID);
+            if (proxies == null) {
+                return new Result(false, null, "Error : Client not found");
+            }
+            for (ClientProxy clientProxy : proxies) {
                 if (clientProxy.getAuthToken().equals(authToken)) {
                     return clientProxy.getNotSeenCommands(gameID, state);
                 }
