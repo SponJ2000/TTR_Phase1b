@@ -20,6 +20,7 @@ public class SQLDBConnection {
 
     String url;
     static Connection conn;
+    static int numberProcess = 0;
 
     public SQLDBConnection() {
         String fileDirectory = System.getProperty("user.dir") + "/server/src/main/java/dao/SQL/";
@@ -75,8 +76,10 @@ public class SQLDBConnection {
             createDBFile();
             String connectionUrl = "jdbc:sqlite:" + url;
             if (conn == null) {
-                this.conn = DriverManager.getConnection(connectionUrl);
-                conn.setAutoCommit(false);
+                if (conn.isClosed()) {
+                    this.conn = DriverManager.getConnection(connectionUrl);
+                    conn.setAutoCommit(false);
+                }
             }
             return true;
         } catch (SQLException e) {
@@ -90,6 +93,7 @@ public class SQLDBConnection {
             try {
                 conn.setAutoCommit(false);
                 Statement stmt = conn.createStatement();
+                numberProcess--;
                 if (stmt.execute(stmtString)) {
                     conn.commit();
                     closeConnection();
@@ -115,6 +119,7 @@ public class SQLDBConnection {
             try {
                 preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setQueryTimeout(1);
+                numberProcess++;
             }
             catch(SQLException e) {
                 e.printStackTrace();
@@ -127,6 +132,7 @@ public class SQLDBConnection {
     public Statement getStatement() {
         if (openConnection()) {
             try {
+                numberProcess++;
                 return conn.createStatement();
             }
             catch(SQLException e) {
@@ -140,7 +146,9 @@ public class SQLDBConnection {
 
     public Result executeQueryStatement(PreparedStatement p) {
         try{
+            numberProcess--;
             ResultSet rs  = p.executeQuery();
+
             if (rs.getFetchSize() == 0) {
                 conn.rollback();
                 closeConnection();
@@ -161,6 +169,7 @@ public class SQLDBConnection {
 
     public Result executeUpdateStatement(PreparedStatement p) {
         try{
+            numberProcess--;
             int count = p.executeUpdate();
             if (count == 0) {
                 conn.rollback();
@@ -182,8 +191,10 @@ public class SQLDBConnection {
     private boolean closeConnection() {
         if (conn != null) {
             try {
-                conn.close();
-                conn = null;
+                if (numberProcess == 0) {
+                    conn.close();
+                    conn = null;
+                }
                 return true;
             }catch (SQLException e) {
                 e.printStackTrace();
