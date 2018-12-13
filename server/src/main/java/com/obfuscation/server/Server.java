@@ -76,11 +76,11 @@ public class Server {
                 plugInManager.setFactory(fileDirectory, "FlatFileDB1.jar", TSVDaoFactory.class.getName());
                 break;
         }
-        Database.getInstance().initializeDatabase(commandNum);
         if (wipe != null && wipe.equals("-wipe")) {
             System.out.println("WIPTING OUT");
             DAOFacade.getInstance().clear();
         }
+        Database.getInstance().initializeDatabase(commandNum);
 
         //for testing
         System.out.println("server running at port : " + portNumber);

@@ -759,7 +759,7 @@ public class Database {
                     //if deck is empty, refill
                     putDiscardToCardDeck(gameServer);
                     //add to graph
-                    gameGraph.get(gameID).addPath(username, claimedRoute);
+//                    gameGraph.get(gameID).addPath(username, claimedRoute);
                     return new Result(true, true, null);
                 }
 
