@@ -76,10 +76,12 @@ public class SQLDBConnection {
             createDBFile();
             String connectionUrl = "jdbc:sqlite:" + url;
             if (conn == null) {
-                if (conn.isClosed()) {
-                    this.conn = DriverManager.getConnection(connectionUrl);
-                    conn.setAutoCommit(false);
-                }
+                this.conn = DriverManager.getConnection(connectionUrl);
+                conn.setAutoCommit(false);
+            }
+            else if (conn.isClosed()) {
+                this.conn = DriverManager.getConnection(connectionUrl);
+                conn.setAutoCommit(false);
             }
             return true;
         } catch (SQLException e) {
