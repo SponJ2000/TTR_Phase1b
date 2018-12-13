@@ -1,5 +1,7 @@
 package communication;
 
+import com.obfuscation.server.ClientProxy;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -16,6 +18,25 @@ public class GameServer extends Game {
     private String currentPlayer;
     private String lastRoundTriggeredBy;
     private ArrayList<PlayerUser> players = new ArrayList<>();
+    private ArrayList<ClientProxy> clientProxies = new ArrayList<>();
+
+    public ArrayList<ClientProxy> getOriginalClientProxies() {
+        return originalClientProxies;
+    }
+
+    public void setOriginalClientProxies(ArrayList<ClientProxy> originalClientProxies) {
+        this.originalClientProxies = originalClientProxies;
+    }
+
+    private ArrayList<ClientProxy> originalClientProxies = new ArrayList<>();
+
+    public ArrayList<ClientProxy> getClientProxies() {
+        return clientProxies;
+    }
+
+    public void setClientProxies(ArrayList<ClientProxy> clientProxies) {
+        this.clientProxies = clientProxies;
+    }
 
     public ArrayList<Card> getTrainCards() {
         return trainCards;

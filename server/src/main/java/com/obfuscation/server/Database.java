@@ -87,18 +87,23 @@ public class Database {
 
     private List<ActiveUser> activeUsers;
     private HashMap<String, String> authTokenMap = new HashMap<>();
-    private List<User> users;
+    public List<User> users;
 
     public void initializeDatabase(int commandNum) {
         updateDelta = commandNum;
         lobbyGameList = DAOFacade.getInstance().getLobbies();
         gameList = DAOFacade.getInstance().getGames();
+        for (int i = 0; i < gameList.size(); i++) {
+            List<GenericCommand> newList = new ArrayList<>();
+            gameUpdates.put(gameList.get(i).getGameID(), newList);
+        }
         users = DAOFacade.getInstance().getUsers();
 
         for (User user : users) {
             authTokenMap.put(user.getId(), user.getAuthtoken());
             loginInfo.put(user.getId(), user.getPassword());
         }
+        ServerFacade.getInstance().initializeServer();
 
         List<GenericCommand> commands = DAOFacade.getInstance().getCommands();
         for (GenericCommand genericCommand : commands) {
@@ -270,7 +275,7 @@ public class Database {
         else if (game.getPlayers().size() < game.getMaxPlayers()) {
             if (!game.getPlayers().contains(player)) {
                 game.getPlayers().add(player);
-                DAOFacade.getInstance().addLobby(gameID, game);
+                DAOFacade.getInstance().updateLobby(gameID, game);
                 return new Result(true, true, null);
             }
             else return new Result(false, null, "Error: player already in game");
@@ -390,7 +395,7 @@ public class Database {
 
         gameServer.setTrainCards(trainCards);
 
-
+        saveGameState(gameID);
     }
     Result startGame(String gameID, String authToken) {
         LobbyGame lobbyGame = findGameLobbyByID(gameID);
